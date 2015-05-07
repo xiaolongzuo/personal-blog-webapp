@@ -1,4 +1,13 @@
-package com.zuoxiaolong.dao;/*
+package com.zuoxiaolong.dao;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import org.apache.log4j.Logger;
+
+import com.zuoxiaolong.jdbc.ConnectionFactory;
+
+/*
  * Copyright 2002-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,12 +22,6 @@ package com.zuoxiaolong.dao;/*
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import com.zuoxiaolong.jdbc.ConnectionFactory;
-import org.apache.log4j.Logger;
-
-import java.sql.Connection;
-import java.sql.SQLException;
 
 /**
  * @author 左潇龙

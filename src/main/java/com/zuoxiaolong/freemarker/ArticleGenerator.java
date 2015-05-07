@@ -1,4 +1,21 @@
-package com.zuoxiaolong.freemarker;/*
+package com.zuoxiaolong.freemarker;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.dao.ArticleDao;
+
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+
+/*
  * Copyright 2002-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,19 +30,6 @@ package com.zuoxiaolong.freemarker;/*
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.dao.ArticleDao;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import org.apache.log4j.Logger;
-
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author 左潇龙
@@ -50,7 +54,7 @@ public class ArticleGenerator implements Generator {
                 data.put("newCharts", acticles);
                 data.put("recommendCharts", ArticleDao.getArticles("good_times"));
                 data.put("imageArticles", acticles);
-                String htmlPath = Configuration.getServletContext().getRealPath("article_" + acticles.get(i).get("id") + ".html");
+                String htmlPath = Configuration.getContextPath("article_" + acticles.get(i).get("id") + ".html");
                 if (logger.isInfoEnabled()) {
                     logger.info("htmlPath : " + htmlPath);
                 }
