@@ -3,16 +3,20 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 
-    <filter>
-        <filter-name>security</filter-name>
-        <filter-class>com.zuoxiaolong.filter.SecurityFilter</filter-class>
-    </filter>
+    <servlet>
+        <servlet-name>generate</servlet-name>
+        <servlet-class>com.zuoxiaolong.servlet.GenerateSite</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>generate</servlet-name>
+        <url-pattern>/generate</url-pattern>
+    </servlet-mapping>
 
-    <filter-mapping>
-        <filter-name>security</filter-name>
-        <url-pattern>/security/*</url-pattern>
-    </filter-mapping>
-
+    <listener>
+        <listener-class>com.zuoxiaolong.listener.ConfigurationListener</listener-class>
+    </listener>
+    
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
