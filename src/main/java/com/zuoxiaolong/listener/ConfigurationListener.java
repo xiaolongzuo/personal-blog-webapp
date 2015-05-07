@@ -1,4 +1,11 @@
-package com.zuoxiaolong.listener;/*
+package com.zuoxiaolong.listener;
+
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+
+import com.zuoxiaolong.config.Configuration;
+
+/*
  * Copyright 2002-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,11 +20,6 @@ package com.zuoxiaolong.listener;/*
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import com.zuoxiaolong.config.Configuration;
-
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
 
 /**
  * @author 左潇龙

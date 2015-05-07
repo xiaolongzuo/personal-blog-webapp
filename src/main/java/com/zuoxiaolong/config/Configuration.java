@@ -1,14 +1,16 @@
 package com.zuoxiaolong.config;
 
-import freemarker.template.Version;
-import org.apache.log4j.Logger;
-
-import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
+
+import javax.servlet.ServletContext;
+
+import org.apache.log4j.Logger;
+
+import freemarker.template.Version;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -70,10 +72,26 @@ public abstract class Configuration {
     public static void init(ServletContext servletContext) {
         Configuration.servletContext = servletContext;
         try {
-            configuration.setDirectoryForTemplateLoading(new File(servletContext.getRealPath("template")));
+            configuration.setDirectoryForTemplateLoading(new File(getContextPath("template")));
+            if (logger.isInfoEnabled()) {
+				logger.info("templateBasePath set success ... ");
+			}
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+    
+    public static String getContextPath(String path) {
+    	String contextFile = servletContext.getRealPath(path);
+    	if (contextFile == null && !path.startsWith("/")) {
+    		contextFile = servletContext.getRealPath("/" + path);
+		} else if (contextFile == null && path.startsWith("/")){
+			contextFile = servletContext.getRealPath(path.substring(1));
+		}
+    	if (logger.isInfoEnabled()) {
+			logger.info("contextFile : " + contextFile);
+		}
+    	return contextFile;
     }
 
     public static ServletContext getServletContext() {

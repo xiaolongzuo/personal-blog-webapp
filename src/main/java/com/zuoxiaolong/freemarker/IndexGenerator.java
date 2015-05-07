@@ -1,4 +1,20 @@
-package com.zuoxiaolong.freemarker;/*
+package com.zuoxiaolong.freemarker;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.dao.ArticleDao;
+
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+
+/*
  * Copyright 2002-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,18 +29,6 @@ package com.zuoxiaolong.freemarker;/*
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.dao.ArticleDao;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import org.apache.log4j.Logger;
-
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author 左潇龙
@@ -63,7 +67,7 @@ public class IndexGenerator implements Generator {
             if (logger.isInfoEnabled()) {
                 logger.info("put imageArticles success ... ");
             }
-            String htmlPath = Configuration.getServletContext().getRealPath("index.html");
+            String htmlPath = Configuration.getContextPath("index.html");
             if (logger.isInfoEnabled()) {
                 logger.info("htmlPath : " + htmlPath);
             }

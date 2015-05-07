@@ -1,4 +1,16 @@
-package com.zuoxiaolong.servlet;/*
+package com.zuoxiaolong.servlet;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.freemarker.Generators;
+
+/*
  * Copyright 2002-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,28 +26,25 @@ package com.zuoxiaolong.servlet;/*
  * limitations under the License.
  */
 
-import com.zuoxiaolong.freemarker.Generators;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
 /**
  * @author 左潇龙
  * @since 5/7/2015 2:49 PM
  */
 public class GenerateSite extends HttpServlet {
 
-    @Override
+	private static final long serialVersionUID = -289349821452906846L;
+
+	@Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doPost(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Generators.generate();
+        String key = request.getParameter("key");
+    	if (Configuration.get("key").equals(key)) {
+    		Generators.generate();
+		}
     }
 
 }

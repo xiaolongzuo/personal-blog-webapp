@@ -1,7 +1,7 @@
-DROP TABLE comments;
-DROP TABLE articles;
-DROP TABLE users;
-DROP TABLE visitors;
+DROP TABLE IF EXISTS comments;
+DROP TABLE IF EXISTS articles;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS visitors;
 
 CREATE TABLE users
 (
