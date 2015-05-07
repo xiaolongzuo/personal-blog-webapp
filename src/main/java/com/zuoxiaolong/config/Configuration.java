@@ -40,7 +40,13 @@ public abstract class Configuration {
 
     private static ServletContext servletContext;
 
+    private static final String system;
+
     static {
+        system = System.getProperty("os.name").toLowerCase();
+        if (logger.isInfoEnabled()) {
+            logger.info("os.name = " + system);
+        }
         File classpath = new File(Configuration.class.getClassLoader().getResource("").getFile());
         File[] propertyFiles = classpath.listFiles(new FileFilter() {
             @Override
@@ -80,6 +86,10 @@ public abstract class Configuration {
 
     public static freemarker.template.Configuration getFreemarkerConfiguration() {
         return configuration;
+    }
+
+    public static String getSystem() {
+        return system;
     }
 
 }

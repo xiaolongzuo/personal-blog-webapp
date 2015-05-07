@@ -39,9 +39,14 @@ public abstract class ConnectionFactory {
     static {
         try {
             url = Configuration.get("url");
-            username = Configuration.get("username");
-            password = Configuration.get("password");
             driver = Configuration.get("driver");
+            if (Configuration.getSystem().contains("linux")) {
+                username = Configuration.get("username.product");
+                password = Configuration.get("password.product");
+            } else {
+                username = Configuration.get("username");
+                password = Configuration.get("password");
+            }
             Class.forName(driver);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
