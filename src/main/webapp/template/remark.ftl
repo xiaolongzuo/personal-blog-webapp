@@ -6,15 +6,15 @@
 </head>
 <body>
 <table align="center" border="0" cellpadding="3" cellspacing="1" width="100%">
-<form action="remark" method="post" name="moodform" id="moodform"></form>
+<form action="counter" method="post" name="moodform" id="moodform">
 	<input name="articleId" value="${article.id}" type="hidden">
   <tbody><tr valign="bottom">
       <td align="center">
           <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
             <tbody><tr>
 				<td height="100" align="center" valign="bottom">
-					${article.good_times}				<br>
-					<img src="../resources/img/bg2.gif" height="${article.good_times  * 50 / article.max_times}" border="0" width="20">
+                    ${article.good_times?default("0")}<br>
+					<img src="../resources/img/bg2.gif" height="${article.good_times_height?default("0")}" border="0" width="20">
 				</td>
             </tr>
             <tr>
@@ -37,8 +37,8 @@
           <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
             <tbody><tr>
 				<td height="100" align="center" valign="bottom">
-                    ${article.touch_times}					<br>
-					<img src="../resources/img/bg2.gif" height="${article.touch_times  * 50 / article.max_times}" border="0" width="20">
+                    ${article.touch_times?default("0")}					<br>
+					<img src="../resources/img/bg2.gif" height="${article.touch_times_height?default("0")}" border="0" width="20">
 				</td>
             </tr>
             <tr>
@@ -52,7 +52,7 @@
             </tr>
             <tr> 
 				<td align="center"> 
-					<input name="column" value="2" onclick="javascript:document.moodform.submit();" type="radio">
+					<input name="column" value="touch_times" onclick="javascript:document.moodform.submit();" type="radio">
 				</td>
             </tr>
           </tbody></table>
@@ -61,8 +61,8 @@
           <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
             <tbody><tr>
 				<td height="100" align="center" valign="bottom">
-                    ${article.funny_times}					<br>
-					<img src="../resources/img/bg1.gif" height="${article.funny_times  * 50 / article.max_times}" border="0" width="20">
+                    ${article.funny_times?default("0")}					<br>
+					<img src="../resources/img/bg1.gif" height="${article.funny_times_height?default("0")}" border="0" width="20">
 				</td>
             </tr>
             <tr>
@@ -76,7 +76,7 @@
             </tr>
             <tr> 
 				<td align="center"> 
-					<input name="column" value="3" onclick="javascript:document.moodform.submit();" type="radio">
+					<input name="column" value="funny_times" onclick="javascript:document.moodform.submit();" type="radio">
 				</td>
             </tr>
           </tbody></table>
@@ -85,8 +85,8 @@
           <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
             <tbody><tr>
 				<td height="100" align="center" valign="bottom">
-                    ${article.happy_times}				<br>
-					<img src="../resources/img/bg2.gif" height="${article.happy_times  * 50 / article.max_times}" border="0" width="20">
+                    ${article.happy_times?default("0")}				<br>
+					<img src="../resources/img/bg2.gif" height="${article.happy_times_height?default("0")}" border="0" width="20">
 				</td>
             </tr>
             <tr>
@@ -100,7 +100,7 @@
             </tr>
             <tr> 
 				<td align="center"> 
-					<input name="column" value="4" onclick="javascript:document.moodform.submit();" type="radio">
+					<input name="column" value="happy_times" onclick="javascript:document.moodform.submit();" type="radio">
 				</td>
             </tr>
           </tbody></table>
@@ -109,8 +109,8 @@
           <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
             <tbody><tr>
 				<td height="100" align="center" valign="bottom">
-					${article.anger_times}					<br>
-					<img src="../resources/img/bg1.gif" height="${article.anger_times  * 50 / article.max_times}" border="0" width="20">
+					${article.anger_times?default("0")}					<br>
+					<img src="../resources/img/bg1.gif" height="${article.anger_times_height?default("0")}" border="0" width="20">
 				</td>
             </tr>
             <tr>
@@ -124,7 +124,7 @@
             </tr>
             <tr> 
 				<td align="center"> 
-					<input name="column" value="5" onclick="javascript:document.moodform.submit();" type="radio">
+					<input name="column" value="anger_times" onclick="javascript:document.moodform.submit();" type="radio">
 				</td>
             </tr>
           </tbody></table>
@@ -133,8 +133,8 @@
           <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
             <tbody><tr>
 				<td height="100" align="center" valign="bottom">
-					${article.bored_times}					<br>
-					<img src="../resources/img/bg1.gif" height="${article.bored_times  * 50 / article.max_times}" border="0" width="20">
+					${article.bored_times?default("0")}					<br>
+					<img src="../resources/img/bg1.gif" height="${article.bored_times_height?default("0")}" border="0" width="20">
 				</td>
             </tr>
             <tr>
@@ -148,7 +148,7 @@
             </tr>
             <tr> 
 				<td align="center"> 
-					<input name="column" value="6" onclick="javascript:document.moodform.submit();" type="radio">
+					<input name="column" value="bored_times" onclick="javascript:document.moodform.submit();" type="radio">
 				</td>
             </tr>
           </tbody></table>
@@ -157,8 +157,8 @@
           <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
             <tbody><tr>
 				<td height="100" align="center" valign="bottom">
-					${article.water_times}					<br>
-					<img src="../resources/img/bg1.gif" height="${article.water_times  * 50 / article.max_times}" border="0" width="20">
+					${article.water_times?default("0")}					<br>
+					<img src="../resources/img/bg1.gif" height="${article.water_times_height?default("0")}" border="0" width="20">
 				</td>
             </tr>
             <tr>
@@ -172,7 +172,7 @@
             </tr>
             <tr> 
 				<td align="center"> 
-					<input name="column" value="7" onclick="javascript:document.moodform.submit();" type="radio">
+					<input name="column" value="water_times" onclick="javascript:document.moodform.submit();" type="radio">
 				</td>
             </tr>
           </tbody></table>
@@ -181,8 +181,8 @@
           <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
             <tbody><tr>
 				<td height="100" align="center" valign="bottom">
-					${article.surprise_times}					<br>
-					<img src="../resources/img/bg1.gif" height="${article.surprise_times  * 50 / article.max_times}" border="0" width="20">
+					${article.surprise_times?default("0")}					<br>
+					<img src="../resources/img/bg1.gif" height="${article.surprise_times_height?default("0")}" border="0" width="20">
 				</td>
             </tr>
             <tr>
@@ -196,13 +196,14 @@
             </tr>
             <tr> 
 				<td align="center"> 
-					<input name="column" value="8" onclick="javascript:document.moodform.submit();" type="radio">
+					<input name="column" value="surprise_times" onclick="javascript:document.moodform.submit();" type="radio">
 				</td>
             </tr>
           </tbody></table>
     </td>
     </tr>
-
-</tbody></table>
+</tbody>
+</form>
+</table>
 
 </body></html>

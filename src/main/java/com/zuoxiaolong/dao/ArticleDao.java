@@ -105,14 +105,51 @@ public abstract class ArticleDao extends BaseDao {
             info("transfer access_times success ...");
             article.put("comment_times", resultSet.getString("comment_times"));
             info("transfer comment_times success ...");
+
+            article.put("good_times", resultSet.getString("good_times"));
+            info("transfer good_times success ...");
+            article.put("touch_times", resultSet.getString("touch_times"));
+            info("transfer touch_times success ...");
+            article.put("funny_times", resultSet.getString("funny_times"));
+            info("transfer funny_times success ...");
+            article.put("happy_times", resultSet.getString("happy_times"));
+            info("transfer happy_times success ...");
+            article.put("anger_times", resultSet.getString("anger_times"));
+            info("transfer anger_times success ...");
+            article.put("bored_times", resultSet.getString("bored_times"));
+            info("transfer bored_times success ...");
+            article.put("water_times", resultSet.getString("water_times"));
+            info("transfer water_times success ...");
+            article.put("surprise_times", resultSet.getString("surprise_times"));
+            info("transfer surprise_times success ...");
             String content = resultSet.getString("content");
             article.put("content", content);
-            article.put("summary", content.substring(0, content.length() < 50 ? content.length() : 50));
+            article.put("summary", content.substring(0, content.length() < 100 ? content.length() : 100));
             info("transfer summary success ...");
+            putAllTimesHeight(article);
+            info("transfer putAllTimesHeight success ...");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         return article;
+    }
+
+    private static void putAllTimesHeight(Map<String, String> article) {
+        int max = 10;
+        for (String key : article.keySet()) {
+            if (key.endsWith("_times") && !key.startsWith("access") && !key.startsWith("comment")) {
+                Integer times = Integer.valueOf(article.get(key));
+                if (times > max) {
+                    max = times;
+                }
+            }
+        }
+        Map<String, String> tempArticle = new HashMap<String, String>(article);
+        for (String key : tempArticle.keySet()) {
+            if (key.endsWith("_times") && !key.startsWith("access") && !key.startsWith("comment")) {
+                article.put(key + "_height", String.valueOf(Integer.valueOf(article.get(key)) * 50 / max));
+            }
+        }
     }
 
 }

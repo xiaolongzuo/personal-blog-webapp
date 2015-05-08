@@ -2,7 +2,8 @@
 <html>
 <head>
 <#include "head.ftl">
-<link href="resources/css/article.css" rel="stylesheet">
+<link href="resources/css/article.css" rel="stylesheet"/>
+<script type="application/javascript" src="resources/js/counter.js"></script>
 </head>
 <body>
 <#include "header.ftl">

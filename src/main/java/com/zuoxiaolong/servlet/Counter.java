@@ -2,6 +2,7 @@ package com.zuoxiaolong.servlet;
 
 import com.zuoxiaolong.dao.ArticleDao;
 import com.zuoxiaolong.freemarker.Generators;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -31,11 +32,27 @@ import java.io.IOException;
  */
 public class Counter extends HttpServlet {
 
+    private static final Logger logger = Logger.getLogger(Counter.class);
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Integer articleId = Integer.valueOf(request.getParameter("articleId"));
-        ArticleDao.updateCount(articleId, request.getParameter("column"));
+        String articleIdString = request.getParameter("articleId");
+        //参数为空代表是阅读次数的统计，否则则是remark的统计
+        if (articleIdString == null) {
+            String url = request.getParameter("url");
+            url = url.substring(url.indexOf("article_"));
+            articleIdString = url.substring(url.indexOf("_") + 1, url.indexOf("."));
+        }
+        Integer articleId = Integer.valueOf(articleIdString);
+        String column = request.getParameter("column");
+        if (logger.isInfoEnabled()) {
+            logger.info("counter param : articleId = " + articleId + "   , column = " + column);
+        }
+        ArticleDao.updateCount(articleId, column);
         Generators.generate(articleId);
+        if (articleIdString != null) {
+            response.sendRedirect("/article_" + articleId + ".html");
+        }
     }
 
 }
