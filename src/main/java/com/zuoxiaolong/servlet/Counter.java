@@ -1,14 +1,13 @@
 package com.zuoxiaolong.servlet;
 
-import java.io.IOException;
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.freemarker.Generators;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.freemarker.Generators;
+import java.io.IOException;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -28,23 +27,16 @@ import com.zuoxiaolong.freemarker.Generators;
 
 /**
  * @author 左潇龙
- * @since 5/7/2015 2:49 PM
+ * @since 5/8/2015 4:12 PM
  */
-public class GenerateSite extends HttpServlet {
-
-	private static final long serialVersionUID = -289349821452906846L;
-
-	@Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doPost(request, response);
-    }
+public class Counter extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String key = request.getParameter("key");
-    	if (Configuration.get("key").equals(key)) {
-    		Generators.generate();
-		}
+        Integer articleId = Integer.valueOf(request.getParameter("articleId"));
+        ArticleDao.updateCount(articleId, request.getParameter("column"));
+        Generators.generate(articleId);
     }
 
 }
+

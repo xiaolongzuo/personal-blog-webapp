@@ -1,9 +1,11 @@
 package com.zuoxiaolong.listener;
 
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.freemarker.Generators;
+import org.apache.log4j.Logger;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-
-import com.zuoxiaolong.config.Configuration;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -27,9 +29,25 @@ import com.zuoxiaolong.config.Configuration;
  */
 public class ConfigurationListener implements ServletContextListener {
 
+    private static final Logger logger = Logger.getLogger(ConfigurationListener.class);
+
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         Configuration.init(servletContextEvent.getServletContext());
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+                        Generators.generate();
+                        Thread.sleep(1000 * 60 * 60);
+                    } catch (Exception e) {
+                        logger.warn("generate failed ..." , e);
+                    }
+                }
+            }
+        });
+        thread.start();
     }
 
     @Override

@@ -1,9 +1,6 @@
 package com.zuoxiaolong.dao;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,6 +67,22 @@ public abstract class ArticleDao extends BaseDao {
                     throw new RuntimeException(e);
                 }
                 return result;
+            }
+        });
+    }
+    
+    public static boolean updateCount(final int id, final String column) {
+        return execute(new TransactionalOperation<Boolean>() {
+            @Override
+            public Boolean doInConnection(Connection connection) {
+                try {
+                    PreparedStatement preparedStatement = connection.prepareStatement("update articles set " + column + " = " + column + " + 1 where id = ?");
+                    preparedStatement.setInt(1, id);
+                    int number = preparedStatement.executeUpdate();
+                    return number > 0;
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
     }

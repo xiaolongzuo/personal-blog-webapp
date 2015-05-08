@@ -1,19 +1,17 @@
 package com.zuoxiaolong.freemarker;
 
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.dao.ArticleDao;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import org.apache.log4j.Logger;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.log4j.Logger;
-
-import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.dao.ArticleDao;
-
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -41,36 +39,40 @@ public class ArticleGenerator implements Generator {
 
     @Override
     public void generate() {
-        List<Map<String, String>> acticles = ArticleDao.getArticles("id");
-        for (int i = 0; i < acticles.size(); i++) {
-            Map<String, String> article = ArticleDao.getArticle(Integer.valueOf(acticles.get(i).get("id")));
-            freemarker.template.Configuration configuration = Configuration.getFreemarkerConfiguration();
-            Writer writer = null;
+        List<Map<String, String>> articles = ArticleDao.getArticles("id");
+        for (int i = 0; i < articles.size(); i++) {
+            generateArticle(Integer.valueOf(articles.get(i).get("id")), articles);
+        }
+    }
+
+    void generateArticle(Integer id, List<Map<String, String>> articles) {
+        Map<String, String> article = ArticleDao.getArticle(id);
+        freemarker.template.Configuration configuration = Configuration.getFreemarkerConfiguration();
+        Writer writer = null;
+        try {
+            Template template = configuration.getTemplate("article.ftl", "UTF-8");
+            Map<String, Object> data = new HashMap<String, Object>();
+            data.put("article", article);
+            data.put("accessCharts", ArticleDao.getArticles("access_times"));
+            data.put("newCharts", articles);
+            data.put("recommendCharts", ArticleDao.getArticles("good_times"));
+            data.put("imageArticles", articles);
+            String htmlPath = Configuration.getContextPath("article_" + id + ".html");
+            if (logger.isInfoEnabled()) {
+                logger.info("htmlPath : " + htmlPath);
+            }
+            writer = new FileWriter(htmlPath);
+            template.process(data, writer);
+            writer.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (TemplateException e) {
+            throw new RuntimeException(e);
+        } finally {
             try {
-                Template template = configuration.getTemplate("article.ftl", "UTF-8");
-                Map<String, Object> data = new HashMap<String, Object>();
-                data.put("article", article);
-                data.put("accessCharts", ArticleDao.getArticles("access_times"));
-                data.put("newCharts", acticles);
-                data.put("recommendCharts", ArticleDao.getArticles("good_times"));
-                data.put("imageArticles", acticles);
-                String htmlPath = Configuration.getContextPath("article_" + acticles.get(i).get("id") + ".html");
-                if (logger.isInfoEnabled()) {
-                    logger.info("htmlPath : " + htmlPath);
-                }
-                writer = new FileWriter(htmlPath);
-                template.process(data, writer);
-                writer.flush();
+                writer.close();
             } catch (IOException e) {
                 throw new RuntimeException(e);
-            } catch (TemplateException e) {
-                throw new RuntimeException(e);
-            } finally {
-                try {
-                    writer.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
             }
         }
     }
