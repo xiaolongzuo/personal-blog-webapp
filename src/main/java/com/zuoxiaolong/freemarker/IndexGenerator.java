@@ -47,7 +47,7 @@ public class IndexGenerator implements Generator {
             if (logger.isInfoEnabled()) {
                 logger.info("start put data ... ");
             }
-            data.put("articles", ArticleDao.getArticles("id"));
+            data.put("articles", ArticleDao.getArticles("good_times"));
             if (logger.isInfoEnabled()) {
                 logger.info("put articles success ... ");
             }
@@ -55,7 +55,7 @@ public class IndexGenerator implements Generator {
             if (logger.isInfoEnabled()) {
                 logger.info("put accessCharts success ... ");
             }
-            data.put("newCharts",ArticleDao.getArticles("id"));
+            data.put("newCharts",ArticleDao.getArticles("create_date"));
             if (logger.isInfoEnabled()) {
                 logger.info("put newCharts success ... ");
             }
@@ -63,7 +63,7 @@ public class IndexGenerator implements Generator {
             if (logger.isInfoEnabled()) {
                 logger.info("put recommendCharts success ... ");
             }
-            data.put("imageArticles",ArticleDao.getArticles("id"));
+            data.put("imageArticles",ArticleDao.getArticles("good_times"));
             if (logger.isInfoEnabled()) {
                 logger.info("put imageArticles success ... ");
             }

@@ -4,15 +4,25 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 
     <servlet>
-        <servlet-name>generate</servlet-name>
-        <servlet-class>com.zuoxiaolong.servlet.GenerateSite</servlet-class>
+        <servlet-name>counter</servlet-name>
+        <servlet-class>com.zuoxiaolong.servlet.Counter</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>comment</servlet-name>
+        <servlet-class>com.zuoxiaolong.servlet.Comment</servlet-class>
     </servlet>
     
     <servlet-mapping>
-        <servlet-name>generate</servlet-name>
-        <url-pattern>/generate</url-pattern>
+        <servlet-name>counter</servlet-name>
+        <url-pattern>/counter</url-pattern>
     </servlet-mapping>
-
+    
+    <servlet-mapping>
+    	<servlet-name>comment</servlet-name>
+    	<url-pattern>/comment</url-pattern>
+    </servlet-mapping>
+    
     <listener>
         <listener-class>com.zuoxiaolong.listener.ConfigurationListener</listener-class>
     </listener>

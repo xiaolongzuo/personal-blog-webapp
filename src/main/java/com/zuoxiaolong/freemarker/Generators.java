@@ -1,7 +1,9 @@
 package com.zuoxiaolong.freemarker;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.zuoxiaolong.dao.ArticleDao;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -25,17 +27,23 @@ import java.util.List;
  */
 public abstract class Generators {
 
-    private static final List<Generator> generators;
+    private static final Map<Class<? extends Generator>,Generator> generators;
 
     static {
-        generators = new ArrayList<Generator>();
-        generators.add(new IndexGenerator());
-        generators.add(new ArticleGenerator());
+        generators = new HashMap<Class<? extends Generator>, Generator>();
+        generators.put(IndexGenerator.class, new IndexGenerator());
+        generators.put(ArticleGenerator.class, new ArticleGenerator());
+        generators.put(ArticleListGenerator.class, new ArticleListGenerator());
     }
 
     public static void generate() {
-        for (Generator generator : generators) {
-            generator.generate();
+        for (Class<? extends Generator> key : generators.keySet()) {
+            generators.get(key).generate();
         }
     }
+
+    public static void generate(Integer id) {
+        ((ArticleGenerator)generators.get(ArticleGenerator.class)).generateArticle(id, ArticleDao.getArticles("id"));
+    }
+
 }

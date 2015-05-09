@@ -1,6 +1,7 @@
 package com.zuoxiaolong.dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -31,6 +32,29 @@ import java.util.Map;
  * @since 5/7/2015 3:40 PM
  */
 public abstract class ArticleDao extends BaseDao {
+	
+	public static List<Map<String, String>> getPageArticles(final Map<String, Integer> pager) {
+        return execute(new Operation<List<Map<String, String>>>() {
+            @Override
+            public List<Map<String, String>> doInConnection(Connection connection) {
+                String sql = "select * from articles order by create_date desc limit ?,10";
+                List<Map<String, String>> result = new ArrayList<Map<String, String>>();
+                try {
+                    PreparedStatement statement = connection.prepareStatement(sql);
+                    statement.setInt(1, (pager.get("current") - 1) * 10);
+                    ResultSet resultSet = statement.executeQuery();
+                    info("getArticles's resultSet : " + resultSet);
+                    while (resultSet.next()) {
+                        result.add(transfer(resultSet));
+                    }
+                    info("transfer success ...");
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+                return result;
+            }
+        });
+    }
 
     public static List<Map<String, String>> getArticles(final String order) {
         return execute(new Operation<List<Map<String, String>>>() {
@@ -73,33 +97,70 @@ public abstract class ArticleDao extends BaseDao {
             }
         });
     }
+    
+    public static boolean updateCount(final int id, final String column) {
+        return execute(new TransactionalOperation<Boolean>() {
+            @Override
+            public Boolean doInConnection(Connection connection) {
+                try {
+                    PreparedStatement preparedStatement = connection.prepareStatement("update articles set " + column + " = " + column + " + 1 where id = ?");
+                    preparedStatement.setInt(1, id);
+                    int number = preparedStatement.executeUpdate();
+                    return number > 0;
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+    }
 
     private static Map<String, String> transfer(ResultSet resultSet) {
         Map<String, String> article = new HashMap<String, String>();
         info("start transfer ...");
         try {
             article.put("id", resultSet.getString("id"));
-            info("transfer id success ...");
             article.put("icon", resultSet.getString("icon"));
-            info("transfer icon success ...");
             article.put("subject", resultSet.getString("subject"));
-            info("transfer subject success ...");
             article.put("username", resultSet.getString("username"));
-            info("transfer username success ...");
-            article.put("create_date", new SimpleDateFormat("yyyy-MM-dd").format(resultSet.getDate("create_date")));
-            info("transfer create_date success ...");
+            article.put("create_date", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(resultSet.getTimestamp("create_date")));
             article.put("access_times", resultSet.getString("access_times"));
-            info("transfer access_times success ...");
             article.put("comment_times", resultSet.getString("comment_times"));
-            info("transfer comment_times success ...");
+
+            article.put("good_times", resultSet.getString("good_times"));
+            article.put("touch_times", resultSet.getString("touch_times"));
+            article.put("funny_times", resultSet.getString("funny_times"));
+            article.put("happy_times", resultSet.getString("happy_times"));
+            article.put("anger_times", resultSet.getString("anger_times"));
+            article.put("bored_times", resultSet.getString("bored_times"));
+            article.put("water_times", resultSet.getString("water_times"));
+            article.put("surprise_times", resultSet.getString("surprise_times"));
+            article.put("html", resultSet.getString("html"));
             String content = resultSet.getString("content");
-            article.put("content", content);
-            article.put("summary", content.substring(0, content.length() < 50 ? content.length() : 50));
+            article.put("summary", content.substring(0, content.length() < 100 ? content.length() : 100));
+            putAllTimesHeight(article);
             info("transfer summary success ...");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         return article;
+    }
+
+    private static void putAllTimesHeight(Map<String, String> article) {
+        int max = 10;
+        for (String key : article.keySet()) {
+            if (key.endsWith("_times") && !key.startsWith("access") && !key.startsWith("comment")) {
+                Integer times = Integer.valueOf(article.get(key));
+                if (times > max) {
+                    max = times;
+                }
+            }
+        }
+        Map<String, String> tempArticle = new HashMap<String, String>(article);
+        for (String key : tempArticle.keySet()) {
+            if (key.endsWith("_times") && !key.startsWith("access") && !key.startsWith("comment")) {
+                article.put(key + "_height", String.valueOf(Integer.valueOf(article.get(key)) * 50 / max));
+            }
+        }
     }
 
 }

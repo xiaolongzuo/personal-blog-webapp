@@ -1,155 +1,88 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <title>Zeus个人博客</title>
-    <meta name="keywords" content="个人博客,Zeus">
-    <meta name="description" content="左潇龙,Zeus,个人博客">
-    <link href="resources/css/base.css" rel="stylesheet">
-    <link href="resources/css/index.css" rel="stylesheet">
-    <script type="text/javascript" src="resources/js/jquery.js"></script>
-    <script type="text/javascript" src="resources/js/sliders.js"></script>
-    <!-- 返回顶部调用 begin -->
-    <script type="text/javascript" src="resources/js/jquery.htm"></script>
-    <script type="text/javascript" src="resources/js/js.htm"></script>
-    <!-- 返回顶部调用 end-->
+<#include "head.ftl">
+<link href="resources/css/article.css" rel="stylesheet"/>
+<link href="resources/css/code.css" rel="stylesheet"/>
+<script type="application/javascript" src="resources/js/counter.js"></script>
+<script type="application/javascript" src="resources/js/comment.js"></script>
+<script type="text/javascript" src="resources/js/syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
+<script type="text/javascript" src="resources/js/syntaxhighlighter_3.0.83/scripts/shBrushJava.js"></script>
+<link type="text/css" rel="stylesheet" href="resources/js/syntaxhighlighter_3.0.83/styles/shCoreDefault.css"/>
+<script type="text/javascript">SyntaxHighlighter.all();</script>
 </head>
 <body>
-<header>
-    <div class="logo f_l"><a href="/"><img src="resources/img/logo.jpg"></a></div>
-    <nav id="topnav" class="f_r">
-        <ul>
-            <a id="topnav_current" href="/" target="_blank">首页</a>
-            <a href="#" target="_blank">关于我</a>
-            <a href="#" target="_blank">文章</a>
-            <a href="#" target="_blank">心情</a>
-            <a href="#" target="_blank">相册</a>
-            <a href="#" target="_blank">留言</a>
-        </ul>
-        <script src="resources/js/nav.js"></script>
-    </nav>
-</header>
+<#include "header.ftl">
 <article>
     <div class="l_box f_l">
         <!-- 主题内容模块 -->
-        <div class="acticle_main">
-            <h2 align="center">${article.subject}</h2>
-            <hr/>
-            ${article.content}
+        <div class="index_about">
+            <h2 class="c_titile">${article.subject}</h2>
+            <p class="box_c"><span class="d_time">发布时间：${article.create_date}</span><span>作者：<a href="/">${article.username}</a></span><span>阅读（${article.access_times}）</span><span>评论（${article.comment_times}）</span></p>
+            <ul class="infos">
+                ${article.html} <br/>
+                <#include "remark.ftl">
+            </ul>
+            <div class="keybq">
+                <p><span>关键字</span>：个人博客,Java</p>
+            </div>
+            <#if nextArticle?? || preArticle?? >
+                <div class="nextinfo">
+                    <#if preArticle??>
+                        <p>上一篇：<a href="article_${preArticle.id}.html">${preArticle.subject}</a></p>
+                    </#if>
+                    <#if nextArticle??>
+                        <p>下一篇：<a href="article_${nextArticle.id}.html">${nextArticle.subject}</a></p>
+                    </#if>
+                </div>
+            </#if>
+            <#if relatedArticles?? && relatedArticles?size gt 0>
+                <div class="otherlink">
+                    <h2>相关文章</h2>
+                    <ul>
+                        <#list relatedArticles as article>
+                            <li><a href="article_${article.id}.html" title="${article.subject}">${article.subject}</a></li>
+                        </#list>
+                    </ul>
+                </div>
+            </#if>
+            <div id="comments_pager_top"></div>
+            <!-- 评论列表 -->
+            <div class="feedback_area_title">评论列表（共<span id="comment_size">${comments?size}</span>条评论）</div>
+            <div class="feedbackNoItems"></div>
+            <div class="feedbackItem" id="comment_list">
+                <#if comments?? && comments?size gt 0 >
+                    <#list comments as comment>
+                        <div class="feedbackListSubtitle">
+                            <a href="#" class="layer">#${comment_index + 1}楼</a>&nbsp;&nbsp;&nbsp;&nbsp;时间：<span class="comment_date">${comment.create_date}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;来源：<a href="#" >${comment.visitor_ip}</a>
+                        </div>
+                        <div class="feedbackCon">
+                            <div class="blog_comment_body">${comment.content}</div>
+                        </div>
+                    </#list>
+					<#else>
+					暂无评论
+                </#if>
+            </div>
+            <div id="comments_pager_bottom"></div>
+
+            <!-- 提交评论 -->
+            <a name="commentform"></a>
+            <div id="divCommentShow"></div>
+            <div id="comment_form_container"><div id="commentform_title">发表评论</div>
+                <div class="commentbox_main">
+                    <div class="clear"></div>
+                    <input id="articleId" type="hidden" name="articleId" value="${article.id}"/>
+                    <textarea name="content" id="tbCommentBody" class="comment_textarea" rows="20" cols="50"></textarea>
+                </div>
+                <p id="commentbox_opt">
+                    <input id="btn_comment_submit" class="comment_btn" value="提交评论" type="button">
+                </p>
+            </div>
         </div>
     </div>
-
-    <div class="r_box f_r">
-        <!-- 关注模块 -->
-        <div class="tit01">
-            <h3>关注我</h3>
-
-            <div class="gzwm">
-                <ul>
-                    <li><a class="xlwb" href="#" target="_blank">新浪微博</a></li>
-                    <li><a class="txwb" href="#" target="_blank">腾讯微博</a></li>
-                    <li><a class="rss" href="http://www.yangqq.com/web/410/portal.php?mod=rss" target="_blank">RSS</a>
-                    </li>
-                    <li><a class="wx" href="mailto:admin@admin.com">邮箱</a></li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- 排行榜模块 -->
-        <div class="ad300x100"><img src="resources/img/ad300x100.jpg"></div>
-        <div class="moreSelect" id="lp_right_select">
-            <!-- 排行榜切换 -->
-            <script>
-                window.onload = function () {
-                    var oLi = document.getElementById("tab").getElementsByTagName("li");
-                    var oUl = document.getElementById("ms-main").getElementsByTagName("div");
-
-                    for (var i = 0; i < oLi.length; i++) {
-                        oLi[i].index = i;
-                        oLi[i].onmouseover = function () {
-                            for (var n = 0; n < oLi.length; n++) oLi[n].className = "";
-                            this.className = "cur";
-                            for (var n = 0; n < oUl.length; n++) oUl[n].style.display = "none";
-                            oUl[this.index].style.display = "block"
-                        }
-                    }
-                }
-            </script>
-            <div class="ms-top">
-                <ul class="hd" id="tab">
-                    <li class="cur"><a href="/">点击排行</a></li>
-                    <li><a href="/">最新文章</a></li>
-                    <li><a href="/">站长推荐</a></li>
-                </ul>
-            </div>
-            <div class="ms-main" id="ms-main">
-                <div style="display: block;" class="bd bd-news">
-                    <ul>
-                    <#list accessCharts as article>
-                        <li><a href="acticle_${article.id}.html" target="_blank">${article.subject}</a></li>
-                    </#list>
-                    </ul>
-                </div>
-                <div class="bd bd-news">
-                    <ul>
-                    <#list newCharts as article>
-                        <li><a href="acticle_${article.id}.html" target="_blank">${article.subject}</a></li>
-                    </#list>
-                    </ul>
-                </div>
-                <div class="bd bd-news">
-                    <ul>
-                    <#list recommendCharts as article>
-                        <li><a href="acticle_${article.id}.html" target="_blank">${article.subject}</a></li>
-                    </#list>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <!--切换卡 moreSelect end -->
-
-        <!-- 标签模块 -->
-        <div class="cloud">
-            <h3>标签云</h3>
-            <ul>
-                <li><a href="#">个人博客</a></li>
-                <li><a href="#">web开发</a></li>
-                <li><a href="#">前端设计</a></li>
-                <li><a href="#">Html</a></li>
-                <li><a href="#">CSS3</a></li>
-                <li><a href="#">百度</a></li>
-                <li><a href="#">Javasript</a></li>
-            </ul>
-        </div>
-
-        <!-- 图文模块 -->
-        <div class="tuwen">
-            <h3>图文推荐</h3>
-            <ul>
-            <#list imageArticles as article>
-                <li><a href="article_${article.id}.html"><img src="${article.icon}"><b>${article.subject}</b></a>
-
-                    <p><span class="tulanmu"><a href="/">${article.username}</a></span><span
-                            class="tutime">${article.create_date}</span>
-                    </p>
-                </li>
-            </#list>
-            </ul>
-        </div>
-
-        <!-- 链接模块 -->
-        <div class="ad"><img src="resources/img/03.jpg"></div>
-        <div class="links">
-            <h3><span>[<a href="#">申请友情链接</a>]</span>友情链接</h3>
-            <ul>
-                <li><a href="http://www.cnblogs.com/zuoxiaolong">Zeus博客园</a></li>
-            </ul>
-        </div>
-    </div>
+    <#include "right.ftl">
 </article>
-<footer>
-    <p class="ft-copyright">Zeus博客</p>
-    <div id="tbox"><a id="togbook" href="#"></a> <a id="gotop" href="javascript:void(0)"></a></div>
-</footer>
+<#include "footer.ftl">
 </body>
 </html>

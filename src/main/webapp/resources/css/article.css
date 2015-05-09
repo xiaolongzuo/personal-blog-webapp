@@ -1,0 +1,59 @@
+.index_about { float: left; width: 740px; overflow: hidden; margin: 10px -40px }
+.c_titile { font-size: 22px; margin: 20px 0; text-align: center;color: #333; }
+.box_c { border: #ccc 1px dashed; text-align: center; padding: 5px 0; margin-right: 30px;color: #999;}
+.box_c span { margin: 0 10px; }
+.box_c span a{color: #099;}
+ul.infos { overflow: hidden; margin: 20px 30px 20px 0; line-height: 28px; font-size: 14px; text-indent: 2em;color:#666 }
+ul.infos p { margin-bottom: 5px }
+ul.infos p img { display: block; margin: auto }
+ul.infos h3 span {font-weight: bold;}
+.keybq { line-height: 30px; height: 30px; padding-left: 5px; border: 1px solid #F0F0F0; margin-right: 20px; }
+.keybq span { color: #099 }
+.nextinfo { line-height: 24px; }
+.otherlink h2 { border-bottom: #099 2px solid; line-height: 40px; font-size: 12px; font-weight: normal; margin-right: 20px; padding-left:40px}
+.otherlink ul { margin: 10px 0 }
+.otherlink li { line-height: 24px; height: 24px; display: block; width: 290px; float: left; overflow: hidden; margin-right: 30px; }
+.otherlink li a:hover{ text-decoration:underline}
+
+/*段落*/
+.postBody p,.postCon p { margin:7px 0;  line-height:24px;  }
+h1 {  margin:0;  }
+.index_about h3 {  color: #fff;  background-color: #708090;  -moz-border-radius: 5px;  border-radius: 5px;  padding:6px;  margin:10px 0px;  text-shadow:2px 2px 3px #404040;  }
+/*超链接*/
+a {  color:#708090;  text-decoration:none;  }
+a:hover {  text-decoration:underline;  }
+a:visited,a:hover {  color:#708090;  }
+ul {  list-style:none;  margin:0;  padding:0;  }
+image {  border:none;  }
+/*评论按钮*/
+#btn_comment_submit {  border:none;  height:30px;  width:90px;  }
+/*评论按钮*/
+.comment_btn {  font-family:'Microsoft Yahei';  border:none;  height:30px;  width:90px;  font-size:15px;  cursor:pointer;  position:relative;  vertical-align:middle;  display:inline-block;  background:#708090;  color:#fff;  }
+#btn_comment_submit:hover {  background:#CDC5BF;  }
+/*评论标题*/
+.feedback_area_title {  padding:10px;  font-size:18px;  font-weight:bold;  color:#708090;  border-bottom:solid 6px #708090;  }
+.feedbackListSubtitle {  font-size:12px;  color:#888;  }
+.feedbackListSubtitle a {  color:#888;  }
+.comment_quote {  background:#FCFAAC;  padding:15px;  border:1px solid #CCC;  }
+#commentform_title {  color:#708090;  background-image:none;  background-repeat:no-repeat;  margin-bottom:10px;  padding:10px 20px 10px 10px;  font-size:18px;  font-weight:bold;  border-bottom:solid 6px #708090;  }
+/*评论框*/
+#comment_form {  margin:10px 0;  padding:0;  }
+.commentform {  margin:10px 0;  padding:10px 20px;  background:#fff;  }
+/*评论输入域*/
+#tbCommentBody {  font-family:'MIcrosoft Yahei';  margin-top:10px;  width:940px;  max-width:940px;  min-width:940px;  background:white;  color:#333;  border:2px solid #fff;  box-shadow:inset 0 0 8px #aaa;  padding:10px;  height:120px;  font-size:14px;  min-height:120px;  }
+/*评论条目*/
+.feedbackItem {  font-size:14px;  line-height:24px;  margin:10px 0;  padding:20px;  background:#F2F2F2;  box-shadow:0 0 5px #aaa;  }
+.feedbackListSubtitle {  font-weight:normal;  }
+/*文章内图片*/
+#cnblogs_post_body p img {  margin:10px;  }
+/*最新评论*/
+#myposts .PostList {  font-size:14px;  line-height:24px;  margin:10px 0;  padding:20px;  background:#F2F2F2;  box-shadow:0 0 5px #aaa;  }
+#myposts .postTitl2 a {  color:#C2C2C2;  }
+
+/*评论框*/
+.list .out .topleft, .list .out .topright, .list .out .bottomleft, .list .out .bottomright, .list .inc .topleft, .list .inc .topright, .list .inc .bottomleft, .list .inc .bottomright
+{  background-image:url("http://images.cnblogs.com/cnblogs_com/zuoxiaolong/678771/o_t_o_bubbles.png");  background-attachment:no-repeat;  background-position-x:0%;  background-position-y:0%;  background-size:auto;  background-origin:padding-box;  background-clip:border-box;  background-color:transparent;  }
+.list .out .top, .list .out .bottom, .list .inc .top, .list .inc .bottom
+{  background-image:url("http://images.cnblogs.com/cnblogs_com/zuoxiaolong/678771/o_t_o_horizontal.png");  background-attachment:scroll;  background-position-x:0%;  background-position-y:0% ;background-size:auto;  background-origin:padding-box;  background-clip:border-box;  background-color:transparent;  }
+.list .out .left, .list .out .right, .list .inc .left, .list .inc .right
+{  background-image:url("http://images.cnblogs.com/cnblogs_com/zuoxiaolong/678771/o_t_o_vertical.png");  background-attachment:scroll;  background-position-x:0%;  background-position-y:0% ;background-size:auto;  background-origin:padding-box;  background-clip:border-box;  background-color:transparent;  }

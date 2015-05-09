@@ -3,11 +3,12 @@ package com.zuoxiaolong.servlet;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.zuoxiaolong.config.Configuration;
+import org.apache.log4j.Logger;
+
+import com.zuoxiaolong.dao.ArticleDao;
 import com.zuoxiaolong.freemarker.Generators;
 
 /*
@@ -28,23 +29,31 @@ import com.zuoxiaolong.freemarker.Generators;
 
 /**
  * @author 左潇龙
- * @since 5/7/2015 2:49 PM
+ * @since 5/8/2015 4:12 PM
  */
-public class GenerateSite extends HttpServlet {
+public class Counter extends BaseServlet {
 
-	private static final long serialVersionUID = -289349821452906846L;
-
-	@Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doPost(request, response);
-    }
+	private static final long serialVersionUID = -2655585691431759816L;
+	
+	private static final Logger logger = Logger.getLogger(Counter.class);
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String key = request.getParameter("key");
-    	if (Configuration.get("key").equals(key)) {
-    		Generators.generate();
-		}
+        String articleIdString = request.getParameter("articleId");
+        //参数为空代表是阅读次数的统计，否则则是remark的统计
+        if (articleIdString == null) {
+            String url = request.getParameter("url");
+            url = url.substring(url.indexOf("article_"));
+            articleIdString = url.substring(url.indexOf("_") + 1, url.indexOf("."));
+        }
+        Integer articleId = Integer.valueOf(articleIdString);
+        String column = request.getParameter("column");
+        if (logger.isInfoEnabled()) {
+            logger.info("counter param : articleId = " + articleId + "   , column = " + column);
+        }
+        ArticleDao.updateCount(articleId, column);
+        Generators.generate(articleId);
     }
 
 }
+
