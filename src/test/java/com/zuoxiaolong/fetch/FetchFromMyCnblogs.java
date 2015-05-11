@@ -1,12 +1,5 @@
 package com.zuoxiaolong.fetch;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
-import org.jsoup.nodes.TextNode;
-import org.jsoup.select.Elements;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,6 +7,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
+import org.jsoup.select.Elements;
 
 
 /*
@@ -39,7 +39,7 @@ import java.util.List;
 public class FetchFromMyCnblogs {
 
     public static void main(String[] args) throws IOException {
-        fetchArticles();
+    	fetchArticles();
     }
 
     private static String getArticleHtml(String url) throws IOException {
@@ -58,7 +58,7 @@ public class FetchFromMyCnblogs {
         return new String(stringBytes, "UTF-8");
     }
 
-    private static List<String> getPreList(String html) {
+    private static List<String> getPreList(String html,boolean filterEnter) {
         List<String> codeList = new ArrayList<String>();
         char[] chars = html.toCharArray();
         StringBuffer stringBuffer = new StringBuffer();
@@ -72,7 +72,7 @@ public class FetchFromMyCnblogs {
             }
             if (swich) {
                 //过滤显示换行
-                if (chars[i] == '\\' && chars[i+1] == 'n') {
+                if (filterEnter && chars[i] == '\\' && chars[i+1] == 'n') {
                     i++;
                 } else {
                     stringBuffer.append(chars[i]);
@@ -116,8 +116,8 @@ public class FetchFromMyCnblogs {
         Element bodyElement = acticleDocument.getElementById("cnblogs_post_body");
         String html = bodyElement.html();
         String originHtml = getArticleHtml(articleUrl);
-        List<String> codeList = getPreList(html);
-        List<String> originCodeList = getPreList(originHtml);
+        List<String> codeList = getPreList(html, false);
+        List<String> originCodeList = getPreList(originHtml, true);
         if (codeList.size() != originCodeList.size()) throw new RuntimeException();
         for (int i = 0; i < codeList.size() ; i++) {
             html = html.replace(codeList.get(i), originCodeList.get(i));
