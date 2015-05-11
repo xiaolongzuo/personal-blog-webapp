@@ -1,11 +1,10 @@
-/*导航当前页高亮*/
-
-var obj=null;
-var As=document.getElementById('topnav').getElementsByTagName('a');
-obj = As[0];
-for(i=1;i<As.length;i++){if(window.location.href.indexOf(As[i].href)>=0)
-obj=As[i];}
-obj.id='topnav_current'
+$(document).ready(function(){
+    $("#topnav a").each(function(){
+        if (window.location.href.indexOf($(this).attr("href")) > 0) {
+            $(this).attr("id","topnav_current");
+        }
+    });
+});
 
 
 

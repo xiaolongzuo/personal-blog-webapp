@@ -1,15 +1,13 @@
 package com.zuoxiaolong.servlet;
 
-import java.io.IOException;
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.freemarker.Generators;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.log4j.Logger;
-
-import com.zuoxiaolong.dao.ArticleDao;
-import com.zuoxiaolong.freemarker.Generators;
+import java.io.IOException;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -39,14 +37,7 @@ public class Counter extends BaseServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String articleIdString = request.getParameter("articleId");
-        //参数为空代表是阅读次数的统计，否则则是remark的统计
-        if (articleIdString == null) {
-            String url = request.getParameter("url");
-            url = url.substring(url.indexOf("article_"));
-            articleIdString = url.substring(url.indexOf("_") + 1, url.indexOf("."));
-        }
-        Integer articleId = Integer.valueOf(articleIdString);
+        Integer articleId = Integer.valueOf(request.getParameter("articleId"));
         String column = request.getParameter("column");
         if (logger.isInfoEnabled()) {
             logger.info("counter param : articleId = " + articleId + "   , column = " + column);

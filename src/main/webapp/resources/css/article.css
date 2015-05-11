@@ -3,7 +3,7 @@
 .box_c { border: #ccc 1px dashed; text-align: center; padding: 5px 0; margin-right: 30px;color: #999;}
 .box_c span { margin: 0 10px; }
 .box_c span a{color: #099;}
-ul.infos { overflow: hidden; margin: 20px 30px 20px 0; line-height: 28px; font-size: 14px; text-indent: 2em;color:#666 }
+ul.infos { overflow: hidden; margin: 20px 30px 20px 0; line-height: 28px; font-size: 14px;color:#666 }
 ul.infos p { margin-bottom: 5px }
 ul.infos p img { display: block; margin: auto }
 ul.infos h3 span {font-weight: bold;}
@@ -44,16 +44,3 @@ image {  border:none;  }
 /*评论条目*/
 .feedbackItem {  font-size:14px;  line-height:24px;  margin:10px 0;  padding:20px;  background:#F2F2F2;  box-shadow:0 0 5px #aaa;  }
 .feedbackListSubtitle {  font-weight:normal;  }
-/*文章内图片*/
-#cnblogs_post_body p img {  margin:10px;  }
-/*最新评论*/
-#myposts .PostList {  font-size:14px;  line-height:24px;  margin:10px 0;  padding:20px;  background:#F2F2F2;  box-shadow:0 0 5px #aaa;  }
-#myposts .postTitl2 a {  color:#C2C2C2;  }
-
-/*评论框*/
-.list .out .topleft, .list .out .topright, .list .out .bottomleft, .list .out .bottomright, .list .inc .topleft, .list .inc .topright, .list .inc .bottomleft, .list .inc .bottomright
-{  background-image:url("http://images.cnblogs.com/cnblogs_com/zuoxiaolong/678771/o_t_o_bubbles.png");  background-attachment:no-repeat;  background-position-x:0%;  background-position-y:0%;  background-size:auto;  background-origin:padding-box;  background-clip:border-box;  background-color:transparent;  }
-.list .out .top, .list .out .bottom, .list .inc .top, .list .inc .bottom
-{  background-image:url("http://images.cnblogs.com/cnblogs_com/zuoxiaolong/678771/o_t_o_horizontal.png");  background-attachment:scroll;  background-position-x:0%;  background-position-y:0% ;background-size:auto;  background-origin:padding-box;  background-clip:border-box;  background-color:transparent;  }
-.list .out .left, .list .out .right, .list .inc .left, .list .inc .right
-{  background-image:url("http://images.cnblogs.com/cnblogs_com/zuoxiaolong/678771/o_t_o_vertical.png");  background-attachment:scroll;  background-position-x:0%;  background-position-y:0% ;background-size:auto;  background-origin:padding-box;  background-clip:border-box;  background-color:transparent;  }

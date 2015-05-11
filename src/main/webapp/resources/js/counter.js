@@ -1,8 +1,9 @@
-$(document).ready(function(){
+$(document).ready(function() {
+	var articleId = $("#articleId").val();
     $.ajax({
         url:"counter",
         type:"POST",
-        data:{"url":window.location.pathname,"column":"access_times"}
+        data:{"articleId":articleId,"column":"access_times"}
     });
     
     $("input[name=column]").click(function(){
@@ -10,7 +11,7 @@ $(document).ready(function(){
     	$.ajax({
         	url:"counter",
         	type:"POST",
-            data:{"articleId":$("#articleId").val(),"column":checked}
+            data:{"articleId":articleId,"column":checked}
         });
     	var max = 10;
     	$("input[name=column]").each(function(){

@@ -9,6 +9,5 @@
             <a href="#" >照片墙</a>
             <a href="#" >关于我</a>
         </ul>
-        <script src="resources/js/nav.js"></script>
     </nav>
 </header>
