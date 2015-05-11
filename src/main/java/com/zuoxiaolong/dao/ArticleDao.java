@@ -1,10 +1,6 @@
 package com.zuoxiaolong.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,8 +28,8 @@ import java.util.Map;
  * @since 5/7/2015 3:40 PM
  */
 public abstract class ArticleDao extends BaseDao {
-	
-	public static List<Map<String, String>> getPageArticles(final Map<String, Integer> pager) {
+
+    public static List<Map<String, String>> getPageArticles(final Map<String, Integer> pager) {
         return execute(new Operation<List<Map<String, String>>>() {
             @Override
             public List<Map<String, String>> doInConnection(Connection connection) {
@@ -97,7 +93,7 @@ public abstract class ArticleDao extends BaseDao {
             }
         });
     }
-    
+
     public static boolean updateCount(final int id, final String column) {
         return execute(new TransactionalOperation<Boolean>() {
             @Override
@@ -137,6 +133,8 @@ public abstract class ArticleDao extends BaseDao {
             article.put("html", resultSet.getString("html"));
             String content = resultSet.getString("content");
             article.put("summary", content.substring(0, content.length() < 100 ? content.length() : 100));
+            String subject = resultSet.getString("subject");
+            article.put("shortSubject", subject.length() < 10 ? subject : (subject.substring(0, 10) + " ..."));
             putAllTimesHeight(article);
             info("transfer summary success ...");
         } catch (SQLException e) {
