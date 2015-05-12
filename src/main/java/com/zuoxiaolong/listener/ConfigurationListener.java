@@ -3,8 +3,6 @@ package com.zuoxiaolong.listener;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import org.apache.log4j.Logger;
-
 import com.zuoxiaolong.config.Configuration;
 import com.zuoxiaolong.freemarker.Generators;
 
@@ -30,26 +28,10 @@ import com.zuoxiaolong.freemarker.Generators;
  */
 public class ConfigurationListener implements ServletContextListener {
 
-    private static final Logger logger = Logger.getLogger(ConfigurationListener.class);
-
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         Configuration.init(servletContextEvent.getServletContext());
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        Generators.generate();
-                        Thread.sleep(1000 * 60 * 10);
-                    } catch (Exception e) {
-                        logger.warn("generate failed ..." , e);
-                        break;
-                    }
-                }
-            }
-        });
-        thread.start();
+        Generators.newGenerateThread().start();
     }
 
     @Override
