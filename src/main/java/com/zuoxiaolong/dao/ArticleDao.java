@@ -37,61 +37,38 @@ public abstract class ArticleDao extends BaseDao {
     
     private static final int SHORT_SUBJECT_LENGTH = 10;
     
-    public static boolean exsits(String resourceId) {
-    	return execute(new Operation<Boolean>() {
-			@Override
-			public Boolean doInConnection(Connection connection) {
-				String sql = "select id from articles where resource_id=?";
-				try {
-					PreparedStatement statement = connection.prepareStatement(sql);
-					statement.setString(1, resourceId);
-					ResultSet resultSet = statement.executeQuery();
-					return resultSet.next();
-				} catch (SQLException e) {
-					throw new RuntimeException(e);
-				}
-			}
-		});
-    }
-    
-    public static boolean update(String resourceId, String subject, String html, String content) {
+    public static boolean saveOrUpdate(String resourceId, String subject, String createDate, String username, Integer accessTimes, Integer goodTimes, String html, String content) {
     	return execute(new TransactionalOperation<Boolean>() {
 			@Override
 			public Boolean doInConnection(Connection connection) {
-				String sql = "update articles set subject=?,html=?,content=? where resource_id=?";
-				try {
-					PreparedStatement statement = connection.prepareStatement(sql);
-					statement.setString(1, subject);
-					statement.setString(2, html);
-					statement.setString(3, content);
-					statement.setString(4, resourceId);
-					int result = statement.executeUpdate();
-					return result > 0;
-				} catch (SQLException e) {
-					throw new RuntimeException(e);
-				}
-			}
-		});
-    }
-    
-    public static boolean save(String resourceId, String subject, String createDate, String username, Integer accessTimes, Integer goodTimes, String html, String content) {
-    	return execute(new TransactionalOperation<Boolean>() {
-			@Override
-			public Boolean doInConnection(Connection connection) {
-				String sql = "insert into articles (resource_id,username,icon,create_date," +
+				String selectSql = "select id from articles where resource_id=?";
+				String insertSql = "insert into articles (resource_id,username,icon,create_date," +
                 "access_times,good_times,subject,html,content) values (?,?,?,?,?,?,?,?,?)";
+				String updateSql = "update articles set subject=?,html=?,content=? where resource_id=?";
 				try {
-					PreparedStatement statement = connection.prepareStatement(sql);
+					PreparedStatement statement = connection.prepareStatement(selectSql);
 					statement.setString(1, resourceId);
-					statement.setString(2, username);
-					statement.setString(3, "resources/img/article.jpg");
-					statement.setString(4, createDate);
-					statement.setInt(5, accessTimes);
-					statement.setInt(6, goodTimes);
-					statement.setString(7, subject);
-					statement.setString(8, html);
-					statement.setString(9, content);
-					int result = statement.executeUpdate();
+					boolean exsits = statement.executeQuery().next();
+					PreparedStatement saveOrUpdate = null;
+					if (!exsits) {
+						saveOrUpdate = connection.prepareStatement(insertSql);
+						saveOrUpdate.setString(1, resourceId);
+						saveOrUpdate.setString(2, username);
+						saveOrUpdate.setString(3, "resources/img/article.jpg");
+						saveOrUpdate.setString(4, createDate);
+						saveOrUpdate.setInt(5, accessTimes);
+						saveOrUpdate.setInt(6, goodTimes);
+						saveOrUpdate.setString(7, subject);
+						saveOrUpdate.setString(8, html);
+						saveOrUpdate.setString(9, content);
+					} else {
+						saveOrUpdate = connection.prepareStatement(updateSql);
+						saveOrUpdate.setString(1, subject);
+						saveOrUpdate.setString(2, html);
+						saveOrUpdate.setString(3, content);
+						saveOrUpdate.setString(4, resourceId);
+					}
+					int result = saveOrUpdate.executeUpdate();
 					return result > 0;
 				} catch (SQLException e) {
 					throw new RuntimeException(e);
@@ -99,7 +76,7 @@ public abstract class ArticleDao extends BaseDao {
 			}
 		});
     }
-
+    
     public static List<Map<String, String>> getPageArticles(final Map<String, Integer> pager) {
         return execute(new Operation<List<Map<String, String>>>() {
             @Override

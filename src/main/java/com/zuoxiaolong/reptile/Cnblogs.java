@@ -113,16 +113,9 @@ public abstract class Cnblogs {
         Integer goodTimes = Integer.valueOf(diggCountDocument.getElementById("digg_count").html());
 
         //如果resourceId已经存在则更新，否则保存
-        if (ArticleDao.exsits(resourceId)) {
-        	ArticleDao.update(resourceId, subject, html, content);
-            if (logger.isInfoEnabled()) {
-        		logger.info("update article : [" + resourceId + ":" + subject + "]");
-    		}
-		} else {
-			ArticleDao.save(resourceId, subject, createDate, username, accessTimes, goodTimes, html, content);
-	        if (logger.isInfoEnabled()) {
-	    		logger.info("save article : [" + resourceId + ":" + subject + "]");
-			}
+		ArticleDao.saveOrUpdate(resourceId, subject, createDate, username, accessTimes, goodTimes, html, content);
+        if (logger.isInfoEnabled()) {
+    		logger.info("saveOrUpdate article : [" + resourceId + ":" + subject + "]");
 		}
 	}
 
