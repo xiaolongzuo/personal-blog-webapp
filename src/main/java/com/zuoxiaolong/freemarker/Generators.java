@@ -1,9 +1,9 @@
 package com.zuoxiaolong.freemarker;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
-import org.apache.log4j.Logger;
 
 import com.zuoxiaolong.dao.ArticleDao;
 
@@ -29,46 +29,33 @@ import com.zuoxiaolong.dao.ArticleDao;
  */
 public abstract class Generators {
 	
-    private static final Map<Class<? extends Generator>,Generator> generators;
+    private static final Map<Class<? extends Generator>,Generator> generatorMap;
+    
+    private static final List<Generator> generatorList;
 
     static {
-        generators = new HashMap<Class<? extends Generator>, Generator>();
-        generators.put(IndexGenerator.class, new IndexGenerator());
-        generators.put(ArticleGenerator.class, new ArticleGenerator());
-        generators.put(ArticleListGenerator.class, new ArticleListGenerator());
+    	IndexGenerator indexGenerator = new IndexGenerator();
+    	ArticleGenerator articleGenerator = new ArticleGenerator();
+    	ArticleListGenerator articleListGenerator = new ArticleListGenerator();
+    	generatorMap = new HashMap<Class<? extends Generator>, Generator>();
+    	generatorMap.put(IndexGenerator.class, indexGenerator);
+    	generatorMap.put(ArticleGenerator.class, articleGenerator);
+    	generatorMap.put(ArticleListGenerator.class, articleListGenerator);
+    	
+    	generatorList = new ArrayList<Generator>();
+    	generatorList.add(indexGenerator);
+    	generatorList.add(articleListGenerator);
+    	generatorList.add(articleGenerator);
     }
 
     public static void generate() {
-        for (Class<? extends Generator> key : generators.keySet()) {
-            generators.get(key).generate();
-        }
+        for (int i = 0; i < generatorList.size(); i++) {
+			generatorList.get(i).generate();
+		}
     }
 
     public static void generate(Integer id) {
-        ((ArticleGenerator)generators.get(ArticleGenerator.class)).generateArticle(id, ArticleDao.getArticles("id"));
+        ((ArticleGenerator)generatorMap.get(ArticleGenerator.class)).generateArticle(id, ArticleDao.getArticles("id"));
     }
     
-    public static Thread newGenerateThread() {
-    	return new GenerateThread();
-    }
-    
-    static class GenerateThread extends Thread {
-    	
-    	private static final Logger logger = Logger.getLogger(GenerateThread.class);
-    	
-    	@Override
-        public void run() {
-            while (true) {
-                try {
-                    Generators.generate();
-                    Thread.sleep(1000 * 60 * 10);
-                } catch (Exception e) {
-                    logger.warn("generate failed ..." , e);
-                    break;
-                }
-            }
-        }
-    	
-    }
-
 }

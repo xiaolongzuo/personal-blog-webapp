@@ -6,7 +6,6 @@ import javax.servlet.ServletContextListener;
 import org.apache.log4j.Logger;
 
 import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.freemarker.Generators;
 import com.zuoxiaolong.reptile.Reptiles;
 
 /*
@@ -43,18 +42,11 @@ public class ConfigurationListener implements ServletContextListener {
 			logger.info("init configuration success...");
 		}
         if (logger.isInfoEnabled()) {
-			logger.info("starting generate thread...");
-		}
-        Generators.newGenerateThread().start();
-        if (logger.isInfoEnabled()) {
-			logger.info("generate thread has been started...");
-		}
-        if (logger.isInfoEnabled()) {
-			logger.info("starting fetch thread...");
+			logger.info("starting fetch and generate thread...");
 		}
         Reptiles.newReptileThread().start();
         if (logger.isInfoEnabled()) {
-			logger.info("fetch thread has been started...");
+			logger.info("fetch and generate thread has been started...");
 		}
     }
 

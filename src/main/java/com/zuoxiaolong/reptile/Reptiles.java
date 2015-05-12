@@ -2,6 +2,8 @@ package com.zuoxiaolong.reptile;
 
 import org.apache.log4j.Logger;
 
+import com.zuoxiaolong.freemarker.Generators;
+
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -37,9 +39,10 @@ public abstract class Reptiles {
 			while (true) {
 				try {
 					Cnblogs.fetchArticles();
+					Generators.generate();
 					Thread.sleep(1000 * 60 * 11);
 				} catch (Exception e) {
-					logger.warn("fetch failed ...", e);
+					logger.warn("fetch and generate failed ...", e);
 					break;
 				}
 			}
