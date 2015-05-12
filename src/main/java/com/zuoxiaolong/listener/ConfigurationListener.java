@@ -3,6 +3,8 @@ package com.zuoxiaolong.listener;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import org.apache.log4j.Logger;
+
 import com.zuoxiaolong.config.Configuration;
 import com.zuoxiaolong.freemarker.Generators;
 import com.zuoxiaolong.reptile.Reptiles;
@@ -28,12 +30,32 @@ import com.zuoxiaolong.reptile.Reptiles;
  * @since 5/7/2015 3:33 PM
  */
 public class ConfigurationListener implements ServletContextListener {
+	
+	private static final Logger logger = Logger.getLogger(ConfigurationListener.class);
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
+    	if (logger.isInfoEnabled()) {
+			logger.info("will begin init configuration...");
+		}
         Configuration.init(servletContextEvent.getServletContext());
+        if (logger.isInfoEnabled()) {
+			logger.info("init configuration success...");
+		}
+        if (logger.isInfoEnabled()) {
+			logger.info("starting generate thread...");
+		}
         Generators.newGenerateThread().start();
+        if (logger.isInfoEnabled()) {
+			logger.info("generate thread has been started...");
+		}
+        if (logger.isInfoEnabled()) {
+			logger.info("starting fetch thread...");
+		}
         Reptiles.newReptileThread().start();
+        if (logger.isInfoEnabled()) {
+			logger.info("fetch thread has been started...");
+		}
     }
 
     @Override
