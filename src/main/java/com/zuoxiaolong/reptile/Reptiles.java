@@ -37,7 +37,7 @@ public abstract class Reptiles {
 			while (true) {
 				try {
 					Cnblogs.fetchArticles();
-					Thread.sleep(1000 * 60 * 60 * 24);
+					Thread.sleep(1000 * 60 * 11);
 				} catch (Exception e) {
 					logger.warn("fetch failed ...", e);
 					break;
