@@ -5,6 +5,7 @@ import javax.servlet.ServletContextListener;
 
 import com.zuoxiaolong.config.Configuration;
 import com.zuoxiaolong.freemarker.Generators;
+import com.zuoxiaolong.reptile.Reptiles;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -32,6 +33,7 @@ public class ConfigurationListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         Configuration.init(servletContextEvent.getServletContext());
         Generators.newGenerateThread().start();
+        Reptiles.newReptileThread().start();
     }
 
     @Override

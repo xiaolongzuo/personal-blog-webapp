@@ -6,7 +6,6 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import com.zuoxiaolong.dao.ArticleDao;
-import com.zuoxiaolong.listener.ConfigurationListener;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -30,8 +29,6 @@ import com.zuoxiaolong.listener.ConfigurationListener;
  */
 public abstract class Generators {
 	
-	private static final Logger logger = Logger.getLogger(ConfigurationListener.class);
-
     private static final Map<Class<? extends Generator>,Generator> generators;
 
     static {
@@ -56,6 +53,8 @@ public abstract class Generators {
     }
     
     static class GenerateThread extends Thread {
+    	
+    	private static final Logger logger = Logger.getLogger(GenerateThread.class);
     	
     	@Override
         public void run() {

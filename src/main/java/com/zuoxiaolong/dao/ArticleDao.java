@@ -36,6 +36,49 @@ public abstract class ArticleDao extends BaseDao {
     private static final int SUMMARY_LENGTH = 100;
     
     private static final int SHORT_SUBJECT_LENGTH = 10;
+    
+    public static boolean exsits(String resourceId) {
+    	return execute(new Operation<Boolean>() {
+			@Override
+			public Boolean doInConnection(Connection connection) {
+				String sql = "select id from articles where resource_id=?";
+				try {
+					PreparedStatement statement = connection.prepareStatement(sql);
+					statement.setString(1, resourceId);
+					ResultSet resultSet = statement.executeQuery();
+					return resultSet.next();
+				} catch (SQLException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+    }
+    
+    public static boolean save(String resourceId, String subject, String createDate, String username, Integer accessTimes, Integer goodTimes, String html, String content) {
+    	return execute(new TransactionalOperation<Boolean>() {
+			@Override
+			public Boolean doInConnection(Connection connection) {
+				String sql = "insert into articles (resource_id,username,icon,create_date," +
+                "access_times,good_times,subject,html,content) values (?,?,?,?,?,?,?,?,?)";
+				try {
+					PreparedStatement statement = connection.prepareStatement(sql);
+					statement.setString(1, resourceId);
+					statement.setString(2, username);
+					statement.setString(3, "resources/img/article.jpg");
+					statement.setString(4, createDate);
+					statement.setInt(5, accessTimes);
+					statement.setInt(6, goodTimes);
+					statement.setString(7, subject);
+					statement.setString(8, html);
+					statement.setString(9, content);
+					int result = statement.executeUpdate();
+					return result > 0;
+				} catch (SQLException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+    }
 
     public static List<Map<String, String>> getPageArticles(final Map<String, Integer> pager) {
         return execute(new Operation<List<Map<String, String>>>() {
