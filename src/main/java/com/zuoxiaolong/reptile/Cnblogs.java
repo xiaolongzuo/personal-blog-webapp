@@ -84,14 +84,6 @@ public abstract class Cnblogs {
         String resourceId = postIdElement.attr("href").substring(postIdElement.attr("href").indexOf("=") + 1);
         Integer postId = Integer.valueOf(resourceId);
         
-        //如果postId已经存在则直接退出不再重复保存
-        if (ArticleDao.exsits(resourceId)) {
-        	if (logger.isInfoEnabled()) {
-        		logger.info("skiped exsits article for [" + resourceId + ":" + subject + "]");
-			}
-			return;
-		}
-        
         //获取内容
         Element bodyElement = acticleDocument.getElementById("cnblogs_post_body");
         String html = bodyElement.html();
@@ -120,9 +112,17 @@ public abstract class Cnblogs {
         Document diggCountDocument = Jsoup.connect("http://www.cnblogs.com/mvc/blog/BlogPostInfo.aspx?blogId=160491&postId=" + postId + "&blogApp=zuoxiaolong&blogUserGuid=8834a931-b305-e311-8d02-90b11c0b17d6").get();
         Integer goodTimes = Integer.valueOf(diggCountDocument.getElementById("digg_count").html());
 
-        ArticleDao.save(resourceId, subject, createDate, username, accessTimes, goodTimes, html, content);
-        if (logger.isInfoEnabled()) {
-    		logger.info("save article : [" + resourceId + ":" + subject + "]");
+        //如果resourceId已经存在则更新，否则保存
+        if (ArticleDao.exsits(resourceId)) {
+        	ArticleDao.update(resourceId, subject, html, content);
+            if (logger.isInfoEnabled()) {
+        		logger.info("update article : [" + resourceId + ":" + subject + "]");
+    		}
+		} else {
+			ArticleDao.save(resourceId, subject, createDate, username, accessTimes, goodTimes, html, content);
+	        if (logger.isInfoEnabled()) {
+	    		logger.info("save article : [" + resourceId + ":" + subject + "]");
+			}
 		}
 	}
 

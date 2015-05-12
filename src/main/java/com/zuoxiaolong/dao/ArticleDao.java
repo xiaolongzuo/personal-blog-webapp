@@ -54,6 +54,26 @@ public abstract class ArticleDao extends BaseDao {
 		});
     }
     
+    public static boolean update(String resourceId, String subject, String html, String content) {
+    	return execute(new TransactionalOperation<Boolean>() {
+			@Override
+			public Boolean doInConnection(Connection connection) {
+				String sql = "update articles set subject=?,html=?,content=? where resource_id=?";
+				try {
+					PreparedStatement statement = connection.prepareStatement(sql);
+					statement.setString(1, subject);
+					statement.setString(2, html);
+					statement.setString(3, content);
+					statement.setString(4, resourceId);
+					int result = statement.executeUpdate();
+					return result > 0;
+				} catch (SQLException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+    }
+    
     public static boolean save(String resourceId, String subject, String createDate, String username, Integer accessTimes, Integer goodTimes, String html, String content) {
     	return execute(new TransactionalOperation<Boolean>() {
 			@Override
