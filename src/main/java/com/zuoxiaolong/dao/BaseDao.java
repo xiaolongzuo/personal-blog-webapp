@@ -89,6 +89,7 @@ public abstract class BaseDao {
         } catch (Exception e) {
             if (connection != null) {
                 try {
+                	error("execute update failed!", e);
                     connection.rollback();
                 } catch (SQLException e1) {
                     throw new RuntimeException(e1);

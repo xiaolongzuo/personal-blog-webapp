@@ -21,7 +21,7 @@
                 </p>
                 <p class="autor">
                     <span class="lm f_l"><a href="/">${article.username}</a></span>
-                    <span class="dtime f_l">${article.create_date}</span>
+                    <span class="dtime f_l">${article.create_date?substring(0,10)}</span>
                     <span class="viewnum f_r">浏览（${article.access_times}）</span>
                     <span class="pingl f_r">评论（${article.comment_times}）</span>
                 </p>

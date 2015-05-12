@@ -43,7 +43,7 @@
                 <div class="feedbackListSubtitle">
                     <a href="#" class="layer">#${comment_index + 1}楼</a>&nbsp;&nbsp;&nbsp;&nbsp;时间：<span
                         class="comment_date">${comment.create_date}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;来源：<a
-                        href="#">${comment.visitor_ip}</a>
+                        href="#">${comment.city}网友</a>
                 </div>
                 <div class="feedbackCon">
                     <div class="blog_comment_body">${comment.content}</div>

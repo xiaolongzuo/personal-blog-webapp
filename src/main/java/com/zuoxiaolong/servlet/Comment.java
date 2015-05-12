@@ -6,6 +6,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.zuoxiaolong.api.HttpApiHelper;
+import com.zuoxiaolong.dao.ArticleDao;
 import com.zuoxiaolong.dao.CommentDao;
 import com.zuoxiaolong.freemarker.Generators;
 
@@ -37,7 +39,19 @@ public class Comment extends BaseServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String content = request.getParameter("content");
 		Integer articleId = Integer.valueOf(request.getParameter("articleId"));
-		CommentDao.save(articleId, getVisitorIp(request), content);
+		if (logger.isInfoEnabled()) {
+			logger.info("comment param : articleId = " + articleId + "   , content = " + content);
+		}
+		String visitorIp = getVisitorIp(request);
+		boolean result = CommentDao.save(articleId, visitorIp, HttpApiHelper.getCity(visitorIp), content);
+		if (!result) {
+			logger.error("save comment error!");
+			return;
+		}
+		result = result && ArticleDao.updateCount(articleId, "comment_times");
+		if (result && logger.isInfoEnabled()) {
+			logger.info("save comment and updateCount success!");
+		}
 		Generators.generate(articleId);
 	}
 

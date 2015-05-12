@@ -38,47 +38,49 @@ import freemarker.template.TemplateException;
  */
 public class ArticleGenerator implements Generator {
 
-    private static final Logger logger = Logger.getLogger(ArticleGenerator.class);
+	private static final Logger logger = Logger.getLogger(ArticleGenerator.class);
 
-    @Override
-    public void generate() {
-        List<Map<String, String>> articles = ArticleDao.getArticles("create_date");
-        for (int i = 0; i < articles.size(); i++) {
-            generateArticle(Integer.valueOf(articles.get(i).get("id")), articles);
-        }
-    }
+	@Override
+	public void generate() {
+		List<Map<String, String>> articles = ArticleDao.getArticles("create_date");
+		for (int i = 0; i < articles.size(); i++) {
+			generateArticle(Integer.valueOf(articles.get(i).get("id")), articles);
+		}
+	}
 
-    void generateArticle(Integer id, List<Map<String, String>> articles) {
-        Map<String, String> article = ArticleDao.getArticle(id);
-        freemarker.template.Configuration configuration = Configuration.getFreemarkerConfiguration();
-        Writer writer = null;
-        try {
-            Template template = configuration.getTemplate("article.ftl", "UTF-8");
-            Map<String, Object> data = new HashMap<String, Object>();
-            data.put("article", article);
-            data.put("accessCharts", ArticleDao.getArticles("access_times"));
-            data.put("newCharts", articles);
-            data.put("recommendCharts", ArticleDao.getArticles("good_times"));
-            data.put("imageArticles", articles);
-            data.put("comments", CommentDao.getComments(id));
-            String htmlPath = Configuration.getContextPath("article_" + id + ".html");
-            if (logger.isInfoEnabled()) {
-                logger.info("htmlPath : " + htmlPath);
-            }
-            writer = new FileWriter(htmlPath);
-            template.process(data, writer);
-            writer.flush();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (TemplateException e) {
-            throw new RuntimeException(e);
-        } finally {
-            try {
-                writer.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
+	void generateArticle(Integer id, List<Map<String, String>> articles) {
+		Map<String, String> article = ArticleDao.getArticle(id);
+		freemarker.template.Configuration configuration = Configuration.getFreemarkerConfiguration();
+		Writer writer = null;
+		try {
+			Template template = configuration.getTemplate("article.ftl", "UTF-8");
+			Map<String, Object> data = new HashMap<String, Object>();
+			data.put("article", article);
+			data.put("accessCharts", ArticleDao.getArticles("access_times"));
+			data.put("newCharts", articles);
+			data.put("recommendCharts", ArticleDao.getArticles("good_times"));
+			data.put("imageArticles", articles);
+			data.put("comments", CommentDao.getComments(id));
+			String htmlPath = Configuration.getContextPath("article_" + id + ".html");
+			if (logger.isInfoEnabled()) {
+				logger.info("htmlPath : " + htmlPath);
+			}
+			writer = new FileWriter(htmlPath);
+			template.process(data, writer);
+			writer.flush();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		} catch (TemplateException e) {
+			throw new RuntimeException(e);
+		} finally {
+			try {
+				if (writer != null) {
+					writer.close();
+				}
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
+	}
 
 }

@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS comments;
+DROP TABLE IF EXISTS article_id_visitor_ip;
 DROP TABLE IF EXISTS articles;
 
 CREATE TABLE articles
@@ -29,6 +30,7 @@ CREATE TABLE comments
   id INT NOT NULL AUTO_INCREMENT,
   content TEXT NOT NULL,
   visitor_ip char(20) NOT NULL,
+  city char(20) NOT NULL,
   article_id INT NOT NULL ,
   create_date TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
   modify_date TIMESTAMP NULL DEFAULT '0000-00-00 00:00:00',
@@ -36,3 +38,11 @@ CREATE TABLE comments
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 AUTO_INCREMENT = 1;
 
 ALTER TABLE comments ADD CONSTRAINT `COMMENTS_FK_ARTICLE_ID` FOREIGN KEY (`article_id`) REFERENCES articles(`id`);
+
+create table article_id_visitor_ip (  
+    article_id INT NOT NULL, 
+	visitor_ip char(20) NOT NULL, 
+	primary key (article_id,visitor_ip)
+);
+
+ALTER TABLE article_id_visitor_ip ADD CONSTRAINT `ARTICLE_ID_VISITOR_IP_FK_ARTICLE_ID` FOREIGN KEY (`article_id`) REFERENCES articles(`id`);

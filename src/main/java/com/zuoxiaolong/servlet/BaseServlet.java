@@ -26,6 +26,10 @@ import java.net.UnknownHostException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
+
+import com.zuoxiaolong.dao.BaseDao;
+
 /**
  * @author zuoxiaolong
  *
@@ -33,6 +37,8 @@ import javax.servlet.http.HttpServletRequest;
 public abstract class BaseServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -6921810339176306346L;
+	
+	protected static final Logger logger = Logger.getLogger(BaseDao.class);
 
 	public static String getVisitorIp(HttpServletRequest request) {
 		String ipAddress = null;

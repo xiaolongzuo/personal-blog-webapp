@@ -1,13 +1,17 @@
 package com.zuoxiaolong.servlet;
 
-import com.zuoxiaolong.dao.ArticleDao;
-import com.zuoxiaolong.freemarker.Generators;
-import org.apache.log4j.Logger;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+
+import org.apache.log4j.Logger;
+
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.dao.ArticleIdVisitorIpDao;
+import com.zuoxiaolong.freemarker.Generators;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -42,7 +46,33 @@ public class Counter extends BaseServlet {
         if (logger.isInfoEnabled()) {
             logger.info("counter param : articleId = " + articleId + "   , column = " + column);
         }
-        ArticleDao.updateCount(articleId, column);
+        PrintWriter printWriter = response.getWriter();
+        if (!column.equals("access_times")) {
+        	if (logger.isInfoEnabled()) {
+        		logger.info("there is someone remarking...");
+			}
+			String ip = getVisitorIp(request);
+			if (ArticleIdVisitorIpDao.exsits(articleId, ip)) {
+				printWriter.write("exists");
+				printWriter.flush();
+				if (logger.isInfoEnabled()) {
+					logger.info(ip + " has remarked...");
+				}
+				return ;
+			} else {
+				ArticleIdVisitorIpDao.save(articleId, ip);
+			}
+		}
+        boolean result = ArticleDao.updateCount(articleId, column);
+        if (!result) {
+			logger.error("updateCount error!");
+			return;
+		}
+		if (result && logger.isInfoEnabled()) {
+			logger.info("updateCount success!");
+		}
+		printWriter.write("success");
+		printWriter.flush();
         Generators.generate(articleId);
     }
 

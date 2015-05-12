@@ -33,18 +33,18 @@ import java.util.Map;
  */
 public abstract class CommentDao extends BaseDao {
 	
-	public static boolean save(final Integer articleId, final String visitorIp, final String content) {
+	public static boolean save(final Integer articleId, final String visitorIp, final String city, final String content) {
 		return execute(new TransactionalOperation<Boolean>() {
 			@Override
 			public Boolean doInConnection(Connection connection) {
 				try {
-					PreparedStatement statement = connection.prepareStatement("insert into comments (visitor_ip,content,article_id,create_date) values (?,?,?,?)");
+					PreparedStatement statement = connection.prepareStatement("insert into comments (visitor_ip,city,content,article_id,create_date) values (?,?,?,?,?)");
 					statement.setString(1, visitorIp);
-					statement.setString(2, content);
-					statement.setInt(3, articleId);
-					statement.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
+					statement.setString(2, city);
+					statement.setString(3, content);
+					statement.setInt(4, articleId);
+					statement.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
 					int result = statement.executeUpdate();
-					ArticleDao.updateCount(articleId, "comment_times");
 					return result > 0;
 				} catch (SQLException e) {
 					error("save comments failed ..." , e);
@@ -79,7 +79,7 @@ public abstract class CommentDao extends BaseDao {
 		try {
 			comment.put("content", resultSet.getString("content"));
 			comment.put("create_date", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(resultSet.getTimestamp("create_date")));
-			comment.put("visitor_ip", resultSet.getString("visitor_ip"));
+			comment.put("city", resultSet.getString("city"));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
