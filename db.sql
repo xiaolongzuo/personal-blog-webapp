@@ -6,6 +6,7 @@ CREATE TABLE articles
 (
   id INT NOT NULL AUTO_INCREMENT,
   username CHAR(15) NOT NULL CHECK(username !=''),
+  resource_id VARCHAR(200) NOT NULL,
   subject VARCHAR (100) NOT NULL,
   html LONGTEXT NOT NULL,
   content LONGTEXT NOT NULL,
@@ -24,6 +25,8 @@ CREATE TABLE articles
   surprise_times INT DEFAULT 0,
   PRIMARY KEY(id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 AUTO_INCREMENT = 1;
+
+alter table articles add unique(resource_id);
 
 CREATE TABLE comments
 (
