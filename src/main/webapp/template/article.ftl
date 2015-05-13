@@ -9,6 +9,7 @@
 </head>
 <body>
 <input id="articleId" type="hidden" name="articleId" value="${article.id}"/>
+<#include "header.ftl">
 <article>
     <#include "article_main.ftl">
     <#include "right.ftl">

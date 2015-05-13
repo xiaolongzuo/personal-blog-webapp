@@ -6,7 +6,7 @@ import javax.servlet.ServletContextListener;
 import org.apache.log4j.Logger;
 
 import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.freemarker.Generators;
+import com.zuoxiaolong.reptile.Reptiles;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -29,27 +29,25 @@ import com.zuoxiaolong.freemarker.Generators;
  * @since 5/7/2015 3:33 PM
  */
 public class ConfigurationListener implements ServletContextListener {
-
-    private static final Logger logger = Logger.getLogger(ConfigurationListener.class);
+	
+	private static final Logger logger = Logger.getLogger(ConfigurationListener.class);
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
+    	if (logger.isInfoEnabled()) {
+			logger.info("will begin init configuration...");
+		}
         Configuration.init(servletContextEvent.getServletContext());
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        Generators.generate();
-                        Thread.sleep(1000 * 60 * 10);
-                    } catch (Exception e) {
-                        logger.warn("generate failed ..." , e);
-                        break;
-                    }
-                }
-            }
-        });
-        thread.start();
+        if (logger.isInfoEnabled()) {
+			logger.info("init configuration success...");
+		}
+        if (logger.isInfoEnabled()) {
+			logger.info("starting fetch and generate thread...");
+		}
+        Reptiles.newReptileThread().start();
+        if (logger.isInfoEnabled()) {
+			logger.info("fetch and generate thread has been started...");
+		}
     }
 
     @Override

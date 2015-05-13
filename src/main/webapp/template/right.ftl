@@ -46,7 +46,7 @@
                     <#if article_index gt 5>
                         <#break />
                     </#if>
-                    <li><a href="article_${article.id}.html" target="_blank">${article.subject}</a></li>
+                    <li><a href="article_${article.id}.html" target="_blank" title="${article.subject}">${article.subject}</a></li>
                 </#list>
                 </ul>
             </div>
@@ -56,7 +56,7 @@
                     <#if article_index gt 5>
                         <#break />
                     </#if>
-                    <li><a href="article_${article.id}.html" target="_blank">${article.subject}</a></li>
+                    <li><a href="article_${article.id}.html" target="_blank" title="${article.subject}">${article.subject}</a></li>
                 </#list>
                 </ul>
             </div>
@@ -66,7 +66,7 @@
                     <#if article_index gt 5>
                         <#break />
                     </#if>
-                    <li><a href="article_${article.id}.html" target="_blank">${article.subject}</a></li>
+                    <li><a href="article_${article.id}.html" target="_blank" title="${article.subject}">${article.subject}</a></li>
                 </#list>
                 </ul>
             </div>
@@ -96,7 +96,7 @@
             <#if article_index gt 4>
                 <#break />
             </#if>
-            <li><a href="article_${article.id}.html" target="_blank"><img src="${article.icon}"><b>${article.subject}</b></a>
+            <li><a href="article_${article.id}.html" target="_blank" title="${article.subject}"><img src="${article.icon}"><b>${article.shortSubject}</b></a>
 
                 <p><span class="tulanmu"><a href="/">${article.username}</a></span><span
                         class="tutime">${article.create_date?substring(0,10)}</span>

@@ -1,6 +1,10 @@
 package com.zuoxiaolong.dao;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,7 +32,51 @@ import java.util.Map;
  * @since 5/7/2015 3:40 PM
  */
 public abstract class ArticleDao extends BaseDao {
-
+	
+    private static final int SUMMARY_LENGTH = 100;
+    
+    private static final int SHORT_SUBJECT_LENGTH = 10;
+    
+    public static boolean saveOrUpdate(String resourceId, String subject, String createDate, String username, Integer accessTimes, Integer goodTimes, String html, String content) {
+    	return execute(new TransactionalOperation<Boolean>() {
+			@Override
+			public Boolean doInConnection(Connection connection) {
+				String selectSql = "select id from articles where resource_id=?";
+				String insertSql = "insert into articles (resource_id,username,icon,create_date," +
+                "access_times,good_times,subject,html,content) values (?,?,?,?,?,?,?,?,?)";
+				String updateSql = "update articles set subject=?,html=?,content=? where resource_id=?";
+				try {
+					PreparedStatement statement = connection.prepareStatement(selectSql);
+					statement.setString(1, resourceId);
+					boolean exsits = statement.executeQuery().next();
+					PreparedStatement saveOrUpdate = null;
+					if (!exsits) {
+						saveOrUpdate = connection.prepareStatement(insertSql);
+						saveOrUpdate.setString(1, resourceId);
+						saveOrUpdate.setString(2, username);
+						saveOrUpdate.setString(3, "resources/img/article.jpg");
+						saveOrUpdate.setString(4, createDate);
+						saveOrUpdate.setInt(5, accessTimes);
+						saveOrUpdate.setInt(6, goodTimes);
+						saveOrUpdate.setString(7, subject);
+						saveOrUpdate.setString(8, html);
+						saveOrUpdate.setString(9, content);
+					} else {
+						saveOrUpdate = connection.prepareStatement(updateSql);
+						saveOrUpdate.setString(1, subject);
+						saveOrUpdate.setString(2, html);
+						saveOrUpdate.setString(3, content);
+						saveOrUpdate.setString(4, resourceId);
+					}
+					int result = saveOrUpdate.executeUpdate();
+					return result > 0;
+				} catch (SQLException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+    }
+    
     public static List<Map<String, String>> getPageArticles(final Map<String, Integer> pager) {
         return execute(new Operation<List<Map<String, String>>>() {
             @Override
@@ -39,11 +87,9 @@ public abstract class ArticleDao extends BaseDao {
                     PreparedStatement statement = connection.prepareStatement(sql);
                     statement.setInt(1, (pager.get("current") - 1) * 10);
                     ResultSet resultSet = statement.executeQuery();
-                    info("getArticles's resultSet : " + resultSet);
                     while (resultSet.next()) {
                         result.add(transfer(resultSet));
                     }
-                    info("transfer success ...");
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
@@ -61,11 +107,9 @@ public abstract class ArticleDao extends BaseDao {
                 try {
                     Statement statement = connection.createStatement();
                     ResultSet resultSet = statement.executeQuery(sql);
-                    info("getArticles's resultSet : " + resultSet);
                     while (resultSet.next()) {
                         result.add(transfer(resultSet));
                     }
-                    info("transfer success ...");
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
@@ -109,10 +153,9 @@ public abstract class ArticleDao extends BaseDao {
             }
         });
     }
-
+    
     private static Map<String, String> transfer(ResultSet resultSet) {
         Map<String, String> article = new HashMap<String, String>();
-        info("start transfer ...");
         try {
             article.put("id", resultSet.getString("id"));
             article.put("icon", resultSet.getString("icon"));
@@ -132,11 +175,10 @@ public abstract class ArticleDao extends BaseDao {
             article.put("surprise_times", resultSet.getString("surprise_times"));
             article.put("html", resultSet.getString("html"));
             String content = resultSet.getString("content");
-            article.put("summary", content.substring(0, content.length() < 100 ? content.length() : 100));
+            article.put("summary", content.substring(0, content.length() < SUMMARY_LENGTH ? content.length() : SUMMARY_LENGTH));
             String subject = resultSet.getString("subject");
-            article.put("shortSubject", subject.length() < 10 ? subject : (subject.substring(0, 10) + " ..."));
+            article.put("shortSubject", subject.length() < SHORT_SUBJECT_LENGTH ? subject : (subject.substring(0, SHORT_SUBJECT_LENGTH) + " ..."));
             putAllTimesHeight(article);
-            info("transfer summary success ...");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

@@ -1,10 +1,10 @@
 package com.zuoxiaolong.jdbc;
 
-import com.zuoxiaolong.config.Configuration;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+
+import com.zuoxiaolong.config.Configuration;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -35,12 +35,12 @@ public abstract class ConnectionFactory {
     private static final String password;
 
     private static final String driver;
-
+    
     static {
         try {
             url = Configuration.get("url");
             driver = Configuration.get("driver");
-            if (Configuration.getSystem().contains("linux")) {
+            if (Configuration.isProductEnv()) {
                 username = Configuration.get("username.product");
                 password = Configuration.get("password.product");
             } else {

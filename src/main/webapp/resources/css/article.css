@@ -5,7 +5,7 @@
 .box_c span a{color: #099;}
 ul.infos { overflow: hidden; margin: 20px 30px 20px 0; line-height: 28px; font-size: 14px;color:#666 }
 ul.infos p { margin-bottom: 5px }
-ul.infos p img { display: block; margin: auto }
+ul.infos p img { display: block; margin: auto ;max-width: 700px;}
 ul.infos h3 span {font-weight: bold;}
 .keybq { line-height: 30px; height: 30px; padding-left: 5px; border: 1px solid #F0F0F0; margin-right: 20px; }
 .keybq span { color: #099 }

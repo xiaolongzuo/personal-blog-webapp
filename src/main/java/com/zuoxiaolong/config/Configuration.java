@@ -106,8 +106,8 @@ public abstract class Configuration {
         return configuration;
     }
 
-    public static String getSystem() {
-        return system;
+    public static boolean isProductEnv() {
+        return system.contains("linux");
     }
 
 }
