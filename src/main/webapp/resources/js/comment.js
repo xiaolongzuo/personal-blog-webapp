@@ -1,9 +1,14 @@
 $(document).ready(function() {
 	$("#btn_comment_submit").click(function(){
+		var comment = $("#tbCommentBody").val();
+		if(!comment || !$.trim(comment)) {
+			alert("评论不能为空啊，亲！");
+			return false;
+		}
 		$.ajax({
 			url:"comment",
 			type:"POST",
-			data:{"articleId":$("#articleId").val(),"content":$("#tbCommentBody").val()}
+			data:{"articleId":$("#articleId").val(),"content":comment}
 		});
 		var size = parseInt($("#comment_size").html()) + 1;
 		$("#comment_size").html(size);
