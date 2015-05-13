@@ -1,11 +1,11 @@
 package com.zuoxiaolong.freemarker;
 
+import com.zuoxiaolong.dao.ArticleDao;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.zuoxiaolong.dao.ArticleDao;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -55,7 +55,7 @@ public abstract class Generators {
     }
 
     public static void generate(Integer id) {
-        ((ArticleGenerator)generatorMap.get(ArticleGenerator.class)).generateArticle(id, ArticleDao.getArticles("id"));
+        ((ArticleGenerator)generatorMap.get(ArticleGenerator.class)).generateArticle(id, ArticleDao.getArticles("create_date"));
     }
     
 }
