@@ -1,10 +1,8 @@
 package com.zuoxiaolong.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import com.zuoxiaolong.api.HttpApiHelper;
+
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,14 +31,14 @@ import java.util.Map;
  */
 public abstract class CommentDao extends BaseDao {
 	
-	public static boolean save(final Integer articleId, final String visitorIp, final String city, final String content) {
+	public static boolean save(final Integer articleId, final String visitorIp, final String content) {
 		return execute(new TransactionalOperation<Boolean>() {
 			@Override
 			public Boolean doInConnection(Connection connection) {
 				try {
 					PreparedStatement statement = connection.prepareStatement("insert into comments (visitor_ip,city,content,article_id,create_date) values (?,?,?,?,?)");
 					statement.setString(1, visitorIp);
-					statement.setString(2, city);
+					statement.setString(2, HttpApiHelper.getCity(visitorIp));
 					statement.setString(3, content);
 					statement.setInt(4, articleId);
 					statement.setTimestamp(5, new Timestamp(System.currentTimeMillis()));

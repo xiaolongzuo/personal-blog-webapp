@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS comments;
 DROP TABLE IF EXISTS article_id_visitor_ip;
 DROP TABLE IF EXISTS articles;
+DROP TABLE IF EXISTS access_log;
 
 CREATE TABLE articles
 (
@@ -43,9 +44,19 @@ CREATE TABLE comments
 ALTER TABLE comments ADD CONSTRAINT `COMMENTS_FK_ARTICLE_ID` FOREIGN KEY (`article_id`) REFERENCES articles(`id`);
 
 create table article_id_visitor_ip (  
-    article_id INT NOT NULL, 
+  article_id INT NOT NULL,
 	visitor_ip char(20) NOT NULL, 
 	primary key (article_id,visitor_ip)
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8 ;
 
 ALTER TABLE article_id_visitor_ip ADD CONSTRAINT `ARTICLE_ID_VISITOR_IP_FK_ARTICLE_ID` FOREIGN KEY (`article_id`) REFERENCES articles(`id`);
+
+create table access_log (
+  id INT NOT NULL AUTO_INCREMENT,
+	visitor_ip char(20) NOT NULL,
+	url VARCHAR (200) NOT NULL,
+	access_date TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+	city CHAR (20) NOT NULL,
+	params LONGTEXT ,
+	primary key (id)
+) ENGINE=INNODB DEFAULT CHARSET=utf8 AUTO_INCREMENT = 1;

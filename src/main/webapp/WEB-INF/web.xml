@@ -3,6 +3,26 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 
+    <filter>
+        <filter-name>accessLog</filter-name>
+        <filter-class>com.zuoxiaolong.filter.AccessLogFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>accessLog</filter-name>
+        <url-pattern>/</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>accessLog</filter-name>
+        <url-pattern>*.html</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>accessLog</filter-name>
+        <url-pattern>*.do</url-pattern>
+    </filter-mapping>
+
     <servlet>
         <servlet-name>counter</servlet-name>
         <servlet-class>com.zuoxiaolong.servlet.Counter</servlet-class>
@@ -15,12 +35,12 @@
     
     <servlet-mapping>
         <servlet-name>counter</servlet-name>
-        <url-pattern>/counter</url-pattern>
+        <url-pattern>/counter.do</url-pattern>
     </servlet-mapping>
     
     <servlet-mapping>
     	<servlet-name>comment</servlet-name>
-    	<url-pattern>/comment</url-pattern>
+    	<url-pattern>/comment.do</url-pattern>
     </servlet-mapping>
     
     <listener>

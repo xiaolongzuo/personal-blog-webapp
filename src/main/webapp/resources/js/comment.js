@@ -6,7 +6,7 @@ $(document).ready(function() {
 			return false;
 		}
 		$.ajax({
-			url:"comment",
+			url:"comment.do",
 			type:"POST",
 			data:{"articleId":$("#articleId").val(),"content":comment}
 		});

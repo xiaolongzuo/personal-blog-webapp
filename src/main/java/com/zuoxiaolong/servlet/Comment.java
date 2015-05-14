@@ -1,15 +1,13 @@
 package com.zuoxiaolong.servlet;
 
-import java.io.IOException;
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.dao.CommentDao;
+import com.zuoxiaolong.freemarker.Generators;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.zuoxiaolong.api.HttpApiHelper;
-import com.zuoxiaolong.dao.ArticleDao;
-import com.zuoxiaolong.dao.CommentDao;
-import com.zuoxiaolong.freemarker.Generators;
+import java.io.IOException;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -43,7 +41,7 @@ public class Comment extends BaseServlet {
 			logger.info("comment param : articleId = " + articleId + "   , content = " + content);
 		}
 		String visitorIp = getVisitorIp(request);
-		boolean result = CommentDao.save(articleId, visitorIp, HttpApiHelper.getCity(visitorIp), content);
+		boolean result = CommentDao.save(articleId, visitorIp, content);
 		if (!result) {
 			logger.error("save comment error!");
 			return;
