@@ -52,10 +52,11 @@ public class ConcurrentHashMapCache extends AbstractCache {
     @Override
     public Object get(String key) {
         Long time = expiredCache.get(key);
-        if (time == null || time < System.currentTimeMillis()) {
+        if (time == null || time > System.currentTimeMillis()) {
             return cache.get(key);
         } else {
             cache.remove(key);
+            expiredCache.remove(key);
             return null;
         }
     }

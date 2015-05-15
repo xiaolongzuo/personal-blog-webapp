@@ -1,5 +1,18 @@
 package com.zuoxiaolong.dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import com.zuoxiaolong.api.HttpApiHelper;
+import com.zuoxiaolong.cache.Caches;
+import com.zuoxiaolong.config.Configuration;
+
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -15,14 +28,6 @@ package com.zuoxiaolong.dao;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import com.zuoxiaolong.api.HttpApiHelper;
-import com.zuoxiaolong.cache.Caches;
-import com.zuoxiaolong.config.Configuration;
-
-import java.sql.*;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * @author 左潇龙
@@ -42,12 +47,10 @@ public abstract class AccessLogDao extends BaseDao {
                     String startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis() - TIME_QUANTUM * 1000));
                     Statement statement = connection.createStatement();
                     ResultSet resultSet = statement.executeQuery("select count(id) from access_log where visitor_ip='" + visitorIp + "' and access_date > '" + startTime + "'");
-                    int count = -1;
-                    if (resultSet.next() && (count = resultSet.getInt(1)) > TIME_QUANTUM * TIMES_PER_SECOND) {
+                    if (resultSet.next() && resultSet.getInt(1) > TIME_QUANTUM * TIMES_PER_SECOND) {
                         warn("the ip[" + visitorIp + "] access too often , please note!");
                         Caches.getConcurrentHashMapCache().set(visitorIp, 1000 * 60 * 60);
                     }
-                    info("query count : " + count);
                     PreparedStatement preparedStatement = connection.prepareStatement("insert into access_log (visitor_ip,url,access_date,city,params) values (?,?,?,?,?)");
                     preparedStatement.setString(1, visitorIp);
                     preparedStatement.setString(2, url);

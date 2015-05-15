@@ -1,11 +1,18 @@
 package com.zuoxiaolong.filter;
 
+import java.io.IOException;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import com.zuoxiaolong.cache.Caches;
 import com.zuoxiaolong.servlet.BaseServlet;
-
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -35,9 +42,9 @@ public class IpFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         String visitorIp = BaseServlet.getVisitorIp((HttpServletRequest) servletRequest);
-        System.out.println(visitorIp + "     " + Caches.getConcurrentHashMapCache().get(visitorIp));
         if (Caches.getConcurrentHashMapCache().get(visitorIp) != null) {
-            throw new RuntimeException("your accesses are too often!");
+            ((HttpServletResponse)servletResponse).sendError(HttpServletResponse.SC_FORBIDDEN);
+            return ;
         }
         filterChain.doFilter(servletRequest,servletResponse);
     }
