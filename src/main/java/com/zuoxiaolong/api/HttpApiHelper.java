@@ -37,6 +37,7 @@ public abstract class HttpApiHelper {
 	private static final String BAIDU_AK = Configuration.isProductEnv()? Configuration.get("baidu.ak.product") : Configuration.get("baidu.ak");
 	
 	public static String getCity(String ip) {
+		String city = "来自星星的";
 		String url = "http://api.map.baidu.com/location/ip?ak=" + BAIDU_AK + "&ip=" + ip;
 		try {
 			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
@@ -54,15 +55,28 @@ public abstract class HttpApiHelper {
 			if (logger.isInfoEnabled()) {
 				logger.info("baidu-ip-api json : " + json);
 			}
-			JSONObject addressDetail = JSONObject.fromObject(json).getJSONObject("content").getJSONObject("address_detail");
-			String address = StringUtils.isEmpty(addressDetail.getString("city")) ? addressDetail.getString("province") : addressDetail.getString("city");
+			JSONObject resultJsonObject = JSONObject.fromObject(json);
+			if (resultJsonObject == null) {
+				return city;
+			}
+			JSONObject contentJsonObject = resultJsonObject.containsKey("content") ? resultJsonObject.getJSONObject("content") : null;
+			if (contentJsonObject == null) {
+				return city;
+			}
+			JSONObject addressDetailJsonObject = contentJsonObject.containsKey("address_detail") ? contentJsonObject.getJSONObject("address_detail") : null;
+			if (addressDetailJsonObject == null) {
+				return city;
+			}
+			String cityInResult = addressDetailJsonObject.getString("city");
+			String provinceInResult = addressDetailJsonObject.getString("province");
+			String address = StringUtils.isEmpty(cityInResult) ? provinceInResult : cityInResult;
 			if (!StringUtils.isEmpty(address)) {
-				return address;
+				city = address;
 			}
 		} catch (Exception e) {
 			logger.error("get city failed for ip : " + ip, e);
 		}
-		return "来自星星的";
+		return city;
 	}
 	
 }
