@@ -1,14 +1,13 @@
 package com.zuoxiaolong.api;
 
+import com.zuoxiaolong.config.Configuration;
+import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
-import net.sf.json.JSONObject;
-
-import org.apache.log4j.Logger;
-
-import com.zuoxiaolong.config.Configuration;
 
 
 /*
@@ -55,11 +54,15 @@ public abstract class HttpApiHelper {
 			if (logger.isInfoEnabled()) {
 				logger.info("baidu-ip-api json : " + json);
 			}
-			return JSONObject.fromObject(json).getJSONObject("content").getJSONObject("address_detail").getString("city");
+			JSONObject addressDetail = JSONObject.fromObject(json).getJSONObject("content").getJSONObject("address_detail");
+			String address = StringUtils.isEmpty(addressDetail.getString("city")) ? addressDetail.getString("province") : addressDetail.getString("city");
+			if (!StringUtils.isEmpty(address)) {
+				return address;
+			}
 		} catch (Exception e) {
 			logger.error("get city failed for ip : " + ip, e);
-			return "来自星星的";
 		}
+		return "来自星星的";
 	}
 	
 }
