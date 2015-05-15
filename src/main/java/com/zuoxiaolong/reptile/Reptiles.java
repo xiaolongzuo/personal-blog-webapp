@@ -2,6 +2,7 @@ package com.zuoxiaolong.reptile;
 
 import org.apache.log4j.Logger;
 
+import com.zuoxiaolong.config.Configuration;
 import com.zuoxiaolong.freemarker.Generators;
 
 /*
@@ -33,6 +34,8 @@ public abstract class Reptiles {
 	static class CnblogsThread extends Thread {
 
 		private static final Logger logger = Logger.getLogger(CnblogsThread.class);
+		
+		private static final int THREAD_SLEEP_MINUTES = Integer.valueOf(Configuration.get("thread.sleep.minutes"));
 
 		@Override
 		public void run() {
@@ -40,7 +43,7 @@ public abstract class Reptiles {
 				try {
 					Cnblogs.fetchArticles();
 					Generators.generate();
-					Thread.sleep(1000 * 60 * 11);
+					Thread.sleep(1000 * 60 * THREAD_SLEEP_MINUTES);
 				} catch (Exception e) {
 					logger.warn("fetch and generate failed ...", e);
 					break;
