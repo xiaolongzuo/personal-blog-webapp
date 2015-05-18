@@ -1,5 +1,6 @@
 package com.zuoxiaolong.util;
 
+import com.zuoxiaolong.cache.CacheManager;
 import com.zuoxiaolong.config.Configuration;
 
 import java.io.File;
@@ -32,18 +33,17 @@ public abstract class ImageUtil {
 
     private static final String BASE_PATH = "resources/img/";
 
-    private static List<String> articleImages;
-
     public static void loadArticleImages (){
-        articleImages = getAllActicleImages();
+        CacheManager.getConcurrentHashMapCache().set("articleImages",getAllActicleImages());
     }
 
     public static String randomArticleImage() {
+        List<String> articleImages = (List<String>) CacheManager.getConcurrentHashMapCache().get("articleImages");
         return articleImages.get(new Random().nextInt(articleImages.size()));
     }
 
     static {
-        articleImages = getAllActicleImages();
+        loadArticleImages();
     }
 
     private static List<String> getAllActicleImages() {

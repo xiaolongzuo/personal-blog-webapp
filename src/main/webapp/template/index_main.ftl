@@ -9,7 +9,7 @@
     </h2>
 <#if articles??>
     <#list articles as article>
-        <#if article_index gt 5>
+        <#if article_index gt 4>
             <#break />
         </#if>
         <div class="blogs">

@@ -11,7 +11,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.zuoxiaolong.cache.Caches;
+import com.zuoxiaolong.cache.CacheManager;
 import com.zuoxiaolong.servlet.BaseServlet;
 
 /*
@@ -42,7 +42,7 @@ public class IpFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         String visitorIp = BaseServlet.getVisitorIp((HttpServletRequest) servletRequest);
-        if (Caches.getConcurrentHashMapCache().get(visitorIp) != null) {
+        if (CacheManager.getConcurrentHashMapCache().get(visitorIp) != null) {
             ((HttpServletResponse)servletResponse).sendError(HttpServletResponse.SC_FORBIDDEN);
             return ;
         }

@@ -20,7 +20,7 @@ package com.zuoxiaolong.cache;
  * @author 左潇龙
  * @since 5/15/2015 5:19 PM
  */
-public abstract class Caches {
+public abstract class CacheManager {
 
     private static final ConcurrentHashMapCache CONCURRENT_HASH_MAP_CACHE = new ConcurrentHashMapCache();
 
