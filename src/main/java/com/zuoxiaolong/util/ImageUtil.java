@@ -1,13 +1,13 @@
 package com.zuoxiaolong.util;
 
-import com.zuoxiaolong.cache.CacheManager;
-import com.zuoxiaolong.config.Configuration;
-
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import com.zuoxiaolong.cache.CacheManager;
+import com.zuoxiaolong.config.Configuration;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -37,7 +37,8 @@ public abstract class ImageUtil {
         CacheManager.getConcurrentHashMapCache().set("articleImages",getAllActicleImages());
     }
 
-    public static String randomArticleImage() {
+    @SuppressWarnings("unchecked")
+	public static String randomArticleImage() {
         List<String> articleImages = (List<String>) CacheManager.getConcurrentHashMapCache().get("articleImages");
         return articleImages.get(new Random().nextInt(articleImages.size()));
     }
