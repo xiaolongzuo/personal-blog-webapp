@@ -7,13 +7,13 @@
                 <tr>
                     <td height="100" align="center" valign="bottom">
                         <span id="good_times_span">${article.good_times?default("0")}</span><br>
-                        <img id="good_times_img" src="../resources/img/bg2.gif"
+                        <img id="good_times_img" src="../resources/img/remark_bg_2.gif"
                              height="${article.good_times_height?default("0")}" border="0" width="20">
                     </td>
                 </tr>
                 <tr>
                     <td height="42" align="center">
-                        <img src="../resources/img/mood1.gif" height="32" border="0" width="32">
+                        <img src="../resources/img/remark_good.gif" height="32" border="0" width="32">
                     </td>
                 </tr>
                 <tr>
@@ -33,13 +33,13 @@
                 <tr>
                     <td height="100" align="center" valign="bottom">
                         <span id="touch_times_span">${article.touch_times?default("0")}</span><br>
-                        <img id="touch_times_img" src="../resources/img/bg2.gif"
+                        <img id="touch_times_img" src="../resources/img/remark_bg_2.gif"
                              height="${article.touch_times_height?default("0")}" border="0" width="20">
                     </td>
                 </tr>
                 <tr>
                     <td height="42" align="center">
-                        <img src="../resources/img/mood2.gif" height="32" border="0" width="32">
+                        <img src="../resources/img/remark_touch.gif" height="32" border="0" width="32">
                     </td>
                 </tr>
                 <tr>
@@ -61,13 +61,13 @@
                 <tr>
                     <td height="100" align="center" valign="bottom">
                         <span id="funny_times_span">${article.funny_times?default("0")}</span><br>
-                        <img id="funny_times_img" src="../resources/img/bg1.gif"
+                        <img id="funny_times_img" src="../resources/img/remark_bg_1.gif"
                              height="${article.funny_times_height?default("0")}" border="0" width="20">
                     </td>
                 </tr>
                 <tr>
                     <td height="42" align="center">
-                        <img src="../resources/img/mood3.gif" height="32" border="0" width="32">
+                        <img src="../resources/img/remark_funny.gif" height="32" border="0" width="32">
                     </td>
                 </tr>
                 <tr>
@@ -89,13 +89,13 @@
                 <tr>
                     <td height="100" align="center" valign="bottom">
                         <span id="happy_times_span">${article.happy_times?default("0")}</span><br>
-                        <img id="happy_times_img" src="../resources/img/bg2.gif"
+                        <img id="happy_times_img" src="../resources/img/remark_bg_2.gif"
                              height="${article.happy_times_height?default("0")}" border="0" width="20">
                     </td>
                 </tr>
                 <tr>
                     <td height="42" align="center">
-                        <img src="../resources/img/mood4.gif" height="32" border="0" width="32">
+                        <img src="../resources/img/remark_happy.gif" height="32" border="0" width="32">
                     </td>
                 </tr>
                 <tr>
@@ -117,13 +117,13 @@
                 <tr>
                     <td height="100" align="center" valign="bottom">
                         <span id="anger_times_span">${article.anger_times?default("0")}</span><br>
-                        <img id="anger_times_img" src="../resources/img/bg1.gif"
+                        <img id="anger_times_img" src="../resources/img/remark_bg_1.gif"
                              height="${article.anger_times_height?default("0")}" border="0" width="20">
                     </td>
                 </tr>
                 <tr>
                     <td height="42" align="center">
-                        <img src="../resources/img/mood5.gif" height="32" border="0" width="32">
+                        <img src="../resources/img/remark_anger.gif" height="32" border="0" width="32">
                     </td>
                 </tr>
                 <tr>
@@ -145,13 +145,13 @@
                 <tr>
                     <td height="100" align="center" valign="bottom">
                         <span id="bored_times_span">${article.bored_times?default("0")}</span><br>
-                        <img id="bored_times_img" src="../resources/img/bg1.gif"
+                        <img id="bored_times_img" src="../resources/img/remark_bg_1.gif"
                              height="${article.bored_times_height?default("0")}" border="0" width="20">
                     </td>
                 </tr>
                 <tr>
                     <td height="42" align="center">
-                        <img src="../resources/img/mood6.gif" height="32" border="0" width="32">
+                        <img src="../resources/img/remark_bored.gif" height="32" border="0" width="32">
                     </td>
                 </tr>
                 <tr>
@@ -173,13 +173,13 @@
                 <tr>
                     <td height="100" align="center" valign="bottom">
                         <span id="water_times_span">${article.water_times?default("0")}</span><br>
-                        <img id="water_times_img" src="../resources/img/bg1.gif"
+                        <img id="water_times_img" src="../resources/img/remark_bg_1.gif"
                              height="${article.water_times_height?default("0")}" border="0" width="20">
                     </td>
                 </tr>
                 <tr>
                     <td height="42" align="center">
-                        <img src="../resources/img/mood7.gif" height="32" border="0" width="32">
+                        <img src="../resources/img/remark_water.gif" height="32" border="0" width="32">
                     </td>
                 </tr>
                 <tr>
@@ -199,13 +199,13 @@
                 <tr>
                     <td height="100" align="center" valign="bottom">
                         <span id="surprise_times_span">${article.surprise_times?default("0")}</span><br>
-                        <img id="surprise_times_img" src="../resources/img/bg1.gif"
+                        <img id="surprise_times_img" src="../resources/img/remark_bg_1.gif"
                              height="${article.surprise_times_height?default("0")}" border="0" width="20">
                     </td>
                 </tr>
                 <tr>
                     <td height="42" align="center">
-                        <img src="../resources/img/mood8.gif" height="32" border="0" width="32">
+                        <img src="../resources/img/remark_surprise.gif" height="32" border="0" width="32">
                     </td>
                 </tr>
                 <tr>

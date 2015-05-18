@@ -1,5 +1,5 @@
 <header>
-    <div class="logo f_l"><a href="/"><img src="resources/img/logo.gif"></a></div>
+    <div class="logo f_l"><a href="/"><img src="resources/img/header_logo.gif"></a></div>
     <nav id="topnav" class="f_r">
         <ul>
             <a id="topnav_current" href="/">首页</a>

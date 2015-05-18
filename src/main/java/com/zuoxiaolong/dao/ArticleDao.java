@@ -1,10 +1,8 @@
 package com.zuoxiaolong.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import com.zuoxiaolong.util.ImageUtil;
+
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,7 +42,7 @@ public abstract class ArticleDao extends BaseDao {
 				String selectSql = "select id from articles where resource_id=?";
 				String insertSql = "insert into articles (resource_id,username,icon,create_date," +
                 "access_times,good_times,subject,html,content) values (?,?,?,?,?,?,?,?,?)";
-				String updateSql = "update articles set subject=?,html=?,content=? where resource_id=?";
+				String updateSql = "update articles set subject=?,html=?,content=?,icon=? where resource_id=?";
 				try {
 					PreparedStatement statement = connection.prepareStatement(selectSql);
 					statement.setString(1, resourceId);
@@ -54,7 +52,7 @@ public abstract class ArticleDao extends BaseDao {
 						saveOrUpdate = connection.prepareStatement(insertSql);
 						saveOrUpdate.setString(1, resourceId);
 						saveOrUpdate.setString(2, username);
-						saveOrUpdate.setString(3, "resources/img/article.jpg");
+						saveOrUpdate.setString(3, ImageUtil.randomArticleImage());
 						saveOrUpdate.setString(4, createDate);
 						saveOrUpdate.setInt(5, accessTimes);
 						saveOrUpdate.setInt(6, goodTimes);
@@ -66,7 +64,8 @@ public abstract class ArticleDao extends BaseDao {
 						saveOrUpdate.setString(1, subject);
 						saveOrUpdate.setString(2, html);
 						saveOrUpdate.setString(3, content);
-						saveOrUpdate.setString(4, resourceId);
+						saveOrUpdate.setString(4, ImageUtil.randomArticleImage());
+                        saveOrUpdate.setString(5, resourceId);
 					}
 					int result = saveOrUpdate.executeUpdate();
 					return result > 0;

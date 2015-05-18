@@ -1,15 +1,15 @@
 @charset "UTF-8";
-/* �õ�Ƭ */
+/* 滑动图片 */
 .banner { height : 280px; width : 670px; overflow : hidden; }
 #slide-runner { height : 280px; width : 670px; overflow : hidden; position : absolute; }
 #slide-holder img { position : absolute; }
-#slide-controls { left : 0; bottom : 0px; width : 670px; height : 34px; display : none; position : absolute; background : url(../img/slide-bg.png) 0 0; }
+#slide-controls { left : 0; bottom : 0px; width : 670px; height : 34px; display : none; position : absolute; background : url(../img/slide-bottom_bg.png) 0 0; }
 #slide-controls p.text { float : left; color : #fff; display : inline; line-height : 16px; margin : 10px 0 0 20px; }
 #slide-controls p#slide-nav { float : right; height : 24px; display : inline; margin : 5px 0px 0 0; }
 #slide-controls p#slide-nav a { float : left; width : 24px; height : 24px; display : inline; font-size : 11px; margin : 0 5px 0 0; line-height : 24px; text-align : center; color: #fff }
 #slide-controls p#slide-nav a.on { background-position : 0 -24px; }
-#slide-controls p#slide-nav a { background-image : url(../img/silde-nav.png); }
-/*�������б�*/
+#slide-controls p#slide-nav a { background-image : url(../img/silde-bottom_nav.png); }
+/* */
 .topnews { margin: 20px 0; }
 .topnews h2 { font-size: 16px; font-weight: bold; line-height: 36px; color: #333; border-bottom: #db6d4c 4px solid; }
 .topnews h2 b { }
@@ -28,24 +28,25 @@
 .autor span { margin: 0 10px 0 0; padding-left: 20px }
 .autor span a { color: #759b08; }
 .autor span a:hover { text-decoration: underline }
-.lm { background: url(../img/newsbg01.png) no-repeat left center }
-.dtime { background: url(../img/newsbg02.png) no-repeat left center }
-.viewnum { background: url(../img/newsbg04.png) no-repeat left center }
-.pingl { background: url(../img/newsbg03.png) no-repeat left center }
+.lm { background: url(../img/bg_author.png) no-repeat left center }
+.dtime { background: url(../img/bg_time.png) no-repeat left center }
+.viewnum { background: url(../img/bg_look.png) no-repeat left center }
+.pingl { background: url(../img/bg_comment.png) no-repeat left center }
 .tit01 h3 { line-height: 40px; color: #38485A; font-size: 18px; border-bottom: 1px solid #E6E6E6; height: 40px }
-/* ��ע����ʽ */
+/* 右侧关注我 */
+.info {margin: 25px 0px 0px 0px;}
 .gzwm ul { width: 100%; margin: 30px 0; overflow: hidden }
 .gzwm li { width: 52px; margin: 0 18px 0 5px; float: left; }
 .gzwm li a { color: #747F8C; width: 52px; text-align: center; padding-top: 60px; float: left; }
-.gzwm .rss { background: url(../img/ico_04_1.jpg) no-repeat scroll 0% 0% transparent; }
-.gzwm .rss:hover { color: #000; background: url(../img/ico_04.png) no-repeat scroll 0% 0% transparent; }
-.gzwm .xlwb { background: url(../img/ico_05_1.jpg) no-repeat scroll 0% 0% transparent; }
-.gzwm .xlwb:hover { color: #000; background: url(../img/ico_05.png) no-repeat scroll 0% 0% transparent; }
-.gzwm .txwb { background: url(../img/ico_06_1.jpg) no-repeat scroll 0% 0% transparent; }
-.gzwm .txwb:hover { color: #000; background: url(../img/ico_06.png) no-repeat scroll 0% 0% transparent; }
-.gzwm .wx { background: url(../img/ico_07_1.jpg) no-repeat scroll 0% 0% transparent; }
-.gzwm .wx:hover { color: #000; background: url(../img/ico_07.png) no-repeat scroll 0% 0% transparent; }
-/*ͼ���б�*/
+.gzwm .rss { background: url(../img/right_info_ico_1_black.jpg) no-repeat scroll 0% 0% transparent; }
+.gzwm .rss:hover { color: #000; background: url(../img/right_info_ico_1.png) no-repeat scroll 0% 0% transparent; }
+.gzwm .xlwb { background: url(../img/right_info_ico_2_black.jpg) no-repeat scroll 0% 0% transparent; }
+.gzwm .xlwb:hover { color: #000; background: url(../img/right_info_ico_2.png) no-repeat scroll 0% 0% transparent; }
+.gzwm .txwb { background: url(../img/right_info_ico_3_black.jpg) no-repeat scroll 0% 0% transparent; }
+.gzwm .txwb:hover { color: #000; background: url(../img/right_info_ico_3.png) no-repeat scroll 0% 0% transparent; }
+.gzwm .wx { background: url(../img/right_info_ico_4_black.jpg) no-repeat scroll 0% 0% transparent; }
+.gzwm .wx:hover { color: #000; background: url(../img/right_info_ico_4.png) no-repeat scroll 0% 0% transparent; }
+/* 右侧图文 */
 .tuwen { width: 100%; clear: both; overflow: hidden; margin: 20px 0 }
 .tuwen h3 { line-height: 40px; color: #38485A; font-size: 18px; border-bottom: 1px solid #E6E6E6; height: 40px; margin-bottom: 30px }
 .tuwen li { overflow: hidden; clear: both; margin-bottom: 10px }
@@ -54,15 +55,15 @@
 .tuwen li a b:hover { text-decoration: underline; color: #F60 }
 .tuwen li span { color: #999; margin-right: 10px }
 .tuwen p { margin-top: 5px }
-.tulanmu { background: url(../img/lanmbq.png) no-repeat center left; padding-left: 17px }
+.tulanmu { background: url(../img/right_tuwen_bg_author.png) no-repeat center left; padding-left: 17px }
 .tulanmu a { color: #999; }
 .tulanmu a:hover { color: #066 }
-.tutime { background: url(../img/datepng.png) no-repeat left center; padding-left: 15px }
+.tutime { background: url(../img/right_tuwen_bg_time.png) no-repeat left center; padding-left: 15px }
 .tuwen li:hover { background: #f4f3f3 }
-/*��ҳ�Ҳ��� 300*/
+/* 300*/
 .ad { width: 300px; overflow: hidden; margin: 30px 0 }
 .ad img { width: 300px; }
-/*��������*/
+/* 链接模块*/
 .links { width: 100%; overflow: hidden; clear: both }
 .links h3 { line-height: 40px; color: #38485A; font-size: 18px; border-bottom: 1px solid #E6E6E6; height: 40px; margin-bottom: 20px }
 .links h3 span { float: right; font-size: 12px; }

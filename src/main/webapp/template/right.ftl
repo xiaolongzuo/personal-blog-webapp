@@ -2,18 +2,22 @@
     <!-- 关注模块 -->
     <div class="tit01">
         <h3>关注我</h3>
+        <div class="info">
+            个人的技术交流QQ群：300638185
+        </div>
         <div class="gzwm">
             <ul>
-                <li><a class="xlwb" href="#">新浪微博</a></li>
-                <li><a class="txwb" href="#">腾讯微博</a></li>
-                <li><a class="rss" href="#">RSS</a></li>
-                <li><a class="wx" href="#">邮箱</a></li>
+                <li><a class="txwb" href="http://t.qq.com/zuoxiaolong1988" target="_blank">腾讯微博</a></li>
+                <li><a class="rss" href="https://github.com/xiaolongzuo" target="_blank">Github</a></li>
             </ul>
         </div>
     </div>
 
+    <!-- 宣传图片
+    <div class="ad300x100"><img src="resources/img/right_xuanchuan.jpg"></div>
+    -->
+
     <!-- 排行榜模块 -->
-    <div class="ad300x100"><img src="resources/img/ad300x100.jpg"></div>
     <div class="moreSelect" id="lp_right_select">
         <!-- 排行榜切换 -->
         <script>
@@ -106,8 +110,11 @@
         </ul>
     </div>
 
-    <!-- 链接模块 -->
+    <!-- 宣传图片
     <div class="ad"><img src="resources/img/03.jpg"></div>
+    -->
+
+    <!-- 链接模块 -->
     <div class="links">
         <h3><span>[<a href="#">申请友情链接</a>]</span>友情链接</h3>
         <ul>
