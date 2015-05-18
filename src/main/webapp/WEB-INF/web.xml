@@ -43,6 +43,16 @@
         <servlet-class>com.zuoxiaolong.servlet.Comment</servlet-class>
     </servlet>
     
+    <servlet>
+        <servlet-name>heroFinder</servlet-name>
+        <servlet-class>com.zuoxiaolong.servlet.HeroFinder</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>saveMatch</servlet-name>
+        <servlet-class>com.zuoxiaolong.servlet.SaveMatch</servlet-class>
+    </servlet>
+    
     <servlet-mapping>
         <servlet-name>counter</servlet-name>
         <url-pattern>/counter.do</url-pattern>
@@ -51,6 +61,16 @@
     <servlet-mapping>
     	<servlet-name>comment</servlet-name>
     	<url-pattern>/comment.do</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+    	<servlet-name>heroFinder</servlet-name>
+    	<url-pattern>/heroFinder.do</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+    	<servlet-name>saveMatch</servlet-name>
+    	<url-pattern>/saveMatch.do</url-pattern>
     </servlet-mapping>
     
     <listener>
