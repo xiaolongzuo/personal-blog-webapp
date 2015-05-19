@@ -102,7 +102,7 @@
 </head>
 <body>
 <div style="margin: 20px">
-	<span><a href="/jsp/match_input.jsp" style="color: blue">我要为晓风贡献力量，记录我的对战结果</a>（PS:为保证结果的正确性，请只录入JJC的对战结果，不要录入巅峰的。）</span><br/>
+	<span><a href="/jsp/match_input.jsp" style="color: blue">我要为晓风贡献力量，记录我的对战结果</a>（PS:为保证结果的正确性，请只录入JJC的对战结果，不要录入巅峰的）</span><br/>
 </div>
 <div style="margin: 20px">
 	请填写要破解的阵容:
