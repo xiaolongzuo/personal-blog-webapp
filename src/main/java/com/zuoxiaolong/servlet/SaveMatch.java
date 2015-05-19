@@ -51,6 +51,10 @@ public class SaveMatch extends BaseServlet {
 		if (countString != null && countString.trim().length() > 0) {
 			try {
 				count = Integer.valueOf(countString);
+				if (count > 10) {
+					writeText(response, "对战场数一次性录入不能超过10场！");
+					return;
+				}
 			} catch (Exception e) {
 				writeText(response, "对战场数必须为数字！");
 				return;
