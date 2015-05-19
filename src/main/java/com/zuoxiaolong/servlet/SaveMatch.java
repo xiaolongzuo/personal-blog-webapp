@@ -20,16 +20,18 @@
  */
 package com.zuoxiaolong.servlet;
 
-import com.zuoxiaolong.dao.HeroDao;
-import com.zuoxiaolong.dao.MatchDao;
-import net.sf.json.JSONArray;
+import java.io.IOException;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.SortedSet;
-import java.util.TreeSet;
+
+import net.sf.json.JSONArray;
+
+import com.zuoxiaolong.dao.HeroDao;
+import com.zuoxiaolong.dao.MatchDao;
 
 /**
  * @author zuoxiaolong
@@ -48,8 +50,8 @@ public class SaveMatch extends BaseServlet {
 			writeText(response, "请填满十个英雄！");
 			return;
 		}
-		SortedSet aSet = new TreeSet<>();
-		SortedSet dSet = new TreeSet<>();
+		SortedSet<String> aSet = new TreeSet<>();
+		SortedSet<String> dSet = new TreeSet<>();
 		for (int i = 0 ; i < a.length && i < d.length;i++) {
 			if (a[i].trim().length() == 0) {
 				writeText(response, "进攻方第" + (i + 1) + "位英雄为空");

@@ -1,7 +1,7 @@
 insert into hero (full_name) values ('天怒法师');
 insert into hero (full_name) values ('兽王');
 insert into hero (full_name) values ('赏金猎人');
-insert into hero (full_name) values ('仙龙女');
+insert into hero (full_name) values ('仙女龙');
 insert into hero (full_name) values ('吸血鬼');
 insert into hero (full_name) values ('军团指挥');
 insert into hero (full_name) values ('炸弹人');

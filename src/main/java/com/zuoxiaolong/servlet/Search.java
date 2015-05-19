@@ -20,15 +20,22 @@
  */
 package com.zuoxiaolong.servlet;
 
-import com.zuoxiaolong.dao.HeroDao;
-import com.zuoxiaolong.dao.MatchDao;
-import net.sf.json.JSONArray;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.*;
+
+import net.sf.json.JSONArray;
+
+import com.zuoxiaolong.dao.HeroDao;
+import com.zuoxiaolong.dao.MatchDao;
 
 /**
  * @author zuoxiaolong
@@ -45,7 +52,7 @@ public class Search extends BaseServlet {
 			writeText(response, "请填满五个英雄！");
 			return;
 		}
-		SortedSet hSet = new TreeSet<>();
+		SortedSet<String> hSet = new TreeSet<>();
 		for (int i = 0 ; i < h.length;i++) {
 			if (h[i].trim().length() == 0) {
 				writeText(response, "第" + (i + 1) + "位英雄为空");
