@@ -48,7 +48,7 @@ public class SaveMatch extends BaseServlet {
 		Integer result = Integer.valueOf(request.getParameter("result"));
 		Integer count = null;
 		String countString = request.getParameter("count");
-		if (countString != null ) {
+		if (countString != null && countString.trim().length() > 0) {
 			try {
 				count = Integer.valueOf(countString);
 			} catch (Exception e) {
