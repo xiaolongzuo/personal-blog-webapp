@@ -52,6 +52,10 @@
 									}
 								}
 								key = key + "]";
+								if(i == 0 && totalMap[key][0] == 0) {
+									alert("该阵容目前没有破解方式，请大家努力录入对战结果才会有哦！");
+									return;
+								}
 								$("#showTable").html('<tr id="tableHead"> <th width="200">阵容</th> <th>总胜率</th> <th>进攻胜率</th> <th>防守胜率</th>' +
 								' <th>总场数</th> <th>总胜利数</th> <th>总失败数</th> <th>进攻场数</th> <th>进攻胜利数</th> <th>进攻失败数</th> <th>防守场数</th>' +
 								' <th>防守胜利数</th> <th>防守失败数</th> </tr>');
@@ -94,7 +98,7 @@
 						} else if (data && !data.orderList) {
 							alert(data);
 						} else {
-							alert("该阵容目前没有查询结果，请大家努力录入对战结果才会有哦！");
+							alert("该阵容目前没有破解方式，请大家努力录入对战结果才会有哦！");
 						}
 					}
 				});
@@ -134,7 +138,7 @@
 </div>
 <table id="showTable" cellpadding="0" border="0" align="center" width="1200">
 	<tr id="tableHead">
-		<th width="200">破解阵容</th>
+		<th width="200">推荐阵容</th>
 		<th>总胜率</th>
 		<th>进攻胜率</th>
 		<th>防守胜率</th>
