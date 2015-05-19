@@ -25,7 +25,7 @@
     		},
     		success:function(data){
     			if(data && data == 'success') {
-					alert("感谢你对公会的贡献，你输入的数据将被其它人使用。");
+					alert("感谢你对公会的贡献，你输入的数据将会为公会贡献一份力量。");
     				window.location.href="/jsp/dota_index.jsp";
     			} else {
 					alert(data);
