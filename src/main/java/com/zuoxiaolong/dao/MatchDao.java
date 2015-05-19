@@ -26,6 +26,24 @@ import java.util.Map;
  */
 public abstract class MatchDao extends BaseDao {
 
+    public static int count() {
+        return execute(new Operation<Integer>() {
+            @Override
+            public Integer doInConnection(Connection connection) {
+                try {
+                    Statement statement = connection.createStatement();
+                    ResultSet resultSet = statement.executeQuery("select count(id) from matches");
+                    if (resultSet.next()) {
+                        return resultSet.getInt(1);
+                    }
+                } catch (SQLException e) {
+                    error("query matches failed ..." , e);
+                }
+                return 0;
+            }
+        });
+    }
+
     public static List<Map<String,String>> findMatchesResult(String h) {
         return execute(new Operation<List<Map<String,String>>>() {
             @Override

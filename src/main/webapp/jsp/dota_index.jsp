@@ -16,6 +16,20 @@
 			$(".heroInput").autocomplete({
 				source: "/heroFinder.do"
 			});
+			$.ajax({
+				url:"/matchCount.do",
+				type:"POST",
+				success:function(data) {
+					if(data && !isNaN(data)) {
+						$("#matchSize").html(data);
+					} else {
+						$("#infoSpan").html("真是抱歉，获取系统信息失败了，你可以尝试刷新页面或者联系男神来帮你解决！");
+					}
+				},
+				error:function() {
+					$("#infoSpan").html("真是抱歉，获取系统信息失败了，你可以尝试刷新页面或者联系男神来帮你解决！");
+				}
+			});
 			$("#searchButton").click(function(){
 				$.ajax({
 					url:"/search.do",
@@ -104,20 +118,23 @@
 </head>
 <body>
 <div style="margin: 20px">
-	<span><a href="/jsp/match_input.jsp" style="color: blue">我要为晓风贡献力量，记录我的对战结果</a>（PS:为保证结果的正确性，请只录入JJC的对战结果，不要录入巅峰的）</span><br/>
+	<span id="infoSpan" style="color: red;">当前数据库当中共保存了<span id="matchSize" style="color: red;"></span>场对战结果，加油！</span><br/>
 </div>
 <div style="margin: 20px">
-	请填写要破解的阵容:
+	<span>为晓风贡献力量，记录自己的对战结果，请点击<a href="/jsp/match_input.jsp" style="color: blue;text-decoration: underline;">&nbsp;这里&nbsp;</a>（PS:为保证结果的正确性，请只录入JJC的对战结果，不要录入巅峰的）</span><br/>
+</div>
+<div style="margin: 20px">
+	待破解的阵容：
 		<input id="h1" class="heroInput" type="text"/>
 		<input id="h2" class="heroInput" type="text"/>
 		<input id="h3" class="heroInput" type="text"/>
 		<input id="h4" class="heroInput" type="text"/>
 		<input id="h5" class="heroInput" type="text"/>
-		<input style="padding: 0px;width: 200px; line-height: 20px;" id="searchButton" type="button" value="我要查询JJC阵容破法"/>
+		<input style="padding: 0px;width: 200px; line-height: 20px;" id="searchButton" type="button" value="我要破解"/>
 </div>
 <table id="showTable" cellpadding="0" border="0" align="center" width="1200">
 	<tr id="tableHead">
-		<th width="200">阵容</th>
+		<th width="200">破解阵容</th>
 		<th>总胜率</th>
 		<th>进攻胜率</th>
 		<th>防守胜率</th>
