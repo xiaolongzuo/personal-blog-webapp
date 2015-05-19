@@ -29,6 +29,11 @@
     </filter-mapping>
 
     <filter-mapping>
+        <filter-name>accessLog</filter-name>
+        <url-pattern>*.jsp</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
         <filter-name>ip</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
@@ -52,6 +57,16 @@
         <servlet-name>saveMatch</servlet-name>
         <servlet-class>com.zuoxiaolong.servlet.SaveMatch</servlet-class>
     </servlet>
+
+    <servlet>
+        <servlet-name>search</servlet-name>
+        <servlet-class>com.zuoxiaolong.servlet.Search</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>matchCount</servlet-name>
+        <servlet-class>com.zuoxiaolong.servlet.MatchCount</servlet-class>
+    </servlet>
     
     <servlet-mapping>
         <servlet-name>counter</servlet-name>
@@ -71,6 +86,16 @@
     <servlet-mapping>
     	<servlet-name>saveMatch</servlet-name>
     	<url-pattern>/saveMatch.do</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>search</servlet-name>
+        <url-pattern>/search.do</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>matchCount</servlet-name>
+        <url-pattern>/matchCount.do</url-pattern>
     </servlet-mapping>
     
     <listener>

@@ -20,17 +20,13 @@
  */
 package com.zuoxiaolong.servlet;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
+import com.zuoxiaolong.dao.HeroDao;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import net.sf.json.JSONArray;
-
-import com.zuoxiaolong.dao.HeroDao;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * @author zuoxiaolong
@@ -49,11 +45,7 @@ public class HeroFinder extends BaseServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String param = request.getParameter("term");
 		List<String> heroList = HeroDao.getList(param);
-		response.setContentType("application/json");
-		response.setCharacterEncoding("UTF-8");
-		PrintWriter writer = response.getWriter();
-		writer.write(JSONArray.fromObject(heroList).toString());
-		writer.flush();
+		writeJsonArray(response, heroList);
 	}
 
 }

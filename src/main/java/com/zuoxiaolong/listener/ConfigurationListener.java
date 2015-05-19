@@ -1,12 +1,11 @@
 package com.zuoxiaolong.listener;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-
-import org.apache.log4j.Logger;
-
 import com.zuoxiaolong.config.Configuration;
 import com.zuoxiaolong.reptile.Reptiles;
+import org.apache.log4j.Logger;
+
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 
 /*
  * Copyright 2002-2015 the original author or authors.

@@ -20,10 +20,7 @@
  */
 package com.zuoxiaolong.dao;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +29,23 @@ import java.util.List;
  *
  */
 public abstract class HeroDao extends BaseDao {
+
+	public static Boolean exsits(final String fullName) {
+		return execute(new Operation<Boolean>() {
+			@Override
+			public Boolean doInConnection(Connection connection) {
+				try {
+					PreparedStatement statement = connection.prepareStatement("select * from hero where full_name=?");
+					statement.setString(1, fullName);
+					ResultSet resultSet = statement.executeQuery();
+					return resultSet.next();
+				} catch (SQLException e) {
+					error("query hero failed ..." , e);
+				}
+				return false;
+			}
+		});
+	}
 
 	public static List<String> getList(final String param) {
 		return execute(new Operation<List<String>>() {
