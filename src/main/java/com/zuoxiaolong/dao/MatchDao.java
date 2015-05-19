@@ -37,7 +37,7 @@ public abstract class MatchDao extends BaseDao {
             public Integer doInConnection(Connection connection) {
                 try {
                     Statement statement = connection.createStatement();
-                    ResultSet resultSet = statement.executeQuery("select count(id) from matches");
+                    ResultSet resultSet = statement.executeQuery("select sum(count) from matches");
                     if (resultSet.next()) {
                         return resultSet.getInt(1);
                     }
