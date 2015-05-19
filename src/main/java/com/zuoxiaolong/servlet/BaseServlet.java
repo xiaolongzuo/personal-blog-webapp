@@ -20,15 +20,19 @@
  */
 package com.zuoxiaolong.servlet;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import com.zuoxiaolong.dao.BaseDao;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
-
-import org.apache.log4j.Logger;
-
-import com.zuoxiaolong.dao.BaseDao;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.List;
 
 /**
  * @author zuoxiaolong
@@ -69,6 +73,44 @@ public abstract class BaseServlet extends HttpServlet {
 			}
 		}
 		return ipAddress;
+	}
+
+	protected void writeJsonObject(HttpServletResponse response,Object object) {
+		PrintWriter writer = null;
+		try {
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			writer = response.getWriter();
+			writer.write(JSONObject.fromObject(object).toString());
+			writer.flush();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected void writeJsonArray(HttpServletResponse response,List<?> list) {
+		PrintWriter writer = null;
+		try {
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			writer = response.getWriter();
+			writer.write(JSONArray.fromObject(list).toString());
+			writer.flush();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected void writeText(HttpServletResponse response,String text){
+		PrintWriter printWriter = null;
+		try {
+			response.setCharacterEncoding("UTF-8");
+			printWriter = response.getWriter();
+			printWriter.write(text);
+			printWriter.flush();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 }

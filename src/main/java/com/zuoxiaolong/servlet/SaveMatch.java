@@ -20,12 +20,16 @@
  */
 package com.zuoxiaolong.servlet;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import com.zuoxiaolong.dao.HeroDao;
+import com.zuoxiaolong.dao.MatchDao;
+import net.sf.json.JSONArray;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * @author zuoxiaolong
@@ -37,12 +41,54 @@ public class SaveMatch extends BaseServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String a = request.getParameter("a");
-		String d = request.getParameter("d");
+		String[] a = request.getParameter("a").split(",");
+		String[] d = request.getParameter("d").split(",");
 		Integer result = Integer.valueOf(request.getParameter("result"));
-		PrintWriter printWriter = response.getWriter();
-		printWriter.write("success");
-		printWriter.flush();
+		if (a.length != 5 || d.length != 5 ) {
+			writeText(response, "请填满十个英雄！");
+			return;
+		}
+		SortedSet aSet = new TreeSet<>();
+		SortedSet dSet = new TreeSet<>();
+		for (int i = 0 ; i < a.length && i < d.length;i++) {
+			if (a[i].trim().length() == 0) {
+				writeText(response, "进攻方第" + (i + 1) + "位英雄为空");
+				return;
+			}
+			if (d[i].trim().length() == 0) {
+				writeText(response, "防守方第" + (i + 1) + "位英雄为空");
+				return;
+			}
+			if (aSet.contains(a[i])) {
+				writeText(response, "进攻方第" + (i + 1) + "位英雄重复");
+				return;
+			}
+			if (dSet.contains(d[i])) {
+				writeText(response, "防守方第" + (i + 1) + "位英雄重复");
+				return;
+			}
+			if (!HeroDao.exsits(a[i].trim())) {
+				writeText(response, "进攻方第" + (i + 1) + "位英雄在英雄库中没找到，请按照提示输入英雄");
+				return;
+			}
+			if (!HeroDao.exsits(d[i].trim())) {
+				writeText(response, "防守方第" + (i + 1) + "位英雄在英雄库中没找到，请按照提示输入英雄");
+				return;
+			}
+			aSet.add(a[i]);
+			dSet.add(d[i]);
+		}
+		String attack = JSONArray.fromObject(aSet).toString();
+		String defend = JSONArray.fromObject(dSet).toString();
+		if (attack.equals(defend)) {
+			writeText(response, "进攻方和防守方阵容一样，不能进行保存");
+			return;
+		}
+		if (MatchDao.save(attack,defend,result)) {
+			writeText(response, "success");
+		} else {
+			writeText(response, "发生未知错误，请联系男神！");
+		}
 	}
 
 }

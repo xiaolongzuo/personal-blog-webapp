@@ -25,13 +25,24 @@
     		},
     		success:function(data){
     			if(data && data == 'success') {
+					alert("感谢你对公会的贡献，你输入的数据将被其它人使用。");
     				window.location.href="/jsp/dota_index.jsp";
-    			}
+    			} else {
+					alert(data);
+				}
     		}
     	});
     });
   });
 </script>
+	<style type="text/css">
+		.heroInput {
+			height: 20px;
+		}
+		input {
+			margin: 5px;
+		}
+	</style>
 </head>
 <body>
 <div style="margin: 20px">
@@ -46,8 +57,8 @@
 					<input id="d3" class="heroInput" type="text" />
 					<input id="d4" class="heroInput" type="text" />
 					<input id="d5" class="heroInput" type="text" />
-	<br/>胜负: <input type="radio" name="result" checked="checked" value="1"/>胜利   &nbsp;&nbsp;<input type="radio" name="result" value="0"/>失败   &nbsp;&nbsp;
-	<br/><input style="padding: 15px;width: 200px;height: 20px;" id="submitButton" type="button" value="我要保存"/>
+	<br/>胜负: <input type="radio" name="result" checked="checked" value="1"/>进攻胜利   &nbsp;&nbsp;<input type="radio" name="result" value="0"/>进攻失败   &nbsp;&nbsp;
+	<br/><input style="padding: 0px;width: 200px; line-height: 20px;" id="submitButton" type="button" value="我要保存"/>
 	</form>
 </div>
 </body>

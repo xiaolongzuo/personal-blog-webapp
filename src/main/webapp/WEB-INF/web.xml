@@ -52,6 +52,11 @@
         <servlet-name>saveMatch</servlet-name>
         <servlet-class>com.zuoxiaolong.servlet.SaveMatch</servlet-class>
     </servlet>
+
+    <servlet>
+        <servlet-name>search</servlet-name>
+        <servlet-class>com.zuoxiaolong.servlet.Search</servlet-class>
+    </servlet>
     
     <servlet-mapping>
         <servlet-name>counter</servlet-name>
@@ -71,6 +76,11 @@
     <servlet-mapping>
     	<servlet-name>saveMatch</servlet-name>
     	<url-pattern>/saveMatch.do</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>search</servlet-name>
+        <url-pattern>/search.do</url-pattern>
     </servlet-mapping>
     
     <listener>
