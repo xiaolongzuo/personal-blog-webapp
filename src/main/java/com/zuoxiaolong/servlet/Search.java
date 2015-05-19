@@ -75,54 +75,43 @@ public class Search extends BaseServlet {
 		Map<String, int[]> defendMap = new HashMap<>();
 		for (Map<String,String> match : matches) {
 			String battle = null;
-			boolean isAttack = false;
+			Boolean isAttack = null;
+			Map<String, int[]> currentMap = null;
 			if (match.get("attack").equals(hero)) {
 				//目前计算阵容为防守
 				battle = match.get("defend");
+				currentMap = defendMap;
+				isAttack = false;
 			} else {
 				//目前计算阵容为进攻
 				battle = match.get("attack");
+				currentMap = attackMap;
 				isAttack = true;
 			}
-
 			int[] totalResult = totalMap.get(battle);
+			int[] currentResult = currentMap.get(battle);
+			//0:胜率。1:总场数。2:胜利场数。3:失败场数。
 			if (totalResult == null ) {
 				totalResult = new int[4];
 			}
-			totalResult[1]++;
-			if (!isAttack) {
-				//目前计算阵容为防守
-				int[] result = defendMap.get(battle);
-				if (result == null ) {
-					result = new int[4];
-				}
-				result[1]++;
-				if (match.get("result").equals("1")) {
-					result[3]++;
-					totalResult[3]++;
-				} else {
-					result[2]++;
-					totalResult[2]++;
-				}
-				result[0] = result[2] * 100 / result[1];
-				defendMap.put(battle, result);
-			} else {
-				//目前计算阵容为进攻
-				int[] result = attackMap.get(battle);
-				if (result == null ) {
-					result = new int[4];
-				}
-				result[1]++;
-				if (match.get("result").equals("1")) {
-					result[2]++;
-					totalResult[2]++;
-				} else {
-					result[3]++;
-					totalResult[3]++;
-				}
-				result[0] = result[2] * 100 / result[1];
-				attackMap.put(battle, result);
+			if (currentResult == null ) {
+				currentResult = new int[4];
 			}
+			Integer count = Integer.valueOf(match.get("count"));
+			Integer result = Integer.valueOf(match.get("result"));
+			
+			totalResult[1] += count;
+			currentResult[1] += count;
+			//如果是进攻方，并且进攻方胜利。或者是防守方，并且防守方胜利。则给胜利场数增加，否则给失败场数增加。
+			if ((isAttack && result == 1) || (!isAttack && result == 0)) {
+				currentResult[2] += count;
+				totalResult[2] += count;
+			} else {
+				currentResult[3] += count;
+				totalResult[3] += count;
+			}
+			currentResult[0] = currentResult[2] * 100 / currentResult[1];
+			currentMap.put(battle, currentResult);
 			totalResult[0] = totalResult[2] * 100 / totalResult[1];
 			totalMap.put(battle, totalResult);
 		}

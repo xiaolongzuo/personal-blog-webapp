@@ -46,6 +46,16 @@ public class SaveMatch extends BaseServlet {
 		String[] a = request.getParameter("a").split(",");
 		String[] d = request.getParameter("d").split(",");
 		Integer result = Integer.valueOf(request.getParameter("result"));
+		Integer count = null;
+		String countString = request.getParameter("count");
+		if (countString != null ) {
+			try {
+				count = Integer.valueOf(countString);
+			} catch (Exception e) {
+				writeText(response, "对战场数必须为数字！");
+				return;
+			}
+		}
 		if (a.length != 5 || d.length != 5 ) {
 			writeText(response, "请填满十个英雄！");
 			return;
@@ -54,23 +64,23 @@ public class SaveMatch extends BaseServlet {
 		SortedSet<String> dSet = new TreeSet<>();
 		for (int i = 0 ; i < a.length && i < d.length;i++) {
 			if (a[i].trim().length() == 0) {
-				writeText(response, "进攻方第" + (i + 1) + "位英雄为空");
+				writeText(response, "进攻方第" + (i + 1) + "位英雄为空！");
 				return;
 			}
 			if (d[i].trim().length() == 0) {
-				writeText(response, "防守方第" + (i + 1) + "位英雄为空");
+				writeText(response, "防守方第" + (i + 1) + "位英雄为空！");
 				return;
 			}
 			if (aSet.contains(a[i])) {
-				writeText(response, "进攻方第" + (i + 1) + "位英雄重复");
+				writeText(response, "进攻方第" + (i + 1) + "位英雄重复！");
 				return;
 			}
 			if (dSet.contains(d[i])) {
-				writeText(response, "防守方第" + (i + 1) + "位英雄重复");
+				writeText(response, "防守方第" + (i + 1) + "位英雄重复！");
 				return;
 			}
 			if (!HeroDao.exsits(a[i].trim())) {
-				writeText(response, "进攻方第" + (i + 1) + "位英雄在英雄库中没找到，请按照提示输入英雄");
+				writeText(response, "进攻方第" + (i + 1) + "位英雄在英雄库中没找到，请按照提示输入英雄！");
 				return;
 			}
 			if (!HeroDao.exsits(d[i].trim())) {
@@ -83,10 +93,10 @@ public class SaveMatch extends BaseServlet {
 		String attack = JSONArray.fromObject(aSet).toString();
 		String defend = JSONArray.fromObject(dSet).toString();
 		if (attack.equals(defend)) {
-			writeText(response, "进攻方和防守方阵容一样，不能进行保存");
+			writeText(response, "进攻方和防守方阵容一样，不能进行保存！");
 			return;
 		}
-		if (MatchDao.save(attack,defend,result)) {
+		if (MatchDao.save(attack,defend,result,count)) {
 			writeText(response, "success");
 		} else {
 			writeText(response, "发生未知错误，请联系男神！");

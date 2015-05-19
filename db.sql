@@ -78,3 +78,6 @@ create table hero (
 	aliases VARCHAR(200),
 	primary key (full_name)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+alter table matches add count int(11) default 1;
+alter table matches add record_date timestamp default '0000-00-00 00:00:00';
