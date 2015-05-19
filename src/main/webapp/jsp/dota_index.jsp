@@ -77,8 +77,10 @@
 								}
 								$("#showTable").append('</tr>');
 							}
+						} else if (data && !data.orderList) {
+							alert(data);
 						} else {
-							alert("该阵容目前还没有查询结果！");
+							alert("该阵容目前没有查询结果，请大家努力录入对战结果才会有哦！");
 						}
 					}
 				});
