@@ -22,7 +22,7 @@
 					type:"POST",
 					data:{"h":$("#h1").val() + "," + $("#h2").val() + "," + $("#h3").val() + "," + $("#h4").val() + "," + $("#h5").val()},
 					success:function(data){
-						if(data && data.orderList && data.totalMap && data.attackMap && data.defendMap) {
+						if(data && data.orderList && data.orderList.length > 0 && data.totalMap && data.attackMap && data.defendMap) {
 							var orderList = data.orderList;
 							var totalMap = data.totalMap;
 							var attackMap = data.attackMap;
@@ -102,7 +102,7 @@
 </head>
 <body>
 <div style="margin: 20px">
-	<a href="/jsp/match_input.jsp" style="color: blue">我要为晓风贡献力量，记录我的对战结果</a><br/>
+	<span><a href="/jsp/match_input.jsp" style="color: blue">我要为晓风贡献力量，记录我的对战结果</a>（PS:为保证结果的正确性，请只录入JJC的对战结果，不要录入巅峰的。）</span><br/>
 </div>
 <div style="margin: 20px">
 	请填写要破解的阵容:
