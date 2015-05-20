@@ -20,7 +20,10 @@
  */
 package com.zuoxiaolong.dao;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,8 +56,10 @@ public abstract class HeroDao extends BaseDao {
 			public List<String> doInConnection(Connection connection) {
 				List<String> result = new ArrayList<String>();
 				try {
-					Statement statement = connection.createStatement();
-					ResultSet resultSet = statement.executeQuery("select * from hero where full_name like '%" + param + "%' or aliases like '%" + param + "%'");
+					PreparedStatement statement = connection.prepareStatement("select * from hero where full_name like ? or aliases like ?");
+					statement.setString(1, "%" + param + "%");
+					statement.setString(2, "%" + param + "%");
+					ResultSet resultSet = statement.executeQuery();
 					while (resultSet.next()) {
 						result.add(resultSet.getString("full_name"));
 					}

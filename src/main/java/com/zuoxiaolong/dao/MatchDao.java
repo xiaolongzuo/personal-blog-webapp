@@ -55,8 +55,10 @@ public abstract class MatchDao extends BaseDao {
             public List<Map<String,String>> doInConnection(Connection connection) {
                 List<Map<String,String>> result = new ArrayList<Map<String, String>>();
                 try {
-                    Statement statement = connection.createStatement();
-                    ResultSet resultSet = statement.executeQuery("select * from matches where attack ='" + h + "' or defend = '" +h + "'");
+                    PreparedStatement statement = connection.prepareStatement("select * from matches where attack=? or defend=?");
+                    statement.setString(1, h);
+                    statement.setString(2, h);
+                    ResultSet resultSet = statement.executeQuery();
                     while (resultSet.next()) {
                         Map<String,String> match = new HashMap<String, String>();
                         match.put("attack", resultSet.getString("attack"));
