@@ -1,4 +1,4 @@
-<div class="l_box f_l">
+<div class="left_box float_left">
     <!-- 主题内容模块 -->
     <div class="index_about">
         <h2 class="c_titile">${article.subject}</h2>

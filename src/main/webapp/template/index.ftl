@@ -6,7 +6,7 @@
 <body>
 <#include "header.ftl">
 <article>
-    <div class="l_box f_l">
+    <div class="left_box float_left">
     <#include "banner.ftl">
         <#include "index_main.ftl">
     </div>

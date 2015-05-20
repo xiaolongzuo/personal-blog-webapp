@@ -9,4 +9,3 @@
 <!--[if lt IE 9]>
 <script src="resources/js/modernizr.js"></script>
 <![endif]-->
-<script src="resources/js/nav.js"></script>

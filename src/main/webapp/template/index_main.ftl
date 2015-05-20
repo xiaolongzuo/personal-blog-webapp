@@ -1,4 +1,4 @@
-<div class="topnews">
+<div class="main-div">
     <h2>
                 <span>
                     <a href="#" >技术</a>
@@ -20,10 +20,10 @@
                 ${article.summary}...
                 </p>
                 <p class="autor">
-                    <span class="lm f_l"><a href="/">${article.username}</a></span>
-                    <span class="dtime f_l">${article.create_date?substring(0,10)}</span>
-                    <span class="viewnum f_r">浏览（${article.access_times}）</span>
-                    <span class="pingl f_r">评论（${article.comment_times}）</span>
+                    <span class="username_bg_image float_left"><a href="/">${article.username}</a></span>
+                    <span class="time_bg_image float_left">${article.create_date?substring(0,10)}</span>
+                    <span class="access_times_bg_image float_right">浏览（${article.access_times}）</span>
+                    <span class="comment_times_bg_image float_right">评论（${article.comment_times}）</span>
                 </p>
             </ul>
         </div>
