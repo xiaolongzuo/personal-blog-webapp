@@ -3,10 +3,10 @@
 .box_c { border: #ccc 1px dashed; text-align: center; padding: 5px 0; margin-right: 30px;color: #999;}
 .box_c span { margin: 0 10px; }
 .box_c span a{color: #099;}
-ul.infos { overflow: hidden; margin: 20px 30px 20px 0; line-height: 28px; font-size: 14px;color:#666 }
-ul.infos p { margin-bottom: 5px }
-ul.infos p img { display: block; margin: auto ;max-width: 700px;}
-ul.infos h3 span {font-weight: bold;}
+.index_about ul.infos { overflow: hidden; margin: 20px 30px 20px 0; line-height: 28px; font-size: 14px;color:#666 }
+.index_about ul.infos p { margin-bottom: 5px }
+.index_about ul.infos p img { display: block; margin: auto ;max-width: 700px;}
+.index_about ul.infos h3 span {font-weight: bold;}
 .keybq { line-height: 30px; height: 30px; padding-left: 5px; border: 1px solid #F0F0F0; margin-right: 20px; }
 .keybq span { color: #099 }
 .nextinfo { line-height: 24px; }
@@ -17,14 +17,14 @@ ul.infos h3 span {font-weight: bold;}
 
 /*段落*/
 .postBody p,.postCon p { margin:7px 0;  line-height:24px;  }
-h1 {  margin:0;  }
+.index_about h1 {  margin:0;  }
 .index_about h3 {  color: #fff;  background-color: #708090;  -moz-border-radius: 5px;  border-radius: 5px;  padding:6px;  margin:10px 0px;  text-shadow:2px 2px 3px #404040;  }
 /*超链接*/
-a {  color:#708090;  text-decoration:none;  }
-a:hover {  text-decoration:underline;  }
-a:visited,a:hover {  color:#708090;  }
-ul {  list-style:none;  margin:0;  padding:0;  }
-image {  border:none;  }
+.index_about a {  color:#708090;  text-decoration:none;  }
+.index_about a:hover {  text-decoration:underline;  }
+.index_about a:visited,a:hover {  color:#708090;  }
+.index_about ul {  list-style:none;  margin:0;  padding:0;  }
+.index_about image {  border:none;  }
 /*评论按钮*/
 #btn_comment_submit {  border:none;  height:30px;  width:90px;  }
 /*评论按钮*/
