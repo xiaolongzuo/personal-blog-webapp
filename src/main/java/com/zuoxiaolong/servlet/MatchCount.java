@@ -1,12 +1,12 @@
 package com.zuoxiaolong.servlet;
 
-import com.zuoxiaolong.dao.MatchDao;
-import org.apache.log4j.Logger;
+import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+
+import com.zuoxiaolong.dao.MatchDao;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -32,8 +32,6 @@ public class MatchCount extends BaseServlet {
 
 	private static final long serialVersionUID = -2655585691431759816L;
 	
-	private static final Logger logger = Logger.getLogger(MatchCount.class);
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         writeText(response, String.valueOf(MatchDao.count()));

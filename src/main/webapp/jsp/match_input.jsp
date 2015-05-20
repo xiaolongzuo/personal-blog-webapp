@@ -21,7 +21,8 @@
     		type:"POST",
     		data:{"a":$("#a1").val() + "," + $("#a2").val() + "," + $("#a3").val() + "," + $("#a4").val() + "," + $("#a5").val(),
     			  "d":$("#d1").val() + "," + $("#d2").val() + "," + $("#d3").val() + "," + $("#d4").val() + "," + $("#d5").val(),
-    			  "result":$(":radio[name=result]:checked").val()	  
+    			  "result":$(":radio[name=result]:checked").val(),
+    			  "count":$("#count").val()
     		},
     		success:function(data){
     			if(data && data == 'success') {
@@ -46,7 +47,7 @@
 </head>
 <body>
 <div style="margin: 20px">
-	<form action="/saveMatch.do" method="post">
+	PS:请按照实际的阵容情况，胜负结果以及对战场数进行录入，这样才可以使破解的推荐阵容更加准确。
 	<br/>进攻方阵容:  <input id="a1" class="heroInput" type="text" />
 					<input id="a2" class="heroInput" type="text" />
 					<input id="a3" class="heroInput" type="text" />
@@ -58,9 +59,9 @@
 					<input id="d4" class="heroInput" type="text" />
 					<input id="d5" class="heroInput" type="text" />
 	<br/>胜负: <input type="radio" name="result" checked="checked" value="1"/>进攻胜利   &nbsp;&nbsp;<input type="radio" name="result" value="0"/>进攻失败   &nbsp;&nbsp;
+	<br/>场数（每次最多录入10场）：<input id="count" type="text" value="1" />
 	<br/><input style="padding: 0px;width: 200px; line-height: 20px;" id="submitButton" type="button" value="我要保存"/>
 		<input style="padding: 0px;width: 200px; line-height: 20px;" onclick="javascript:history.go(-1);" type="button" value="返回主页"/>
-	</form>
 </div>
 </body>
 </html>

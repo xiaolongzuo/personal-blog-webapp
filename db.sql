@@ -60,3 +60,24 @@ create table access_log (
 	params LONGTEXT ,
 	primary key (id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 AUTO_INCREMENT = 1;
+
+--以下为刀塔传奇sql
+DROP TABLE IF EXISTS matches;
+DROP TABLE IF EXISTS hero;
+
+create table matches (
+	id INT NOT NULL AUTO_INCREMENT,
+	attack VARCHAR(50) NOT NULL,
+	defend VARCHAR(50) NOT NULL,
+	result TINYINT NOT NULL,
+	primary key (id)
+) ENGINE=INNODB DEFAULT CHARSET=utf8 AUTO_INCREMENT = 1;
+
+create table hero (
+	full_name VARCHAR(20) NOT NULL,
+	aliases VARCHAR(200),
+	primary key (full_name)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+alter table matches add count int(11) default 1;
+alter table matches add record_date timestamp default '0000-00-00 00:00:00';

@@ -14,7 +14,12 @@ package com.zuoxiaolong.dao;/*
  * limitations under the License.
  */
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +37,7 @@ public abstract class MatchDao extends BaseDao {
             public Integer doInConnection(Connection connection) {
                 try {
                     Statement statement = connection.createStatement();
-                    ResultSet resultSet = statement.executeQuery("select count(id) from matches");
+                    ResultSet resultSet = statement.executeQuery("select sum(count) from matches");
                     if (resultSet.next()) {
                         return resultSet.getInt(1);
                     }
@@ -57,6 +62,7 @@ public abstract class MatchDao extends BaseDao {
                         match.put("attack", resultSet.getString("attack"));
                         match.put("defend", resultSet.getString("defend"));
                         match.put("result", String.valueOf(resultSet.getInt("result")));
+                        match.put("count", String.valueOf(resultSet.getInt("count")));
                         result.add(match);
                     }
                 } catch (SQLException e) {
@@ -67,15 +73,24 @@ public abstract class MatchDao extends BaseDao {
         });
     }
 
-    public static boolean save(final String a, final String d , final Integer result) {
+    public static boolean save(final String a, final String d , final Integer result,final Integer count) {
         return execute(new TransactionalOperation<Boolean>() {
             @Override
             public Boolean doInConnection(Connection connection) {
                 try {
-                    PreparedStatement statement = connection.prepareStatement("insert into matches (attack,defend,result) values (?,?,?)");
+                	PreparedStatement statement = null;
+                	if (count != null && count > 0) {
+                		statement = connection.prepareStatement("insert into matches (attack,defend,result,record_date,count) values (?,?,?,?,?)");
+					} else {
+						statement = connection.prepareStatement("insert into matches (attack,defend,result,record_date) values (?,?,?,?)");
+					}
                     statement.setString(1, a);
                     statement.setString(2, d);
                     statement.setInt(3, result);
+                    statement.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
+                    if (count != null && count > 0) {
+						statement.setInt(5, count);
+					}
                     int result = statement.executeUpdate();
                     return result > 0;
                 } catch (SQLException e) {
