@@ -20,7 +20,6 @@
  */
 package com.zuoxiaolong.servlet;
 
-import com.zuoxiaolong.dao.BaseDao;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
@@ -42,7 +41,7 @@ public abstract class BaseServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -6921810339176306346L;
 	
-	protected static final Logger logger = Logger.getLogger(BaseDao.class);
+	protected final Logger logger = Logger.getLogger(getClass());
 
 	public static String getVisitorIp(HttpServletRequest request) {
 		String ipAddress = null;

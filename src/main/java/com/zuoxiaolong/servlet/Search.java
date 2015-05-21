@@ -20,22 +20,15 @@
  */
 package com.zuoxiaolong.servlet;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import com.zuoxiaolong.dao.HeroDao;
+import com.zuoxiaolong.dao.MatchDao;
+import net.sf.json.JSONArray;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import net.sf.json.JSONArray;
-
-import com.zuoxiaolong.dao.HeroDao;
-import com.zuoxiaolong.dao.MatchDao;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * @author zuoxiaolong
@@ -69,7 +62,13 @@ public class Search extends BaseServlet {
 			hSet.add(h[i]);
 		}
 		String hero = JSONArray.fromObject(hSet).toString();
+		if (logger.isInfoEnabled()) {
+			logger.info("search servlet's hero is : " + hero);
+		}
 		List<Map<String,String>> matches = MatchDao.findMatchesResult(hero);
+		if (logger.isInfoEnabled()) {
+			logger.info("search servlet's matches is : " + matches);
+		}
 		Map<String, int[]> totalMap = new HashMap<>();
 		Map<String, int[]> attackMap = new HashMap<>();
 		Map<String, int[]> defendMap = new HashMap<>();
@@ -135,6 +134,9 @@ public class Search extends BaseServlet {
 			}
 		}
 		result.put("orderList", orderList);
+		if (logger.isInfoEnabled()) {
+			logger.info("search servlet's result is : " + result);
+		}
 		writeJsonObject(response, result);
 	}
 

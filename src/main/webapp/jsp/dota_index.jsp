@@ -36,6 +36,9 @@
 					type:"POST",
 					data:{"h":$("#h1").val() + "," + $("#h2").val() + "," + $("#h3").val() + "," + $("#h4").val() + "," + $("#h5").val()},
 					success:function(data){
+						$("#showTable").html('<tbody id="tableBody"><tr> <th width="200">阵容</th> <th>总胜率</th> <th>进攻胜率</th> <th>防守胜率</th>' +
+						' <th>总场数</th> <th>总胜利数</th> <th>总失败数</th> <th>进攻场数</th> <th>进攻胜利数</th> <th>进攻失败数</th> <th>防守场数</th>' +
+						' <th>防守胜利数</th> <th>防守失败数</th> </tr></tbody>');
 						if(data && data.orderList && data.orderList.length > 0 && data.totalMap && data.attackMap && data.defendMap) {
 							var orderList = data.orderList;
 							var totalMap = data.totalMap;
@@ -44,7 +47,7 @@
 							for (var i = 0;i < orderList.length;i++) {
 								var keys = orderList[i];
 								var key = "[";
-								for (var j = 0; j < keys.length;j++) {
+								for (var j = 0; j < keys.length; j++) {
 									if (j == 0) {
 										key = key + '"' + keys[j] + '"';
 									} else {
@@ -52,48 +55,45 @@
 									}
 								}
 								key = key + "]";
-								if(i == 0 && totalMap[key][0] == 0) {
+								if (i == 0 && totalMap[key][0] == 0) {
 									alert("该阵容目前没有破解方式，请大家努力录入对战结果才会有哦！");
 									return;
 								}
-								$("#showTable").html('<tr id="tableHead"> <th width="200">阵容</th> <th>总胜率</th> <th>进攻胜率</th> <th>防守胜率</th>' +
-								' <th>总场数</th> <th>总胜利数</th> <th>总失败数</th> <th>进攻场数</th> <th>进攻胜利数</th> <th>进攻失败数</th> <th>防守场数</th>' +
-								' <th>防守胜利数</th> <th>防守失败数</th> </tr>');
-								$("#showTable").append('<tr>');
-								$("#showTable").append('<td width="200">' + keys + '</td>');
-								$("#showTable").append('<td>' + totalMap[key][0] + '%</td>');
+								$("#tableBody").append('<tr>');
+								$("#tableBody").append('<td width="200">' + keys + '</td>');
+								$("#tableBody").append('<td>' + totalMap[key][0] + '%</td>');
 								if (attackMap[key]) {
-									$("#showTable").append('<td>' + attackMap[key][0] + '%</td>');
+									$("#tableBody").append('<td>' + attackMap[key][0] + '%</td>');
 								} else {
-									$("#showTable").append('<td>0%</td>');
+									$("#tableBody").append('<td>0%</td>');
 								}
 								if (defendMap[key]) {
-									$("#showTable").append('<td>' + defendMap[key][0] + '%</td>');
+									$("#tableBody").append('<td>' + defendMap[key][0] + '%</td>');
 								} else {
-									$("#showTable").append('<td>0%</td>');
+									$("#tableBody").append('<td>0%</td>');
 								}
-								$("#showTable").append('<td>' + totalMap[key][1] + '</td>');
-								$("#showTable").append('<td>' + totalMap[key][2] + '</td>');
-								$("#showTable").append('<td>' + totalMap[key][3] + '</td>');
+								$("#tableBody").append('<td>' + totalMap[key][1] + '</td>');
+								$("#tableBody").append('<td>' + totalMap[key][2] + '</td>');
+								$("#tableBody").append('<td>' + totalMap[key][3] + '</td>');
 								if (attackMap[key]) {
-									$("#showTable").append('<td>' + attackMap[key][1] + '</td>');
-									$("#showTable").append('<td>' + attackMap[key][2] + '</td>');
-									$("#showTable").append('<td>' + attackMap[key][3] + '</td>');
+									$("#tableBody").append('<td>' + attackMap[key][1] + '</td>');
+									$("#tableBody").append('<td>' + attackMap[key][2] + '</td>');
+									$("#tableBody").append('<td>' + attackMap[key][3] + '</td>');
 								} else {
-									$("#showTable").append('<td>0</td>');
-									$("#showTable").append('<td>0</td>');
-									$("#showTable").append('<td>0</td>');
+									$("#tableBody").append('<td>0</td>');
+									$("#tableBody").append('<td>0</td>');
+									$("#tableBody").append('<td>0</td>');
 								}
 								if (defendMap[key]) {
-									$("#showTable").append('<td>' + defendMap[key][1] + '</td>');
-									$("#showTable").append('<td>' + defendMap[key][2] + '</td>');
-									$("#showTable").append('<td>' + defendMap[key][3] + '</td>');
+									$("#tableBody").append('<td>' + defendMap[key][1] + '</td>');
+									$("#tableBody").append('<td>' + defendMap[key][2] + '</td>');
+									$("#tableBody").append('<td>' + defendMap[key][3] + '</td>');
 								} else {
-									$("#showTable").append('<td>0</td>');
-									$("#showTable").append('<td>0</td>');
-									$("#showTable").append('<td>0</td>');
+									$("#tableBody").append('<td>0</td>');
+									$("#tableBody").append('<td>0</td>');
+									$("#tableBody").append('<td>0</td>');
 								}
-								$("#showTable").append('</tr>');
+								$("#tableBody").append('</tr>');
 							}
 						} else if (data && !data.orderList) {
 							alert(data);
@@ -104,6 +104,7 @@
 				});
 			});
 		});
+
 	</script>
 	<style type="text/css">
 		.heroInput {
@@ -137,21 +138,23 @@
 		<input style="padding: 0px;width: 200px; line-height: 20px;" id="searchButton" type="button" value="我要破解"/>
 </div>
 <table id="showTable" cellpadding="0" border="0" align="center" width="1200">
-	<tr id="tableHead">
-		<th width="200">推荐阵容</th>
-		<th>总胜率</th>
-		<th>进攻胜率</th>
-		<th>防守胜率</th>
-		<th>总场数</th>
-		<th>总胜利数</th>
-		<th>总失败数</th>
-		<th>进攻场数</th>
-		<th>进攻胜利数</th>
-		<th>进攻失败数</th>
-		<th>防守场数</th>
-		<th>防守胜利数</th>
-		<th>防守失败数</th>
-	</tr>
+	<tbody id="tableBody">
+		<tr>
+			<th width="200">推荐阵容</th>
+			<th>总胜率</th>
+			<th>进攻胜率</th>
+			<th>防守胜率</th>
+			<th>总场数</th>
+			<th>总胜利数</th>
+			<th>总失败数</th>
+			<th>进攻场数</th>
+			<th>进攻胜利数</th>
+			<th>进攻失败数</th>
+			<th>防守场数</th>
+			<th>防守胜利数</th>
+			<th>防守失败数</th>
+		</tr>
+	</tbody>
 </table>
 </body>
 </html>
