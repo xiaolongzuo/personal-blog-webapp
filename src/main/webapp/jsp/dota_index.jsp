@@ -44,6 +44,7 @@
 							var totalMap = data.totalMap;
 							var attackMap = data.attackMap;
 							var defendMap = data.defendMap;
+							var tableData = '';
 							for (var i = 0;i < orderList.length;i++) {
 								var keys = orderList[i];
 								var key = "[";
@@ -59,42 +60,42 @@
 									alert("该阵容目前没有破解方式，请大家努力录入对战结果才会有哦！");
 									return;
 								}
-								$("#tableBody").append('<tr>');
-								$("#tableBody").append('<td width="200">' + keys + '</td>');
-								$("#tableBody").append('<td>' + totalMap[key][0] + '%</td>');
+								tableData += '<tr><td width="200">' + keys + '</td>';
+								tableData += '<td>' + totalMap[key][0] + '%</td>';
 								if (attackMap[key]) {
-									$("#tableBody").append('<td>' + attackMap[key][0] + '%</td>');
+									tableData += '<td>' + attackMap[key][0] + '%</td>';
 								} else {
-									$("#tableBody").append('<td>0%</td>');
+									tableData += '<td>0%</td>';
 								}
 								if (defendMap[key]) {
-									$("#tableBody").append('<td>' + defendMap[key][0] + '%</td>');
+									tableData += '<td>' + defendMap[key][0] + '%</td>';
 								} else {
-									$("#tableBody").append('<td>0%</td>');
+									tableData += '<td>0%</td>';
 								}
-								$("#tableBody").append('<td>' + totalMap[key][1] + '</td>');
-								$("#tableBody").append('<td>' + totalMap[key][2] + '</td>');
-								$("#tableBody").append('<td>' + totalMap[key][3] + '</td>');
+								tableData += '<td>' + totalMap[key][1] + '</td>';
+								tableData += '<td>' + totalMap[key][2] + '</td>';
+								tableData += '<td>' + totalMap[key][3] + '</td>';
 								if (attackMap[key]) {
-									$("#tableBody").append('<td>' + attackMap[key][1] + '</td>');
-									$("#tableBody").append('<td>' + attackMap[key][2] + '</td>');
-									$("#tableBody").append('<td>' + attackMap[key][3] + '</td>');
+									tableData += '<td>' + attackMap[key][1] + '</td>';
+									tableData += '<td>' + attackMap[key][2] + '</td>';
+									tableData += '<td>' + attackMap[key][3] + '</td>';
 								} else {
-									$("#tableBody").append('<td>0</td>');
-									$("#tableBody").append('<td>0</td>');
-									$("#tableBody").append('<td>0</td>');
+									tableData += '<td>0</td>';
+									tableData += '<td>0</td>';
+									tableData += '<td>0</td>';
 								}
 								if (defendMap[key]) {
-									$("#tableBody").append('<td>' + defendMap[key][1] + '</td>');
-									$("#tableBody").append('<td>' + defendMap[key][2] + '</td>');
-									$("#tableBody").append('<td>' + defendMap[key][3] + '</td>');
+									tableData += '<td>' + defendMap[key][1] + '</td>';
+									tableData += '<td>' + defendMap[key][2] + '</td>';
+									tableData += '<td>' + defendMap[key][3] + '</td>';
 								} else {
-									$("#tableBody").append('<td>0</td>');
-									$("#tableBody").append('<td>0</td>');
-									$("#tableBody").append('<td>0</td>');
+									tableData += '<td>0</td>';
+									tableData += '<td>0</td>';
+									tableData += '<td>0</td>';
 								}
-								$("#tableBody").append('</tr>');
+								tableData += '</tr>';
 							}
+							$("#tableBody").append(tableData);
 						} else if (data && !data.orderList) {
 							alert(data);
 						} else {
