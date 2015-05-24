@@ -43,11 +43,11 @@ public abstract class Reptiles {
 			while (true) {
 				try {
 					ImageUtil.loadArticleImages();
-//					if (Configuration.isProductEnv()) {
-//						Cnblogs.fetchArticlesAfterLogin();
-//					} else {
-//						Cnblogs.fetchArticlesCommon();
-//					}
+					if (Configuration.isProductEnv()) {
+						Cnblogs.fetchArticlesAfterLogin();
+					} else {
+						Cnblogs.fetchArticlesCommon();
+					}
 					Generators.generate();
 					Thread.sleep(1000 * 60 * THREAD_SLEEP_MINUTES);
 				} catch (Exception e) {
