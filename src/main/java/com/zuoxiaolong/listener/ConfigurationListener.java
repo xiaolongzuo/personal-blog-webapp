@@ -1,11 +1,13 @@
 package com.zuoxiaolong.listener;
 
-import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.reptile.Reptiles;
-import org.apache.log4j.Logger;
-
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+
+import org.apache.log4j.Logger;
+
+import com.zuoxiaolong.api.HttpApiHelper;
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.reptile.Reptiles;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -46,6 +48,32 @@ public class ConfigurationListener implements ServletContextListener {
         Reptiles.newReptileThread().start();
         if (logger.isInfoEnabled()) {
 			logger.info("fetch and generate thread has been started...");
+		}
+        try {
+			Thread.sleep(1000 * 60);
+		} catch (InterruptedException e) {
+			logger.warn("sleep has been interrupted...");
+		}
+        if (logger.isInfoEnabled()) {
+			logger.info("starting baidu push thread...");
+		}
+        Thread baiduPushThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (true) {
+					try {
+						HttpApiHelper.baiduPush(HttpApiHelper.baiduPushIndex());
+						Thread.sleep(1000 * 60 * 60 * 24);
+					} catch (Exception e) {
+						logger.warn("fetch and generate failed ...", e);
+						break;
+					}
+				}
+			}
+		});
+        baiduPushThread.start();
+        if (logger.isInfoEnabled()) {
+			logger.info("baidu push thread has been started...");
 		}
     }
 

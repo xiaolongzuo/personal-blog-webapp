@@ -1,13 +1,17 @@
 package com.zuoxiaolong.api;
 
-import com.zuoxiaolong.config.Configuration;
+import java.io.File;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import net.sf.json.JSONObject;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.util.IOUtil;
 
 
 /*
@@ -36,22 +40,69 @@ public abstract class HttpApiHelper {
 
 	private static final String BAIDU_AK = Configuration.isProductEnv()? Configuration.get("baidu.ak.product") : Configuration.get("baidu.ak");
 	
+	private static volatile int cursor = 0;
+	
+	public static int baiduPushIndex() {
+		return baiduPush(1);
+	}
+	
+	public static int baiduPush(int remain) {
+		if (remain <= 0 ) {
+			logger.warn("baidu-push arg lt 0 : " + remain);
+			return 0;
+		}
+		String site = Configuration.isProductEnv() ? Configuration.get("site.product") : Configuration.get("site"); 
+		String token = Configuration.isProductEnv() ? Configuration.get("baidu.push.token.product") : Configuration.get("baidu.push.token");
+		String url = "http://data.zz.baidu.com/urls?site=" + site + "&token=" + token;
+		try {
+			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+			connection.setDoInput(true);
+			connection.setDoOutput(true);
+			connection.setRequestMethod("POST");
+			connection.setRequestProperty("Content-Type", "text/plain");
+			OutputStream outputStream = connection.getOutputStream();
+			File[] htmlFiles = new File(Configuration.getContextPath("html")).listFiles();
+			String contextPath = Configuration.isProductEnv() ? Configuration.get("context.path.product") : Configuration.get("context.path");
+			if (remain == 1) {
+				outputStream.write(contextPath.getBytes("UTF-8"));
+			} else {
+				for (int i = 0; cursor < htmlFiles.length && i < remain; cursor++, i++) {
+					outputStream.write((contextPath + "/html/" + htmlFiles[cursor].getName() + "\r\n").getBytes("UTF-8"));
+					if (cursor == htmlFiles.length - 1) {
+						if (htmlFiles.length < remain) {
+							break;
+						} else {
+							cursor = 0;
+						}
+					}
+					if (i < remain - 1) {
+						outputStream.write("\r\n".getBytes("UTF-8"));
+					}
+				}
+			}
+			outputStream.flush();
+			String response = IOUtil.read(connection.getInputStream());
+			if (logger.isInfoEnabled()) {
+				logger.info("baidu-push response : " + response);
+			}
+			JSONObject result = JSONObject.fromObject(response);
+			if (result.getInt("remain") > 0) {
+				return baiduPush(remain);
+			} else {
+				return 0;
+			}
+		} catch (Exception e) {
+			logger.error("baidu push failed ...", e);
+			return 0;
+		}
+	}
+	
 	public static String getCity(String ip) {
 		String city = "来自星星的";
 		String url = "http://api.map.baidu.com/location/ip?ak=" + BAIDU_AK + "&ip=" + ip;
 		try {
 			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-			InputStream inputStream = connection.getInputStream();
-			byte[] bytes = new byte[2048];
-			byte[] result = new byte[0];
-			int len = 0;
-			while ((len = inputStream.read(bytes)) > 0) {
-				byte[] temp = new byte[result.length + len];
-				System.arraycopy(result, 0, temp, 0, result.length);
-				System.arraycopy(bytes, 0, temp, result.length, len);
-				result = temp;
-			}
-			String json = new String(result,"UTF-8");
+			String json = IOUtil.read(connection.getInputStream());
 			if (logger.isInfoEnabled()) {
 				logger.info("baidu-ip-api json : " + json);
 			}

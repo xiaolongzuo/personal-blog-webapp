@@ -115,8 +115,8 @@ public abstract class Cnblogs {
         loginConnection.connect();
         OutputStream outputStream = loginConnection.getOutputStream();
         Map<String,Object> params = new HashMap<>();
-        params.put("input1",EnrypyUtil.publicEnrypy(publicKey, Configuration.get("cnblogs.username")));
-        params.put("input2",EnrypyUtil.publicEnrypy(publicKey, Configuration.get("cnblogs.password")));
+        params.put("input1",EnrypyUtil.publicEnrypy(publicKey, Configuration.get("cnblogs.username.product")));
+        params.put("input2",EnrypyUtil.publicEnrypy(publicKey, Configuration.get("cnblogs.password.product")));
         params.put("remember", false);
         outputStream.write(JSONObject.fromObject(params).toString().getBytes("UTF-8"));
         outputStream.flush();
