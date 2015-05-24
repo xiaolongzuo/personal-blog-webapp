@@ -9,9 +9,6 @@
     </h2>
 <#if articles??>
     <#list articles as article>
-        <#if article_index gt 4>
-            <#break />
-        </#if>
         <div class="blogs">
             <figure><img src="${article.icon}"></figure>
             <ul>
