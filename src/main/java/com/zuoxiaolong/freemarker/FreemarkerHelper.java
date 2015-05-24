@@ -110,12 +110,12 @@ public abstract class FreemarkerHelper {
 			
 			temp = new ArrayList<>(winCharts);
 			for (int i =0; i< temp.size() ;i++) {
-				if (resultCount[0] > (int) temp.get(i).get("win")) {
+				if (resultCount[0] > (int) temp.get(i).get("win") && resultCount[1] > 10) {
 					winCharts.add(i,heroMap);
 					break;
 				}
 			}
-			if (temp.size() == winCharts.size()) {
+			if (temp.size() == winCharts.size() && resultCount[1] > 10) {
 				winCharts.add(heroMap);
 			}
 			
