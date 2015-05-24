@@ -35,19 +35,17 @@ import com.zuoxiaolong.config.Configuration;
  */
 public abstract class AccessLogDao extends BaseDao {
 
-    private static final long TIME_QUANTUM = Long.valueOf(Configuration.get("time.quantum"));
-
-    private static final long TIMES_PER_SECOND = Long.valueOf(Configuration.get("times.per.second"));
+    private static final long TIMES_PER_SECOND = Long.valueOf(Configuration.get("max.access.times.per.second"));
 
     public static boolean save(final String visitorIp, final String url, final String params) {
         return execute(new TransactionalOperation<Boolean>() {
             @Override
             public Boolean doInConnection(Connection connection) {
                 try {
-                    String startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis() - TIME_QUANTUM * 1000));
+                    String startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis() - 1000));
                     Statement statement = connection.createStatement();
                     ResultSet resultSet = statement.executeQuery("select count(id) from access_log where visitor_ip='" + visitorIp + "' and access_date > '" + startTime + "'");
-                    if (resultSet.next() && resultSet.getInt(1) > TIME_QUANTUM * TIMES_PER_SECOND) {
+                    if (resultSet.next() && resultSet.getInt(1) > TIMES_PER_SECOND) {
                         warn("the ip[" + visitorIp + "] access too often , please note!");
                         CacheManager.getConcurrentHashMapCache().set(visitorIp, 1000 * 60 * 60);
                     }

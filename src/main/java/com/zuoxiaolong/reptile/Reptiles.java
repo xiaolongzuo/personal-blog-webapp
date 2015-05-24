@@ -36,7 +36,7 @@ public abstract class Reptiles {
 
 		private static final Logger logger = Logger.getLogger(CnblogsThread.class);
 		
-		private static final int THREAD_SLEEP_MINUTES = Integer.valueOf(Configuration.get("thread.sleep.minutes"));
+		private static final int THREAD_SLEEP_MINUTES = Integer.valueOf(Configuration.get("reptile.thread.sleep.minutes"));
 
 		@Override
 		public void run() {
