@@ -20,15 +20,21 @@
  */
 package com.zuoxiaolong.servlet;
 
-import com.zuoxiaolong.dao.HeroDao;
-import com.zuoxiaolong.dao.MatchDao;
-import net.sf.json.JSONArray;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.*;
+
+import net.sf.json.JSONArray;
+
+import com.zuoxiaolong.dao.HeroDao;
+import com.zuoxiaolong.dao.MatchDao;
 
 /**
  * @author zuoxiaolong
@@ -39,24 +45,25 @@ public class Search extends BaseServlet {
 	private static final long serialVersionUID = 4998713126399162358L;
 
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void service() throws ServletException, IOException {
+		HttpServletRequest request = getRequest();
 		String[] h = request.getParameter("h").split(",");
 		if (h.length != 5) {
-			writeText(response, "请填满五个英雄！");
+			writeText("请填满五个英雄！");
 			return;
 		}
 		SortedSet<String> hSet = new TreeSet<>();
 		for (int i = 0 ; i < h.length;i++) {
 			if (h[i].trim().length() == 0) {
-				writeText(response, "第" + (i + 1) + "位英雄为空");
+				writeText("第" + (i + 1) + "位英雄为空");
 				return;
 			}
 			if (hSet.contains(h[i])) {
-				writeText(response, "第" + (i + 1) + "位英雄重复");
+				writeText("第" + (i + 1) + "位英雄重复");
 				return;
 			}
 			if (!HeroDao.exsits(h[i].trim())) {
-				writeText(response, "第" + (i + 1) + "位英雄在英雄库中没找到，请按照提示输入英雄");
+				writeText("第" + (i + 1) + "位英雄在英雄库中没找到，请按照提示输入英雄");
 				return;
 			}
 			hSet.add(h[i]);
@@ -137,7 +144,7 @@ public class Search extends BaseServlet {
 		if (logger.isInfoEnabled()) {
 			logger.info("search servlet's result is : " + result);
 		}
-		writeJsonObject(response, result);
+		writeJsonObject(result);
 	}
 
 }

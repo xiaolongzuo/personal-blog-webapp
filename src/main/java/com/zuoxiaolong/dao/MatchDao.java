@@ -48,6 +48,30 @@ public abstract class MatchDao extends BaseDao {
             }
         });
     }
+    
+    public static List<Map<String,String>> getAll() {
+        return execute(new Operation<List<Map<String,String>>>() {
+            @Override
+            public List<Map<String,String>> doInConnection(Connection connection) {
+                List<Map<String,String>> result = new ArrayList<Map<String, String>>();
+                try {
+                    Statement statement = connection.createStatement();
+                    ResultSet resultSet = statement.executeQuery("select * from matches");
+                    while (resultSet.next()) {
+                        Map<String,String> match = new HashMap<String, String>();
+                        match.put("attack", resultSet.getString("attack"));
+                        match.put("defend", resultSet.getString("defend"));
+                        match.put("result", String.valueOf(resultSet.getInt("result")));
+                        match.put("count", String.valueOf(resultSet.getInt("count")));
+                        result.add(match);
+                    }
+                } catch (SQLException e) {
+                    error("query matches failed ..." , e);
+                }
+                return result;
+            }
+        });
+    }
 
     public static List<Map<String,String>> findMatchesResult(String h) {
         return execute(new Operation<List<Map<String,String>>>() {

@@ -2,10 +2,17 @@ package com.zuoxiaolong.reptile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -15,7 +22,10 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
+import com.zuoxiaolong.config.Configuration;
 import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.util.EnrypyUtil;
+import com.zuoxiaolong.util.IOUtil;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -41,7 +51,161 @@ public abstract class Cnblogs {
 	
 	private static final Logger logger = Logger.getLogger(Cnblogs.class);
 	
-	public static void fetchArticles() throws IOException {
+	private static final String loginUrl = "http://passport.cnblogs.com/user/signin";
+
+	private static final String publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCp0wHYbg/NOPO3nzMD3dndwS0MccuMeXCHgVlGOoYyFwLdS24Im2e7YyhB0wrUsyYf0/nhzCzBK8ZC9eCWqd0aHbdgOQT6CuFQBMjbyGYvlVYU2ZP7kG9Ft6YV6oc9ambuO7nPZh+bvXH0zDKfi02prknrScAKC0XhadTHT3Al0QIDAQAB";
+	
+	private static final String username = "左潇龙";
+	
+	public static void fetchArticlesAfterLogin() throws IOException {
+		String cookie;
+		try {
+			cookie = login();
+		} catch (Exception e) {
+			logger.error("login failed ...", e);
+			return;
+		}
+        for (int i = 1; ; i++) {
+        	if (logger.isInfoEnabled()) {
+        		logger.info("begin fetch the " + i + " page...");
+			}
+            Document document = Jsoup.parse(getHtmlUseCookie(cookie, "http://i.cnblogs.com/EditPosts.aspx?pg=" + i));
+            Element mainElement = document.getElementById("Listing");
+            Elements elements = mainElement.getElementsByTag("tr");
+            int pageSize = 0;
+            for (int j = 1 ; j < elements.size(); j++) {
+                fetchArticle(elements.get(j),cookie);
+                pageSize++;
+            }
+            if (logger.isInfoEnabled()) {
+        		logger.info("fetch success for pagenumber : " + i + ", pagesize : " + pageSize);
+			}
+            if (pageSize < 10) {
+				break;
+			}
+            pageSize = 0;
+        }
+    }
+	
+	private static String login() throws Exception{
+		HttpURLConnection loginPageConnection = (HttpURLConnection) new URL(loginUrl).openConnection();
+        loginPageConnection.setRequestProperty("Connection","keep-alive");
+        loginPageConnection.setRequestMethod("GET");
+        loginPageConnection.connect();
+        String body = IOUtil.read(loginPageConnection.getInputStream());
+        String cookie = loginPageConnection.getHeaderField("Set-Cookie");
+        Pattern pattern = Pattern.compile("'VerificationToken':\\s*?'(.*?)'");
+        Matcher matcher = pattern.matcher(body);
+        String token = null;
+        if (matcher.find()) {
+            token = matcher.group(1);
+        }
+
+        HttpURLConnection loginConnection = (HttpURLConnection) new URL(loginUrl).openConnection();
+        loginConnection.setDoInput(true);
+        loginConnection.setDoOutput(true);
+        loginConnection.setRequestMethod("POST");
+        loginConnection.setRequestProperty("Connection", "keep-alive");
+        loginConnection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+        loginConnection.setRequestProperty("VerificationToken",token);
+        loginConnection.setRequestProperty("Cookie",cookie);
+        loginConnection.setRequestProperty("User-Agent","Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0");
+        loginConnection.setRequestProperty("Referer","http://passport.cnblogs.com/user/signin?ReturnUrl=http%3A%2F%2Fhome.cnblogs.com%2Fu%2Fzuoxiaolong%2F");
+        loginConnection.setRequestProperty("X-Requested-With","XMLHttpRequest");
+        loginConnection.connect();
+        OutputStream outputStream = loginConnection.getOutputStream();
+        Map<String,Object> params = new HashMap<>();
+        params.put("input1",EnrypyUtil.publicEnrypy(publicKey, Configuration.get("cnblogs.username")));
+        params.put("input2",EnrypyUtil.publicEnrypy(publicKey, Configuration.get("cnblogs.password")));
+        params.put("remember", false);
+        outputStream.write(JSONObject.fromObject(params).toString().getBytes("UTF-8"));
+        outputStream.flush();
+        String json = IOUtil.read(loginConnection.getInputStream());
+        if (JSONObject.fromObject(json).containsKey("success") && JSONObject.fromObject(json).getBoolean("success")) {
+        	List<String> cooks = loginConnection.getHeaderFields().get("Set-Cookie");
+            return cooks.get(0) + ";" + cooks.get(1);
+		} else {
+			throw new RuntimeException("login failed ...");
+		}
+	}
+	
+	private static void fetchArticle(Element element,String cookie) throws IOException {
+		Elements tdElements = element.getElementsByTag("td");
+		Element subjectTdElement = tdElements.get(0);
+		Element subjectElement = subjectTdElement.getElementsByTag("a").first();
+        String articleUrl = subjectElement.attr("href");
+        
+        String originArticleHtml = getHtmlUseCookie(cookie, articleUrl);
+        Document acticleDocument = Jsoup.parse(originArticleHtml);
+        
+        //获取标题
+        String subject = subjectElement.html().trim();
+        
+        //获取postid
+        String resourceId = element.attr("id").split("_")[1];
+        Integer postId = Integer.valueOf(resourceId);
+        
+        //获取内容
+        Element bodyElement = acticleDocument.getElementById("cnblogs_post_body");
+        String html = bodyElement.html();
+        List<String> codeList = getPreList(html, false);
+        List<String> originCodeList = getPreList(originArticleHtml, true);
+        if (codeList.size() != originCodeList.size()) throw new RuntimeException();
+        for (int i = 0; i < codeList.size() ; i++) {
+            html = html.replace(codeList.get(i), originCodeList.get(i));
+        }
+        html = html.replace("'", "\"");
+
+        //获取纯文本内容
+        StringBuffer stringBuffer = new StringBuffer();
+        appendText(bodyElement, stringBuffer);
+        String content = stringBuffer.toString().replace("'", "\"");
+
+        //获取文章基本属性，使用文章索引里面的postdesc获取
+        List<Node> subjectNodes = subjectTdElement.childNodes();
+        String createDateText = ((TextNode)subjectNodes.get(subjectNodes.size() - 1)).text().trim();
+        Pattern pattern = Pattern.compile("\\((.*?)\\)");
+        Matcher matcher = pattern.matcher(createDateText);
+        String createDate = null;
+        if (matcher.find()) {
+        	createDate = matcher.group(1) + ":00";
+		} else {
+			logger.error("get create_date failed for " + postId);
+			return;
+		}
+        Integer status = null;
+        TextNode statusNode = (TextNode) tdElements.get(1).childNodes().get(0);
+        String statusNodeText = statusNode.text().trim();
+        if (statusNodeText.length() == 0) {
+        	Element statusElement = (Element) tdElements.get(1).childNodes().get(1);
+			status = statusElement.text().trim().equals("未发布") ? 0 : 1;
+		} else {
+			status = statusNodeText.equals("未发布") ? 0 : 1;
+		}
+        Integer accessTimes = Integer.valueOf(tdElements.get(3).html().trim()) + Integer.valueOf(tdElements.get(4).html().trim());
+
+        //获取赞的次数
+        Integer goodTimes = 0;
+        if (status == 1) {
+        	Document diggCountDocument = Jsoup.connect("http://www.cnblogs.com/mvc/blog/BlogPostInfo.aspx?blogId=160491&postId=" + postId + "&blogApp=zuoxiaolong&blogUserGuid=8834a931-b305-e311-8d02-90b11c0b17d6").get();
+            goodTimes = Integer.valueOf(diggCountDocument.getElementById("digg_count").html());
+		}
+
+        //如果resourceId已经存在则更新，否则保存
+		ArticleDao.saveOrUpdate(resourceId, subject, createDate, status, username, accessTimes, goodTimes, html, content);
+        if (logger.isInfoEnabled()) {
+    		logger.info("saveOrUpdate article : [" + resourceId + ":" + subject + "]");
+		}
+	}
+
+    private static String getHtmlUseCookie(String cookie, String url) throws IOException {
+        HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(url).openConnection();
+        httpURLConnection.setRequestMethod("GET");
+        httpURLConnection.setRequestProperty("Cookie",cookie);
+        return IOUtil.read(httpURLConnection.getInputStream());
+    }
+
+    public static void fetchArticlesCommon() throws IOException {
         for (int i = 1; ; i++) {
         	if (logger.isInfoEnabled()) {
         		logger.info("begin fetch the " + i + " page...");
@@ -112,8 +276,9 @@ public abstract class Cnblogs {
         Document diggCountDocument = Jsoup.connect("http://www.cnblogs.com/mvc/blog/BlogPostInfo.aspx?blogId=160491&postId=" + postId + "&blogApp=zuoxiaolong&blogUserGuid=8834a931-b305-e311-8d02-90b11c0b17d6").get();
         Integer goodTimes = Integer.valueOf(diggCountDocument.getElementById("digg_count").html());
 
+        Integer status = 1;
         //如果resourceId已经存在则更新，否则保存
-		ArticleDao.saveOrUpdate(resourceId, subject, createDate, username, accessTimes, goodTimes, html, content);
+		ArticleDao.saveOrUpdate(resourceId, subject, createDate, status, username, accessTimes, goodTimes, html, content);
         if (logger.isInfoEnabled()) {
     		logger.info("saveOrUpdate article : [" + resourceId + ":" + subject + "]");
 		}
@@ -134,7 +299,7 @@ public abstract class Cnblogs {
         }
         return new String(stringBytes, "UTF-8");
     }
-
+    
     private static List<String> getPreList(String html,boolean filterEnter) {
         List<String> codeList = new ArrayList<String>();
         char[] chars = html.toCharArray();
@@ -181,5 +346,5 @@ public abstract class Cnblogs {
             }
         }
     }
-
+    
 }

@@ -1,12 +1,9 @@
-package com.zuoxiaolong.servlet;
+package com.zuoxiaolong.dynamic;
 
-import java.io.IOException;
+import java.util.Map;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.zuoxiaolong.dao.MatchDao;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -26,16 +23,10 @@ import com.zuoxiaolong.dao.MatchDao;
 
 /**
  * @author 左潇龙
- * @since 5/8/2015 4:12 PM
+ * @since 2015年5月24日 上午5:15:33
  */
-public class MatchCount extends BaseServlet {
-
-	private static final long serialVersionUID = -2655585691431759816L;
+public interface DataMap {
 	
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        writeText(response, String.valueOf(MatchDao.count()));
-    }
-
+	public Map<String, Object> buildDataMap(HttpServletRequest request, HttpServletResponse response);
+	
 }
-

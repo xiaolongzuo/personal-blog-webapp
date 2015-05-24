@@ -1,13 +1,17 @@
 package com.zuoxiaolong.dao;
 
-import com.zuoxiaolong.util.ImageUtil;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.zuoxiaolong.util.ImageUtil;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -35,18 +39,24 @@ public abstract class ArticleDao extends BaseDao {
     
     private static final int SHORT_SUBJECT_LENGTH = 10;
     
-    public static boolean saveOrUpdate(String resourceId, String subject, String createDate, String username, Integer accessTimes, Integer goodTimes, String html, String content) {
+    public static boolean saveOrUpdate(String resourceId, String subject, String createDate, Integer status,String username, Integer accessTimes, Integer goodTimes, String html, String content) {
     	return execute(new TransactionalOperation<Boolean>() {
 			@Override
 			public Boolean doInConnection(Connection connection) {
-				String selectSql = "select id from articles where resource_id=?";
+				String selectSql = "select id,status from articles where resource_id=?";
 				String insertSql = "insert into articles (resource_id,username,icon,create_date," +
-                "access_times,good_times,subject,html,content) values (?,?,?,?,?,?,?,?,?)";
-				String updateSql = "update articles set subject=?,html=?,content=?,icon=? where resource_id=?";
+                "access_times,good_times,subject,html,content,status) values (?,?,?,?,?,?,?,?,?,?)";
+				String updateSql = "update articles set subject=?,html=?,content=?,icon=?,status=? where resource_id=?";
 				try {
 					PreparedStatement statement = connection.prepareStatement(selectSql);
 					statement.setString(1, resourceId);
-					boolean exsits = statement.executeQuery().next();
+					ResultSet resultSet = statement.executeQuery();
+					boolean exsits = false;
+					int currentStatus = 0;
+					if (resultSet.next()) {
+						exsits = true;
+						currentStatus = resultSet.getInt("status");
+					}
 					PreparedStatement saveOrUpdate = null;
 					if (!exsits) {
 						saveOrUpdate = connection.prepareStatement(insertSql);
@@ -59,13 +69,15 @@ public abstract class ArticleDao extends BaseDao {
 						saveOrUpdate.setString(7, subject);
 						saveOrUpdate.setString(8, html);
 						saveOrUpdate.setString(9, content);
+						saveOrUpdate.setInt(10, status);
 					} else {
 						saveOrUpdate = connection.prepareStatement(updateSql);
 						saveOrUpdate.setString(1, subject);
 						saveOrUpdate.setString(2, html);
 						saveOrUpdate.setString(3, content);
 						saveOrUpdate.setString(4, ImageUtil.randomArticleImage());
-                        saveOrUpdate.setString(5, resourceId);
+                        saveOrUpdate.setInt(5, currentStatus == 1 ? currentStatus : status);
+                        saveOrUpdate.setString(6, resourceId);
 					}
 					int result = saveOrUpdate.executeUpdate();
 					return result > 0;
@@ -80,7 +92,7 @@ public abstract class ArticleDao extends BaseDao {
         return execute(new Operation<List<Map<String, String>>>() {
             @Override
             public List<Map<String, String>> doInConnection(Connection connection) {
-                String sql = "select * from articles order by create_date desc limit ?,10";
+                String sql = "select * from articles where status = 1 order by create_date desc limit ?,10";
                 List<Map<String, String>> result = new ArrayList<Map<String, String>>();
                 try {
                     PreparedStatement statement = connection.prepareStatement(sql);
@@ -101,7 +113,7 @@ public abstract class ArticleDao extends BaseDao {
         return execute(new Operation<List<Map<String, String>>>() {
             @Override
             public List<Map<String, String>> doInConnection(Connection connection) {
-                String sql = "select * from articles order by " + order + " desc";
+                String sql = "select * from articles where status = 1 order by " + order + " desc";
                 List<Map<String, String>> result = new ArrayList<Map<String, String>>();
                 try {
                     Statement statement = connection.createStatement();
@@ -121,7 +133,7 @@ public abstract class ArticleDao extends BaseDao {
         return execute(new Operation<Map<String, String>>() {
             @Override
             public Map<String, String> doInConnection(Connection connection) {
-                String sql = "select * from articles where id = " + id;
+                String sql = "select * from articles where status = 1 and id = " + id;
                 Map<String, String> result = new HashMap<String, String>();
                 try {
                     Statement statement = connection.createStatement();

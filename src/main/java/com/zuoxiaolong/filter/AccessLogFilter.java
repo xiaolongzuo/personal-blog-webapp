@@ -14,13 +14,20 @@ package com.zuoxiaolong.filter;/*
  * limitations under the License.
  */
 
-import com.zuoxiaolong.dao.AccessLogDao;
-import com.zuoxiaolong.servlet.BaseServlet;
+import java.io.IOException;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+
 import net.sf.json.JSONObject;
 
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
+import com.zuoxiaolong.dao.AccessLogDao;
+import com.zuoxiaolong.util.HttpUtil;
 
 /**
  * @author 左潇龙
@@ -36,7 +43,7 @@ public class AccessLogFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         if (servletRequest instanceof HttpServletRequest) {
             HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
-            String visitorIp = BaseServlet.getVisitorIp(httpServletRequest);
+            String visitorIp = HttpUtil.getVisitorIp(httpServletRequest);
             String url = httpServletRequest.getRequestURI();
             String params = httpServletRequest.getParameterMap() == null ? "" : JSONObject.fromObject(httpServletRequest.getParameterMap()).toString();
             AccessLogDao.save(visitorIp, url, params);

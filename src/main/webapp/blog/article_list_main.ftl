@@ -1,4 +1,3 @@
-<div class="left_box float_left">
     <!-- 主题内容模块 -->
     <div class="main-div">
         <h2>
@@ -9,7 +8,7 @@
             <div class="blogs">
                 <figure><img src="${article.icon}"></figure>
                 <ul>
-                    <h3><a href="article_${article.id}.html" target="_blank">${article.subject}</a></h3>
+                    <h3><a href="${contextPath}/html/article_${article.id}.html" target="_blank">${article.subject}</a></h3>
                     <p>
                     ${article.summary}...
                     </p>
@@ -26,4 +25,3 @@
         <#include "page.ftl">
     </#if>
     </div>
-</div>

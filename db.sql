@@ -81,3 +81,5 @@ create table hero (
 
 alter table matches add count int(11) default 1;
 alter table matches add record_date timestamp default '0000-00-00 00:00:00';
+
+alter table articles add status tinyint default 1;

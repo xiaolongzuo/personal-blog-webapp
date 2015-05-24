@@ -1,4 +1,3 @@
-<div class="left_box float_left">
     <!-- 主题内容模块 -->
     <div class="index_about">
         <h2 class="c_titile">${article.subject}</h2>
@@ -16,10 +15,10 @@
     <#if nextArticle?? || preArticle?? >
         <div class="nextinfo">
             <#if preArticle??>
-                <p>上一篇：<a href="article_${preArticle.id}.html">${preArticle.subject}</a></p>
+                <p>上一篇：<a href="${contextPath}/html/article_${preArticle.id}.html">${preArticle.subject}</a></p>
             </#if>
             <#if nextArticle??>
-                <p>下一篇：<a href="article_${nextArticle.id}.html">${nextArticle.subject}</a></p>
+                <p>下一篇：<a href="${contextPath}/html/article_${nextArticle.id}.html">${nextArticle.subject}</a></p>
             </#if>
         </div>
     </#if>
@@ -28,7 +27,7 @@
             <h2>相关文章</h2>
             <ul>
                 <#list relatedArticles as article>
-                    <li><a href="article_${article.id}.html" title="${article.subject}">${article.subject}</a></li>
+                    <li><a href="${contextPath}/html/article_${article.id}.html" title="${article.subject}">${article.subject}</a></li>
                 </#list>
             </ul>
         </div>
@@ -67,4 +66,3 @@
             </p>
         </div>
     </div>
-</div>

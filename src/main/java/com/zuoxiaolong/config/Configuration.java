@@ -49,7 +49,7 @@ public abstract class Configuration {
         if (logger.isInfoEnabled()) {
             logger.info("os.name = " + system);
         }
-        File classpath = new File(Configuration.class.getClassLoader().getResource("").getFile());
+        File classpath = getClasspathFile("");
         File[] propertyFiles = classpath.listFiles(new FileFilter() {
             @Override
             public boolean accept(File file) {
@@ -68,17 +68,30 @@ public abstract class Configuration {
         }
         configuration = new freemarker.template.Configuration(new Version(2, 3, 22));
     }
+    
+    public static ClassLoader getClassLoader() {
+    	return Configuration.class.getClassLoader();
+    }
+    
+    public static File getClasspathFile(String path) {
+    	return new File(getClassLoader().getResource(path).getFile());
+    }
 
     public static void init(ServletContext servletContext) {
         Configuration.servletContext = servletContext;
         try {
-            configuration.setDirectoryForTemplateLoading(new File(getContextPath("template")));
+            configuration.setDirectoryForTemplateLoading(new File(getContextPath()));
+            configuration.setDefaultEncoding("UTF-8");
             if (logger.isInfoEnabled()) {
 				logger.info("templateBasePath set success ... ");
 			}
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+    
+    public static String getContextPath() {
+    	return getContextPath("");
     }
     
     public static String getContextPath(String path) {

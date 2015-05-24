@@ -1,4 +1,3 @@
-<div class="right_box float_right">
     <!-- 关注模块 -->
     <div class="follow_me">
         <h3>关注我</h3>
@@ -14,7 +13,7 @@
     </div>
 
     <!-- 宣传图片
-    <div class="right_image"><img src="resources/img/right_xuanchuan.jpg"></div>
+    <div class="right_image"><img src="${contextPath}/resources/img/right_xuanchuan.jpg"></div>
     -->
 
     <!-- 排行榜模块 -->
@@ -50,7 +49,7 @@
                     <#if article_index gt 5>
                         <#break />
                     </#if>
-                    <li><a href="article_${article.id}.html" target="_blank" title="${article.subject}">${article.subject}</a></li>
+                    <li><a href="${contextPath}/html/article_${article.id}.html" target="_blank" title="${article.subject}">${article.subject}</a></li>
                 </#list>
                 </ul>
             </div>
@@ -60,7 +59,7 @@
                     <#if article_index gt 5>
                         <#break />
                     </#if>
-                    <li><a href="article_${article.id}.html" target="_blank" title="${article.subject}">${article.subject}</a></li>
+                    <li><a href="${contextPath}/html/article_${article.id}.html" target="_blank" title="${article.subject}">${article.subject}</a></li>
                 </#list>
                 </ul>
             </div>
@@ -70,7 +69,7 @@
                     <#if article_index gt 5>
                         <#break />
                     </#if>
-                    <li><a href="article_${article.id}.html" target="_blank" title="${article.subject}">${article.subject}</a></li>
+                    <li><a href="${contextPath}/html/article_${article.id}.html" target="_blank" title="${article.subject}">${article.subject}</a></li>
                 </#list>
                 </ul>
             </div>
@@ -100,7 +99,7 @@
             <#if article_index gt 4>
                 <#break />
             </#if>
-            <li><a href="article_${article.id}.html" target="_blank" title="${article.subject}"><img src="${article.icon}"><b>${article.shortSubject}</b></a>
+            <li><a href="${contextPath}/html/article_${article.id}.html" target="_blank" title="${article.subject}"><img src="${article.icon}"><b>${article.shortSubject}</b></a>
 
                 <p><span class="tulanmu"><a href="/">${article.username}</a></span><span
                         class="tutime">${article.create_date?substring(0,10)}</span>
@@ -111,7 +110,7 @@
     </div>
 
     <!-- 宣传图片
-    <div class="right_image"><img src="resources/img/03.jpg"></div>
+    <div class="right_image"><img src="${contextPath}/resources/img/03.jpg"></div>
     -->
 
     <!-- 链接模块 -->
@@ -121,4 +120,3 @@
             <li><a href="http://www.cnblogs.com/zuoxiaolong" target="_blank">Zeus博客园</a></li>
         </ul>
     </div>
-</div>

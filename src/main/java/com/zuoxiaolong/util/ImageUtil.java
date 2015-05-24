@@ -30,6 +30,8 @@ import com.zuoxiaolong.config.Configuration;
  * @since 5/18/2015 2:33 PM
  */
 public abstract class ImageUtil {
+	
+	private static final String CONTEXT_PATH = (Configuration.isProductEnv() ? Configuration.get("context.path.product") : Configuration.get("context.path"));
 
     private static final String BASE_PATH = "resources/img/";
 
@@ -61,7 +63,7 @@ public abstract class ImageUtil {
         List<String> nameList = new ArrayList<>();
         if (articleImages != null ) {
             for (int i = 0 ; i < articleImages.length ; i++) {
-                nameList.add(BASE_PATH + articleImages[i].getName());
+                nameList.add(CONTEXT_PATH + "/" + BASE_PATH + articleImages[i].getName());
             }
         }
         return nameList;

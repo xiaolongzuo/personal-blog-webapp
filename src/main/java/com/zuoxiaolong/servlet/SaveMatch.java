@@ -26,7 +26,6 @@ import java.util.TreeSet;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONArray;
 
@@ -42,7 +41,8 @@ public class SaveMatch extends BaseServlet {
 	private static final long serialVersionUID = 4998713126399162358L;
 
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void service() throws ServletException, IOException {
+		HttpServletRequest request = getRequest();
 		String[] a = request.getParameter("a").split(",");
 		String[] d = request.getParameter("d").split(",");
 		Integer result = Integer.valueOf(request.getParameter("result"));
@@ -52,43 +52,43 @@ public class SaveMatch extends BaseServlet {
 			try {
 				count = Integer.valueOf(countString);
 				if (count > 10) {
-					writeText(response, "对战场数一次性录入不能超过10场！");
+					writeText("对战场数一次性录入不能超过10场！");
 					return;
 				}
 			} catch (Exception e) {
-				writeText(response, "对战场数必须为数字！");
+				writeText("对战场数必须为数字！");
 				return;
 			}
 		}
 		if (a.length != 5 || d.length != 5 ) {
-			writeText(response, "请填满十个英雄！");
+			writeText("请填满十个英雄！");
 			return;
 		}
 		SortedSet<String> aSet = new TreeSet<>();
 		SortedSet<String> dSet = new TreeSet<>();
 		for (int i = 0 ; i < a.length && i < d.length;i++) {
 			if (a[i].trim().length() == 0) {
-				writeText(response, "进攻方第" + (i + 1) + "位英雄为空！");
+				writeText("进攻方第" + (i + 1) + "位英雄为空！");
 				return;
 			}
 			if (d[i].trim().length() == 0) {
-				writeText(response, "防守方第" + (i + 1) + "位英雄为空！");
+				writeText("防守方第" + (i + 1) + "位英雄为空！");
 				return;
 			}
 			if (aSet.contains(a[i])) {
-				writeText(response, "进攻方第" + (i + 1) + "位英雄重复！");
+				writeText("进攻方第" + (i + 1) + "位英雄重复！");
 				return;
 			}
 			if (dSet.contains(d[i])) {
-				writeText(response, "防守方第" + (i + 1) + "位英雄重复！");
+				writeText("防守方第" + (i + 1) + "位英雄重复！");
 				return;
 			}
 			if (!HeroDao.exsits(a[i].trim())) {
-				writeText(response, "进攻方第" + (i + 1) + "位英雄在英雄库中没找到，请按照提示输入英雄！");
+				writeText("进攻方第" + (i + 1) + "位英雄在英雄库中没找到，请按照提示输入英雄！");
 				return;
 			}
 			if (!HeroDao.exsits(d[i].trim())) {
-				writeText(response, "防守方第" + (i + 1) + "位英雄在英雄库中没找到，请按照提示输入英雄");
+				writeText("防守方第" + (i + 1) + "位英雄在英雄库中没找到，请按照提示输入英雄");
 				return;
 			}
 			aSet.add(a[i]);
@@ -97,13 +97,13 @@ public class SaveMatch extends BaseServlet {
 		String attack = JSONArray.fromObject(aSet).toString();
 		String defend = JSONArray.fromObject(dSet).toString();
 		if (attack.equals(defend)) {
-			writeText(response, "进攻方和防守方阵容一样，不能进行保存！");
+			writeText("进攻方和防守方阵容一样，不能进行保存！");
 			return;
 		}
 		if (MatchDao.save(attack,defend,result,count)) {
-			writeText(response, "success");
+			writeText("success");
 		} else {
-			writeText(response, "发生未知错误，请联系男神！");
+			writeText("发生未知错误，请联系男神！");
 		}
 	}
 

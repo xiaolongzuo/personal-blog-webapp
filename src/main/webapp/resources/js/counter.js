@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	var articleId = $("#articleId").val();
     $.ajax({
-        url:"counter.do",
+        url:contextPath + "/counter.do",
         type:"POST",
         data:{"articleId":articleId,"column":"access_times"}
     });
@@ -10,7 +10,7 @@ $(document).ready(function() {
     	var checked = $("input[name=column]:checked").val();
     	var result = null;
     	$.ajax({
-        	url:"counter.do",
+        	url:contextPath + "/counter.do",
         	async: false,
         	type:"POST",
             data:{"articleId":articleId,"column":checked},

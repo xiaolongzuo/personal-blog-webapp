@@ -20,18 +20,19 @@
  */
 package com.zuoxiaolong.servlet;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import org.apache.log4j.Logger;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.List;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+import org.apache.log4j.Logger;
 
 /**
  * @author zuoxiaolong
@@ -42,74 +43,53 @@ public abstract class BaseServlet extends HttpServlet {
 	private static final long serialVersionUID = -6921810339176306346L;
 	
 	protected final Logger logger = Logger.getLogger(getClass());
-
-	public static String getVisitorIp(HttpServletRequest request) {
-		String ipAddress = null;
-		ipAddress = request.getHeader("x-forwarded-for");
-		if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
-			ipAddress = request.getHeader("Proxy-Client-IP");
-		}
-		if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
-			ipAddress = request.getHeader("WL-Proxy-Client-IP");
-		}
-		if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
-			ipAddress = request.getRemoteAddr();
-			if (ipAddress.equals("127.0.0.1")) {
-				// 根据网卡取本机配置的IP
-				InetAddress inet = null;
-				try {
-					inet = InetAddress.getLocalHost();
-				} catch (UnknownHostException e) {
-					e.printStackTrace();
-				}
-				ipAddress = inet.getHostAddress();
-			}
-		}
-		// 对于通过多个代理的情况，第一个IP为客户端真实IP,多个IP按照','分割
-		if (ipAddress != null && ipAddress.length() > 15) { 
-			if (ipAddress.indexOf(",") > 0) {
-				ipAddress = ipAddress.substring(0, ipAddress.indexOf(","));
-			}
-		}
-		return ipAddress;
+	
+	private static ThreadLocal<HttpServletRequest> requestThreadLocal = new ThreadLocal<>();
+	
+	private static ThreadLocal<HttpServletResponse> responseThreadLocal = new ThreadLocal<>();
+	
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doPost(request, response);
 	}
 
-	protected void writeJsonObject(HttpServletResponse response,Object object) {
-		PrintWriter writer = null;
-		try {
-			response.setContentType("application/json");
-			response.setCharacterEncoding("UTF-8");
-			writer = response.getWriter();
-			writer.write(JSONObject.fromObject(object).toString());
-			writer.flush();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		requestThreadLocal.set(request);
+		response.setCharacterEncoding("UTF-8");
+		responseThreadLocal.set(response);
+		service();
+	}
+	
+	protected abstract void service() throws ServletException, IOException ;
+	
+	protected HttpServletRequest getRequest() {
+		return requestThreadLocal.get();
+	}
+	
+	protected HttpServletResponse getResponse() {
+		return responseThreadLocal.get();
 	}
 
-	protected void writeJsonArray(HttpServletResponse response,List<?> list) {
-		PrintWriter writer = null;
-		try {
-			response.setContentType("application/json");
-			response.setCharacterEncoding("UTF-8");
-			writer = response.getWriter();
-			writer.write(JSONArray.fromObject(list).toString());
-			writer.flush();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+	protected void writeJsonObject(Object object) {
+		getResponse().setContentType("application/json");
+		writeText(JSONObject.fromObject(object).toString());
 	}
 
-	protected void writeText(HttpServletResponse response,String text){
+	protected void writeJsonArray(List<?> list) {
+		getResponse().setContentType("application/json");
+		writeText(JSONArray.fromObject(list).toString());
+	}
+
+	protected void writeText(String text){
 		PrintWriter printWriter = null;
 		try {
-			response.setCharacterEncoding("UTF-8");
-			printWriter = response.getWriter();
+			printWriter = getResponse().getWriter();
 			printWriter.write(text);
 			printWriter.flush();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
-
+	
 }

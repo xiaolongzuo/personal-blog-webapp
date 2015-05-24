@@ -1,9 +1,10 @@
 package com.zuoxiaolong.reptile;
 
+import org.apache.log4j.Logger;
+
 import com.zuoxiaolong.config.Configuration;
 import com.zuoxiaolong.freemarker.Generators;
 import com.zuoxiaolong.util.ImageUtil;
-import org.apache.log4j.Logger;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -42,7 +43,11 @@ public abstract class Reptiles {
 			while (true) {
 				try {
 					ImageUtil.loadArticleImages();
-					Cnblogs.fetchArticles();
+					if (Configuration.isProductEnv()) {
+						Cnblogs.fetchArticlesAfterLogin();
+					} else {
+						Cnblogs.fetchArticlesCommon();
+					}
 					Generators.generate();
 					Thread.sleep(1000 * 60 * THREAD_SLEEP_MINUTES);
 				} catch (Exception e) {

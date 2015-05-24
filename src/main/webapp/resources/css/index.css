@@ -32,6 +32,9 @@
 .time_bg_image { background: url(../img/bg_time.png) no-repeat left center }
 .access_times_bg_image { background: url(../img/bg_look.png) no-repeat left center }
 .comment_times_bg_image { background: url(../img/bg_comment.png) no-repeat left center }
+/* 排行榜 */
+.charts_tab h3 { line-height: 40px; color: #38485A; font-size: 18px; border-bottom: 1px solid #E6E6E6; height: 40px; margin-bottom: 20px }
+
 /* 右侧关注我 */
 .follow_me h3 { line-height: 40px; color: #38485A; font-size: 18px; border-bottom: 1px solid #E6E6E6; height: 40px }
 .follow_me_info {margin: 25px 0px 0px 0px;}

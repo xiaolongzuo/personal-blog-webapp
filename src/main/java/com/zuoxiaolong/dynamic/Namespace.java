@@ -1,3 +1,10 @@
+package com.zuoxiaolong.dynamic;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -16,32 +23,12 @@
 
 /**
  * @author 左潇龙
- * @since 2015年5月19日 上午12:49:37
+ * @since 2015年5月24日 上午5:43:14
  */
-package com.zuoxiaolong.servlet;
+@Retention(RetentionPolicy.RUNTIME) 
+@Target({ElementType.TYPE})
+public @interface Namespace {
 
-import java.io.IOException;
-import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-
-import com.zuoxiaolong.dao.HeroDao;
-
-/**
- * @author zuoxiaolong
- *
- */
-public class HeroFinder extends BaseServlet {
-
-	private static final long serialVersionUID = 7397746086771972627L;
-
-	@Override
-	protected void service() throws ServletException, IOException {
-		HttpServletRequest request = getRequest();
-		String param = request.getParameter("term");
-		List<String> heroList = HeroDao.getList(param);
-		writeJsonArray(heroList);
-	}
-
+	public String value() default "/dota";
+	
 }

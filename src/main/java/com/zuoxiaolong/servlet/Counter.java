@@ -3,7 +3,6 @@ package com.zuoxiaolong.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -12,6 +11,7 @@ import org.apache.log4j.Logger;
 import com.zuoxiaolong.dao.ArticleDao;
 import com.zuoxiaolong.dao.ArticleIdVisitorIpDao;
 import com.zuoxiaolong.freemarker.Generators;
+import com.zuoxiaolong.util.HttpUtil;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -38,9 +38,11 @@ public class Counter extends BaseServlet {
 	private static final long serialVersionUID = -2655585691431759816L;
 	
 	private static final Logger logger = Logger.getLogger(Counter.class);
-
+	
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void service() throws IOException {
+    	HttpServletRequest request = getRequest();
+    	HttpServletResponse response = getResponse();
         Integer articleId = Integer.valueOf(request.getParameter("articleId"));
         String column = request.getParameter("column");
         if (logger.isInfoEnabled()) {
@@ -51,7 +53,7 @@ public class Counter extends BaseServlet {
         	if (logger.isInfoEnabled()) {
         		logger.info("there is someone remarking...");
 			}
-			String ip = getVisitorIp(request);
+			String ip = HttpUtil.getVisitorIp(request);
 			if (ArticleIdVisitorIpDao.exsits(articleId, ip)) {
 				printWriter.write("exists");
 				printWriter.flush();
