@@ -40,7 +40,7 @@
     
     <filter-mapping>
         <filter-name>dynamicFreemarker</filter-name>
-        <url-pattern>/dota/*</url-pattern>
+        <url-pattern>*.ftl</url-pattern>
     </filter-mapping>
 
     <servlet>

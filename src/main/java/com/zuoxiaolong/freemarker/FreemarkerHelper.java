@@ -134,8 +134,11 @@ public abstract class FreemarkerHelper {
 		dotaData.put("winCharts", winCharts);
 		dotaData.put("winTimesCharts", winTimesCharts);
 		dotaData.put("totalCount", MatchDao.count());
+		
+		Map<String, Object> adminData = new HashMap<String, Object>();
 		NAMESPACE_DATA_MAP.put("blog", blogData);
 		NAMESPACE_DATA_MAP.put("dota", dotaData);
+		NAMESPACE_DATA_MAP.put("admin", adminData);
 	}
 	
 	public static Map<String, Object> buildCommonDataMap() {
