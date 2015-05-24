@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import net.sf.json.JSONArray;
 
+import com.zuoxiaolong.algorithm.Match;
 import com.zuoxiaolong.dao.HeroDao;
 import com.zuoxiaolong.dao.MatchDao;
 
@@ -68,78 +69,20 @@ public class Search extends BaseServlet {
 			}
 			hSet.add(h[i]);
 		}
-		String hero = JSONArray.fromObject(hSet).toString();
+		String currentBattle = JSONArray.fromObject(hSet).toString();
 		if (logger.isInfoEnabled()) {
-			logger.info("search servlet's hero is : " + hero);
+			logger.info("search servlet's currentBattle is : " + currentBattle);
 		}
-		List<Map<String,String>> matches = MatchDao.findMatchesResult(hero);
+		List<Map<String,String>> matches = MatchDao.findMatchesResult(currentBattle);
 		if (logger.isInfoEnabled()) {
 			logger.info("search servlet's matches is : " + matches);
 		}
-		Map<String, int[]> totalMap = new HashMap<>();
-		Map<String, int[]> attackMap = new HashMap<>();
-		Map<String, int[]> defendMap = new HashMap<>();
-		for (Map<String,String> match : matches) {
-			String battle = null;
-			Boolean isAttack = null;
-			Map<String, int[]> currentMap = null;
-			if (match.get("attack").equals(hero)) {
-				//目前计算阵容为防守
-				battle = match.get("defend");
-				currentMap = defendMap;
-				isAttack = false;
-			} else {
-				//目前计算阵容为进攻
-				battle = match.get("attack");
-				currentMap = attackMap;
-				isAttack = true;
-			}
-			int[] totalResult = totalMap.get(battle);
-			int[] currentResult = currentMap.get(battle);
-			//0:胜率。1:总场数。2:胜利场数。3:失败场数。
-			if (totalResult == null ) {
-				totalResult = new int[4];
-			}
-			if (currentResult == null ) {
-				currentResult = new int[4];
-			}
-			Integer count = Integer.valueOf(match.get("count"));
-			Integer result = Integer.valueOf(match.get("result"));
-			
-			totalResult[1] += count;
-			currentResult[1] += count;
-			//如果是进攻方，并且进攻方胜利。或者是防守方，并且防守方胜利。则给胜利场数增加，否则给失败场数增加。
-			if ((isAttack && result == 1) || (!isAttack && result == 0)) {
-				currentResult[2] += count;
-				totalResult[2] += count;
-			} else {
-				currentResult[3] += count;
-				totalResult[3] += count;
-			}
-			currentResult[0] = currentResult[2] * 100 / currentResult[1];
-			currentMap.put(battle, currentResult);
-			totalResult[0] = totalResult[2] * 100 / totalResult[1];
-			totalMap.put(battle, totalResult);
-		}
+		Map<String, int[]> totalMap = Match.computeBattleCharts(matches, currentBattle);
 		Map<String,Object> result = new HashMap<>();
-		result.put("attackMap", attackMap);
-		result.put("defendMap", defendMap);
-		result.put("totalMap", totalMap);
 		List<String> orderList = new ArrayList<>();
-		for (String battle : totalMap.keySet()) {
-			int successRate = totalMap.get(battle)[0];
-			List<String> temp = new ArrayList<>(orderList);
-			for (int i =0; i< temp.size() ;i++) {
-				int maxSuccessRate = totalMap.get(temp.get(i))[0];
-				if (successRate > maxSuccessRate) {
-					orderList.add(i,battle);
-					break;
-				}
-			}
-			if (temp.size() == orderList.size()) {
-				orderList.add(battle);
-			}
-		}
+		Match.fillOrderList(totalMap, orderList);
+		
+		result.put("totalMap", totalMap);
 		result.put("orderList", orderList);
 		if (logger.isInfoEnabled()) {
 			logger.info("search servlet's result is : " + result);

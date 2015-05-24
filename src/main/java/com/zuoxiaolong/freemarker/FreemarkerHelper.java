@@ -6,10 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.json.JSONArray;
-
 import org.apache.log4j.Logger;
 
+import com.zuoxiaolong.algorithm.Match;
 import com.zuoxiaolong.algorithm.Random;
 import com.zuoxiaolong.config.Configuration;
 import com.zuoxiaolong.dao.ArticleDao;
@@ -41,117 +40,37 @@ public abstract class FreemarkerHelper {
 	
 	private static final Logger logger = Logger.getLogger(FreemarkerHelper.class);
 	
-	private static final Map<String, Map<String, Object>> NAMESPACE_DATA_MAP = new HashMap<>();
-	
 	private static final String DEFAULT_NAMESPACE = "blog";
 	
 	private static final int DEFAULT_RIGHT_ARTICLE_NUMBER = 5;
-	
-	static {
-		Map<String, Object> blogData = new HashMap<String, Object>();
-		blogData.put("accessCharts",ArticleDao.getArticles("access_times"));
-		blogData.put("newCharts",ArticleDao.getArticles("create_date"));
-		blogData.put("recommendCharts",ArticleDao.getArticles("good_times"));
-		blogData.put("imageArticles",Random.random(ArticleDao.getArticles("create_date"), DEFAULT_RIGHT_ARTICLE_NUMBER));
-		
-		Map<String, Object> dotaData = new HashMap<String, Object>();
-		List<Map<String, String>> matchList = MatchDao.getAll();
-		List<Map<String, Object>> hotCharts = new ArrayList<Map<String,Object>>();
-		List<Map<String, Object>> winCharts = new ArrayList<Map<String,Object>>();
-		List<Map<String, Object>> winTimesCharts = new ArrayList<Map<String,Object>>();
-		
-		Map<String, int[]> resultCountMap = new HashMap<>();
-		for (Map<String, String> match : matchList) {
-			JSONArray attack = JSONArray.fromObject(match.get("attack"));
-			JSONArray defend = JSONArray.fromObject(match.get("defend"));
-			Integer count = Integer.valueOf(match.get("count"));
-			Integer result = Integer.valueOf(match.get("result"));
-			for (int i = 0; i < attack.size(); i++) {
-				String hero = attack.getString(i);
-				int[] resultCount = resultCountMap.get(hero);
-				if (resultCount == null) {
-					resultCount = new int[3];
-				}
-				resultCount[1] += count;
-				if (result == 1) {
-					resultCount[2] += count;
-				}
-				resultCount[0] = resultCount[2] * 100 / resultCount[1];
-				resultCountMap.put(hero, resultCount);
-			}
-			for (int i = 0; i < defend.size(); i++) {
-				String hero = defend.getString(i);
-				int[] resultCount = resultCountMap.get(hero);
-				if (resultCount == null) {
-					resultCount = new int[3];
-				}
-				resultCount[1] += count;
-				if (result == 0) {
-					resultCount[2] += count;
-				}
-				resultCount[0] = resultCount[2] * 100 / resultCount[1];
-				resultCountMap.put(hero, resultCount);
-			}
-		}
-		for (String hero : resultCountMap.keySet()) {
-			int[] resultCount = resultCountMap.get(hero);
-			Map<String, Object> heroMap = new HashMap<>();
-			heroMap.put("fullName", hero);
-			heroMap.put("win", resultCount[0]);
-			heroMap.put("times", resultCount[1]);
-			heroMap.put("winTimes", resultCount[2]);
-			List<Map<String, Object>> temp = new ArrayList<>(hotCharts);
-			for (int i =0; i< temp.size() ;i++) {
-				if (resultCount[1] > (int) temp.get(i).get("times")) {
-					hotCharts.add(i,heroMap);
-					break;
-				}
-			}
-			if (temp.size() == hotCharts.size()) {
-				hotCharts.add(heroMap);
-			}
-			
-			temp = new ArrayList<>(winCharts);
-			for (int i =0; i< temp.size() ;i++) {
-				if (resultCount[0] > (int) temp.get(i).get("win") && resultCount[1] > 10) {
-					winCharts.add(i,heroMap);
-					break;
-				}
-			}
-			if (temp.size() == winCharts.size() && resultCount[1] > 10) {
-				winCharts.add(heroMap);
-			}
-			
-			temp = new ArrayList<>(winTimesCharts);
-			for (int i =0; i< temp.size() ;i++) {
-				if (resultCount[2] > (int) temp.get(i).get("winTimes")) {
-					winTimesCharts.add(i,heroMap);
-					break;
-				}
-			}
-			if (temp.size() == winTimesCharts.size()) {
-				winTimesCharts.add(heroMap);
-			}
-		}
-		dotaData.put("hotCharts", hotCharts);
-		dotaData.put("winCharts", winCharts);
-		dotaData.put("winTimesCharts", winTimesCharts);
-		dotaData.put("totalCount", MatchDao.count());
-		
-		Map<String, Object> adminData = new HashMap<String, Object>();
-		NAMESPACE_DATA_MAP.put("blog", blogData);
-		NAMESPACE_DATA_MAP.put("dota", dotaData);
-		NAMESPACE_DATA_MAP.put("admin", adminData);
-	}
 	
 	public static Map<String, Object> buildCommonDataMap() {
 		return buildCommonDataMap(DEFAULT_NAMESPACE);
 	}
 
 	public static Map<String, Object> buildCommonDataMap(String namespace) {
-		Map<String, Object> data = new HashMap<String, Object>();
+		Map<String, Object> data = new HashMap<>();
         data.put("contextPath", Configuration.isProductEnv() ? Configuration.get("context.path.product") : Configuration.get("context.path"));
-        data.putAll(NAMESPACE_DATA_MAP.get(namespace));
+        if (namespace.equals("blog")) {
+        	List<Map<String, String>> articleList = ArticleDao.getArticles("create_date");
+    		List<Map<String, String>> articleListCopy = new ArrayList<>(articleList);
+    		data.put("accessCharts",ArticleDao.getArticles("access_times"));
+        	data.put("newCharts",articleList);
+    		data.put("recommendCharts",ArticleDao.getArticles("good_times"));
+        	data.put("imageArticles",Random.random(articleListCopy, DEFAULT_RIGHT_ARTICLE_NUMBER));
+		}
+        if (namespace.equals("dota")) {
+        	List<Map<String, String>> matchList = MatchDao.getAll();
+    		List<Map<String, Object>> hotCharts = new ArrayList<Map<String,Object>>();
+    		List<Map<String, Object>> winCharts = new ArrayList<Map<String,Object>>();
+    		List<Map<String, Object>> winTimesCharts = new ArrayList<Map<String,Object>>();
+        	Map<String, int[]> resultCountMap = Match.computeHeroCharts(matchList);
+    		Match.fillHeroCharts(resultCountMap, hotCharts, winCharts, winTimesCharts);
+    		data.put("hotCharts", hotCharts);
+    		data.put("winCharts", winCharts);
+    		data.put("winTimesCharts", winTimesCharts);
+        	data.put("totalCount", MatchDao.count());
+		}
         return data;
 	}
 	
