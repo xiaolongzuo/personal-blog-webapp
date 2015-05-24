@@ -1,3 +1,19 @@
+package com.zuoxiaolong.servlet;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+import org.apache.log4j.Logger;
+
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -17,26 +33,6 @@
 /**
  * @author 左潇龙
  * @since 2015年5月10日 上午1:30:40
- */
-package com.zuoxiaolong.servlet;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
-import org.apache.log4j.Logger;
-
-/**
- * @author zuoxiaolong
- *
  */
 public abstract class BaseServlet extends HttpServlet {
 

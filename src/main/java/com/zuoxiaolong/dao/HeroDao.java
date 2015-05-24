@@ -1,3 +1,12 @@
+package com.zuoxiaolong.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -17,19 +26,6 @@
 /**
  * @author 左潇龙
  * @since 2015年5月19日 上午12:51:37
- */
-package com.zuoxiaolong.dao;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
-/**
- * @author zuoxiaolong
- *
  */
 public abstract class HeroDao extends BaseDao {
 

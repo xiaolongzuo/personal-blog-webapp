@@ -1,3 +1,17 @@
+package com.zuoxiaolong.servlet;
+
+import java.io.IOException;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+
+import net.sf.json.JSONArray;
+
+import com.zuoxiaolong.dao.HeroDao;
+import com.zuoxiaolong.dao.MatchDao;
+
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -16,25 +30,7 @@
 
 /**
  * @author 左潇龙
- * @since 2015年5月19日 上午1:11:48
- */
-package com.zuoxiaolong.servlet;
-
-import java.io.IOException;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-
-import net.sf.json.JSONArray;
-
-import com.zuoxiaolong.dao.HeroDao;
-import com.zuoxiaolong.dao.MatchDao;
-
-/**
- * @author zuoxiaolong
- *
+ * @since 2015年5月10日 上午1:30:40
  */
 public class SaveMatch extends BaseServlet {
 

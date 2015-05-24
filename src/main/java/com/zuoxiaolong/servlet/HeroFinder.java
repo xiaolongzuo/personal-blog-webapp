@@ -1,3 +1,13 @@
+package com.zuoxiaolong.servlet;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+
+import com.zuoxiaolong.dao.HeroDao;
+
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -16,21 +26,7 @@
 
 /**
  * @author 左潇龙
- * @since 2015年5月19日 上午12:49:37
- */
-package com.zuoxiaolong.servlet;
-
-import java.io.IOException;
-import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-
-import com.zuoxiaolong.dao.HeroDao;
-
-/**
- * @author zuoxiaolong
- *
+ * @since 2015年5月10日 上午1:30:40
  */
 public class HeroFinder extends BaseServlet {
 

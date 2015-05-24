@@ -1,3 +1,15 @@
+package com.zuoxiaolong.freemarker;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.dao.ArticleDao;
+
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -17,22 +29,6 @@
 /**
  * @author 左潇龙
  * @since 2015年5月10日 下午3:17:37
- */
-package com.zuoxiaolong.freemarker;
-
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.dao.ArticleDao;
-
-/**
- * @author zuoxiaolong
- *
  */
 public class ArticleListGenerator implements Generator {
 	
