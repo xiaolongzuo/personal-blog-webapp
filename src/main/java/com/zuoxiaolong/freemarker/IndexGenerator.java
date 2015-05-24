@@ -3,11 +3,10 @@ package com.zuoxiaolong.freemarker;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
+import com.zuoxiaolong.algorithm.Random;
 import com.zuoxiaolong.config.Configuration;
 import com.zuoxiaolong.dao.ArticleDao;
 
@@ -39,11 +38,7 @@ public class IndexGenerator implements Generator {
         Writer writer = null;
         try {
             Map<String, Object> data = FreemarkerHelper.buildCommonDataMap();
-            List<Map<String, String>> articleList = ArticleDao.getArticles("create_date");
-            List<Map<String, String>> randomList = new ArrayList<Map<String,String>>();
-            for (int i = 0; i < DEFAULT_INDEX_ARTICLE_NUMBER; i++) {
-				randomList.add(articleList.remove(new Random().nextInt(articleList.size())));
-			}
+            List<Map<String, String>> randomList = Random.random(ArticleDao.getArticles("create_date"), DEFAULT_INDEX_ARTICLE_NUMBER);
             data.put("articles", randomList);
             String htmlPath = Configuration.getContextPath("html/index.html");
             writer = new FileWriter(htmlPath);

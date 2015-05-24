@@ -10,6 +10,7 @@ import net.sf.json.JSONArray;
 
 import org.apache.log4j.Logger;
 
+import com.zuoxiaolong.algorithm.Random;
 import com.zuoxiaolong.config.Configuration;
 import com.zuoxiaolong.dao.ArticleDao;
 import com.zuoxiaolong.dao.MatchDao;
@@ -44,12 +45,14 @@ public abstract class FreemarkerHelper {
 	
 	private static final String DEFAULT_NAMESPACE = "blog";
 	
+	private static final int DEFAULT_RIGHT_ARTICLE_NUMBER = 5;
+	
 	static {
 		Map<String, Object> blogData = new HashMap<String, Object>();
 		blogData.put("accessCharts",ArticleDao.getArticles("access_times"));
 		blogData.put("newCharts",ArticleDao.getArticles("create_date"));
 		blogData.put("recommendCharts",ArticleDao.getArticles("good_times"));
-		blogData.put("imageArticles",ArticleDao.getArticles("good_times"));
+		blogData.put("imageArticles",Random.random(ArticleDao.getArticles("create_date"), DEFAULT_RIGHT_ARTICLE_NUMBER));
 		
 		Map<String, Object> dotaData = new HashMap<String, Object>();
 		List<Map<String, String>> matchList = MatchDao.getAll();
