@@ -1,11 +1,8 @@
 package com.zuoxiaolong.api;
 
-import java.io.File;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -15,6 +12,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.dao.HtmlPageDao;
 import com.zuoxiaolong.util.IOUtil;
 
 
@@ -48,16 +46,19 @@ public abstract class HttpApiHelper {
 	
 	private static final String token = Configuration.isProductEnv() ? Configuration.get("baidu.push.token.product") : Configuration.get("baidu.push.token");
 	
-	private static volatile int cursor = 0;
-	
-	public static int baiduPush() {
-		return baiduPush(1);
-	}
-	
-	private static int baiduPush(int remain) {
-		if (remain <= 0 ) {
-			logger.warn("baidu-push arg lt 0 : " + remain);
-			return 0;
+	public static void baiduPush(int remain) {
+		String pushUrl = HtmlPageDao.findPushUrl();
+		if (pushUrl == null) {
+			if (logger.isInfoEnabled()) {
+				logger.info("all html page has been pushed!");
+			}
+			return;
+		}
+		if (remain <= 0) {
+			if (logger.isInfoEnabled()) {
+				logger.info("there has no remain[" + remain + "]!");
+			}
+			return;
 		}
 		String url = "http://data.zz.baidu.com/urls?site=" + site + "&token=" + token;
 		try {
@@ -67,30 +68,8 @@ public abstract class HttpApiHelper {
 			connection.setRequestMethod("POST");
 			connection.setRequestProperty("Content-Type", "text/plain");
 			OutputStream outputStream = connection.getOutputStream();
-			File[] htmlFiles = new File(Configuration.getContextPath("html")).listFiles();
-			String contextPath = Configuration.isProductEnv() ? Configuration.get("context.path.product") : Configuration.get("context.path");
-			if (remain == 1) {
-				outputStream.write(contextPath.getBytes("UTF-8"));
-				outputStream.write("\r\n".getBytes("UTF-8"));
-			} else {
-				List<String> pushList = new ArrayList<String>();
-				if (htmlFiles.length <= remain) {
-					for (cursor = 0; cursor < htmlFiles.length; cursor++) {
-						pushList.add(contextPath + "/html/" + htmlFiles[cursor].getName());
-					}
-				} else {
-					for (int i = 0; i < remain && cursor < htmlFiles.length; i++, cursor++) {
-						pushList.add(contextPath + "/html/" + htmlFiles[cursor].getName());
-						if (cursor == htmlFiles.length - 1) {
-							cursor = 0;
-						}
-					}
-				}
-				for (int i = 0; i < pushList.size(); i++) {
-					outputStream.write(pushList.get(i).getBytes("UTF-8"));
-					outputStream.write("\r\n".getBytes("UTF-8"));
-				}
-			}
+			outputStream.write(pushUrl.getBytes("UTF-8"));
+			outputStream.write("\r\n".getBytes("UTF-8"));
 			outputStream.flush();
 			int status = connection.getResponseCode();
 			if (status == HttpServletResponse.SC_OK) {
@@ -99,10 +78,12 @@ public abstract class HttpApiHelper {
 					logger.info("baidu-push response : " + response);
 				}
 				JSONObject result = JSONObject.fromObject(response);
-				remain = result.getInt("remain");
-				if (remain > 0) {
-					return baiduPush(remain);
-				} 
+				if (result.getInt("success") >= 1) {
+					HtmlPageDao.updateIsPush(pushUrl);
+				} else {
+					logger.warn("push url failed : " + pushUrl);
+				}
+				baiduPush(result.getInt("remain"));
 			} else {
 				String error = IOUtil.read(connection.getErrorStream());
 				if (logger.isInfoEnabled()) {
@@ -112,7 +93,6 @@ public abstract class HttpApiHelper {
 		} catch (Exception e) {
 			logger.error("baidu push failed ...", e);
 		}
-		return 0;
 	}
 	
 	public static String getCity(String ip) {

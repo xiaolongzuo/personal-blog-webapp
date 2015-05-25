@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 
 import com.zuoxiaolong.api.HttpApiHelper;
 import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.dao.HtmlPageDao;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -38,7 +39,8 @@ public class BaiduPushTask implements Runnable {
 					first = false;
 					Thread.sleep(1000 * 60 * Integer.valueOf(Configuration.get("baidu.push.thread.wait.minutes")));
 				}
-				HttpApiHelper.baiduPush();
+				HtmlPageDao.flush();
+				HttpApiHelper.baiduPush(1);
 				Thread.sleep(1000 * 60 * 60 * 24);
 			} catch (Exception e) {
 				logger.warn("baidu push failed ...", e);
