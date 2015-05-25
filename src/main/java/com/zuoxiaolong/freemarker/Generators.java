@@ -1,11 +1,15 @@
 package com.zuoxiaolong.freemarker;
 
-import com.zuoxiaolong.dao.ArticleDao;
-
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.log4j.Logger;
+
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.dao.ArticleDao;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -29,6 +33,8 @@ import java.util.Map;
  */
 public abstract class Generators {
 	
+	private static final Logger logger = Logger.getLogger(Generators.class);
+	
     private static final Map<Class<? extends Generator>,Generator> generatorMap;
     
     private static final List<Generator> generatorList;
@@ -49,6 +55,12 @@ public abstract class Generators {
     }
 
     public static void generate() {
+    	String path = Configuration.getContextPath("html");
+    	File htmlDirectory = new File(path);
+    	if (!htmlDirectory.exists() && !htmlDirectory.mkdir()) {
+    		logger.error("mkdir failed for :" + path);
+    		return;
+		}
         for (int i = 0; i < generatorList.size(); i++) {
 			generatorList.get(i).generate();
 		}

@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.sf.json.JSONObject;
 
@@ -40,19 +42,21 @@ public abstract class HttpApiHelper {
 
 	private static final String BAIDU_AK = Configuration.isProductEnv()? Configuration.get("baidu.ak.product") : Configuration.get("baidu.ak");
 	
+	private static final String site = Configuration.isProductEnv() ? Configuration.get("site.product") : Configuration.get("site"); 
+	
+	private static final String token = Configuration.isProductEnv() ? Configuration.get("baidu.push.token.product") : Configuration.get("baidu.push.token");
+	
 	private static volatile int cursor = 0;
 	
-	public static int baiduPushIndex() {
+	public static int baiduPush() {
 		return baiduPush(1);
 	}
 	
-	public static int baiduPush(int remain) {
+	private static int baiduPush(int remain) {
 		if (remain <= 0 ) {
 			logger.warn("baidu-push arg lt 0 : " + remain);
 			return 0;
 		}
-		String site = Configuration.isProductEnv() ? Configuration.get("site.product") : Configuration.get("site"); 
-		String token = Configuration.isProductEnv() ? Configuration.get("baidu.push.token.product") : Configuration.get("baidu.push.token");
 		String url = "http://data.zz.baidu.com/urls?site=" + site + "&token=" + token;
 		try {
 			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
@@ -66,16 +70,22 @@ public abstract class HttpApiHelper {
 			if (remain == 1) {
 				outputStream.write(contextPath.getBytes("UTF-8"));
 			} else {
-				for (int i = 0; cursor < htmlFiles.length && i < remain; cursor++, i++) {
-					outputStream.write((contextPath + "/html/" + htmlFiles[cursor].getName() + "\r\n").getBytes("UTF-8"));
-					if (cursor == htmlFiles.length - 1) {
-						if (htmlFiles.length < remain) {
-							break;
-						} else {
+				List<String> pushList = new ArrayList<String>();
+				if (htmlFiles.length <= remain) {
+					for (cursor = 0; cursor < htmlFiles.length; cursor++) {
+						pushList.add(contextPath + "/html/" + htmlFiles[cursor].getName());
+					}
+				} else {
+					for (int i = 0; i < remain && cursor < htmlFiles.length; i++, cursor++) {
+						pushList.add(contextPath + "/html/" + htmlFiles[cursor].getName());
+						if (cursor == htmlFiles.length - 1) {
 							cursor = 0;
 						}
 					}
-					if (i < remain - 1) {
+				}
+				for (int i = 0; i < pushList.size(); i++) {
+					outputStream.write(pushList.get(i).getBytes("UTF-8"));
+					if (i < pushList.size() - 1) {
 						outputStream.write("\r\n".getBytes("UTF-8"));
 					}
 				}
@@ -86,7 +96,8 @@ public abstract class HttpApiHelper {
 				logger.info("baidu-push response : " + response);
 			}
 			JSONObject result = JSONObject.fromObject(response);
-			if (result.getInt("remain") > 0) {
+			remain = result.getInt("remain");
+			if (remain > 0) {
 				return baiduPush(remain);
 			} else {
 				return 0;

@@ -1,5 +1,5 @@
 <header>
-    <div class="logo float_left"><a href="/"><img src="${contextPath}/resources/img/header_logo.gif"></a></div>
+    <div class="logo float_left"><a href="/"><img src="${contextPath}/resources/img/header_logo.png"></a></div>
     <nav id="header_nav" class="float_right">
         <ul>
             <a class="header_nav_a" href="/">首页</a>
