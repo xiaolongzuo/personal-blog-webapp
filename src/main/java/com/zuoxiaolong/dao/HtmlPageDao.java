@@ -45,6 +45,7 @@ public abstract class HtmlPageDao extends BaseDao {
 		for (String url : htmlPageList) {
 			save(url);
 		}
+		info("flush html_page success...");
 	}
 
 	public static boolean save(final String url) {
@@ -57,7 +58,7 @@ public abstract class HtmlPageDao extends BaseDao {
                 	if (findStatement.executeQuery().next()) {
 						return true;
 					}
-                	PreparedStatement saveStatement = connection.prepareStatement("insert into html_page (url,is_push,push_date) values (?,?,?)");
+                	PreparedStatement saveStatement = connection.prepareStatement("insert into html_page (url,is_push,create_date) values (?,?,?)");
                 	saveStatement.setString(1, url);
                 	saveStatement.setInt(2, 0);
                     saveStatement.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
@@ -76,8 +77,9 @@ public abstract class HtmlPageDao extends BaseDao {
             @Override
             public Boolean doInConnection(Connection connection) {
                 try {
-                	PreparedStatement saveStatement = connection.prepareStatement("update html_page set is_push=1 where url=?");
-                	saveStatement.setString(1, url);
+                	PreparedStatement saveStatement = connection.prepareStatement("update html_page set is_push=1,push_date=? where url=?");
+                	saveStatement.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
+                	saveStatement.setString(2, url);
                     int result = saveStatement.executeUpdate();
                     return result > 0;
                 } catch (SQLException e) {

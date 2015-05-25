@@ -88,7 +88,8 @@ create table html_page (
 	id INT NOT NULL AUTO_INCREMENT,
 	url VARCHAR(500),
 	is_push tinyint,
-	push_date timestamp,
+	push_date timestamp default '0000-00-00 00:00:00',
+	create_date timestamp default '0000-00-00 00:00:00',
 	primary key (id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 AUTO_INCREMENT = 1;
 

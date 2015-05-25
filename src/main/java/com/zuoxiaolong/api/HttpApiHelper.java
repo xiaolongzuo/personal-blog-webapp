@@ -60,6 +60,9 @@ public abstract class HttpApiHelper {
 			}
 			return;
 		}
+		if (logger.isInfoEnabled()) {
+			logger.info("find push url : " + pushUrl);
+		}
 		String url = "http://data.zz.baidu.com/urls?site=" + site + "&token=" + token;
 		try {
 			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
@@ -72,6 +75,9 @@ public abstract class HttpApiHelper {
 			outputStream.write("\r\n".getBytes("UTF-8"));
 			outputStream.flush();
 			int status = connection.getResponseCode();
+			if (logger.isInfoEnabled()) {
+				logger.info("baidu-push response code : " + status);
+			}
 			if (status == HttpServletResponse.SC_OK) {
 				String response = IOUtil.read(connection.getInputStream());
 				if (logger.isInfoEnabled()) {
@@ -85,10 +91,7 @@ public abstract class HttpApiHelper {
 				}
 				baiduPush(result.getInt("remain"));
 			} else {
-				String error = IOUtil.read(connection.getErrorStream());
-				if (logger.isInfoEnabled()) {
-					logger.info("baidu-push error : " + error);
-				}
+				logger.error("baidu-push error : " + IOUtil.read(connection.getErrorStream()));
 			}
 		} catch (Exception e) {
 			logger.error("baidu push failed ...", e);
