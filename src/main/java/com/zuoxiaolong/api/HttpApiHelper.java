@@ -7,6 +7,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
@@ -69,6 +71,7 @@ public abstract class HttpApiHelper {
 			String contextPath = Configuration.isProductEnv() ? Configuration.get("context.path.product") : Configuration.get("context.path");
 			if (remain == 1) {
 				outputStream.write(contextPath.getBytes("UTF-8"));
+				outputStream.write("\r\n".getBytes("UTF-8"));
 			} else {
 				List<String> pushList = new ArrayList<String>();
 				if (htmlFiles.length <= remain) {
@@ -85,27 +88,31 @@ public abstract class HttpApiHelper {
 				}
 				for (int i = 0; i < pushList.size(); i++) {
 					outputStream.write(pushList.get(i).getBytes("UTF-8"));
-					if (i < pushList.size() - 1) {
-						outputStream.write("\r\n".getBytes("UTF-8"));
-					}
+					outputStream.write("\r\n".getBytes("UTF-8"));
 				}
 			}
 			outputStream.flush();
-			String response = IOUtil.read(connection.getInputStream());
-			if (logger.isInfoEnabled()) {
-				logger.info("baidu-push response : " + response);
-			}
-			JSONObject result = JSONObject.fromObject(response);
-			remain = result.getInt("remain");
-			if (remain > 0) {
-				return baiduPush(remain);
+			int status = connection.getResponseCode();
+			if (status == HttpServletResponse.SC_OK) {
+				String response = IOUtil.read(connection.getInputStream());
+				if (logger.isInfoEnabled()) {
+					logger.info("baidu-push response : " + response);
+				}
+				JSONObject result = JSONObject.fromObject(response);
+				remain = result.getInt("remain");
+				if (remain > 0) {
+					return baiduPush(remain);
+				} 
 			} else {
-				return 0;
+				String error = IOUtil.read(connection.getErrorStream());
+				if (logger.isInfoEnabled()) {
+					logger.info("baidu-push error : " + error);
+				}
 			}
 		} catch (Exception e) {
 			logger.error("baidu push failed ...", e);
-			return 0;
 		}
+		return 0;
 	}
 	
 	public static String getCity(String ip) {
