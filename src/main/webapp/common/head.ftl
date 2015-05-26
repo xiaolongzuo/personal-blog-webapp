@@ -2,6 +2,7 @@
 <title>Zeus个人博客</title>
 <meta name="keywords" content="个人博客,Zeus">
 <meta name="description" content="左潇龙,Zeus,个人博客">
+<meta property="qc:admins" content="11436637076257011747676375" />
 <link href="${contextPath}/resources/css/base.css" rel="stylesheet">
 <link href="${contextPath}/resources/css/index.css" rel="stylesheet">
 <link href="${contextPath}/resources/css/jquery-ui.min.css" rel="stylesheet">
