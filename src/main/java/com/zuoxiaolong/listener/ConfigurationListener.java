@@ -1,14 +1,15 @@
 package com.zuoxiaolong.listener;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-
-import org.apache.log4j.Logger;
-
 import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.freemarker.Generators;
 import com.zuoxiaolong.thread.BaiduPushTask;
 import com.zuoxiaolong.thread.Executor;
 import com.zuoxiaolong.thread.FetchTask;
+import com.zuoxiaolong.util.ImageUtil;
+import org.apache.log4j.Logger;
+
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -43,20 +44,25 @@ public class ConfigurationListener implements ServletContextListener {
         if (logger.isInfoEnabled()) {
 			logger.info("init configuration success...");
 		}
-        if (logger.isInfoEnabled()) {
-			logger.info("starting fetch and generate thread...");
-		}
-        Executor.executeTask(new FetchTask());
-        if (logger.isInfoEnabled()) {
-			logger.info("fetch and generate thread has been started...");
-		}
-        if (logger.isInfoEnabled()) {
-			logger.info("starting baidu push thread...");
-		}
-        Executor.executeTask(new BaiduPushTask());
-        if (logger.isInfoEnabled()) {
-			logger.info("baidu push thread has been started...");
-		}
+        if (!Configuration.isProductEnv()) {
+            ImageUtil.loadArticleImages();
+            Generators.generate();
+        } else {
+            if (logger.isInfoEnabled()) {
+                logger.info("starting fetch and generate thread...");
+            }
+            Executor.executeTask(new FetchTask());
+            if (logger.isInfoEnabled()) {
+                logger.info("fetch and generate thread has been started...");
+            }
+            if (logger.isInfoEnabled()) {
+                logger.info("starting baidu push thread...");
+            }
+            Executor.executeTask(new BaiduPushTask());
+            if (logger.isInfoEnabled()) {
+                logger.info("baidu push thread has been started...");
+            }
+        }
     }
 
     @Override
