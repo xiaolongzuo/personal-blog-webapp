@@ -1,9 +1,11 @@
-package com.zuoxiaolong.dynamic;
+package com.zuoxiaolong.servlet;
 
-import java.util.Map;
+import java.io.IOException;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
+
+import com.qq.connect.QQConnectException;
+import com.qq.connect.oauth.Oauth;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -23,10 +25,20 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author 左潇龙
- * @since 2015年5月24日 上午5:15:33
+ * @since 2015年5月26日 下午9:20:28
  */
-public interface DataMap {
-	
-	public void putCustomData(Map<String, Object> data,HttpServletRequest request, HttpServletResponse response);
-	
+public class Redirect extends BaseServlet {
+
+	private static final long serialVersionUID = 3204459453635451541L;
+
+	@Override
+	protected void service() throws ServletException, IOException {
+		try {
+			getResponse().sendRedirect(new Oauth().getAuthorizeURL(getRequest()));
+		} catch (QQConnectException e) {
+			logger.error("getAuthorizeURL failed!",e);
+			writeText("跳转qq登录失败！");
+		}
+	}
+
 }

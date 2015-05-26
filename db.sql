@@ -94,8 +94,18 @@ create table html_page (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 AUTO_INCREMENT = 1;
 
 create table users (
-  username VARCHAR (30) NOT NULL ,
-  password VARCHAR (30) NOT NULL ,
-  qq_open_id VARCHAR (200) ,
-  primary key (username)
-) ENGINE=INNODB DEFAULT CHARSET=utf8;
+  id INT NOT NULL AUTO_INCREMENT,
+  username VARCHAR (40) NOT NULL,
+  password VARCHAR (40) ,
+  nick_name VARCHAR (40) ,
+  qq_open_id VARCHAR (40) ,
+  qq_nick_name VARCHAR (40),
+  qq_avatar_url_30 VARCHAR(200),
+  primary key (id)
+) ENGINE=INNODB DEFAULT CHARSET=utf8 AUTO_INCREMENT = 1;
+
+alter table users add unique(username);
+
+alter table comments add username VARCHAR (40);
+alter table comments add nick_name VARCHAR (40);
+

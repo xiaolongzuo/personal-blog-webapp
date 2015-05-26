@@ -68,6 +68,16 @@
         <servlet-class>com.zuoxiaolong.servlet.Search</servlet-class>
     </servlet>
 
+	<servlet>
+        <servlet-name>redirect</servlet-name>
+        <servlet-class>com.zuoxiaolong.servlet.Redirect</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>callback</servlet-name>
+        <servlet-class>com.zuoxiaolong.servlet.Callback</servlet-class>
+    </servlet>
+    
     <servlet-mapping>
         <servlet-name>counter</servlet-name>
         <url-pattern>/counter.do</url-pattern>
@@ -92,13 +102,23 @@
         <servlet-name>search</servlet-name>
         <url-pattern>/search.do</url-pattern>
     </servlet-mapping>
+    
+    <servlet-mapping>
+    	<servlet-name>redirect</servlet-name>
+    	<url-pattern>/redirect.do</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>callback</servlet-name>
+        <url-pattern>/oauth2/callback</url-pattern>
+    </servlet-mapping>
 
     <listener>
         <listener-class>com.zuoxiaolong.listener.ConfigurationListener</listener-class>
     </listener>
     
     <welcome-file-list>
-        <welcome-file>html/index.html</welcome-file>
+        <welcome-file>blog/index.ftl</welcome-file>
     </welcome-file-list>
 
 </web-app>

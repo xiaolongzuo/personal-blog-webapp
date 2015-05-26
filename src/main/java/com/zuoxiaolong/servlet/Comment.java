@@ -1,6 +1,7 @@
 package com.zuoxiaolong.servlet;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -43,7 +44,8 @@ public class Comment extends BaseServlet {
 			logger.info("comment param : articleId = " + articleId + "   , content = " + content);
 		}
 		String visitorIp = HttpUtil.getVisitorIp(request);
-		boolean result = CommentDao.save(articleId, visitorIp, content);
+		Map<String, String> user = getUser();
+		boolean result = CommentDao.save(articleId, visitorIp, content, (user == null ? null : user.get("username")), (user == null ? null : user.get("nickName")));
 		if (!result) {
 			logger.error("save comment error!");
 			return;

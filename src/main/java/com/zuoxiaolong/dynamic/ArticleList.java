@@ -1,9 +1,12 @@
 package com.zuoxiaolong.dynamic;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.zuoxiaolong.dao.ArticleDao;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -23,10 +26,21 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author 左潇龙
- * @since 2015年5月24日 上午5:15:33
+ * @since 2015年5月27日 上午2:13:35
  */
-public interface DataMap {
-	
-	public void putCustomData(Map<String, Object> data,HttpServletRequest request, HttpServletResponse response);
-	
+@Namespace("blog")
+public class ArticleList implements DataMap {
+
+	@Override
+	public void putCustomData(Map<String, Object> data, HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Integer> pager = new HashMap<String, Integer>();
+		int total = ArticleDao.getArticles("create_date").size();
+		int page = (total % 10 == 0) ? (total / 10) : (total / 10 + 1);
+		pager.put("current", Integer.valueOf(request.getParameter("current")));
+		pager.put("total", total);
+		pager.put("page", page);
+		data.put("pageArticles", ArticleDao.getPageArticles(pager));
+        data.put("pager", pager);
+	}
+
 }

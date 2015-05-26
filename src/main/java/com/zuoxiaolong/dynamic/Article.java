@@ -5,6 +5,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.dao.CommentDao;
+
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -23,10 +26,17 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author 左潇龙
- * @since 2015年5月24日 上午5:15:33
+ * @since 2015年5月27日 上午2:12:01
  */
-public interface DataMap {
-	
-	public void putCustomData(Map<String, Object> data,HttpServletRequest request, HttpServletResponse response);
-	
+@Namespace("blog")
+public class Article implements DataMap {
+
+	@Override
+	public void putCustomData(Map<String, Object> data, HttpServletRequest request, HttpServletResponse response) {
+		Integer id = Integer.valueOf(request.getParameter("id"));
+		Map<String, String> article = ArticleDao.getArticle(id);
+		data.put("article", article);
+		data.put("comments", CommentDao.getComments(id));
+	}
+
 }

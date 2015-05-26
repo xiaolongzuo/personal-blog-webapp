@@ -1,9 +1,13 @@
 package com.zuoxiaolong.dynamic;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.zuoxiaolong.algorithm.Random;
+import com.zuoxiaolong.dao.ArticleDao;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -23,10 +27,18 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author 左潇龙
- * @since 2015年5月24日 上午5:15:33
+ * @since 2015年5月27日 上午1:54:53
  */
-public interface DataMap {
+@Namespace("blog")
+public class Index implements DataMap {
 	
-	public void putCustomData(Map<String, Object> data,HttpServletRequest request, HttpServletResponse response);
+	private static final int DEFAULT_INDEX_ARTICLE_NUMBER = 5;
+
+	@Override
+	public void putCustomData(Map<String, Object> data,HttpServletRequest request, HttpServletResponse response) {
+		List<Map<String, String>> randomList = Random.random(ArticleDao.getArticles("create_date"), DEFAULT_INDEX_ARTICLE_NUMBER);
+        data.put("articles", randomList);
+	}
+
 	
 }

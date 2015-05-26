@@ -11,6 +11,14 @@
 	<dependencies>
 		
 		<dependency>
+			<groupId>qq.sdk</groupId>
+			<artifactId>sdk4j</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/Sdk4J.jar</systemPath>
+		</dependency>
+		
+		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
 			<version>1.8.2</version>

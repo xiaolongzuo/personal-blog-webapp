@@ -12,7 +12,7 @@
         <div class="blogs">
             <figure><img src="${article.icon}"></figure>
             <ul>
-                <h3><a href="${contextPath}/html/article_${article.id}.html" target="_blank">${article.subject}</a></h3>
+                <h3><a href="${contextPath}/blog/article.ftl?id=${article.id}" target="_blank">${article.subject}</a></h3>
                 <p>
                 ${article.summary}...
                 </p>

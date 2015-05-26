@@ -3,11 +3,13 @@ package com.zuoxiaolong.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -55,6 +57,15 @@ public abstract class BaseServlet extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		responseThreadLocal.set(response);
 		service();
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected Map<String, String> getUser() {
+		HttpSession session = getRequest().getSession(false);
+		if (session != null && session.getAttribute("user") != null) {
+			return (Map<String, String>) session.getAttribute("user");
+		}
+		return null;
 	}
 	
 	protected abstract void service() throws ServletException, IOException ;

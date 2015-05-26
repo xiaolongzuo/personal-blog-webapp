@@ -105,10 +105,15 @@ public abstract class FreemarkerHelper {
 	}
 	
 	public static String getNamespace(String templatePath) {
-		while (templatePath.startsWith("/")) {
-			templatePath = templatePath.substring(1);
-		}
+		templatePath = replaceStartSlant(templatePath);
 		return templatePath.substring(0, templatePath.indexOf("/"));
+	}
+	
+	public static String replaceStartSlant(String s) {
+		while (s.startsWith("/")) {
+			s = s.substring(1);
+		}
+		return s;
 	}
 	
 }

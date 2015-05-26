@@ -1,0 +1,63 @@
+package com.zuoxiaolong.servlet;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.ServletException;
+
+import com.qq.connect.QQConnectException;
+import com.qq.connect.api.OpenID;
+import com.qq.connect.api.qzone.UserInfo;
+import com.qq.connect.javabeans.qzone.UserInfoBean;
+import com.qq.connect.oauth.Oauth;
+import com.zuoxiaolong.dao.UserDao;
+
+/*
+ * Copyright 2002-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * @author 左潇龙
+ * @since 2015年5月26日 下午9:23:04
+ */
+public class Callback extends BaseServlet {
+
+	private static final long serialVersionUID = 7842406487110985418L;
+
+	@Override
+	protected void service() throws ServletException, IOException {
+		try {
+			String accessToken = new Oauth().getAccessTokenByRequest(getRequest()).getAccessToken();
+			String openId = new OpenID(accessToken).getUserOpenID();
+			UserInfo qzoneUserInfo = new UserInfo(accessToken, openId);
+			UserInfoBean userInfoBean = qzoneUserInfo.getUserInfo();
+			if (userInfoBean.getRet() == 0) {
+				Map<String, String> userMap = new HashMap<>();
+				userMap.put("username", openId);
+				userMap.put("nickName", userInfoBean.getNickname());
+				UserDao.saveOrUpdate(openId, null, userInfoBean.getNickname(), openId, userInfoBean.getNickname(), userInfoBean.getAvatar().getAvatarURL30());
+				getRequest().getSession().setAttribute("user", userMap);
+				getResponse().sendRedirect("/");
+			} else {
+				writeText("很抱歉，我们没能正确获取到您的信息，原因是：" + userInfoBean.getMsg());
+			}
+		} catch (QQConnectException e) {
+			logger.error("getAccessTokenByRequest failed", e);
+			writeText("qq登陆授权失败！");
+		}
+	}
+
+}

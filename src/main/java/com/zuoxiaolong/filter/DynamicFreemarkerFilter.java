@@ -15,6 +15,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.zuoxiaolong.config.Configuration;
 import com.zuoxiaolong.dynamic.DataMap;
 import com.zuoxiaolong.dynamic.Namespace;
@@ -50,18 +52,22 @@ public class DynamicFreemarkerFilter implements Filter {
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+		String requestUri = null;
 		try {
-			String requestUri = ((HttpServletRequest)request).getRequestURI();
+			requestUri = ((HttpServletRequest)request).getRequestURI();
+			if (StringUtils.isEmpty(FreemarkerHelper.replaceStartSlant(requestUri))) {
+				requestUri = Configuration.get("welcome.file");
+			}
 			response.setCharacterEncoding("UTF-8");
 			Writer writer = response.getWriter();
 			Map<String, Object> data = FreemarkerHelper.buildCommonDataMap(FreemarkerHelper.getNamespace(requestUri));
 			DataMap current = dataMap.get(requestUri);
 			if (current != null) {
-				data.putAll(current.buildDataMap((HttpServletRequest)request, (HttpServletResponse)response));
+				current.putCustomData(data, (HttpServletRequest)request, (HttpServletResponse)response);
 			}
 			FreemarkerHelper.generateByTemplatePath(requestUri, writer, data);
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException(requestUri,e);
 		}
 	}
 
