@@ -5,6 +5,7 @@
 <meta property="qc:admins" content="11436637076257011747676375" />
 <link href="${contextPath}/resources/css/base.css" rel="stylesheet">
 <link href="${contextPath}/resources/css/index.css" rel="stylesheet">
+<link href="${contextPath}/resources/css/github_button.css" rel="stylesheet">
 <link href="${contextPath}/resources/css/jquery-ui.min.css" rel="stylesheet">
 <script type="text/javascript" src="${contextPath}/resources/js/jquery.min.js"></script>
 <script type="text/javascript" src="${contextPath}/resources/js/jquery-ui.min.js"></script>

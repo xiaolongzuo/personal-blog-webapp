@@ -93,3 +93,9 @@ create table html_page (
 	primary key (id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 AUTO_INCREMENT = 1;
 
+create table users (
+  username VARCHAR (30) NOT NULL ,
+  password VARCHAR (30) NOT NULL ,
+  qq_open_id VARCHAR (200) ,
+  primary key (username)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
