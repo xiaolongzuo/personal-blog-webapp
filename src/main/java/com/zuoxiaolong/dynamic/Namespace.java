@@ -29,6 +29,6 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 public @interface Namespace {
 
-	public String value() default "/dota";
+	public String value() default "/blog";
 	
 }

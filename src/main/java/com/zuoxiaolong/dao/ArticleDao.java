@@ -1,17 +1,14 @@
 package com.zuoxiaolong.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import com.zuoxiaolong.model.ViewMode;
+import com.zuoxiaolong.util.ImageUtil;
+
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.zuoxiaolong.util.ImageUtil;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -88,7 +85,7 @@ public abstract class ArticleDao extends BaseDao {
 		});
     }
     
-    public static List<Map<String, String>> getPageArticles(final Map<String, Integer> pager) {
+    public static List<Map<String, String>> getPageArticles(final Map<String, Integer> pager, final ViewMode viewMode ) {
         return execute(new Operation<List<Map<String, String>>>() {
             @Override
             public List<Map<String, String>> doInConnection(Connection connection) {
@@ -96,10 +93,10 @@ public abstract class ArticleDao extends BaseDao {
                 List<Map<String, String>> result = new ArrayList<Map<String, String>>();
                 try {
                     PreparedStatement statement = connection.prepareStatement(sql);
-                    statement.setInt(1, (pager.get("current") - 1) * 10);
+                    statement.setInt(1 , (pager.get("current") - 1) * 10);
                     ResultSet resultSet = statement.executeQuery();
                     while (resultSet.next()) {
-                        result.add(transfer(resultSet));
+                        result.add(transfer(resultSet, viewMode));
                     }
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
@@ -109,7 +106,7 @@ public abstract class ArticleDao extends BaseDao {
         });
     }
 
-    public static List<Map<String, String>> getArticles(final String order) {
+    public static List<Map<String, String>> getArticles(final String order, final ViewMode viewMode ) {
         return execute(new Operation<List<Map<String, String>>>() {
             @Override
             public List<Map<String, String>> doInConnection(Connection connection) {
@@ -119,7 +116,7 @@ public abstract class ArticleDao extends BaseDao {
                     Statement statement = connection.createStatement();
                     ResultSet resultSet = statement.executeQuery(sql);
                     while (resultSet.next()) {
-                        result.add(transfer(resultSet));
+                        result.add(transfer(resultSet, viewMode));
                     }
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
@@ -129,7 +126,7 @@ public abstract class ArticleDao extends BaseDao {
         });
     }
 
-    public static Map<String, String> getArticle(final int id) {
+    public static Map<String, String> getArticle(final int id, final ViewMode viewMode ) {
         return execute(new Operation<Map<String, String>>() {
             @Override
             public Map<String, String> doInConnection(Connection connection) {
@@ -139,7 +136,7 @@ public abstract class ArticleDao extends BaseDao {
                     Statement statement = connection.createStatement();
                     ResultSet resultSet = statement.executeQuery(sql);
                     if (resultSet.next()) {
-                        result = transfer(resultSet);
+                        result = transfer(resultSet, viewMode);
                     }
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
@@ -165,10 +162,16 @@ public abstract class ArticleDao extends BaseDao {
         });
     }
     
-    private static Map<String, String> transfer(ResultSet resultSet) {
+    private static Map<String, String> transfer(ResultSet resultSet, ViewMode viewMode) {
         Map<String, String> article = new HashMap<String, String>();
         try {
-            article.put("id", resultSet.getString("id"));
+            String id = resultSet.getString("id");
+            article.put("id", id);
+            if (viewMode == ViewMode.DYNAMIC) {
+                article.put("url", "/blog/article.ftl?id=" + id);
+            } else {
+                article.put("url", "/html/article_" + id + ".html");
+            }
             article.put("icon", resultSet.getString("icon"));
             article.put("subject", resultSet.getString("subject"));
             article.put("username", resultSet.getString("username"));

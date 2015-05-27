@@ -7,8 +7,23 @@
             }
         </script>
         <h3>用户中心</h3>
-        <table id="login_table" cellspacing="0" cellpadding="0">
-            <tbody>
+        <#if nickName??>
+            <div id="user_info_div">
+                <#if avatarUrl??>
+                <div id="avatar_div" class="float_left">
+                    <img id="avatar_img" src="${avatarUrl}">
+                </div>
+                </#if>
+                <div id="welcom_div" class="float_left">
+                ${nickName}，欢迎你！
+                </div>
+                <div id="logout_div" class="float_right">
+                    <span id="logout_span"><a href="#" class="button">注销</a></span>
+                </div>
+            </div>
+            <#else>
+            <table id="login_table" cellspacing="0" cellpadding="0">
+                <tbody>
                 <tr>
                     <td>用户名：</td>
                     <td><input type="text" name="username" /></td>
@@ -17,10 +32,16 @@
                 <tr>
                     <td>密  码：</td>
                     <td><input type="password" name="password" /></td>
-                    <td><a href="#" onclick='toLogin()'><img width="50" height="20" src="${contextPath}/resources/img/qq_login.png" title="使用QQ登录"></a></td>
+                    <td>
+                        <!--
+                        <a href="#" onclick='toLogin()'><img width="50" height="20" src="${contextPath}/resources/img/qq_login.png" title="使用QQ登录"></a>
+                        -->
+                        &nbsp;
+                    </td>
                 </tr>
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </#if>
     </div>
 
     <!-- 关注模块 -->
@@ -74,7 +95,7 @@
                     <#if article_index gt 5>
                         <#break />
                     </#if>
-                    <li><a href="${contextPath}/blog/article.ftl?id=${article.id}" target="_blank" title="${article.subject}">${article.subject}</a></li>
+                    <li><a href="${contextPath}${article.url}" target="_blank" title="${article.subject}">${article.subject}</a></li>
                 </#list>
                 </ul>
             </div>
@@ -84,7 +105,7 @@
                     <#if article_index gt 5>
                         <#break />
                     </#if>
-                    <li><a href="${contextPath}/blog/article.ftl?id=${article.id}" target="_blank" title="${article.subject}">${article.subject}</a></li>
+                    <li><a href="${contextPath}${article.url}" target="_blank" title="${article.subject}">${article.subject}</a></li>
                 </#list>
                 </ul>
             </div>
@@ -94,7 +115,7 @@
                     <#if article_index gt 5>
                         <#break />
                     </#if>
-                    <li><a href="${contextPath}/blog/article.ftl?id=${article.id}" target="_blank" title="${article.subject}">${article.subject}</a></li>
+                    <li><a href="${contextPath}${article.url}" target="_blank" title="${article.subject}">${article.subject}</a></li>
                 </#list>
                 </ul>
             </div>
@@ -118,13 +139,13 @@
 
     <!-- 图文模块 -->
     <div class="tuwen">
-        <h3>图文推荐</h3>
+        <h3>随机推荐</h3>
         <ul>
         <#list imageArticles as article>
             <#if article_index gt 4>
                 <#break />
             </#if>
-            <li><a href="${contextPath}/blog/article.ftl?id=${article.id}" target="_blank" title="${article.subject}"><img src="${article.icon}"><b>${article.shortSubject}</b></a>
+            <li><a href="${contextPath}${article.url}" target="_blank" title="${article.subject}"><img src="${article.icon}"><b>${article.shortSubject}</b></a>
 
                 <p><span class="tulanmu"><a href="/">${article.username}</a></span><span
                         class="tutime">${article.create_date?substring(0,10)}</span>

@@ -1,17 +1,16 @@
 package com.zuoxiaolong.servlet;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.ServletException;
-
 import com.qq.connect.QQConnectException;
 import com.qq.connect.api.OpenID;
 import com.qq.connect.api.qzone.UserInfo;
 import com.qq.connect.javabeans.qzone.UserInfoBean;
 import com.qq.connect.oauth.Oauth;
 import com.zuoxiaolong.dao.UserDao;
+
+import javax.servlet.ServletException;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -48,9 +47,10 @@ public class Callback extends BaseServlet {
 				Map<String, String> userMap = new HashMap<>();
 				userMap.put("username", openId);
 				userMap.put("nickName", userInfoBean.getNickname());
+				userMap.put("avatarUrl", userInfoBean.getAvatar().getAvatarURL30());
 				UserDao.saveOrUpdate(openId, null, userInfoBean.getNickname(), openId, userInfoBean.getNickname(), userInfoBean.getAvatar().getAvatarURL30());
 				getRequest().getSession().setAttribute("user", userMap);
-				getResponse().sendRedirect("/");
+				getResponse().sendRedirect("/blog/index.ftl");
 			} else {
 				writeText("很抱歉，我们没能正确获取到您的信息，原因是：" + userInfoBean.getMsg());
 			}

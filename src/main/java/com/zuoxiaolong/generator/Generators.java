@@ -1,15 +1,14 @@
-package com.zuoxiaolong.freemarker;
+package com.zuoxiaolong.generator;
+
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.dao.ArticleDao;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.log4j.Logger;
-
-import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.dao.ArticleDao;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -67,7 +66,7 @@ public abstract class Generators {
     }
 
     public static void generate(Integer id) {
-        ((ArticleGenerator)generatorMap.get(ArticleGenerator.class)).generateArticle(id, ArticleDao.getArticles("create_date"));
+        ((ArticleGenerator)generatorMap.get(ArticleGenerator.class)).generateArticle(id, ArticleDao.getArticles("create_date", Generator.VIEW_MODE));
     }
     
 }

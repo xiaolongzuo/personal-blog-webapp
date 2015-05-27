@@ -1,20 +1,18 @@
 package com.zuoxiaolong.servlet;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
-import java.util.Map;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
-import org.apache.log4j.Logger;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+import java.util.Map;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -58,10 +56,14 @@ public abstract class BaseServlet extends HttpServlet {
 		responseThreadLocal.set(response);
 		service();
 	}
+
+	protected Map<String, String> getUser() {
+		return getUser(getRequest());
+	}
 	
 	@SuppressWarnings("unchecked")
-	protected Map<String, String> getUser() {
-		HttpSession session = getRequest().getSession(false);
+	public static Map<String, String> getUser(HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
 		if (session != null && session.getAttribute("user") != null) {
 			return (Map<String, String>) session.getAttribute("user");
 		}

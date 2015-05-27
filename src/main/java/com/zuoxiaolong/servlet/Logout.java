@@ -1,4 +1,8 @@
-package com.zuoxiaolong.freemarker;
+package com.zuoxiaolong.servlet;
+
+import javax.servlet.ServletException;
+import java.io.IOException;
+import java.util.Map;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -18,10 +22,17 @@ package com.zuoxiaolong.freemarker;
 
 /**
  * @author 左潇龙
- * @since 5/7/2015 5:45 PM
+ * @since 5/27/2015 1:51 PM
  */
-public interface Generator {
+public class Logout extends BaseServlet {
 
-    public void generate();
+    @Override
+    protected void service() throws ServletException, IOException {
+        Map<String, String> user = getUser();
+        if (user != null ) {
+            getRequest().getSession(false).removeAttribute("user");
+            getResponse().sendRedirect("/");
+        }
+    }
 
 }

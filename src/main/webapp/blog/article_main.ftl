@@ -15,10 +15,10 @@
     <#if nextArticle?? || preArticle?? >
         <div class="nextinfo">
             <#if preArticle??>
-                <p>上一篇：<a href="${contextPath}/blog/article.ftl?id=${preArticle.id}">${preArticle.subject}</a></p>
+                <p>上一篇：<a href="${contextPath}${preArticle.url}">${preArticle.subject}</a></p>
             </#if>
             <#if nextArticle??>
-                <p>下一篇：<a href="${contextPath}/blog/article.ftl?id=${nextArticle.id}">${nextArticle.subject}</a></p>
+                <p>下一篇：<a href="${contextPath}${nextArticle.url}">${nextArticle.subject}</a></p>
             </#if>
         </div>
     </#if>
@@ -27,7 +27,7 @@
             <h2>相关文章</h2>
             <ul>
                 <#list relatedArticles as article>
-                    <li><a href="${contextPath}/blog/article.ftl?id=${article.id}" title="${article.subject}">${article.subject}</a></li>
+                    <li><a href="${contextPath}${article.url}" title="${article.subject}">${article.subject}</a></li>
                 </#list>
             </ul>
         </div>

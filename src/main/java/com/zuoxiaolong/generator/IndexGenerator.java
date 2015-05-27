@@ -1,14 +1,15 @@
-package com.zuoxiaolong.freemarker;
+package com.zuoxiaolong.generator;
+
+import com.zuoxiaolong.algorithm.Random;
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.util.FreemarkerUtil;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 import java.util.Map;
-
-import com.zuoxiaolong.algorithm.Random;
-import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.dao.ArticleDao;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -37,12 +38,12 @@ public class IndexGenerator implements Generator {
     public void generate() {
         Writer writer = null;
         try {
-            Map<String, Object> data = FreemarkerHelper.buildCommonDataMap();
-            List<Map<String, String>> randomList = Random.random(ArticleDao.getArticles("create_date"), DEFAULT_INDEX_ARTICLE_NUMBER);
+            Map<String, Object> data = FreemarkerUtil.buildCommonDataMap(VIEW_MODE);
+            List<Map<String, String>> randomList = Random.random(ArticleDao.getArticles("create_date", VIEW_MODE), DEFAULT_INDEX_ARTICLE_NUMBER);
             data.put("articles", randomList);
             String htmlPath = Configuration.getContextPath("html/index.html");
             writer = new FileWriter(htmlPath);
-            FreemarkerHelper.generate("index", writer, data);
+            FreemarkerUtil.generate("index", writer, data);
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {

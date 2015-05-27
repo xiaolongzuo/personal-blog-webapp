@@ -1,12 +1,11 @@
 package com.zuoxiaolong.dynamic;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.zuoxiaolong.dao.ArticleDao;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.zuoxiaolong.dao.ArticleDao;
+import java.util.HashMap;
+import java.util.Map;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -28,18 +27,23 @@ import com.zuoxiaolong.dao.ArticleDao;
  * @author 左潇龙
  * @since 2015年5月27日 上午2:13:35
  */
-@Namespace("blog")
+@Namespace
 public class ArticleList implements DataMap {
 
 	@Override
 	public void putCustomData(Map<String, Object> data, HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Integer> pager = new HashMap<String, Integer>();
-		int total = ArticleDao.getArticles("create_date").size();
+		int total = ArticleDao.getArticles("create_date", VIEW_MODE).size();
 		int page = (total % 10 == 0) ? (total / 10) : (total / 10 + 1);
-		pager.put("current", Integer.valueOf(request.getParameter("current")));
+		int current = Integer.valueOf(request.getParameter("current"));
+		pager.put("current", current);
 		pager.put("total", total);
 		pager.put("page", page);
-		data.put("pageArticles", ArticleDao.getPageArticles(pager));
+		data.put("firstArticleListUrl","/blog/article_list.ftl?current=1");
+		data.put("preArticleListUrl","/blog/article_list.ftl?current=" + (current - 1));
+		data.put("nextArticleListUrl","/blog/article_list.ftl?current=" + (current + 1));
+		data.put("lastArticleListUrl","/blog/article_list.ftl?current=" + page);
+		data.put("pageArticles", ArticleDao.getPageArticles(pager, VIEW_MODE));
         data.put("pager", pager);
 	}
 

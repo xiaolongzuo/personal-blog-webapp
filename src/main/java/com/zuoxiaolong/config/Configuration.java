@@ -1,16 +1,14 @@
 package com.zuoxiaolong.config;
 
+import freemarker.template.Version;
+import org.apache.log4j.Logger;
+
+import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
-
-import javax.servlet.ServletContext;
-
-import org.apache.log4j.Logger;
-
-import freemarker.template.Version;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -60,10 +58,10 @@ public abstract class Configuration {
             try {
                 properties.load(new FileInputStream(propertyFiles[i]));
                 if (logger.isInfoEnabled()) {
-                    logger.info("加载配置文件成功:" + propertyFiles[i]);
+                    logger.info("load properties file success :" + propertyFiles[i]);
                 }
             } catch (IOException e) {
-                logger.warn("加载配置文件失败:" + propertyFiles[i], e);
+                logger.warn("load properties file failed , skiped :" + propertyFiles[i], e);
             }
         }
         configuration = new freemarker.template.Configuration(new Version(2, 3, 22));

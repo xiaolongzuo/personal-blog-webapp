@@ -1,5 +1,5 @@
 package com.zuoxiaolong.config;
-import com.zuoxiaolong.config.Configuration;
+
 import org.junit.Assert;
 import org.junit.Test;
 

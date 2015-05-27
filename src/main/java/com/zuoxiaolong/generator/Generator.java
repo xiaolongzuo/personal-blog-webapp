@@ -1,10 +1,4 @@
-package com.zuoxiaolong.dynamic;
-
-import com.zuoxiaolong.model.ViewMode;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
+package com.zuoxiaolong.generator;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -22,14 +16,16 @@ import java.util.Map;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.model.ViewMode;
+
 /**
  * @author 左潇龙
- * @since 2015年5月24日 上午5:15:33
+ * @since 5/7/2015 5:45 PM
  */
-public interface DataMap {
+public interface Generator {
 
-	public static final ViewMode VIEW_MODE = ViewMode.DYNAMIC;
+    public static final ViewMode VIEW_MODE = ViewMode.STATIC;
 
-	public void putCustomData(Map<String, Object> data,HttpServletRequest request, HttpServletResponse response);
-	
+    public void generate();
+
 }

@@ -14,8 +14,8 @@
     </filter>
     
     <filter>
-        <filter-name>dynamicFreemarker</filter-name>
-        <filter-class>com.zuoxiaolong.filter.DynamicFreemarkerFilter</filter-class>
+        <filter-name>dynamic</filter-name>
+        <filter-class>com.zuoxiaolong.filter.DynamicFilter</filter-class>
     </filter>
 
     <filter-mapping>
@@ -39,7 +39,7 @@
     </filter-mapping>
     
     <filter-mapping>
-        <filter-name>dynamicFreemarker</filter-name>
+        <filter-name>dynamic</filter-name>
         <url-pattern>*.ftl</url-pattern>
     </filter-mapping>
 
@@ -77,6 +77,11 @@
         <servlet-name>callback</servlet-name>
         <servlet-class>com.zuoxiaolong.servlet.Callback</servlet-class>
     </servlet>
+
+    <servlet>
+        <servlet-name>logout</servlet-name>
+        <servlet-class>com.zuoxiaolong.servlet.Logout</servlet-class>
+    </servlet>
     
     <servlet-mapping>
         <servlet-name>counter</servlet-name>
@@ -113,12 +118,17 @@
         <url-pattern>/oauth2/callback</url-pattern>
     </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>logout</servlet-name>
+        <url-pattern>/logout.do</url-pattern>
+    </servlet-mapping>
+
     <listener>
         <listener-class>com.zuoxiaolong.listener.ConfigurationListener</listener-class>
     </listener>
     
     <welcome-file-list>
-        <welcome-file>blog/index.ftl</welcome-file>
+        <welcome-file>html/index.html</welcome-file>
     </welcome-file-list>
 
 </web-app>

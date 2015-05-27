@@ -1,12 +1,11 @@
 package com.zuoxiaolong.dynamic;
 
-import java.util.Map;
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.dao.CommentDao;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.zuoxiaolong.dao.ArticleDao;
-import com.zuoxiaolong.dao.CommentDao;
+import java.util.Map;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -28,13 +27,13 @@ import com.zuoxiaolong.dao.CommentDao;
  * @author 左潇龙
  * @since 2015年5月27日 上午2:12:01
  */
-@Namespace("blog")
+@Namespace
 public class Article implements DataMap {
 
 	@Override
 	public void putCustomData(Map<String, Object> data, HttpServletRequest request, HttpServletResponse response) {
 		Integer id = Integer.valueOf(request.getParameter("id"));
-		Map<String, String> article = ArticleDao.getArticle(id);
+		Map<String, String> article = ArticleDao.getArticle(id, VIEW_MODE);
 		data.put("article", article);
 		data.put("comments", CommentDao.getComments(id));
 	}

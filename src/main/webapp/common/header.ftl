@@ -2,8 +2,8 @@
     <div class="logo float_left"><a href="/"><img src="${contextPath}/resources/img/header_logo.png"></a></div>
     <nav id="header_nav" class="float_right">
         <ul>
-            <a class="header_nav_a" href="/">首页</a>
-            <a class="header_nav_a" href="${contextPath}/html/article_list_1.html" >全部文章</a>
+            <a class="header_nav_a" href="${indexUrl}">首页</a>
+            <a class="header_nav_a" href="${allArticlesUrl}" >全部文章</a>
             <a class="header_nav_a" href="#" >技术</a>
             <a class="header_nav_a" href="#" >生活</a>
             <a class="header_nav_a" href="#" >照片墙</a>

@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.zuoxiaolong.dao.ArticleDao;
 import com.zuoxiaolong.dao.CommentDao;
-import com.zuoxiaolong.freemarker.Generators;
+import com.zuoxiaolong.generator.Generators;
 import com.zuoxiaolong.util.HttpUtil;
 
 /*

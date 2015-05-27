@@ -3,7 +3,7 @@ package com.zuoxiaolong.thread;
 import org.apache.log4j.Logger;
 
 import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.freemarker.Generators;
+import com.zuoxiaolong.generator.Generators;
 import com.zuoxiaolong.reptile.Cnblogs;
 import com.zuoxiaolong.util.ImageUtil;
 

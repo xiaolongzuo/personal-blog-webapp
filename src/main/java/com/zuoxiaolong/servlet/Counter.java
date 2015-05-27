@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 
 import com.zuoxiaolong.dao.ArticleDao;
 import com.zuoxiaolong.dao.ArticleIdVisitorIpDao;
-import com.zuoxiaolong.freemarker.Generators;
+import com.zuoxiaolong.generator.Generators;
 import com.zuoxiaolong.util.HttpUtil;
 
 /*
