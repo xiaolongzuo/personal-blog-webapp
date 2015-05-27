@@ -77,6 +77,11 @@ public class Login extends BaseServlet {
 			writeText("success");
 			return;
 		}
+		Map<String, String> userInDB = UserDao.getUser(username);
+		if (userInDB != null) {
+			writeText("用户名已存在或密码错误！");
+			return;
+		}
 		if (user == null && UserDao.saveOrUpdate(username, password, username, null, username, null)) {
 			user = new HashMap<>();
 			user.put("username", username);
