@@ -2,6 +2,7 @@ package com.zuoxiaolong.util;
 
 import java.security.Key;
 import java.security.KeyFactory;
+import java.security.MessageDigest;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
@@ -45,6 +46,18 @@ public abstract class EnrypyUtil {
         cipher.init(Cipher.ENCRYPT_MODE, key);
         byte[] result = cipher.doFinal(data.getBytes());
         return base64Encode(result);
+    }
+    
+    public static String md5(String source) throws Exception {
+    	byte [] buffer = source.getBytes("UTF-8");
+        MessageDigest md5 = MessageDigest.getInstance("MD5");
+        md5.update(buffer);
+        byte [] temp = md5.digest();
+        StringBuffer stringBuffer = new StringBuffer();
+        for (byte b : temp) {
+        	stringBuffer.append(Integer.toHexString(b&0xff));
+        }
+        return stringBuffer.toString();
     }
     
     public static byte[] base64Decode(String data) {

@@ -1,10 +1,38 @@
     <!-- 关注模块 -->
     <div class="user_profile">
         <script type="application/javascript">
-            function toLogin()
-            {
-                window.location.href="${contextPath}/redirect.do";
-            }
+            $(document).ready(function(){
+            	$("#qq_login_button").click(function(){
+            		window.location.href="${contextPath}/redirect.do";
+            	});
+            	$("#logout_button").click(function(){
+            		$.ajax({
+            			url:"${contextPath}/logout.do",
+						type:"POST",
+						success:function(data) {
+							if(data && data == 'success'){
+								window.location.href="${contextPath}";
+							}
+						}
+            		});
+            	});
+            	$("#login_register_button").click(function(){
+            		$.ajax({
+            			url:"${contextPath}/login.do",
+						type:"POST",
+						data:{"username":$("input[name=username]").val(),"password":$("input[name=password]").val()},
+						success:function(data){
+							if(data && data == 'success'){
+								window.location.href="${contextPath}/blog/index.ftl";
+							} else if(data && data == 'error') {
+								$("#login_error_td").html("发生了未知错误，请联系站长！");
+							} else {
+								$("#login_error_td").html(data);
+							}
+						}
+            		});
+            	});
+            });
         </script>
         <h3>用户中心</h3>
         <#if nickName??>
@@ -14,11 +42,11 @@
                     <img id="avatar_img" src="${avatarUrl}">
                 </div>
                 </#if>
-                <div id="welcom_div" class="float_left">
-                ${nickName}，欢迎你！
+                <div id="welcome_div" class="float_left">
+                <span id="nick_name_span" class="welcome_font">${nickName}</span><span class="welcome_font">，欢迎你！</span>
                 </div>
                 <div id="logout_div" class="float_right">
-                    <span id="logout_span"><a href="#" class="button">注销</a></span>
+                    <a id="logout_button" href="#" class="button">注销</a>
                 </div>
             </div>
             <#else>
@@ -27,17 +55,21 @@
                 <tr>
                     <td>用户名：</td>
                     <td><input type="text" name="username" /></td>
-                    <td><a href="#" class="button">登录&nbsp;|&nbsp;注册</a></td>
+                    <td><a id="login_register_button" href="#" class="button">登录&nbsp;|&nbsp;注册</a></td>
                 </tr>
                 <tr>
                     <td>密  码：</td>
                     <td><input type="password" name="password" /></td>
                     <td>
                         <!--
-                        <a href="#" onclick='toLogin()'><img width="50" height="20" src="${contextPath}/resources/img/qq_login.png" title="使用QQ登录"></a>
+                        <a href="#" id="qq_login_button"><img width="50" height="20" src="${contextPath}/resources/img/qq_login.png" title="使用QQ登录"></a>
                         -->
                         &nbsp;
                     </td>
+                </tr>
+				<tr>
+                    <td>&nbsp;</td>
+                    <td colspan="2" id="login_error_td" style="font-size:11px;color:red;"></td>
                 </tr>
                 </tbody>
             </table>
@@ -83,9 +115,9 @@
         </script>
         <div class="charts_top">
             <ul class="hd" id="tab">
-                <li class="cur"><a href="/">点击排行</a></li>
-                <li><a href="/">最新文章</a></li>
-                <li><a href="/">站长推荐</a></li>
+                <li class="cur"><a href="#">点击排行</a></li>
+                <li><a href="#">最新文章</a></li>
+                <li><a href="#">站长推荐</a></li>
             </ul>
         </div>
         <div class="ms-main" id="ms-main">
@@ -95,7 +127,7 @@
                     <#if article_index gt 5>
                         <#break />
                     </#if>
-                    <li><a href="${contextPath}${article.url}" target="_blank" title="${article.subject}">${article.subject}</a></li>
+                    <li><a href="${contextPath}${article.url}" title="${article.subject}">${article.subject}</a></li>
                 </#list>
                 </ul>
             </div>
@@ -105,7 +137,7 @@
                     <#if article_index gt 5>
                         <#break />
                     </#if>
-                    <li><a href="${contextPath}${article.url}" target="_blank" title="${article.subject}">${article.subject}</a></li>
+                    <li><a href="${contextPath}${article.url}" title="${article.subject}">${article.subject}</a></li>
                 </#list>
                 </ul>
             </div>
@@ -115,7 +147,7 @@
                     <#if article_index gt 5>
                         <#break />
                     </#if>
-                    <li><a href="${contextPath}${article.url}" target="_blank" title="${article.subject}">${article.subject}</a></li>
+                    <li><a href="${contextPath}${article.url}" title="${article.subject}">${article.subject}</a></li>
                 </#list>
                 </ul>
             </div>
@@ -145,9 +177,9 @@
             <#if article_index gt 4>
                 <#break />
             </#if>
-            <li><a href="${contextPath}${article.url}" target="_blank" title="${article.subject}"><img src="${article.icon}"><b>${article.shortSubject}</b></a>
+            <li><a href="${contextPath}${article.url}" title="${article.subject}"><img src="${article.icon}"><b>${article.shortSubject}</b></a>
 
-                <p><span class="tulanmu"><a href="/">${article.username}</a></span><span
+                <p><span class="tulanmu"><a href="#">${article.username}</a></span><span
                         class="tutime">${article.create_date?substring(0,10)}</span>
                 </p>
             </li>

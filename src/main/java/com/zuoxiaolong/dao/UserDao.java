@@ -9,6 +9,8 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.zuoxiaolong.util.EnrypyUtil;
+
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -30,6 +32,29 @@ import org.apache.commons.lang.StringUtils;
  * @since 2015年5月27日 上午12:04:43
  */
 public abstract class UserDao extends BaseDao {
+	
+	public static Map<String, String> login(String username , String password) {
+		return execute(new Operation<Map<String, String>>() {
+			public Map<String, String> doInConnection(Connection connection) {
+				try {
+					PreparedStatement statement = connection.prepareStatement("select nick_name,qq_avatar_url_30 from users where username=? and password=?");
+					statement.setString(1, username);
+					statement.setString(2, EnrypyUtil.md5(password));
+					ResultSet resultSet = statement.executeQuery();
+					if (resultSet.next()) {
+						Map<String, String> result = new HashMap<String, String>();
+						result.put("username", username);
+						result.put("nickName", resultSet.getString("nick_name"));
+						result.put("qqAvatarUrl30", resultSet.getString("qq_avatar_url_30"));
+						return result;
+					}
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+				return null;
+			}
+		});
+	}
 	
 	public static Map<String, String> getUser(String username) {
 		return execute(new Operation<Map<String, String>>() {
@@ -83,7 +108,7 @@ public abstract class UserDao extends BaseDao {
 					if (!exsits) {
 						saveOrUpdate = connection.prepareStatement(insertSql);
 						saveOrUpdate.setString(1, finalUsername);
-						saveOrUpdate.setString(2, password);
+						saveOrUpdate.setString(2, EnrypyUtil.md5(password));
 						saveOrUpdate.setString(3, finalNickName);
 						saveOrUpdate.setString(4, qqOpenId);
 						saveOrUpdate.setString(5, qqNickName);
@@ -98,7 +123,7 @@ public abstract class UserDao extends BaseDao {
 					}
 					int result = saveOrUpdate.executeUpdate();
 					return result > 0;
-				} catch (SQLException e) {
+				} catch (Exception e) {
 					throw new RuntimeException(e);
 				}
 			}

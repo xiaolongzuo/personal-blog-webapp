@@ -1,8 +1,9 @@
 package com.zuoxiaolong.servlet;
 
-import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.Map;
+
+import javax.servlet.ServletException;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -26,13 +27,15 @@ import java.util.Map;
  */
 public class Logout extends BaseServlet {
 
-    @Override
+	private static final long serialVersionUID = -3057874850069731524L;
+
+	@Override
     protected void service() throws ServletException, IOException {
         Map<String, String> user = getUser();
         if (user != null ) {
             getRequest().getSession(false).removeAttribute("user");
-            getResponse().sendRedirect("/");
         }
+        writeText("success");
     }
 
 }

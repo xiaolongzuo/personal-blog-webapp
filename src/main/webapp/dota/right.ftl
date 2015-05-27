@@ -41,9 +41,9 @@
         </script>
         <div class="charts_top">
             <ul class="hd" id="tab">
-                <li class="cur"><a href="/">热度排行榜</a></li>
-                <li><a href="/">胜率排行榜</a></li>
-                <li><a href="/">胜场排行榜</a></li>
+                <li class="cur"><a href="#">热度排行榜</a></li>
+                <li><a href="#">胜率排行榜</a></li>
+                <li><a href="#">胜场排行榜</a></li>
             </ul>
         </div>
         <div class="ms-main" id="ms-main">

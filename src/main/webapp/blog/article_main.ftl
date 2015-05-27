@@ -3,7 +3,7 @@
         <h2 class="c_titile">${article.subject}</h2>
 
         <p class="box_c"><span class="d_time">发布时间：${article.create_date}</span><span>作者：<a
-                href="/">${article.username}</a></span><span>阅读（${article.access_times}
+                href="#">${article.username}</a></span><span>阅读（${article.access_times}
             ）</span><span>评论（${article.comment_times}）</span></p>
         <ul class="infos">
         ${article.html} <br/>

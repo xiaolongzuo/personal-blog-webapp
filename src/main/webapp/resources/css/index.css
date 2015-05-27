@@ -40,12 +40,12 @@
 .user_profile #login_table {margin: 10px 0px 0px 0px;line-height: 30px; color: #38485A; font-size: 15px;}
 .user_profile #login_table tr {height: 35px;}
 .user_profile #login_table tr td {padding: 3px;}
-.user_profile #welcome_div {margin: 2px;height:25px;line-height:25px;}
-.user_profile #logout_div {margin: 2px 0px 2px 10px;}
-.user_profile #user_info_div {height: 40px; margin: 10px 0px 10px 0px;align:center;}
-.user_profile #avatar_div {margin: 2px;}
-.user_profile #avatar_img {height: 25px; width: 25px; margin: 0px 0px 0px 2px;}
-.user_profile #logout_span {margin: 0px 2px 0px 0px;}
+.user_profile #user_info_div {height: 40px; margin: 10px 0px 10px 0px;padding:5px;}
+.user_profile #welcome_div {margin: 0px;height:30px;line-height:30px;}
+.user_profile .welcome_font {font-size:15px;}
+.user_profile #logout_div {margin: 0px;}
+.user_profile #avatar_img {margin: 0px 10px 0px 0px; height: 30px; width: 30px; }
+.user_profile #nick_name_span {color:#8B8682;}
 
 /* 右侧关注我 */
 .follow_me h3 { line-height: 40px; color: #38485A; font-size: 18px; border-bottom: 1px solid #E6E6E6; height: 40px }
