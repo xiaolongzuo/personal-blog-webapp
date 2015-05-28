@@ -109,3 +109,17 @@ alter table users add unique(username);
 alter table comments add username VARCHAR (40);
 alter table comments add nick_name VARCHAR (40);
 
+create table tags (
+	id INT NOT NULL AUTO_INCREMENT,
+	tag_name VARCHAR(20),
+	primary key (id)
+) ENGINE=INNODB DEFAULT CHARSET=utf8 AUTO_INCREMENT = 1;
+
+create table article_tag (
+	article_id INT NOT NULL,
+	tag_id INT NOT NULL,
+	primary key (article_id,tag_id)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+ALTER TABLE article_tag ADD CONSTRAINT `ARTICLE_TAG_FK_ARTICLE_ID` FOREIGN KEY (`article_id`) REFERENCES articles(`id`);
+ALTER TABLE article_tag ADD CONSTRAINT `ARTICLE_TAG_FK_TAG_ID` FOREIGN KEY (`tag_id`) REFERENCES articles(`id`);
