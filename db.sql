@@ -122,4 +122,20 @@ create table article_tag (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8;
 
 ALTER TABLE article_tag ADD CONSTRAINT `ARTICLE_TAG_FK_ARTICLE_ID` FOREIGN KEY (`article_id`) REFERENCES articles(`id`);
-ALTER TABLE article_tag ADD CONSTRAINT `ARTICLE_TAG_FK_TAG_ID` FOREIGN KEY (`tag_id`) REFERENCES articles(`id`);
+ALTER TABLE article_tag ADD CONSTRAINT `ARTICLE_TAG_FK_TAG_ID` FOREIGN KEY (`tag_id`) REFERENCES tags(`id`);
+
+
+create table categories (
+	id INT NOT NULL AUTO_INCREMENT,
+	category_name VARCHAR(20),
+	primary key (id)
+) ENGINE=INNODB DEFAULT CHARSET=utf8 AUTO_INCREMENT = 1;
+
+create table article_category (
+	article_id INT NOT NULL,
+	category_id INT NOT NULL,
+	primary key (article_id,category_id)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+ALTER TABLE article_category ADD CONSTRAINT `ARTICLE_CATEGORY_FK_ARTICLE_ID` FOREIGN KEY (`article_id`) REFERENCES articles(`id`);
+ALTER TABLE article_category ADD CONSTRAINT `ARTICLE_CATEGORY_FK_CATEGORY_ID` FOREIGN KEY (`category_id`) REFERENCES categories(`id`);

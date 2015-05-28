@@ -1,15 +1,20 @@
 package com.zuoxiaolong.dao;
 
-import com.zuoxiaolong.model.ViewMode;
-import com.zuoxiaolong.util.DateUtil;
-import com.zuoxiaolong.util.ImageUtil;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.zuoxiaolong.model.ViewMode;
+import com.zuoxiaolong.util.DateUtil;
+import com.zuoxiaolong.util.ImageUtil;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -37,10 +42,10 @@ public abstract class ArticleDao extends BaseDao {
     
     private static final int SHORT_SUBJECT_LENGTH = 10;
     
-    public static boolean saveOrUpdate(String resourceId, String subject, String createDate, Integer status,String username, Integer accessTimes, Integer goodTimes, String html, String content) {
-    	return execute(new TransactionalOperation<Boolean>() {
+    public static Integer saveOrUpdate(String resourceId, String subject, String createDate, Integer status,String username, Integer accessTimes, Integer goodTimes, String html, String content) {
+    	return execute(new TransactionalOperation<Integer>() {
 			@Override
-			public Boolean doInConnection(Connection connection) {
+			public Integer doInConnection(Connection connection) {
 				String selectSql = "select id,status from articles where resource_id=?";
 				String insertSql = "insert into articles (resource_id,username,icon,create_date," +
                 "access_times,good_times,subject,html,content,status) values (?,?,?,?,?,?,?,?,?,?)";
@@ -49,15 +54,17 @@ public abstract class ArticleDao extends BaseDao {
 					PreparedStatement statement = connection.prepareStatement(selectSql);
 					statement.setString(1, resourceId);
 					ResultSet resultSet = statement.executeQuery();
-					boolean exsits = false;
-					int currentStatus = 0;
+					Boolean exsits = false;
+					Integer currentStatus = 0;
+					Integer id = null;
 					if (resultSet.next()) {
 						exsits = true;
 						currentStatus = resultSet.getInt("status");
+						id = resultSet.getInt("id");
 					}
 					PreparedStatement saveOrUpdate = null;
 					if (!exsits) {
-						saveOrUpdate = connection.prepareStatement(insertSql);
+						saveOrUpdate = connection.prepareStatement(insertSql,Statement.RETURN_GENERATED_KEYS);
 						saveOrUpdate.setString(1, resourceId);
 						saveOrUpdate.setString(2, username);
 						saveOrUpdate.setString(3, ImageUtil.randomArticleImage());
@@ -78,7 +85,13 @@ public abstract class ArticleDao extends BaseDao {
                         saveOrUpdate.setString(6, resourceId);
 					}
 					int result = saveOrUpdate.executeUpdate();
-					return result > 0;
+					if (!exsits && result > 0) {
+						ResultSet keyResultSet = saveOrUpdate.getGeneratedKeys();
+						if (keyResultSet.next()) {
+							id = keyResultSet.getInt(1);
+						}
+					} 
+					return id;
 				} catch (SQLException e) {
 					throw new RuntimeException(e);
 				}

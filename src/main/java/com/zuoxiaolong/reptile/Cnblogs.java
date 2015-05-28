@@ -23,7 +23,11 @@ import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
 import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.dao.ArticleCategoryDao;
 import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.dao.ArticleTagDao;
+import com.zuoxiaolong.dao.CategoryDao;
+import com.zuoxiaolong.dao.TagDao;
 import com.zuoxiaolong.util.EnrypyUtil;
 import com.zuoxiaolong.util.IOUtil;
 
@@ -155,7 +159,7 @@ public abstract class Cnblogs {
             html = html.replace(codeList.get(i), originCodeList.get(i));
         }
         html = html.replace("'", "\"");
-
+        
         //获取纯文本内容
         StringBuffer stringBuffer = new StringBuffer();
         appendText(bodyElement, stringBuffer);
@@ -192,9 +196,45 @@ public abstract class Cnblogs {
 		}
 
         //如果resourceId已经存在则更新，否则保存
-		ArticleDao.saveOrUpdate(resourceId, subject, createDate, status, username, accessTimes, goodTimes, html, content);
+		Integer id = ArticleDao.saveOrUpdate(resourceId, subject, createDate, status, username, accessTimes, goodTimes, html, content);
         if (logger.isInfoEnabled()) {
     		logger.info("saveOrUpdate article : [" + resourceId + ":" + subject + "]");
+		}
+        
+        //保存标签和分类
+        String tagsUrl = "http://www.cnblogs.com/mvc/blog/CategoriesTags.aspx?blogApp=zuoxiaolong&blogId=160491&postId=" + postId;
+        String tagsJson = getHtmlUseCookie(cookie, tagsUrl);
+        JSONObject tagsJsonObject = JSONObject.fromObject(tagsJson);
+        String[] tags = new String[0];
+        if (tagsJsonObject.getString("Tags").split("标签:").length > 1) {
+        	tags = tagsJsonObject.getString("Tags").split("标签:")[1].trim().split(",");
+		}
+        String[] categories = new String[0];
+        if (tagsJsonObject.getString("Categories").split("分类:").length > 1) {
+        	categories = tagsJsonObject.getString("Categories").split("分类:")[1].trim().split(",");
+		}
+        for (int i = 0; i < tags.length; i++) {
+			String tag = Jsoup.parseBodyFragment(tags[i]).text().trim();
+			Integer tagId = TagDao.getId(tag);
+			if (tagId == null) {
+				tagId = TagDao.save(tag);
+			}
+			if (!ArticleTagDao.exsits(id, tagId)) {
+				ArticleTagDao.save(id, tagId);
+			}
+		}
+        for (int i = 0; i < categories.length; i++) {
+			String category = Jsoup.parseBodyFragment(categories[i]).text().trim();
+			Integer categoryId = CategoryDao.getId(category);
+			if (categoryId == null) {
+				categoryId = CategoryDao.save(category);
+			}
+			if (!ArticleCategoryDao.exsits(id, categoryId)) {
+				ArticleCategoryDao.save(id, categoryId);
+			}
+		}
+        if (logger.isInfoEnabled()) {
+    		logger.info("save article tag and category: [" + tagsJson + "]");
 		}
 	}
 
@@ -278,9 +318,45 @@ public abstract class Cnblogs {
 
         Integer status = 1;
         //如果resourceId已经存在则更新，否则保存
-		ArticleDao.saveOrUpdate(resourceId, subject, createDate, status, username, accessTimes, goodTimes, html, content);
+		Integer id = ArticleDao.saveOrUpdate(resourceId, subject, createDate, status, username, accessTimes, goodTimes, html, content);
         if (logger.isInfoEnabled()) {
     		logger.info("saveOrUpdate article : [" + resourceId + ":" + subject + "]");
+		}
+        
+        //保存标签和分类
+        String tagsUrl = "http://www.cnblogs.com/mvc/blog/CategoriesTags.aspx?blogApp=zuoxiaolong&blogId=160491&postId=" + postId;
+        String tagsJson = getArticleHtml(tagsUrl);
+        JSONObject tagsJsonObject = JSONObject.fromObject(tagsJson);
+        String[] tags = new String[0];
+        if (tagsJsonObject.getString("Tags").split("标签:").length > 1) {
+        	tags = tagsJsonObject.getString("Tags").split("标签:")[1].trim().split(",");
+		}
+        String[] categories = new String[0];
+        if (tagsJsonObject.getString("Categories").split("分类:").length > 1) {
+        	categories = tagsJsonObject.getString("Categories").split("分类:")[1].trim().split(",");
+		}
+        for (int i = 0; i < tags.length; i++) {
+			String tag = Jsoup.parseBodyFragment(tags[i]).text().trim();
+			Integer tagId = TagDao.getId(tag);
+			if (tagId == null) {
+				tagId = TagDao.save(tag);
+			}
+			if (!ArticleTagDao.exsits(id, tagId)) {
+				ArticleTagDao.save(id, tagId);
+			}
+		}
+        for (int i = 0; i < categories.length; i++) {
+			String category = Jsoup.parseBodyFragment(categories[i]).text().trim();
+			Integer categoryId = CategoryDao.getId(category);
+			if (categoryId == null) {
+				categoryId = CategoryDao.save(category);
+			}
+			if (!ArticleCategoryDao.exsits(id, categoryId)) {
+				ArticleCategoryDao.save(id, categoryId);
+			}
+		}
+        if (logger.isInfoEnabled()) {
+    		logger.info("save article tag and category: [" + tagsJson + "]");
 		}
 	}
 

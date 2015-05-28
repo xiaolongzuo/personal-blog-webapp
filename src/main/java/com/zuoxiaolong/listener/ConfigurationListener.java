@@ -1,16 +1,20 @@
 package com.zuoxiaolong.listener;
 
+import java.io.IOException;
+
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+
+import org.apache.log4j.Logger;
+
 import com.zuoxiaolong.config.Configuration;
 import com.zuoxiaolong.generator.Generators;
+import com.zuoxiaolong.reptile.Cnblogs;
 import com.zuoxiaolong.thread.BaiduPushTask;
 import com.zuoxiaolong.thread.DirtyWordsFlushTask;
 import com.zuoxiaolong.thread.Executor;
 import com.zuoxiaolong.thread.FetchTask;
 import com.zuoxiaolong.util.ImageUtil;
-import org.apache.log4j.Logger;
-
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -54,6 +58,12 @@ public class ConfigurationListener implements ServletContextListener {
         }
         if (!Configuration.isProductEnv()) {
             ImageUtil.loadArticleImages();
+            try {
+				Cnblogs.fetchArticlesCommon();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
             Generators.generate();
         } else {
             if (logger.isInfoEnabled()) {
