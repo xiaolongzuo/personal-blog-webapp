@@ -56,7 +56,7 @@ public abstract class DataMapLoader {
                     if (namespaceAnnotation == null) {
                         throw new RuntimeException(clazz.getName() + " must has annotation with @Namespace");
                     }
-                    dataMap.put(namespaceAnnotation.value() + "/" + key.toString() + ".ftl", (DataMap) clazz.newInstance());
+                    dataMap.put(namespaceAnnotation.value() + "/" + key.toString(), (DataMap) clazz.newInstance());
                 }
             } catch (Exception e) {
                 throw new RuntimeException(e);

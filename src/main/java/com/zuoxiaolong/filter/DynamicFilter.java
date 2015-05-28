@@ -55,12 +55,13 @@ public class DynamicFilter implements Filter {
 			response.setCharacterEncoding("UTF-8");
 			Writer writer = response.getWriter();
 			Map<String, Object> data = FreemarkerUtil.buildCommonDataMap(FreemarkerUtil.getNamespace(requestUri), ViewMode.DYNAMIC);
-			DataMap current = dataMap.get(requestUri);
+			String dataMapKey = requestUri.substring(0,requestUri.lastIndexOf("."));
+			DataMap current = dataMap.get(dataMapKey);
 			if (current == null) {
-				if (requestUri.startsWith("/")) {
-					current = dataMap.get(requestUri.substring(1));
+				if (dataMapKey.startsWith("/")) {
+					current = dataMap.get(dataMapKey.substring(1));
 				} else {
-					current = dataMap.get("/" + requestUri);
+					current = dataMap.get("/" + dataMapKey);
 				}
 			}
 			if (current != null) {
@@ -71,7 +72,7 @@ public class DynamicFilter implements Filter {
 				data.put("nickName", user.get("nickName"));
 				data.put("avatarUrl", user.get("avatarUrl"));
 			}
-			FreemarkerUtil.generateByTemplatePath(requestUri, writer, data);
+			FreemarkerUtil.generateByTemplatePath(dataMapKey + ".ftl", writer, data);
 		} catch (Exception e) {
 			throw new RuntimeException(requestUri,e);
 		}

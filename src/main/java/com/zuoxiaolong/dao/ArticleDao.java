@@ -1,6 +1,7 @@
 package com.zuoxiaolong.dao;
 
 import com.zuoxiaolong.model.ViewMode;
+import com.zuoxiaolong.util.DateUtil;
 import com.zuoxiaolong.util.ImageUtil;
 
 import java.sql.*;
@@ -175,7 +176,9 @@ public abstract class ArticleDao extends BaseDao {
             article.put("icon", resultSet.getString("icon"));
             article.put("subject", resultSet.getString("subject"));
             article.put("username", resultSet.getString("username"));
-            article.put("create_date", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(resultSet.getTimestamp("create_date")));
+            Timestamp createDate = resultSet.getTimestamp("create_date");
+            article.put("create_date", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(createDate));
+            article.put("us_create_date", DateUtil.rfc822(createDate));
             article.put("access_times", resultSet.getString("access_times"));
             article.put("comment_times", resultSet.getString("comment_times"));
 

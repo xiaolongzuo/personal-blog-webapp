@@ -43,6 +43,11 @@
         <url-pattern>*.ftl</url-pattern>
     </filter-mapping>
 
+    <filter-mapping>
+        <filter-name>dynamic</filter-name>
+        <url-pattern>*.xml</url-pattern>
+    </filter-mapping>
+
     <servlet>
         <servlet-name>counter</servlet-name>
         <servlet-class>com.zuoxiaolong.servlet.Counter</servlet-class>

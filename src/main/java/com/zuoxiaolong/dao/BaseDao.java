@@ -1,11 +1,10 @@
 package com.zuoxiaolong.dao;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
+import com.zuoxiaolong.jdbc.ConnectionFactory;
 import org.apache.log4j.Logger;
 
-import com.zuoxiaolong.jdbc.ConnectionFactory;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -71,7 +70,9 @@ public abstract class BaseDao {
             throw new RuntimeException(e);
         } finally {
             try {
-                connection.close();
+                if (connection != null) {
+                    connection.close();
+                }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
