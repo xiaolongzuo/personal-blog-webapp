@@ -13,7 +13,7 @@
             </#if>
             <item>
                 <title>${article.subject}</title>
-                <link>${article.url}</link>
+                <link>${contextPath}${article.url}</link>
                 <pubDate>${article.us_create_date}</pubDate>
                 <description>${article.summary}...</description>
             </item>

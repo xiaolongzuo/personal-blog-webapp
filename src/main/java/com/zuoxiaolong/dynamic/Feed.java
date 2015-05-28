@@ -1,13 +1,15 @@
 package com.zuoxiaolong.dynamic;
 
-import com.zuoxiaolong.dao.ArticleDao;
-import com.zuoxiaolong.util.DateUtil;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.model.ViewMode;
+import com.zuoxiaolong.util.DateUtil;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -37,7 +39,7 @@ public class Feed implements DataMap {
         response.addHeader("Content-Type","text/xml; charset=utf-8");
         Map<String, Integer> pager = new HashMap<>();
         pager.put("current", 1);
-        data.put("articles", ArticleDao.getPageArticles(pager ,VIEW_MODE));
+        data.put("articles", ArticleDao.getPageArticles(pager ,ViewMode.STATIC));
         data.put("lastBuildDate", DateUtil.rfc822(new Date()));
     }
 
