@@ -1,7 +1,5 @@
 package com.zuoxiaolong.util;
 
-import com.zuoxiaolong.config.Configuration;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -9,6 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import com.zuoxiaolong.config.Configuration;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -32,7 +32,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public abstract class DirtyWordsUtil {
 
-    private static final List<String> dirtyWords = new CopyOnWriteArrayList();
+    private static final List<String> dirtyWords = new CopyOnWriteArrayList<String>();
 
     public static boolean isDirtyWords(String words) {
         for (String dirtyWord : dirtyWords) {

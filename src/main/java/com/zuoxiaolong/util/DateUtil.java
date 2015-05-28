@@ -4,6 +4,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.SimpleTimeZone;
+import java.util.TimeZone;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -28,8 +30,10 @@ import java.util.Locale;
 public abstract class DateUtil {
 
     public static String rfc822(Date date) {
-        DateFormat dateFormat=new SimpleDateFormat("EEE,d MMM yyyy hh:mm:ss Z", Locale.CHINA);
-        return dateFormat.format(new Date())+" GMT";
+        DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z",Locale.US);
+        TimeZone zone = new SimpleTimeZone(8,"GMT");       
+        dateFormat.setTimeZone(zone);
+        return dateFormat.format(date);
     }
 
 }
