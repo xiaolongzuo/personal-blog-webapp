@@ -22,11 +22,10 @@
 						type:"POST",
 						data:{"username":$("input[name=username]").val(),"password":$("input[name=password]").val()},
 						success:function(data){
-							if(data && data == 'success'){
-								window.location.href="${contextPath}/blog/index.ftl";
-							} else if(data && data == 'error') {
-								$("#login_error_td").html("发生了未知错误，请联系站长！");
+							if(data && data.success){
+								window.location.href="${contextPath}" + data.url;
 							} else {
+                                $("#login_error_td").css("color","red");
 								$("#login_error_td").html(data);
 							}
 						}
@@ -69,7 +68,7 @@
                 </tr>
 				<tr>
                     <td>&nbsp;</td>
-                    <td colspan="2" id="login_error_td" style="font-size:11px;color:red;"></td>
+                    <td colspan="2" id="login_error_td" style="font-size:11px;">用户名支持字母，数字，下划线和中文</td>
                 </tr>
                 </tbody>
             </table>

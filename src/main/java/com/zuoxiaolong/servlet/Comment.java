@@ -1,15 +1,16 @@
 package com.zuoxiaolong.servlet;
 
-import java.io.IOException;
-import java.util.Map;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-
 import com.zuoxiaolong.dao.ArticleDao;
 import com.zuoxiaolong.dao.CommentDao;
 import com.zuoxiaolong.generator.Generators;
+import com.zuoxiaolong.util.DirtyWordsUtil;
 import com.zuoxiaolong.util.HttpUtil;
+import org.apache.commons.lang.StringUtils;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.Map;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -39,6 +40,14 @@ public class Comment extends BaseServlet {
 	protected void service() throws ServletException, IOException {
 		HttpServletRequest request = getRequest();
 		String content = request.getParameter("content");
+		if (StringUtils.isBlank(content)) {
+			writeText("评论不能为空");
+			return;
+		}
+		if (DirtyWordsUtil.isDirtyWords(content)) {
+			writeText("评论不合法");
+			return;
+		}
 		Integer articleId = Integer.valueOf(request.getParameter("articleId"));
 		if (logger.isInfoEnabled()) {
 			logger.info("comment param : articleId = " + articleId + "   , content = " + content);
@@ -48,6 +57,7 @@ public class Comment extends BaseServlet {
 		boolean result = CommentDao.save(articleId, visitorIp, content, (user == null ? null : user.get("username")), (user == null ? null : user.get("nickName")));
 		if (!result) {
 			logger.error("save comment error!");
+			writeText("保存评论失败，请稍后再试");
 			return;
 		}
 		result = result && ArticleDao.updateCount(articleId, "comment_times");
@@ -55,6 +65,7 @@ public class Comment extends BaseServlet {
 			logger.info("save comment and updateCount success!");
 		}
 		Generators.generate(articleId);
+		writeText("success");
 	}
 
 }

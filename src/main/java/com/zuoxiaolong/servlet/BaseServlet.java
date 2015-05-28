@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -69,7 +71,26 @@ public abstract class BaseServlet extends HttpServlet {
 		}
 		return null;
 	}
-	
+
+	private static final Pattern STATIC_ARTICLE_PATTERN = Pattern.compile("article_([0-9]+)\\.html");
+
+	private static final Pattern STATIC_ARTICLE_LIST_PATTERN = Pattern.compile("article_list_([0-9]+)\\.html");
+
+	protected String getDynamicUrl() {
+		String requestUri = getRequest().getHeader("Referer");
+		Matcher matcher = STATIC_ARTICLE_PATTERN.matcher(requestUri);
+		if (matcher.find()) {
+			String articleId = matcher.group(1);
+			return "/blog/article.ftl?id=" + articleId;
+		}
+		matcher = STATIC_ARTICLE_LIST_PATTERN.matcher(requestUri);
+		if (matcher.find()) {
+			String current = matcher.group(1);
+			return "/blog/article_list.ftl?current=" + current;
+		}
+		return "/blog/index.ftl";
+	}
+
 	protected abstract void service() throws ServletException, IOException ;
 	
 	protected HttpServletRequest getRequest() {

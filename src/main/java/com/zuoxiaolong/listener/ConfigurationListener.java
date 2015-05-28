@@ -3,6 +3,7 @@ package com.zuoxiaolong.listener;
 import com.zuoxiaolong.config.Configuration;
 import com.zuoxiaolong.generator.Generators;
 import com.zuoxiaolong.thread.BaiduPushTask;
+import com.zuoxiaolong.thread.DirtyWordsFlushTask;
 import com.zuoxiaolong.thread.Executor;
 import com.zuoxiaolong.thread.FetchTask;
 import com.zuoxiaolong.util.ImageUtil;
@@ -44,6 +45,13 @@ public class ConfigurationListener implements ServletContextListener {
         if (logger.isInfoEnabled()) {
 			logger.info("init configuration success...");
 		}
+        if (logger.isInfoEnabled()) {
+            logger.info("starting DirtyWordsFlush thread...");
+        }
+        Executor.executeTask(new DirtyWordsFlushTask());
+        if (logger.isInfoEnabled()) {
+            logger.info("DirtyWordsFlush thread has been started...");
+        }
         if (!Configuration.isProductEnv()) {
             ImageUtil.loadArticleImages();
             Generators.generate();
