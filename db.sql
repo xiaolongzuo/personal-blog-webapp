@@ -141,7 +141,25 @@ ALTER TABLE article_category ADD CONSTRAINT `ARTICLE_CATEGORY_FK_ARTICLE_ID` FOR
 ALTER TABLE article_category ADD CONSTRAINT `ARTICLE_CATEGORY_FK_CATEGORY_ID` FOREIGN KEY (`category_id`) REFERENCES categories(`id`);
 
 
-alter table comments add reference_comment INT ;
-alter table comments add resource_id VARCHAR(40) ;
-alter table comments add good_times INT ;
-alter table comments add bad_times INT ;
+ALTER TABLE comments add reference_comment INT ;
+ALTER TABLE comments add resource_id VARCHAR(40) ;
+ALTER TABLE comments add good_times INT ;
+ALTER TABLE comments add bad_times INT ;
+
+ALTER TABLE comments modify good_times INT DEFAULT 0;
+ALTER TABLE comments modify bad_times INT DEFAULT 0;
+ALTER TABLE comments drop reference_comment;
+
+create table comment_relation (
+	source_comment_id INT NOT NULL,
+	reply_comment_id INT NOT NULL,
+	primary key (source_comment_id,reply_comment_id)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+create table comment_id_visitor_ip (
+  comment_id INT NOT NULL,
+	visitor_ip char(20) NOT NULL,
+	primary key (comment_id,visitor_ip)
+) ENGINE=INNODB DEFAULT CHARSET=utf8 ;
+
+ALTER TABLE comment_id_visitor_ip ADD CONSTRAINT `COMMENT_ID_VISITOR_IP_FK_ARTICLE_ID` FOREIGN KEY (`comment_id`) REFERENCES comments(`id`);

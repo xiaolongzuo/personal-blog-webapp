@@ -31,15 +31,40 @@ import java.util.Map;
  * @since 2015年5月9日 下午11:34:14
  */
 public abstract class CommentDao extends BaseDao {
-	
-	public static boolean save(final Integer articleId, final String visitorIp,
-		final String content,final String username,final String nickName) {
+
+	public static boolean updateCount(final int id, final String column) {
 		return execute(new TransactionalOperation<Boolean>() {
 			@Override
 			public Boolean doInConnection(Connection connection) {
 				try {
+					PreparedStatement preparedStatement = connection.prepareStatement("update comments set " + column + " = " + column + " + 1 where id = ?");
+					preparedStatement.setInt(1, id);
+					int number = preparedStatement.executeUpdate();
+					return number > 0;
+				} catch (SQLException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+	}
+
+	public static boolean exists(String resourceId) {
+		return execute(new Operation<Boolean>() {
+			@Override
+			public Boolean doInConnection(Connection connection) {
+				return null;
+			}
+		});
+	}
+	
+	public static Integer save(final Integer articleId, final String visitorIp,
+		final String content,final String username,final String nickName,final String resourceId) {
+		return execute(new TransactionalOperation<Integer>() {
+			@Override
+			public Integer doInConnection(Connection connection) {
+				try {
 					PreparedStatement statement = connection.prepareStatement("insert into comments (visitor_ip,city,content,article_id,"
-							+ "create_date,username,nick_name) values (?,?,?,?,?,?,?)");
+						+ "create_date,username,nick_name,resource_id) values (?,?,?,?,?,?,?,?)");
 					statement.setString(1, visitorIp);
 					statement.setString(2, HttpApiHelper.getCity(visitorIp));
 					statement.setString(3, content);
@@ -47,12 +72,18 @@ public abstract class CommentDao extends BaseDao {
 					statement.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
 					statement.setString(6, username);
 					statement.setString(7, nickName);
+					statement.setString(8, resourceId);
 					int result = statement.executeUpdate();
-					return result > 0;
+					if (result > 0) {
+						ResultSet resultSet = statement.getGeneratedKeys();
+						if (resultSet.next()) {
+							return resultSet.getInt(1);
+						}
+					}
 				} catch (SQLException e) {
 					error("save comments failed ..." , e);
 				}
-				return false;
+				return null;
 			}
 		});
 	}

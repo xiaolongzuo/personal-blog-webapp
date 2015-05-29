@@ -54,14 +54,16 @@ public class Comment extends BaseServlet {
 		}
 		String visitorIp = HttpUtil.getVisitorIp(request);
 		Map<String, String> user = getUser();
-		boolean result = CommentDao.save(articleId, visitorIp, content, (user == null ? null : user.get("username")), (user == null ? null : user.get("nickName")));
-		if (!result) {
+		String username = user == null ? null : user.get("username");
+		String nickName = user == null ? null : user.get("nickName");
+		Integer result = CommentDao.save(articleId, visitorIp, content, username, nickName, null);
+		if (result == null) {
 			logger.error("save comment error!");
 			writeText("保存评论失败，请稍后再试");
 			return;
 		}
-		result = result && ArticleDao.updateCount(articleId, "comment_times");
-		if (result && logger.isInfoEnabled()) {
+		boolean finalResult = (result != null) && ArticleDao.updateCount(articleId, "comment_times");
+		if (finalResult && logger.isInfoEnabled()) {
 			logger.info("save comment and updateCount success!");
 		}
 		Generators.generate(articleId);
