@@ -5,7 +5,7 @@
 </head>
 <body>
 <#include "../common/header.ftl">
-<main>
+<article>
 	<div class="left_box float_left">
 		<#include "banner.ftl">
         <#include "index_main.ftl">
@@ -13,7 +13,7 @@
 	<div class="right_box float_right">
 		<#include "right.ftl">
 	</div>
-</main>
+</article>
 <#include "../common/footer.ftl">
 </body>
 </html>

@@ -1,4 +1,4 @@
-    <!-- 关注模块 -->
+    <!-- 用户中心模块 -->
     <div class="user_profile">
         <script type="application/javascript">
             $(document).ready(function(){
@@ -52,13 +52,13 @@
             <table id="login_table" cellspacing="0" cellpadding="0">
                 <tbody>
                 <tr>
-                    <td>用户名：</td>
-                    <td><input type="text" name="username" /></td>
+                    <td style="font-size: 12px;">用户名：</td>
+                    <td><input type="text" name="username"/></td>
                     <td><a id="login_register_button" href="#" class="button">登录&nbsp;|&nbsp;注册</a></td>
                 </tr>
                 <tr>
-                    <td>密  码：</td>
-                    <td><input type="password" name="password" /></td>
+                    <td style="font-size: 12px;">密  码：</td>
+                    <td><input type="password" name="password"/></td>
                     <td>
                         <!--
                         <a href="#" id="qq_login_button"><img width="50" height="20" src="${contextPath}/resources/img/qq_login.png" title="使用QQ登录"></a>

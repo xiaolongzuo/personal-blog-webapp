@@ -25,7 +25,7 @@ header { width: 1000px; margin: 20px auto; overflow: hidden; clear: both; }
 #header_nav .header_nav_a:hover { background: yellowgreen; color: #FFFFFF; border-radius: 15px;}
 #header_nav .current { background: yellowgreen; color: #FFFFFF; border-radius: 15px; }
 /* 主模块 */
-main { width: 1000px; margin: 20px auto; }
+article { width: 1000px; margin: 20px auto; }
 /*footer*/
 footer { background: #333; width: 100%; clear: both; text-align: center; }
 .ft-copyright { color: #fff; line-height: 24px; }

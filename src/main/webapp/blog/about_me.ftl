@@ -9,14 +9,14 @@
 </head>
 <body>
 <#include "../common/header.ftl">
-<main>
+<article>
 	<div class="left_box float_left">
 		<#include "about_me_main.ftl">
 	</div>
 	<div class="right_box float_right">
 		<#include "right.ftl">
 	</div>
-</main>
+</article>
 <#include "../common/footer.ftl">
 </body>
 </html>
