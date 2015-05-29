@@ -139,3 +139,9 @@ create table article_category (
 
 ALTER TABLE article_category ADD CONSTRAINT `ARTICLE_CATEGORY_FK_ARTICLE_ID` FOREIGN KEY (`article_id`) REFERENCES articles(`id`);
 ALTER TABLE article_category ADD CONSTRAINT `ARTICLE_CATEGORY_FK_CATEGORY_ID` FOREIGN KEY (`category_id`) REFERENCES categories(`id`);
+
+
+alter table comments add reference_comment INT ;
+alter table comments add resource_id VARCHAR(40) ;
+alter table comments add good_times INT ;
+alter table comments add bad_times INT ;

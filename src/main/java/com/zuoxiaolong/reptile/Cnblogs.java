@@ -1,19 +1,10 @@
 package com.zuoxiaolong.reptile;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.dao.*;
+import com.zuoxiaolong.util.EnrypyUtil;
+import com.zuoxiaolong.util.IOUtil;
 import net.sf.json.JSONObject;
-
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -22,14 +13,15 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
-import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.dao.ArticleCategoryDao;
-import com.zuoxiaolong.dao.ArticleDao;
-import com.zuoxiaolong.dao.ArticleTagDao;
-import com.zuoxiaolong.dao.CategoryDao;
-import com.zuoxiaolong.dao.TagDao;
-import com.zuoxiaolong.util.EnrypyUtil;
-import com.zuoxiaolong.util.IOUtil;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -204,38 +196,76 @@ public abstract class Cnblogs {
         //保存标签和分类
         String tagsUrl = "http://www.cnblogs.com/mvc/blog/CategoriesTags.aspx?blogApp=zuoxiaolong&blogId=160491&postId=" + postId;
         String tagsJson = getHtmlUseCookie(cookie, tagsUrl);
-        JSONObject tagsJsonObject = JSONObject.fromObject(tagsJson);
-        String[] tags = new String[0];
-        if (tagsJsonObject.getString("Tags").split("标签:").length > 1) {
-        	tags = tagsJsonObject.getString("Tags").split("标签:")[1].trim().split(",");
-		}
-        String[] categories = new String[0];
-        if (tagsJsonObject.getString("Categories").split("分类:").length > 1) {
-        	categories = tagsJsonObject.getString("Categories").split("分类:")[1].trim().split(",");
-		}
-        for (int i = 0; i < tags.length; i++) {
-			String tag = Jsoup.parseBodyFragment(tags[i]).text().trim();
-			Integer tagId = TagDao.getId(tag);
-			if (tagId == null) {
-				tagId = TagDao.save(tag);
-			}
-			if (!ArticleTagDao.exsits(id, tagId)) {
-				ArticleTagDao.save(id, tagId);
-			}
-		}
-        for (int i = 0; i < categories.length; i++) {
-			String category = Jsoup.parseBodyFragment(categories[i]).text().trim();
-			Integer categoryId = CategoryDao.getId(category);
-			if (categoryId == null) {
-				categoryId = CategoryDao.save(category);
-			}
-			if (!ArticleCategoryDao.exsits(id, categoryId)) {
-				ArticleCategoryDao.save(id, categoryId);
-			}
-		}
+        saveTagAndCategory(id, tagsJson);
         if (logger.isInfoEnabled()) {
     		logger.info("save article tag and category: [" + tagsJson + "]");
 		}
+
+        //保存评论
+        String commentsUrl = "http://www.cnblogs.com/mvc/blog/GetComments.aspx?blogApp=zuoxiaolong&anchorCommentId=0&postId=" + postId + "&pageIndex=";
+        for (int i = 1 ; ; i++ ) {
+            String currentCommentUrl = commentsUrl + i;
+            String commentsJson = getHtmlUseCookie(cookie, currentCommentUrl);
+            Document commentsDocument = Jsoup.parseBodyFragment(JSONObject.fromObject(commentsJson).getString("commentsHtml"));
+            Elements commentElements = commentsDocument.getElementsByClass("feedbackItem");
+            for (Element commentElement : commentElements) {
+                String commentResourceId = commentElement.getElementsByClass("layer").first().attr("id");
+                if (commentResourceId.startsWith("#")) {
+                    commentResourceId = currentCommentUrl.substring(1);
+                }
+                String nickName = commentElement.getElementById("a_comment_author_" + commentResourceId).text().trim();
+                Date commentDate = null;
+                try {
+                    commentDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(commentElement.getElementsByClass("comment_date").first().text().trim());
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+                Element commentContentElement = commentElement.getElementById("comment_body_" + commentResourceId);
+                Elements refCommentElements = commentContentElement.getElementsByTag("a");
+                List<String> refComments = new ArrayList<>();
+                Pattern onclickPattern = Pattern.compile(".*?\\((.*?)\\).*");
+                for (Element refCommentElement : refCommentElements) {
+                    if (refCommentElement.text().trim().equals("@") && refCommentElement.hasAttr("onclick")) {
+                        String onclick = refCommentElement.attr("onclick");
+                        Matcher onclickMatcher = onclickPattern.matcher(onclick);
+                        if (onclickMatcher.find()) {
+                            refComments.add(onclickMatcher.group(1).split(",")[2]);
+                        }
+                    }
+                }
+                String goodTimesString = commentElement.getElementsByClass("comment_digg").first().text().trim();
+                Integer commentGoodTimes = 0;
+                Matcher goodTimesMatcher = onclickPattern.matcher(goodTimesString);
+                if (goodTimesMatcher.find()) {
+                    commentGoodTimes = Integer.valueOf(goodTimesMatcher.group(1));
+                }
+                String badTimesString = commentElement.getElementsByClass("comment_bury").first().text().trim();
+                Integer commentBadTimes = 0;
+                Matcher badTimesMatcher = onclickPattern.matcher(badTimesString);
+                if (badTimesMatcher.find()) {
+                    commentBadTimes = Integer.valueOf(badTimesMatcher.group(1));
+                }
+                StringBuffer commentContent = new StringBuffer();
+                List<Node> nodes = commentElement.childNodes();
+                for (Node node : nodes) {
+                    if (node instanceof Element && ((Element)node).tagName().equals("a") && ((Element)node).text().trim().equals("@")) {
+                        stringBuffer.append("@");
+                    } else {
+                        stringBuffer.append(node.toString());
+                    }
+                }
+                System.out.println(commentResourceId);
+                System.out.println(nickName);
+                System.out.println(commentDate);
+                System.out.println(refComments);
+                System.out.println(commentGoodTimes);
+                System.out.println(commentBadTimes);
+                System.out.println(commentContent);
+            }
+            if (commentElements.size() < 50) {
+                break;
+            }
+        }
 	}
 
     private static String getHtmlUseCookie(String cookie, String url) throws IOException {
@@ -243,6 +273,38 @@ public abstract class Cnblogs {
         httpURLConnection.setRequestMethod("GET");
         httpURLConnection.setRequestProperty("Cookie",cookie);
         return IOUtil.read(httpURLConnection.getInputStream());
+    }
+
+    private static void saveTagAndCategory(Integer id,String json) {
+        JSONObject tagsJsonObject = JSONObject.fromObject(json);
+        String[] tags = new String[0];
+        if (tagsJsonObject.getString("Tags").split("标签:").length > 1) {
+            tags = tagsJsonObject.getString("Tags").split("标签:")[1].trim().split(",");
+        }
+        String[] categories = new String[0];
+        if (tagsJsonObject.getString("Categories").split("分类:").length > 1) {
+            categories = tagsJsonObject.getString("Categories").split("分类:")[1].trim().split(",");
+        }
+        for (int i = 0; i < tags.length; i++) {
+            String tag = Jsoup.parseBodyFragment(tags[i]).text().trim();
+            Integer tagId = TagDao.getId(tag);
+            if (tagId == null) {
+                tagId = TagDao.save(tag);
+            }
+            if (!ArticleTagDao.exsits(id, tagId)) {
+                ArticleTagDao.save(id, tagId);
+            }
+        }
+        for (int i = 0; i < categories.length; i++) {
+            String category = Jsoup.parseBodyFragment(categories[i]).text().trim();
+            Integer categoryId = CategoryDao.getId(category);
+            if (categoryId == null) {
+                categoryId = CategoryDao.save(category);
+            }
+            if (!ArticleCategoryDao.exsits(id, categoryId)) {
+                ArticleCategoryDao.save(id, categoryId);
+            }
+        }
     }
 
     public static void fetchArticlesCommon() throws IOException {
@@ -326,56 +388,84 @@ public abstract class Cnblogs {
         //保存标签和分类
         String tagsUrl = "http://www.cnblogs.com/mvc/blog/CategoriesTags.aspx?blogApp=zuoxiaolong&blogId=160491&postId=" + postId;
         String tagsJson = getArticleHtml(tagsUrl);
-        JSONObject tagsJsonObject = JSONObject.fromObject(tagsJson);
-        String[] tags = new String[0];
-        if (tagsJsonObject.getString("Tags").split("标签:").length > 1) {
-        	tags = tagsJsonObject.getString("Tags").split("标签:")[1].trim().split(",");
-		}
-        String[] categories = new String[0];
-        if (tagsJsonObject.getString("Categories").split("分类:").length > 1) {
-        	categories = tagsJsonObject.getString("Categories").split("分类:")[1].trim().split(",");
-		}
-        for (int i = 0; i < tags.length; i++) {
-			String tag = Jsoup.parseBodyFragment(tags[i]).text().trim();
-			Integer tagId = TagDao.getId(tag);
-			if (tagId == null) {
-				tagId = TagDao.save(tag);
-			}
-			if (!ArticleTagDao.exsits(id, tagId)) {
-				ArticleTagDao.save(id, tagId);
-			}
-		}
-        for (int i = 0; i < categories.length; i++) {
-			String category = Jsoup.parseBodyFragment(categories[i]).text().trim();
-			Integer categoryId = CategoryDao.getId(category);
-			if (categoryId == null) {
-				categoryId = CategoryDao.save(category);
-			}
-			if (!ArticleCategoryDao.exsits(id, categoryId)) {
-				ArticleCategoryDao.save(id, categoryId);
-			}
-		}
+        saveTagAndCategory(id, tagsJson);
         if (logger.isInfoEnabled()) {
     		logger.info("save article tag and category: [" + tagsJson + "]");
 		}
+
+        //保存评论
+        String commentsUrl = "http://www.cnblogs.com/mvc/blog/GetComments.aspx?blogApp=zuoxiaolong&anchorCommentId=0&postId=" + postId + "&pageIndex=";
+        for (int i = 1 ; ; i++ ) {
+            String currentCommentUrl = commentsUrl + i;
+            String commentsJson = getArticleHtml(commentsUrl);
+            Document commentsDocument = Jsoup.parseBodyFragment(JSONObject.fromObject(commentsJson).getString("commentsHtml"));
+            Elements commentElements = commentsDocument.getElementsByClass("feedbackItem");
+            for (Element commentElement : commentElements) {
+                String commentResourceId = commentElement.getElementsByClass("layer").first().attr("id");
+                if (commentResourceId.startsWith("#")) {
+                    commentResourceId = currentCommentUrl.substring(1);
+                }
+                String nickName = commentElement.getElementById("a_comment_author_" + commentResourceId).text().trim();
+                Date commentDate = null;
+                try {
+                    commentDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(commentElement.getElementsByClass("comment_date").first().text().trim());
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+                Element commentContentElement = commentElement.getElementById("comment_body_" + commentResourceId);
+                Elements refCommentElements = commentContentElement.getElementsByTag("a");
+                List<String> refComments = new ArrayList<>();
+                Pattern onclickPattern = Pattern.compile(".*?\\((.*?)\\).*");
+                for (Element refCommentElement : refCommentElements) {
+                    if (refCommentElement.text().trim().equals("@") && refCommentElement.hasAttr("onclick")) {
+                        String onclick = refCommentElement.attr("onclick");
+                        Matcher onclickMatcher = onclickPattern.matcher(onclick);
+                        if (onclickMatcher.find()) {
+                            refComments.add(onclickMatcher.group(1).split(",")[2]);
+                        }
+                    }
+                }
+                String goodTimesString = commentElement.getElementsByClass("comment_digg").first().text().trim();
+                Integer commentGoodTimes = 0;
+                Matcher goodTimesMatcher = onclickPattern.matcher(goodTimesString);
+                if (goodTimesMatcher.find()) {
+                    commentGoodTimes = Integer.valueOf(goodTimesMatcher.group(1));
+                }
+                String badTimesString = commentElement.getElementsByClass("comment_bury").first().text().trim();
+                Integer commentBadTimes = 0;
+                Matcher badTimesMatcher = onclickPattern.matcher(badTimesString);
+                if (badTimesMatcher.find()) {
+                    commentBadTimes = Integer.valueOf(badTimesMatcher.group(1));
+                }
+                StringBuffer commentContent = new StringBuffer();
+                List<Node> nodes = commentElement.childNodes();
+                for (Node node : nodes) {
+                    if (node instanceof Element && ((Element)node).tagName().equals("a") && ((Element)node).text().trim().equals("@")) {
+                        stringBuffer.append("@");
+                    } else {
+                        stringBuffer.append(node.toString());
+                    }
+                }
+                System.out.println(commentResourceId);
+                System.out.println(nickName);
+                System.out.println(commentDate);
+                System.out.println(refComments);
+                System.out.println(commentGoodTimes);
+                System.out.println(commentBadTimes);
+                System.out.println(commentContent);
+            }
+            if (commentElements.size() < 50) {
+                break;
+            }
+        }
 	}
 
     private static String getArticleHtml(String url) throws IOException {
         HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(url).openConnection();
         httpURLConnection.setRequestMethod("GET");
-        InputStream inStream = httpURLConnection.getInputStream();
-        byte[] stringBytes = new byte[0];
-        byte[] bytes = new byte[1024];
-        int len = 0;
-        while ((len = inStream.read(bytes)) > 0) {
-            byte[] tempStringBytes = new byte[stringBytes.length + len];
-            System.arraycopy(stringBytes, 0, tempStringBytes, 0, stringBytes.length);
-            System.arraycopy(bytes, 0, tempStringBytes, stringBytes.length, len);
-            stringBytes = tempStringBytes;
-        }
-        return new String(stringBytes, "UTF-8");
+        return IOUtil.read(httpURLConnection.getInputStream());
     }
-    
+
     private static List<String> getPreList(String html,boolean filterEnter) {
         List<String> codeList = new ArrayList<String>();
         char[] chars = html.toCharArray();
@@ -419,6 +509,78 @@ public abstract class Cnblogs {
                     Element child = (Element) node;
                     appendText(child, stringBuffer);
                 }
+            }
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
+        String commentsUrl = "http://www.cnblogs.com/mvc/blog/GetComments.aspx?blogApp=zuoxiaolong&postId=4340881&pageIndex=";
+        for (int i = 1 ; ; i++ ) {
+            String currentCommentUrl = commentsUrl + i;
+            String commentsJson = getArticleHtml(currentCommentUrl);
+            Document commentsDocument = Jsoup.parseBodyFragment(JSONObject.fromObject(commentsJson).getString("commentsHtml"));
+            Elements commentElements = commentsDocument.getElementsByClass("feedbackItem");
+            for (Element commentElement : commentElements) {
+                String commentResourceId = commentElement.getElementsByClass("layer").first().attr("href");
+                if (commentResourceId.startsWith("#")) {
+                    commentResourceId = commentResourceId.substring(1);
+                }
+                String nickName = commentElement.getElementById("a_comment_author_" + commentResourceId).text().trim();
+                Date commentDate = null;
+                try {
+                    commentDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(commentElement.getElementsByClass("comment_date").first().text().trim());
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+                Element commentContentElement = commentElement.getElementById("comment_body_" + commentResourceId);
+                Elements refCommentElements = commentContentElement.getElementsByTag("a");
+                List<String> refComments = new ArrayList<>();
+                Pattern onclickPattern = Pattern.compile(".*?\\((.*?)\\).*");
+                System.out.println("size:"+refCommentElements.size());
+                if (commentResourceId.equals("3148439")) {
+                    System.out.println(commentContentElement);
+                }
+                for (Element refCommentElement : refCommentElements) {
+                    if (refCommentElement.text().trim().equals("@") && refCommentElement.hasAttr("onclick")) {
+                        String onclick = refCommentElement.attr("onclick");
+                        Matcher onclickMatcher = onclickPattern.matcher(onclick);
+                        if (onclickMatcher.find()) {
+                            refComments.add(onclickMatcher.group(1).split(",")[2]);
+                        }
+                    }
+                }
+                String goodTimesString = commentElement.getElementsByClass("comment_digg").first().text().trim();
+                Integer commentGoodTimes = 0;
+                Matcher goodTimesMatcher = onclickPattern.matcher(goodTimesString);
+                if (goodTimesMatcher.find()) {
+                    commentGoodTimes = Integer.valueOf(goodTimesMatcher.group(1));
+                }
+                String badTimesString = commentElement.getElementsByClass("comment_bury").first().text().trim();
+                Integer commentBadTimes = 0;
+                Matcher badTimesMatcher = onclickPattern.matcher(badTimesString);
+                if (badTimesMatcher.find()) {
+                    commentBadTimes = Integer.valueOf(badTimesMatcher.group(1));
+                }
+                StringBuffer commentContent = new StringBuffer();
+                List<Node> nodes = commentContentElement.childNodes();
+                for (Node node : nodes) {
+                    if (node instanceof Element && ((Element)node).tagName().equals("a") && ((Element)node).text().trim().equals("@")) {
+                        commentContent.append("@");
+                    } else {
+                        commentContent.append(node.toString());
+                    }
+                }
+                System.out.println(commentResourceId);
+                System.out.println(nickName);
+                System.out.println(commentDate);
+                System.out.println(refComments);
+                System.out.println(commentGoodTimes);
+                System.out.println(commentBadTimes);
+                System.out.println(commentContent);
+                System.out.println("-------------------------------------------------------------------");
+            }
+            if (commentElements.size() < 50) {
+                break;
             }
         }
     }

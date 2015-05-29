@@ -1,19 +1,14 @@
 package com.zuoxiaolong.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import com.zuoxiaolong.api.HttpApiHelper;
+import org.apache.commons.lang.StringUtils;
+
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
-
-import com.zuoxiaolong.api.HttpApiHelper;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -37,7 +32,8 @@ import com.zuoxiaolong.api.HttpApiHelper;
  */
 public abstract class CommentDao extends BaseDao {
 	
-	public static boolean save(final Integer articleId, final String visitorIp, final String content,final String username,final String nickName) {
+	public static boolean save(final Integer articleId, final String visitorIp,
+		final String content,final String username,final String nickName) {
 		return execute(new TransactionalOperation<Boolean>() {
 			@Override
 			public Boolean doInConnection(Connection connection) {
