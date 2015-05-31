@@ -1,11 +1,14 @@
 package com.zuoxiaolong.dynamic;
 
-import com.zuoxiaolong.dao.ArticleDao;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.freemarker.ArticleListHelper;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -32,19 +35,27 @@ public class ArticleList implements DataMap {
 
 	@Override
 	public void putCustomData(Map<String, Object> data, HttpServletRequest request, HttpServletResponse response) {
-		Map<String, Integer> pager = new HashMap<String, Integer>();
-		int total = ArticleDao.getArticles("create_date", VIEW_MODE).size();
-		int page = (total % 10 == 0) ? (total / 10) : (total / 10 + 1);
-		int current = Integer.valueOf(request.getParameter("current"));
-		pager.put("current", current);
-		pager.put("total", total);
-		pager.put("page", page);
-		data.put("firstArticleListUrl","/blog/article_list.ftl?current=1");
-		data.put("preArticleListUrl","/blog/article_list.ftl?current=" + (current - 1));
-		data.put("nextArticleListUrl","/blog/article_list.ftl?current=" + (current + 1));
-		data.put("lastArticleListUrl","/blog/article_list.ftl?current=" + page);
-		data.put("pageArticles", ArticleDao.getPageArticles(pager, VIEW_MODE));
-        data.put("pager", pager);
+		String tag = request.getParameter("tag");
+		String category = request.getParameter("category");
+		String searchText = request.getParameter("searchText");
+		String orderColumn = request.getParameter("orderColumn");
+		String currentString = request.getParameter("current");
+		int current = 1;
+		if (StringUtils.isNotBlank(currentString)) {
+			current = Integer.valueOf(currentString);
+		}
+		if (StringUtils.isNotBlank(orderColumn)) {
+			int total = ArticleDao.getArticles(orderColumn, VIEW_MODE).size();
+			ArticleListHelper.putArticleListDataMap(data, VIEW_MODE, orderColumn, current, total);
+		} else if (StringUtils.isNotBlank(searchText)) {
+			ArticleListHelper.putArticleListDataMapBySearchText(data, VIEW_MODE, searchText, current);
+		} else if (StringUtils.isNotBlank(category)) {
+			ArticleListHelper.putArticleListDataMapByCategory(data, VIEW_MODE, category, current);
+		} else if (StringUtils.isNotBlank(tag)) {
+			ArticleListHelper.putArticleListDataMapByTag(data, VIEW_MODE, tag, current);
+		} else {
+			throw new IllegalArgumentException();
+		}
 	}
-
+	
 }

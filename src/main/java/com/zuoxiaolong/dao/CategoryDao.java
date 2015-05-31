@@ -5,6 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -27,6 +31,29 @@ import java.sql.Statement;
  * @since 2015年5月29日 上午1:04:31
  */
 public abstract class CategoryDao extends BaseDao {
+	
+	public static List<Map<String, String>> getCategories(final int articleId) {
+		return execute(new Operation<List<Map<String, String>>>() {
+			@Override
+			public List<Map<String, String>> doInConnection(Connection connection) {
+				List<Map<String, String>> result = new ArrayList<Map<String,String>>();
+				try {
+					PreparedStatement statement = connection.prepareStatement("select * from categories where id in (select category_id from article_category where article_id=?)");
+					statement.setInt(1, articleId);
+					ResultSet resultSet = statement.executeQuery();
+					while (resultSet.next()) {
+						Map<String, String> category = new HashMap<String, String>();
+						category.put("id", resultSet.getString("id"));
+						category.put("category_name", resultSet.getString("category_name"));
+						result.add(category);
+					}
+				} catch (SQLException e) {
+					error("query article_category failed ..." , e);
+				}
+				return result;
+			}
+		});
+	}
 
 	public static Integer save(final String categoryName) {
 		return execute(new TransactionalOperation<Integer>() {

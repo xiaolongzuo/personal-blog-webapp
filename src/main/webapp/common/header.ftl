@@ -3,7 +3,7 @@
     <nav id="header_nav" class="float_right">
         <ul>
             <a class="header_nav_a" href="${indexUrl}">首页</a>
-            <a class="header_nav_a" href="${allArticlesUrl}" >全部文章</a>
+            <a class="header_nav_a" href="${newArticlesUrl}" >全部文章</a>
             <a class="header_nav_a" href="#" >技术</a>
             <a class="header_nav_a" href="#" >生活</a>
             <a class="header_nav_a" href="#" >照片墙</a>

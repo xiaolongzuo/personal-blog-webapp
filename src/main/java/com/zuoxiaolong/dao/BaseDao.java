@@ -1,10 +1,11 @@
 package com.zuoxiaolong.dao;
 
-import com.zuoxiaolong.jdbc.ConnectionFactory;
-import org.apache.log4j.Logger;
-
 import java.sql.Connection;
 import java.sql.SQLException;
+
+import org.apache.log4j.Logger;
+
+import com.zuoxiaolong.jdbc.ConnectionFactory;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -65,6 +66,7 @@ public abstract class BaseDao {
         try {
             connection = ConnectionFactory.getConnection();
             connection.setReadOnly(true);
+            connection.createStatement().execute("SET NAMES 'utf8mb4'");
             return operation.doInConnection(connection);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -84,6 +86,7 @@ public abstract class BaseDao {
         try {
             connection = ConnectionFactory.getConnection();
             connection.setAutoCommit(false);
+            connection.createStatement().execute("SET NAMES 'utf8mb4'");
             T result = transactionalOperation.doInConnection(connection);
             connection.commit();
             return result;

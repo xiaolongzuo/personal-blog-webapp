@@ -5,6 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.zuoxiaolong.util.StringUtil;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -27,6 +33,45 @@ import java.sql.Statement;
  * @since 2015年5月29日 上午1:04:31
  */
 public abstract class TagDao extends BaseDao {
+	
+	public static List<Map<String, String>> getHotTags() {
+		return execute(new Operation<List<Map<String, String>>>() {
+			@Override
+			public List<Map<String, String>> doInConnection(Connection connection) {
+				List<Map<String, String>> result = new ArrayList<Map<String,String>>();
+				try {
+					Statement statement = connection.createStatement();
+					ResultSet resultSet = statement.executeQuery("select * from tags order by (select count(article_id) from article_tag where tag_id=id) desc");
+					while (resultSet.next()) {
+						result.add(transfer(resultSet));
+					}
+				} catch (SQLException e) {
+					error("query article_category failed ..." , e);
+				}
+				return result;
+			}
+		});
+	}
+	
+	public static List<Map<String, String>> getTags(final int articleId) {
+		return execute(new Operation<List<Map<String, String>>>() {
+			@Override
+			public List<Map<String, String>> doInConnection(Connection connection) {
+				List<Map<String, String>> result = new ArrayList<Map<String,String>>();
+				try {
+					PreparedStatement statement = connection.prepareStatement("select * from tags where id in (select tag_id from article_tag where article_id=?)");
+					statement.setInt(1, articleId);
+					ResultSet resultSet = statement.executeQuery();
+					while (resultSet.next()) {
+						result.add(transfer(resultSet));
+					}
+				} catch (SQLException e) {
+					error("query article_category failed ..." , e);
+				}
+				return result;
+			}
+		});
+	}
 
 	public static Integer save(final String tagName) {
 		return execute(new TransactionalOperation<Integer>() {
@@ -67,6 +112,19 @@ public abstract class TagDao extends BaseDao {
 				return null;
 			}
 		});
+	}
+	
+	public static Map<String, String> transfer(ResultSet resultSet){
+		Map<String, String> tag = new HashMap<String, String>();
+		try {
+			tag.put("id", resultSet.getString("id"));
+			String tagName = resultSet.getString("tag_name");
+			tag.put("tag_name", tagName);
+			tag.put("short_tag_name", StringUtil.substring(tagName, 4));
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+		return tag;
 	}
 	
 }

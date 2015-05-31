@@ -9,8 +9,23 @@
         ${article.html} <br/>
         <#include "remark.ftl">
         </ul>
-        <div class="keybq">
-            <p><span>关键字</span>：个人博客,Java</p>
+        <div class="article_tag_div">
+            <p>关键字：
+            <#if tags?? && tags?size gt 0 >
+            	<#list tags as tag>
+					<a href="${contextPath}/blog/article_list.ftl?tag=${tag.tag_name}">${tag.tag_name}</a>
+                </#list>
+        	</#if>
+            </p>
+        </div>
+		<div class="article_category_div">
+            <p>分类：
+            <#if categories?? && categories?size gt 0 >
+            	<#list categories as category>
+					<a href="${contextPath}/blog/article_list.ftl?category=${category.category_name}">${category.category_name}</a>
+                </#list>
+        	</#if>
+            </p>
         </div>
     <#if nextArticle?? || preArticle?? >
         <div class="nextinfo">
@@ -39,14 +54,26 @@
         <div class="feedbackItem" id="comment_list">
         <#if comments?? && comments?size gt 0 >
             <#list comments as comment>
+			<div id="comment_div_${comment.id}" class="feedbackItem">
                 <div class="feedbackListSubtitle">
-                    <a href="#" class="layer">#${comment_index + 1}楼</a>&nbsp;&nbsp;&nbsp;&nbsp;时间：<span
-                        class="comment_date">${comment.create_date}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;来源：<a
-                        href="#">${comment.commenter}</a>
+                	<div class="feedbackManage">
+					<span class="comment_actions">
+						<a comment_id="${comment.id}" class="reply_button" href="javascript:void(0)">回复</a>
+						<a comment_id="${comment.id}" class="quite_button" href="javascript:void(0)">引用</a>
+					</span>
+					</div>
+                    <a href="javascript:void(0)" class="layer">#${comment_index + 1}楼</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    时间：<span class="comment_date">${comment.create_date}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    来源：<a id="commenter_a_${comment.id}" href="javascript:void(0)">${comment.commenter}</a>
                 </div>
                 <div class="feedbackCon">
-                    <div class="blog_comment_body">${comment.content}</div>
+                    <div id="comment_content_${comment.id}" class="blog_comment_body">${comment.content}</div>
+					<div class="comment_vote">
+						<a class="comment_remark_button" comment_id="${comment.id}" column="good_times" href="javascript:void(0)">支持(<span id="comment_good_span_${comment.id}">${comment.good_times?default(0)}</span>)</a>
+						<a class="comment_remark_button" comment_id="${comment.id}" column="bad_times" href="javascript:void(0)">反对(<span id="comment_bad_span_${comment.id}">${comment.bad_times?default(0)}</span>)</a>
+					</div>
                 </div>
+            </div>
             </#list>
         <#else>
             暂无评论
@@ -54,15 +81,16 @@
         </div>
 
         <!-- 提交评论 -->
-        <div id="divCommentShow"></div>
-        <div id="comment_form_container">
-            <div id="commentform_title">发表评论</div>
+        <div id="comment_container">
+            <div id="comment_title">发表评论</div>
             <div class="commentbox_main">
-                <div class="clear"></div>
-                <textarea name="content" id="tbCommentBody" class="comment_textarea" rows="20" cols="50"></textarea>
+            	<div id="reply_div" class="clear"></div>
+				<input type="hidden" name="referenceCommentId" id="reference_comment_id_input"/>
+				<input type="hidden" name="referenceCommenter" id="reference_commenter_input"/>
+                <textarea name="content" id="comment_textarea" class="comment_textarea" rows="20" cols="30"></textarea>
             </div>
             <p id="commentbox_opt">
-                <input id="btn_comment_submit" class="comment_btn" value="提交评论" type="button">
+                <input id="submit_comment_button" class="comment_btn" value="提交评论" type="button">
             </p>
         </div>
     </div>

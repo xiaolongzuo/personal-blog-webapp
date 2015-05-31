@@ -1,10 +1,8 @@
 package com.zuoxiaolong.servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
@@ -42,27 +40,25 @@ public class Counter extends BaseServlet {
     @Override
     protected void service() throws IOException {
     	HttpServletRequest request = getRequest();
-    	HttpServletResponse response = getResponse();
         Integer articleId = Integer.valueOf(request.getParameter("articleId"));
         String column = request.getParameter("column");
         if (logger.isInfoEnabled()) {
             logger.info("counter param : articleId = " + articleId + "   , column = " + column);
         }
-        PrintWriter printWriter = response.getWriter();
         if (!column.equals("access_times")) {
         	if (logger.isInfoEnabled()) {
         		logger.info("there is someone remarking...");
 			}
+        	String username = getUsername();
 			String ip = HttpUtil.getVisitorIp(request);
-			if (ArticleIdVisitorIpDao.exsits(articleId, ip)) {
-				printWriter.write("exists");
-				printWriter.flush();
+			if (ArticleIdVisitorIpDao.exsits(articleId, ip, username)) {
+				writeText("exists");
 				if (logger.isInfoEnabled()) {
 					logger.info(ip + " has remarked...");
 				}
 				return ;
 			} else {
-				ArticleIdVisitorIpDao.save(articleId, ip);
+				ArticleIdVisitorIpDao.save(articleId, ip, username);
 			}
 		}
         boolean result = ArticleDao.updateCount(articleId, column);
@@ -73,8 +69,7 @@ public class Counter extends BaseServlet {
 		if (result && logger.isInfoEnabled()) {
 			logger.info("updateCount success!");
 		}
-		printWriter.write("success");
-		printWriter.flush();
+		writeText("success");
         Generators.generate(articleId);
     }
 

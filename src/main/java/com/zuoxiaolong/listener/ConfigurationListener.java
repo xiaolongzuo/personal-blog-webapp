@@ -1,16 +1,19 @@
 package com.zuoxiaolong.listener;
 
+import java.io.IOException;
+
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+
+import org.apache.log4j.Logger;
+
 import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.generator.Generators;
+import com.zuoxiaolong.search.LuceneHelper;
 import com.zuoxiaolong.thread.BaiduPushTask;
 import com.zuoxiaolong.thread.DirtyWordsFlushTask;
 import com.zuoxiaolong.thread.Executor;
 import com.zuoxiaolong.thread.FetchTask;
 import com.zuoxiaolong.util.ImageUtil;
-import org.apache.log4j.Logger;
-
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -59,7 +62,13 @@ public class ConfigurationListener implements ServletContextListener {
 //			} catch (IOException e) {
 //				throw new RuntimeException(e);
 //			}
-            Generators.generate();
+            try {
+				LuceneHelper.updateIndex();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+//            Generators.generate();
         } else {
             if (logger.isInfoEnabled()) {
                 logger.info("starting fetch and generate thread...");

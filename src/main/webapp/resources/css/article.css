@@ -7,8 +7,10 @@
 .index_about ul.infos p { margin-bottom: 5px }
 .index_about ul.infos p img { display: block; margin: auto ;max-width: 700px;}
 .index_about ul.infos h3 span {font-weight: bold;}
-.keybq { line-height: 30px; height: 30px; padding-left: 5px; border: 1px solid #F0F0F0; margin-right: 20px; }
-.keybq span { color: #099 }
+.article_tag_div { font-size:14px;line-height: 30px; height: 30px; padding-left: 5px; border-top: 1px solid #F0F0F0;border-bottom: 1px solid #F0F0F0; margin-right: 20px; }
+.article_tag_div a { color: #9FB6CD ;margin: 0px 10px 0px 0px;}
+.article_category_div { font-size:14px;line-height: 30px; height: 30px; padding-left: 5px; border-bottom: 1px solid #F0F0F0; margin-right: 20px; }
+.article_category_div a { color: #9FB6CD ;margin: 0px 10px 0px 0px;}
 .nextinfo { line-height: 24px; }
 .otherlink h2 { border-bottom: #099 2px solid; line-height: 40px; font-size: 12px; font-weight: normal; margin-right: 20px; padding-left:40px}
 .otherlink ul { margin: 10px 0 }
@@ -25,22 +27,27 @@
 .index_about a:visited,a:hover {  color:#708090;  }
 .index_about ul {  list-style:none;  margin:0;  padding:0;  }
 .index_about image {  border:none;  }
+
+
+/*评论标题*/
+.feedback_area_title {  padding:10px;  font-size:18px;  font-weight:bold;  color:#EE9A00;  border-bottom:solid 2px #EE9A00;  }
+/*评论条目*/
+.feedbackItem { word-wrap:break-word; font-size:14px;  line-height:24px;  margin:10px 0;  padding:20px;  box-shadow:0 0 5px #aaa;  }
+.feedbackListSubtitle {  font-weight:normal; font-size:12px;  color:#EE9A00;   }
+.feedbackListSubtitle a {  color:#EE9A00;  }
+.feedbackCon a {color:#EE9A00; }
+.comment_quote {background: #FAEBD7 none repeat scroll 0 0;border: 1px solid #ccc;padding: 15px;}
+.comment_vote {text-align: right;}
+.comment_vote a { padding-left: 10px; text-decoration: none !important;}
+#comment_container {margin:10px;}
+#comment_container a {color:#EE9A00; margin:0px 20px;}
+#comment_title {  color:#EE9A00;  background-image:none;  background-repeat:no-repeat;  margin-bottom:10px;  padding:10px 20px 10px 10px;  font-size:18px;  font-weight:bold;  border-bottom:solid 2px #EE9A00;  }
+/*评论输入域*/
+#comment_textarea {  font-family:'MIcrosoft Yahei';  margin:10px 0px;  width:700px;  max-width:700px;  min-width:700px;  background:white;  color:#333;  border:2px solid #fff;  box-shadow:inset 0 0 8px #aaa;  padding:10px;  height:120px;  font-size:14px;  min-height:120px;  }
 /*评论按钮*/
 #btn_comment_submit {  border:none;  height:30px;  width:90px;  }
 /*评论按钮*/
-.comment_btn {  font-family:'Microsoft Yahei';  border:none;  height:30px;  width:90px;  font-size:15px;  cursor:pointer;  position:relative;  vertical-align:middle;  display:inline-block;  background:#708090;  color:#fff;  }
+.comment_btn {  font-family:'Microsoft Yahei';  border:none;  height:30px;  width:90px;  font-size:15px;  cursor:pointer;  position:relative;  vertical-align:middle;  display:inline-block;  background:#EE9A00;  color:#fff;  }
 #btn_comment_submit:hover {  background:#CDC5BF;  }
-/*评论标题*/
-.feedback_area_title {  padding:10px;  font-size:18px;  font-weight:bold;  color:#708090;  border-bottom:solid 6px #708090;  }
-.feedbackListSubtitle {  font-size:12px;  color:#888;  }
-.feedbackListSubtitle a {  color:#888;  }
-.comment_quote {  background:#FCFAAC;  padding:15px;  border:1px solid #CCC;  }
-#commentform_title {  color:#708090;  background-image:none;  background-repeat:no-repeat;  margin-bottom:10px;  padding:10px 20px 10px 10px;  font-size:18px;  font-weight:bold;  border-bottom:solid 6px #708090;  }
-/*评论框*/
-#comment_form {  margin:10px 0;  padding:0;  }
-.commentform {  margin:10px 0;  padding:10px 20px;  background:#fff;  }
-/*评论输入域*/
-#tbCommentBody {  font-family:'MIcrosoft Yahei';  margin-top:10px;  width:940px;  max-width:940px;  min-width:940px;  background:white;  color:#333;  border:2px solid #fff;  box-shadow:inset 0 0 8px #aaa;  padding:10px;  height:120px;  font-size:14px;  min-height:120px;  }
-/*评论条目*/
-.feedbackItem {  font-size:14px;  line-height:24px;  margin:10px 0;  padding:20px;  background:#F2F2F2;  box-shadow:0 0 5px #aaa;  }
-.feedbackListSubtitle {  font-weight:normal;  }
+
+

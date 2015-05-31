@@ -1,15 +1,15 @@
 package com.zuoxiaolong.generator;
 
-import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.dao.ArticleDao;
-import com.zuoxiaolong.dao.CommentDao;
-import com.zuoxiaolong.util.FreemarkerUtil;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 import java.util.Map;
+
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.freemarker.ArticleHelper;
+import com.zuoxiaolong.freemarker.FreemarkerHelper;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -37,20 +37,18 @@ public class ArticleGenerator implements Generator {
 	public void generate() {
 		List<Map<String, String>> articles = ArticleDao.getArticles("create_date", VIEW_MODE);
 		for (int i = 0; i < articles.size(); i++) {
-			generateArticle(Integer.valueOf(articles.get(i).get("id")), articles);
+			generateArticle(Integer.valueOf(articles.get(i).get("id")));
 		}
 	}
 
-	void generateArticle(Integer id, List<Map<String, String>> articles) {
-		Map<String, String> article = ArticleDao.getArticle(id, VIEW_MODE);
+	void generateArticle(Integer id) {
 		Writer writer = null;
 		try {
-			Map<String, Object> data = FreemarkerUtil.buildCommonDataMap(VIEW_MODE);
-			data.put("article", article);
-			data.put("comments", CommentDao.getComments(id));
-			String htmlPath = Configuration.getContextPath("html/article_" + id + ".html");
+			Map<String, Object> data = FreemarkerHelper.buildCommonDataMap(VIEW_MODE);
+			ArticleHelper.putArticleDataMap(data, VIEW_MODE, id);
+			String htmlPath = Configuration.getContextPath(ArticleHelper.generateStaticPath(id));
 			writer = new FileWriter(htmlPath);
-			FreemarkerUtil.generate("article", writer, data);
+			FreemarkerHelper.generate("article", writer, data);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		} finally {

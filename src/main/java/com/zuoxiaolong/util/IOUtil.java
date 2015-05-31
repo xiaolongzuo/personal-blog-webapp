@@ -26,6 +26,10 @@ import java.io.InputStream;
 public abstract class IOUtil {
 
     public static String read(InputStream inputStream) throws IOException {
+        return new String(readBytes(inputStream), "UTF-8");
+    }
+    
+    public static byte[] readBytes(InputStream inputStream) throws IOException {
         byte[] stringBytes = new byte[0];
         byte[] bytes = new byte[1024];
         int len = 0;
@@ -35,7 +39,7 @@ public abstract class IOUtil {
             System.arraycopy(bytes, 0, tempStringBytes, stringBytes.length, len);
             stringBytes = tempStringBytes;
         }
-        return new String(stringBytes, "UTF-8");
+        return stringBytes;
     }
 
 }

@@ -1,20 +1,28 @@
 package com.zuoxiaolong.filter;
 
-import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.dynamic.DataMap;
-import com.zuoxiaolong.dynamic.DataMapLoader;
-import com.zuoxiaolong.model.ViewMode;
-import com.zuoxiaolong.servlet.BaseServlet;
-import com.zuoxiaolong.util.FreemarkerUtil;
-import org.apache.commons.lang.StringUtils;
-
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.zuoxiaolong.dynamic.DataMap;
+import com.zuoxiaolong.dynamic.DataMapLoader;
+import com.zuoxiaolong.freemarker.FreemarkerHelper;
+import com.zuoxiaolong.freemarker.IndexHelper;
+import com.zuoxiaolong.model.ViewMode;
+import com.zuoxiaolong.servlet.BaseServlet;
+import com.zuoxiaolong.util.StringUtil;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -49,12 +57,12 @@ public class DynamicFilter implements Filter {
 		String requestUri = null;
 		try {
 			requestUri = ((HttpServletRequest)request).getRequestURI();
-			if (StringUtils.isEmpty(FreemarkerUtil.replaceStartSlant(requestUri))) {
-				requestUri = Configuration.get("welcome.file");
+			if (StringUtils.isEmpty(StringUtil.replaceStartSlant(requestUri))) {
+				requestUri = IndexHelper.generateDynamicPath();
 			}
 			response.setCharacterEncoding("UTF-8");
 			Writer writer = response.getWriter();
-			Map<String, Object> data = FreemarkerUtil.buildCommonDataMap(FreemarkerUtil.getNamespace(requestUri), ViewMode.DYNAMIC);
+			Map<String, Object> data = FreemarkerHelper.buildCommonDataMap(FreemarkerHelper.getNamespace(requestUri), ViewMode.DYNAMIC);
 			String dataMapKey = requestUri.substring(0,requestUri.lastIndexOf("."));
 			DataMap current = dataMap.get(dataMapKey);
 			if (current == null) {
@@ -72,7 +80,7 @@ public class DynamicFilter implements Filter {
 				data.put("nickName", user.get("nickName"));
 				data.put("avatarUrl", user.get("avatarUrl"));
 			}
-			FreemarkerUtil.generateByTemplatePath(dataMapKey + ".ftl", writer, data);
+			FreemarkerHelper.generateByTemplatePath(dataMapKey + ".ftl", writer, data);
 		} catch (Exception e) {
 			throw new RuntimeException(requestUri,e);
 		}

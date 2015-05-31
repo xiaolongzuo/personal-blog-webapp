@@ -1,15 +1,15 @@
 package com.zuoxiaolong.generator;
 
-import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.dao.ArticleDao;
-import com.zuoxiaolong.util.FreemarkerUtil;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.freemarker.ArticleListHelper;
+import com.zuoxiaolong.freemarker.FreemarkerHelper;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -35,26 +35,23 @@ public class ArticleListGenerator implements Generator {
 	
 	@Override
 	public void generate() {
-		List<Map<String, String>> articles = ArticleDao.getArticles("create_date", VIEW_MODE);
+		generateArticleList("create_date");
+		generateArticleList("access_times");
+		generateArticleList("good_times");
+	}
+	
+	private void generateArticleList(String orderColumn) {
+		List<Map<String, String>> articles = ArticleDao.getArticles(orderColumn, VIEW_MODE);
 		int total = articles.size();
 		int page = (total % 10 == 0) ? (total / 10) : (total / 10 + 1);
 		for (int i = 1; i < page + 1; i++) {
-			Map<String, Integer> pager = new HashMap<String, Integer>();
-			pager.put("current", i);
-			pager.put("total", total);
-			pager.put("page", page);
 	        Writer writer = null;
 	        try {
-	            Map<String, Object> data = FreemarkerUtil.buildCommonDataMap(VIEW_MODE);
-	            data.put("pageArticles", ArticleDao.getPageArticles(pager, VIEW_MODE));
-	            data.put("pager", pager);
-				data.put("firstArticleListUrl","/html/article_list_1.html");
-				data.put("preArticleListUrl","/html/article_list_" + (i - 1) + ".html");
-				data.put("nextArticleListUrl","/html/article_list_" + (i + 1) + ".html");
-				data.put("lastArticleListUrl","/html/article_list_" + page + ".html");
-	            String htmlPath = Configuration.getContextPath("html/article_list_" + i + ".html");
+	            Map<String, Object> data = FreemarkerHelper.buildCommonDataMap(VIEW_MODE);
+	            ArticleListHelper.putArticleListDataMap(data, VIEW_MODE, orderColumn, i, total);
+	            String htmlPath = Configuration.getContextPath(ArticleListHelper.generateStaticPath(orderColumn, i));
 	            writer = new FileWriter(htmlPath);
-				FreemarkerUtil.generate("article_list", writer, data);
+				FreemarkerHelper.generate("article_list", writer, data);
 	        } catch (IOException e) {
 	            throw new RuntimeException(e);
 	        } finally {

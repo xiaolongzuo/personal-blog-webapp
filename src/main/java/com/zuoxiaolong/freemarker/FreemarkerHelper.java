@@ -1,19 +1,23 @@
-package com.zuoxiaolong.util;
-
-import com.zuoxiaolong.algorithm.Match;
-import com.zuoxiaolong.algorithm.Random;
-import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.dao.ArticleDao;
-import com.zuoxiaolong.dao.MatchDao;
-import com.zuoxiaolong.model.ViewMode;
-import freemarker.template.Template;
-import org.apache.log4j.Logger;
+package com.zuoxiaolong.freemarker;
 
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.log4j.Logger;
+
+import com.zuoxiaolong.algorithm.Match;
+import com.zuoxiaolong.algorithm.Random;
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.dao.MatchDao;
+import com.zuoxiaolong.dao.TagDao;
+import com.zuoxiaolong.model.ViewMode;
+import com.zuoxiaolong.util.StringUtil;
+
+import freemarker.template.Template;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -35,13 +39,15 @@ import java.util.Map;
  * @author 左潇龙
  * @since 2015年5月24日 上午2:04:43
  */
-public abstract class FreemarkerUtil {
+public abstract class FreemarkerHelper {
 
-    private static final Logger logger = Logger.getLogger(FreemarkerUtil.class);
+    private static final Logger logger = Logger.getLogger(FreemarkerHelper.class);
 
     private static final String DEFAULT_NAMESPACE = "blog";
 
     private static final int DEFAULT_RIGHT_ARTICLE_NUMBER = 5;
+    
+    private static final int DEFAULT_RIGHT_TAG_NUMBER = 8;
 
     public static Map<String, Object> buildCommonDataMap(ViewMode viewMode) {
         return buildCommonDataMap(DEFAULT_NAMESPACE, viewMode);
@@ -51,11 +57,9 @@ public abstract class FreemarkerUtil {
         Map<String, Object> data = new HashMap<>();
         data.put("contextPath", Configuration.isProductEnv() ? Configuration.get("context.path.product") : Configuration.get("context.path"));
         if (ViewMode.DYNAMIC == viewMode) {
-            data.put("allArticlesUrl", "/blog/article_list.ftl?current=1");
-            data.put("indexUrl", "/blog/index.ftl");
+            data.put("indexUrl", IndexHelper.generateDynamicPath());
         } else {
-            data.put("allArticlesUrl", "/html/article_list_1.html");
-            data.put("indexUrl", "/");
+            data.put("indexUrl", IndexHelper.generateStaticPath());
         }
         if (namespace.equals("blog")) {
             List<Map<String, String>> articleList = ArticleDao.getArticles("create_date", viewMode);
@@ -64,6 +68,16 @@ public abstract class FreemarkerUtil {
             data.put("newCharts",articleList);
             data.put("recommendCharts",ArticleDao.getArticles("good_times", viewMode));
             data.put("imageArticles",Random.random(articleListCopy, DEFAULT_RIGHT_ARTICLE_NUMBER));
+            data.put("hotTags", Random.random(TagDao.getHotTags(), DEFAULT_RIGHT_TAG_NUMBER));
+            if (ViewMode.DYNAMIC == viewMode) {
+                data.put("accessArticlesUrl", ArticleListHelper.generateDynamicPath("access_times", 1));
+                data.put("newArticlesUrl", ArticleListHelper.generateDynamicPath("create_date", 1));
+                data.put("recommendArticlesUrl", ArticleListHelper.generateDynamicPath("good_times", 1));
+            } else {
+            	data.put("accessArticlesUrl", ArticleListHelper.generateStaticPath("access_times", 1));
+                data.put("newArticlesUrl", ArticleListHelper.generateStaticPath("create_date", 1));
+                data.put("recommendArticlesUrl", ArticleListHelper.generateStaticPath("good_times", 1));
+            }
         }
         if (namespace.equals("dota")) {
             List<Map<String, String>> matchList = MatchDao.getAll();
@@ -111,15 +125,8 @@ public abstract class FreemarkerUtil {
     }
 
     public static String getNamespace(String templatePath) {
-        templatePath = replaceStartSlant(templatePath);
+        templatePath = StringUtil.replaceStartSlant(templatePath);
         return templatePath.substring(0, templatePath.indexOf("/"));
     }
-
-    public static String replaceStartSlant(String s) {
-        while (s.startsWith("/")) {
-            s = s.substring(1);
-        }
-        return s;
-    }
-
+    
 }

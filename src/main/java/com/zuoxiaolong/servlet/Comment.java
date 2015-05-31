@@ -1,16 +1,21 @@
 package com.zuoxiaolong.servlet;
 
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
+
 import com.zuoxiaolong.dao.ArticleDao;
 import com.zuoxiaolong.dao.CommentDao;
 import com.zuoxiaolong.generator.Generators;
 import com.zuoxiaolong.util.DirtyWordsUtil;
 import com.zuoxiaolong.util.HttpUtil;
-import org.apache.commons.lang.StringUtils;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.Map;
+import com.zuoxiaolong.util.StringUtil;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -35,11 +40,13 @@ import java.util.Map;
 public class Comment extends BaseServlet {
 
 	private static final long serialVersionUID = 1250411762987530784L;
-
+	
 	@Override
 	protected void service() throws ServletException, IOException {
 		HttpServletRequest request = getRequest();
 		String content = request.getParameter("content");
+		String referenceCommentIdString = request.getParameter("referenceCommentId");
+		String referenceCommenter = request.getParameter("referenceCommenter");
 		if (StringUtils.isBlank(content)) {
 			writeText("评论不能为空");
 			return;
@@ -56,18 +63,32 @@ public class Comment extends BaseServlet {
 		Map<String, String> user = getUser();
 		String username = user == null ? null : user.get("username");
 		String nickName = user == null ? null : user.get("nickName");
-		Integer result = CommentDao.save(articleId, visitorIp, content, username, nickName, null);
-		if (result == null) {
+		Integer referenceCommentId = null;
+		if (!StringUtils.isBlank(referenceCommentIdString) && !StringUtils.isBlank(referenceCommenter)) {
+			referenceCommentId = Integer.valueOf(referenceCommentIdString);
+			content = "<a href=\"javascript:void(0);\" class=\"content_reply_a\" reference_comment_id=\""+referenceCommentId+"\">@"+referenceCommenter+"</a><br/>" + content;
+		}
+		String quotePrefix = "<fieldset class=\"comment_quote\"><legend>引用</legend>";
+		String quoteSuffix = "</fieldset>";
+		content = StringUtil.replace(content, "[quote]", "[/quote]", quotePrefix, quoteSuffix);
+		Integer id = CommentDao.save(articleId, visitorIp, new Date(), content, username, nickName, null, referenceCommentId);
+		if (id == null) {
 			logger.error("save comment error!");
 			writeText("保存评论失败，请稍后再试");
 			return;
 		}
-		boolean finalResult = (result != null) && ArticleDao.updateCount(articleId, "comment_times");
-		if (finalResult && logger.isInfoEnabled()) {
+		if (ArticleDao.updateCount(articleId, "comment_times") && logger.isInfoEnabled()) {
 			logger.info("save comment and updateCount success!");
+		} else {
+			writeText("保存评论失败，请稍后再试");
+			return;
 		}
 		Generators.generate(articleId);
-		writeText("success");
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("success", true);
+		result.put("id", id);
+		result.put("content", content);
+		writeJsonObject(result);
 	}
 
 }

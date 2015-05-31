@@ -42,8 +42,8 @@ _margin-bottom: 15px; }/*兼容IE6*/
 .tag_div { width: 100%; clear: both; overflow: hidden }
 .tag_div h3 { line-height: 40px; color: #38485A; font-size: 18px; border-bottom: 1px solid #E6E6E6; height: 40px; }
 .tag_div ul { margin: 20px 0 }
-.tag_div ul li { line-height: 24px; height: 24px; display: block; background: #999; float: left; padding: 3px 11px; margin: 10px 10px 0 0; border-radius: 8px; -moz-transition: all 0.5s; -webkit-transition: all 0.5s; -o-transition: all 0.5s; transition: all 0.5s; }
-.tag_div ul li a { color: #FFF }
+.tag_div ul li { line-height: 20px; height: 20px; display: block; background: #999; float: left; padding: 3px 8px; margin: 10px 10px 0 0; border-radius: 8px; -moz-transition: all 0.5s; -webkit-transition: all 0.5s; -o-transition: all 0.5s; transition: all 0.5s; }
+.tag_div ul li a { color: #FFF ;font-size: 12px;}
 .tag_div ul li:nth-child(8n-7) { background: #8A9B0F }
 .tag_div ul li:nth-child(8n-6) { background: #EB6841 }
 .tag_div ul li:nth-child(8n-5) { background: #3FB8AF }

@@ -1,20 +1,26 @@
 package com.zuoxiaolong.servlet;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import org.apache.log4j.Logger;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+import org.apache.log4j.Logger;
+
+import com.zuoxiaolong.freemarker.ArticleHelper;
+import com.zuoxiaolong.freemarker.ArticleListHelper;
+import com.zuoxiaolong.freemarker.IndexHelper;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -58,6 +64,14 @@ public abstract class BaseServlet extends HttpServlet {
 		responseThreadLocal.set(response);
 		service();
 	}
+	
+	protected String getUsername() {
+		Map<String, String> user = getUser();
+		if (user != null) {
+			return user.get("username");
+		}
+		return null;
+	}
 
 	protected Map<String, String> getUser() {
 		return getUser(getRequest());
@@ -72,23 +86,21 @@ public abstract class BaseServlet extends HttpServlet {
 		return null;
 	}
 
-	private static final Pattern STATIC_ARTICLE_PATTERN = Pattern.compile("article_([0-9]+)\\.html");
+	private static final Pattern STATIC_ARTICLE_PATTERN = Pattern.compile("html/article_[0-9]+\\.html");
 
-	private static final Pattern STATIC_ARTICLE_LIST_PATTERN = Pattern.compile("article_list_([0-9]+)\\.html");
+	private static final Pattern STATIC_ARTICLE_LIST_PATTERN = Pattern.compile("/html/article_list_[a-zA-Z_]+_[0-9]+\\.html");
 
 	protected String getDynamicUrl() {
 		String requestUri = getRequest().getHeader("Referer");
 		Matcher matcher = STATIC_ARTICLE_PATTERN.matcher(requestUri);
 		if (matcher.find()) {
-			String articleId = matcher.group(1);
-			return "/blog/article.ftl?id=" + articleId;
+			return ArticleHelper.generateDynamicPath(matcher.group());
 		}
 		matcher = STATIC_ARTICLE_LIST_PATTERN.matcher(requestUri);
 		if (matcher.find()) {
-			String current = matcher.group(1);
-			return "/blog/article_list.ftl?current=" + current;
+			return ArticleListHelper.generateDynamicPath(matcher.group());
 		}
-		return "/blog/index.ftl";
+		return IndexHelper.generateDynamicPath();
 	}
 
 	protected abstract void service() throws ServletException, IOException ;

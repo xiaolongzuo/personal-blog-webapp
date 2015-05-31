@@ -12,9 +12,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.zuoxiaolong.freemarker.ArticleHelper;
 import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.util.DateUtil;
 import com.zuoxiaolong.util.ImageUtil;
+import com.zuoxiaolong.util.StringUtil;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -38,9 +40,87 @@ import com.zuoxiaolong.util.ImageUtil;
  */
 public abstract class ArticleDao extends BaseDao {
 	
-    private static final int SUMMARY_LENGTH = 100;
+    public static List<Map<String, String>> getPageArticlesByTag(final Map<String, Integer> pager,final int tagId, ViewMode viewMode) {
+		return execute(new Operation<List<Map<String, String>>>() {
+			@Override
+			public List<Map<String, String>> doInConnection(Connection connection) {
+				List<Map<String, String>> result = new ArrayList<Map<String,String>>();
+				try {
+					PreparedStatement statement = connection.prepareStatement("select * from articles where id in (select article_id from article_tag where tag_id=? ) order by create_date desc limit ?,10");
+					statement.setInt(1 , tagId);
+					statement.setInt(2 , (pager.get("current") - 1) * 10);
+					ResultSet resultSet = statement.executeQuery();
+					while (resultSet.next()) {
+						result.add(ArticleDao.transfer(resultSet, viewMode));
+					}
+				} catch (SQLException e) {
+					error("query article_category failed ..." , e);
+				}
+				return result;
+			}
+		});
+	}
     
-    private static final int SHORT_SUBJECT_LENGTH = 10;
+    public static List<Map<String, String>> getArticlesByTag(final int tagId, ViewMode viewMode) {
+		return execute(new Operation<List<Map<String, String>>>() {
+			@Override
+			public List<Map<String, String>> doInConnection(Connection connection) {
+				List<Map<String, String>> result = new ArrayList<Map<String,String>>();
+				try {
+					PreparedStatement statement = connection.prepareStatement("select * from articles where id in (select article_id from article_tag where tag_id=? )");
+					statement.setInt(1 , tagId);
+					ResultSet resultSet = statement.executeQuery();
+					while (resultSet.next()) {
+						result.add(ArticleDao.transfer(resultSet, viewMode));
+					}
+				} catch (SQLException e) {
+					error("query article_category failed ..." , e);
+				}
+				return result;
+			}
+		});
+	}
+    
+    public static List<Map<String, String>> getPageArticlesByCategory(final Map<String, Integer> pager,final int categoryId, ViewMode viewMode) {
+		return execute(new Operation<List<Map<String, String>>>() {
+			@Override
+			public List<Map<String, String>> doInConnection(Connection connection) {
+				List<Map<String, String>> result = new ArrayList<Map<String,String>>();
+				try {
+					PreparedStatement statement = connection.prepareStatement("select * from articles where id in (select article_id from article_category where category_id=? ) order by create_date desc limit ?,10");
+					statement.setInt(1, categoryId);
+					statement.setInt(2 , (pager.get("current") - 1) * 10);
+					ResultSet resultSet = statement.executeQuery();
+					while (resultSet.next()) {
+						result.add(ArticleDao.transfer(resultSet, viewMode));
+					}
+				} catch (SQLException e) {
+					error("query article_category failed ..." , e);
+				}
+				return result;
+			}
+		});
+	}
+    
+    public static List<Map<String, String>> getArticlesByCategory(final int categoryId, ViewMode viewMode) {
+		return execute(new Operation<List<Map<String, String>>>() {
+			@Override
+			public List<Map<String, String>> doInConnection(Connection connection) {
+				List<Map<String, String>> result = new ArrayList<Map<String,String>>();
+				try {
+					PreparedStatement statement = connection.prepareStatement("select * from articles where id in (select article_id from article_category where category_id=? )");
+					statement.setInt(1, categoryId);
+					ResultSet resultSet = statement.executeQuery();
+					while (resultSet.next()) {
+						result.add(ArticleDao.transfer(resultSet, viewMode));
+					}
+				} catch (SQLException e) {
+					error("query article_category failed ..." , e);
+				}
+				return result;
+			}
+		});
+	}
     
     public static Integer saveOrUpdate(String resourceId, String subject, String createDate, Integer status,String username, Integer accessTimes, Integer goodTimes, String html, String content) {
     	return execute(new TransactionalOperation<Integer>() {
@@ -99,11 +179,11 @@ public abstract class ArticleDao extends BaseDao {
 		});
     }
     
-    public static List<Map<String, String>> getPageArticles(final Map<String, Integer> pager, final ViewMode viewMode ) {
+    public static List<Map<String, String>> getPageArticles(final Map<String, Integer> pager, final String orderColumn, final ViewMode viewMode ) {
         return execute(new Operation<List<Map<String, String>>>() {
             @Override
             public List<Map<String, String>> doInConnection(Connection connection) {
-                String sql = "select * from articles where status = 1 order by create_date desc limit ?,10";
+                String sql = "select * from articles where status = 1 order by " + orderColumn + " desc limit ?,10";
                 List<Map<String, String>> result = new ArrayList<Map<String, String>>();
                 try {
                     PreparedStatement statement = connection.prepareStatement(sql);
@@ -159,6 +239,23 @@ public abstract class ArticleDao extends BaseDao {
             }
         });
     }
+    
+    public static boolean updateCommentCount(final int id) {
+        return execute(new TransactionalOperation<Boolean>() {
+            @Override
+            public Boolean doInConnection(Connection connection) {
+                try {
+                    PreparedStatement preparedStatement = connection.prepareStatement("update articles set comment_times=(select count(id) from comments where article_id=?) where id = ?");
+                    preparedStatement.setInt(1, id);
+                    preparedStatement.setInt(2, id);
+                    int number = preparedStatement.executeUpdate();
+                    return number > 0;
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+    }
 
     public static boolean updateCount(final int id, final String column) {
         return execute(new TransactionalOperation<Boolean>() {
@@ -182,9 +279,9 @@ public abstract class ArticleDao extends BaseDao {
             String id = resultSet.getString("id");
             article.put("id", id);
             if (viewMode == ViewMode.DYNAMIC) {
-                article.put("url", "/blog/article.ftl?id=" + id);
+                article.put("url", ArticleHelper.generateDynamicPath(Integer.valueOf(id)));
             } else {
-                article.put("url", "/html/article_" + id + ".html");
+                article.put("url", ArticleHelper.generateStaticPath(Integer.valueOf(id)));
             }
             article.put("icon", resultSet.getString("icon"));
             article.put("subject", resultSet.getString("subject"));
@@ -205,9 +302,11 @@ public abstract class ArticleDao extends BaseDao {
             article.put("surprise_times", resultSet.getString("surprise_times"));
             article.put("html", resultSet.getString("html"));
             String content = resultSet.getString("content");
-            article.put("summary", content.substring(0, content.length() < SUMMARY_LENGTH ? content.length() : SUMMARY_LENGTH));
+            article.put("content", content);
+            article.put("summary", StringUtil.substring(content, 100));
             String subject = resultSet.getString("subject");
-            article.put("shortSubject", subject.length() < SHORT_SUBJECT_LENGTH ? subject : (subject.substring(0, SHORT_SUBJECT_LENGTH) + " ..."));
+            article.put("short_subject", StringUtil.substring(subject, 10) + (subject.length() > 10 ? "..." : ""));
+            article.put("common_subject", StringUtil.substring(subject, 15) + (subject.length() > 15 ? "..." : ""));
             putAllTimesHeight(article);
         } catch (SQLException e) {
             throw new RuntimeException(e);

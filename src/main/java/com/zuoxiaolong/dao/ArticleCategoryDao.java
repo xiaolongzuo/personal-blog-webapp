@@ -26,7 +26,7 @@ import java.sql.SQLException;
  * @since 2015年5月29日 上午1:04:31
  */
 public abstract class ArticleCategoryDao extends BaseDao {
-
+	
 	public static boolean save(final int articleId, final int categoryId) {
 		return execute(new TransactionalOperation<Boolean>() {
 			@Override

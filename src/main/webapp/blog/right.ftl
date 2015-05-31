@@ -115,9 +115,9 @@
         </script>
         <div class="charts_top">
             <ul class="hd" id="tab">
-                <li class="cur"><a href="#">点击排行</a></li>
-                <li><a href="#">最新文章</a></li>
-                <li><a href="#">站长推荐</a></li>
+                <li class="cur"><a href="${accessArticlesUrl}" title="点击查看更多">点击排行</a></li>
+                <li><a href="${newArticlesUrl}" title="点击查看更多">最新文章</a></li>
+                <li><a href="${recommendArticlesUrl}" title="点击查看更多">站长推荐</a></li>
             </ul>
         </div>
         <div class="ms-main" id="ms-main">
@@ -127,7 +127,7 @@
                     <#if article_index gt 5>
                         <#break />
                     </#if>
-                    <li><a href="${contextPath}${article.url}" title="${article.subject}">${article.subject}</a></li>
+                    <li><a href="${contextPath}${article.url}" title="${article.subject}">${article.common_subject}</a></li>
                 </#list>
                 </ul>
             </div>
@@ -137,7 +137,7 @@
                     <#if article_index gt 5>
                         <#break />
                     </#if>
-                    <li><a href="${contextPath}${article.url}" title="${article.subject}">${article.subject}</a></li>
+                    <li><a href="${contextPath}${article.url}" title="${article.subject}">${article.common_subject}</a></li>
                 </#list>
                 </ul>
             </div>
@@ -147,7 +147,7 @@
                     <#if article_index gt 5>
                         <#break />
                     </#if>
-                    <li><a href="${contextPath}${article.url}" title="${article.subject}">${article.subject}</a></li>
+                    <li><a href="${contextPath}${article.url}" title="${article.subject}">${article.common_subject}</a></li>
                 </#list>
                 </ul>
             </div>
@@ -159,13 +159,9 @@
     <div class="tag_div">
         <h3>标签云</h3>
         <ul>
-            <li><a href="#">个人博客</a></li>
-            <li><a href="#">web开发</a></li>
-            <li><a href="#">前端设计</a></li>
-            <li><a href="#">Html</a></li>
-            <li><a href="#">CSS3</a></li>
-            <li><a href="#">百度</a></li>
-            <li><a href="#">Javasript</a></li>
+        	<#list hotTags as tag>
+                <li><a href="${contextPath}/blog/article_list.ftl?tag=${tag.tag_name}" title="${tag.tag_name}">${tag.tag_name}</a></li>
+            </#list>
         </ul>
     </div>
 
@@ -177,7 +173,7 @@
             <#if article_index gt 4>
                 <#break />
             </#if>
-            <li><a href="${contextPath}${article.url}" title="${article.subject}"><img src="${article.icon}"><b>${article.shortSubject}</b></a>
+            <li><a href="${contextPath}${article.url}" title="${article.subject}"><img src="${article.icon}"><b>${article.short_subject}</b></a>
 
                 <p><span class="tulanmu"><a href="#">${article.username}</a></span><span
                         class="tutime">${article.create_date?substring(0,10)}</span>
