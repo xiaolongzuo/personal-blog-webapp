@@ -1,5 +1,6 @@
+index/
+image/
 article*.html
-index.html
 .idea/
 *.iml
 *.csv
