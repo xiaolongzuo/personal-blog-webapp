@@ -1,14 +1,13 @@
 package com.zuoxiaolong.generator;
 
+import com.zuoxiaolong.config.Configuration;
+import org.apache.log4j.Logger;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.log4j.Logger;
-
-import com.zuoxiaolong.config.Configuration;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -42,15 +41,18 @@ public abstract class Generators {
     	IndexGenerator indexGenerator = new IndexGenerator();
     	ArticleGenerator articleGenerator = new ArticleGenerator();
     	ArticleListGenerator articleListGenerator = new ArticleListGenerator();
-    	generatorMap = new HashMap<Class<? extends Generator>, Generator>();
+		ExceptionGenerator exceptionGenerator = new ExceptionGenerator();
+    	generatorMap = new HashMap<>();
     	generatorMap.put(IndexGenerator.class, indexGenerator);
     	generatorMap.put(ArticleGenerator.class, articleGenerator);
     	generatorMap.put(ArticleListGenerator.class, articleListGenerator);
+		generatorMap.put(ExceptionGenerator.class, exceptionGenerator);
     	
-    	generatorList = new ArrayList<Generator>();
+    	generatorList = new ArrayList<>();
     	generatorList.add(indexGenerator);
     	generatorList.add(articleListGenerator);
     	generatorList.add(articleGenerator);
+		generatorList.add(exceptionGenerator);
     }
 
     public static void generate() {

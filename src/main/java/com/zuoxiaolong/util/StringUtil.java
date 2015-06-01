@@ -1,5 +1,8 @@
 package com.zuoxiaolong.util;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.regex.Pattern;
 
 /*
@@ -25,6 +28,22 @@ import java.util.regex.Pattern;
 public abstract class StringUtil {
 	
 	private static final String chinesePattern = "[\u4e00-\u9fa5]{1,1}";
+
+	public static String urlEncode(String param) {
+		try {
+			return URLEncoder.encode(param, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public static String urlDecode(String param) {
+		try {
+			return URLDecoder.decode(param, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
+	}
 	
 	public static String substring(String source, int length) {
 		char[] chars = source.toCharArray();
@@ -43,10 +62,6 @@ public abstract class StringUtil {
 			}
 		}
 		return stringBuffer.toString();
-	}
-	
-	public static void main(String[] args) {
-		System.out.println(substring("编程之路", 4));
 	}
 	
 	public static String replaceStartSlant(String s) {

@@ -1,3 +1,9 @@
+function searchArticles(name, value) {
+	var url = contextPath + '/blog/article_list.ftl?current=1';
+	url = url + '&' + name + '=' + encodeURI(value);
+	window.location.href=url;
+}
+
 /*
  * 滑动到指定元素
  */

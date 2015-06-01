@@ -1,14 +1,13 @@
 package com.zuoxiaolong.dynamic;
 
-import java.util.Map;
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.freemarker.ArticleListHelper;
+import com.zuoxiaolong.util.StringUtil;
+import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-
-import com.zuoxiaolong.dao.ArticleDao;
-import com.zuoxiaolong.freemarker.ArticleListHelper;
+import java.util.Map;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -47,12 +46,19 @@ public class ArticleList implements DataMap {
 		if (StringUtils.isNotBlank(orderColumn)) {
 			int total = ArticleDao.getArticles(orderColumn, VIEW_MODE).size();
 			ArticleListHelper.putArticleListDataMap(data, VIEW_MODE, orderColumn, current, total);
+
 		} else if (StringUtils.isNotBlank(searchText)) {
-			ArticleListHelper.putArticleListDataMapBySearchText(data, VIEW_MODE, searchText, current);
+			searchText = StringUtil.urlDecode(searchText);
+			ArticleListHelper.putArticleListDataMapBySearchText(data, searchText, current);
+
 		} else if (StringUtils.isNotBlank(category)) {
+			category = StringUtil.urlDecode(category);
 			ArticleListHelper.putArticleListDataMapByCategory(data, VIEW_MODE, category, current);
+
 		} else if (StringUtils.isNotBlank(tag)) {
+			tag = StringUtil.urlDecode(tag);
 			ArticleListHelper.putArticleListDataMapByTag(data, VIEW_MODE, tag, current);
+
 		} else {
 			throw new IllegalArgumentException();
 		}

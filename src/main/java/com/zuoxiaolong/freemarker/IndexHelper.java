@@ -1,11 +1,11 @@
 package com.zuoxiaolong.freemarker;
 
-import java.util.List;
-import java.util.Map;
-
 import com.zuoxiaolong.algorithm.Random;
 import com.zuoxiaolong.dao.ArticleDao;
 import com.zuoxiaolong.model.ViewMode;
+
+import java.util.List;
+import java.util.Map;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -29,7 +29,7 @@ import com.zuoxiaolong.model.ViewMode;
  */
 public abstract class IndexHelper {
 
-	private static final int DEFAULT_INDEX_ARTICLE_NUMBER = 8;
+	private static final int DEFAULT_INDEX_ARTICLE_NUMBER = 6;
 
 	public static void putArticleDataMap(Map<String, Object> data, ViewMode viewMode) {
 		List<Map<String, String>> randomList = Random.random(ArticleDao.getArticles("create_date", viewMode), DEFAULT_INDEX_ARTICLE_NUMBER);

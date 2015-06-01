@@ -1,17 +1,15 @@
 package com.zuoxiaolong.freemarker;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.lucene.queryparser.classic.ParseException;
-import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
-
 import com.zuoxiaolong.dao.ArticleDao;
 import com.zuoxiaolong.dao.CategoryDao;
 import com.zuoxiaolong.dao.TagDao;
 import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.search.LuceneHelper;
+import com.zuoxiaolong.util.StringUtil;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -56,19 +54,21 @@ public class ArticleListHelper {
 		}
 	}
 
-	public static void putArticleListDataMapBySearchText(Map<String, Object> data, ViewMode viewMode, String searchText, int current) {
-		try {
-			LuceneHelper.search(searchText);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvalidTokenOffsetsException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public static void putArticleListDataMapBySearchText(Map<String, Object> data, String searchText, int current) {
+		List<Map<String, String>> articles = LuceneHelper.search(searchText);
+		int total = articles.size();
+		int page = (total % 10 == 0) ? (total / 10) : (total / 10 + 1);
+		Map<String, Integer> pager = new HashMap<>();
+		pager.put("current", current);
+		pager.put("total", total);
+		pager.put("page", page);
+		data.put("searchText", searchText);
+		data.put("pageArticles", articles.subList((current - 1) * 10, current * 10 > articles.size() ? articles.size() : current * 10));
+		data.put("pager", pager);
+		data.put("firstArticleListUrl", ArticleListHelper.generateDynamicSearchTextPath(searchText, 1));
+		data.put("preArticleListUrl", ArticleListHelper.generateDynamicSearchTextPath(searchText, current - 1));
+		data.put("nextArticleListUrl", ArticleListHelper.generateDynamicSearchTextPath(searchText, current + 1));
+		data.put("lastArticleListUrl", ArticleListHelper.generateDynamicSearchTextPath(searchText, page));
 	}
 	
 	public static void putArticleListDataMapByTag(Map<String, Object> data, ViewMode viewMode, String tag, int current) {
@@ -123,15 +123,15 @@ public class ArticleListHelper {
 	}
 	
 	public static String generateDynamicTagPath(String tag, int current) {
-		return "/blog/article_list.ftl?tag=" + tag + "&current=" + current;
+		return "/blog/article_list.ftl?tag=" + StringUtil.urlEncode(tag) + "&current=" + current;
 	}
 	
 	public static String generateDynamicCategoryPath(String category, int current) {
-		return "/blog/article_list.ftl?category=" + category + "&current=" + current;
+		return "/blog/article_list.ftl?category=" + StringUtil.urlEncode(category) + "&current=" + current;
 	}
 	
 	public static String generateDynamicSearchTextPath(String searchText, int current) {
-		return "/blog/article_list.ftl?searchText=" + searchText + "&current=" + current;
+		return "/blog/article_list.ftl?searchText=" + StringUtil.urlEncode(searchText) + "&current=" + current;
 	}
 	
 }

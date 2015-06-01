@@ -1,11 +1,11 @@
 package com.zuoxiaolong.thread;
 
-import org.apache.log4j.Logger;
-
 import com.zuoxiaolong.config.Configuration;
 import com.zuoxiaolong.generator.Generators;
 import com.zuoxiaolong.reptile.Cnblogs;
+import com.zuoxiaolong.search.LuceneHelper;
 import com.zuoxiaolong.util.ImageUtil;
+import org.apache.log4j.Logger;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -43,6 +43,7 @@ public class FetchTask implements Runnable {
 				} else {
 					Cnblogs.fetchArticlesCommon();
 				}
+				LuceneHelper.updateIndex();
 				Generators.generate();
 				Thread.sleep(1000 * 60 * THREAD_SLEEP_MINUTES);
 			} catch (Exception e) {

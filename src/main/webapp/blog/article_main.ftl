@@ -9,44 +9,45 @@
         ${article.html} <br/>
         <#include "remark.ftl">
         </ul>
-        <div class="article_tag_div">
-            <p>关键字：
-            <#if tags?? && tags?size gt 0 >
-            	<#list tags as tag>
-					<a href="${contextPath}/blog/article_list.ftl?tag=${tag.tag_name}">${tag.tag_name}</a>
-                </#list>
-        	</#if>
-            </p>
-        </div>
-		<div class="article_category_div">
-            <p>分类：
-            <#if categories?? && categories?size gt 0 >
-            	<#list categories as category>
-					<a href="${contextPath}/blog/article_list.ftl?category=${category.category_name}">${category.category_name}</a>
-                </#list>
-        	</#if>
-            </p>
-        </div>
-    <#if nextArticle?? || preArticle?? >
-        <div class="nextinfo">
-            <#if preArticle??>
-                <p>上一篇：<a href="${contextPath}${preArticle.url}">${preArticle.subject}</a></p>
-            </#if>
-            <#if nextArticle??>
-                <p>下一篇：<a href="${contextPath}${nextArticle.url}">${nextArticle.subject}</a></p>
-            </#if>
-        </div>
-    </#if>
-    <#if relatedArticles?? && relatedArticles?size gt 0>
-        <div class="otherlink">
-            <h2>相关文章</h2>
-            <ul>
-                <#list relatedArticles as article>
-                    <li><a href="${contextPath}${article.url}" title="${article.subject}">${article.subject}</a></li>
-                </#list>
-            </ul>
-        </div>
-    </#if>
+        <#if tags?? && tags?size gt 0 >
+            <div class="article_tag_div">
+                <p>关键字：
+
+                    <#list tags as tag>
+                        <a onclick="javascript:searchArticles('tag','${tag.tag_name}')" href="javascript:void(0)" >${tag.tag_name}</a>
+                    </#list>
+                </p>
+            </div>
+        </#if>
+        <#if categories?? && categories?size gt 0 >
+            <div class="article_category_div">
+                <p>分类：
+                    <#list categories as category>
+                        <a onclick="javascript:searchArticles('category','${category.category_name}')" href="javascript:void(0)" >${category.category_name}</a>
+                    </#list>
+                </p>
+            </div>
+        </#if>
+        <#if nextArticle?? || preArticle?? >
+            <div class="nextinfo">
+                <#if preArticle??>
+                    <p>上一篇：<a href="${contextPath}${preArticle.url}">${preArticle.subject}</a></p>
+                </#if>
+                <#if nextArticle??>
+                    <p>下一篇：<a href="${contextPath}${nextArticle.url}">${nextArticle.subject}</a></p>
+                </#if>
+            </div>
+        </#if>
+        <#if relatedArticles?? && relatedArticles?size gt 0>
+            <div class="otherlink">
+                <h2>相关文章</h2>
+                <ul>
+                    <#list relatedArticles as article>
+                        <li><a href="${contextPath}${article.url}" title="${article.subject}">${article.subject}</a></li>
+                    </#list>
+                </ul>
+            </div>
+        </#if>
         <div id="comments_pager_top"></div>
         <!-- 评论列表 -->
         <div class="feedback_area_title">评论列表（共<span id="comment_size">${comments?size}</span>条评论）</div>

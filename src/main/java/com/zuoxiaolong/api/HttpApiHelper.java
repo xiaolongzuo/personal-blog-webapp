@@ -1,19 +1,16 @@
 package com.zuoxiaolong.api;
 
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-import javax.servlet.http.HttpServletResponse;
-
-import net.sf.json.JSONObject;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-
 import com.zuoxiaolong.config.Configuration;
 import com.zuoxiaolong.dao.HtmlPageDao;
 import com.zuoxiaolong.util.IOUtil;
+import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 
 /*
@@ -100,6 +97,9 @@ public abstract class HttpApiHelper {
 	
 	public static String getCity(String ip) {
 		String city = "来自星星的";
+		if (ip.equals("127.0.0.1")) {
+			return city;
+		}
 		String url = "http://api.map.baidu.com/location/ip?ak=" + BAIDU_AK + "&ip=" + ip;
 		try {
 			HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();

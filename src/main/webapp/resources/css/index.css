@@ -48,6 +48,11 @@
 .user_profile #nick_name_span {color:#8B8682;}
 .user_profile input {width: 110px;}
 
+/* 站内搜索 */
+.site_search_div h3 { line-height: 40px; color: #38485A; font-size: 18px; border-bottom: 1px solid #E6E6E6; height: 40px }
+#site_search_input_div {margin: 10px 0px;padding: 10px;}
+#search_text_input {margin: 0px 10px 0px 0px;height: 18px; width: 180px;}
+
 /* 右侧关注我 */
 .follow_me h3 { line-height: 40px; color: #38485A; font-size: 18px; border-bottom: 1px solid #E6E6E6; height: 40px }
 .follow_me_info {margin: 25px 0px 0px 0px;}

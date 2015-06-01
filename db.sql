@@ -1,3 +1,5 @@
+ALTER SCHEMA `blog`  DEFAULT CHARACTER SET utf8mb4 ;
+
 DROP TABLE IF EXISTS comments;
 DROP TABLE IF EXISTS article_id_visitor_ip;
 DROP TABLE IF EXISTS articles;
@@ -154,8 +156,6 @@ create table comment_id_visitor_ip (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 ;
 
 ALTER TABLE comment_id_visitor_ip ADD CONSTRAINT `COMMENT_ID_VISITOR_IP_FK_ARTICLE_ID` FOREIGN KEY (`comment_id`) REFERENCES comments(`id`);
-
-ALTER SCHEMA `blog`  DEFAULT CHARACTER SET utf8mb4 ;
 
 ALTER TABLE comment_id_visitor_ip add username VARCHAR(40) ;
 ALTER TABLE article_id_visitor_ip add username VARCHAR(40) ;

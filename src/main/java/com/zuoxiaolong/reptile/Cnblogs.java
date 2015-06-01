@@ -1,24 +1,10 @@
 package com.zuoxiaolong.reptile;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.dao.*;
+import com.zuoxiaolong.util.EnrypyUtil;
+import com.zuoxiaolong.util.IOUtil;
 import net.sf.json.JSONObject;
-
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -27,16 +13,14 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
-import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.dao.ArticleCategoryDao;
-import com.zuoxiaolong.dao.ArticleDao;
-import com.zuoxiaolong.dao.ArticleTagDao;
-import com.zuoxiaolong.dao.CategoryDao;
-import com.zuoxiaolong.dao.CommentDao;
-import com.zuoxiaolong.dao.ImageDao;
-import com.zuoxiaolong.dao.TagDao;
-import com.zuoxiaolong.util.EnrypyUtil;
-import com.zuoxiaolong.util.IOUtil;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -67,7 +51,7 @@ public abstract class Cnblogs {
 	private static final String publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCp0wHYbg/NOPO3nzMD3dndwS0MccuMeXCHgVlGOoYyFwLdS24Im2e7YyhB0wrUsyYf0/nhzCzBK8ZC9eCWqd0aHbdgOQT6CuFQBMjbyGYvlVYU2ZP7kG9Ft6YV6oc9ambuO7nPZh+bvXH0zDKfi02prknrScAKC0XhadTHT3Al0QIDAQAB";
 	
 	private static final String username = "左潇龙";
-	
+
 	public static void fetchArticlesAfterLogin() throws IOException {
 		String cookie;
 		try {
