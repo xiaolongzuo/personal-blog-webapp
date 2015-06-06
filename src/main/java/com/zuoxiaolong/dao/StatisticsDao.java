@@ -5,6 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -53,7 +56,9 @@ public abstract class StatisticsDao extends BaseDao {
 			public Integer doInConnection(Connection connection) {
 				try {
 					PreparedStatement statement = connection.prepareStatement("select count(*) from access_log where access_date > ?");
-					statement.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
+					DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+					Date today = dateFormat.parse(dateFormat.format(new Date()));
+					statement.setTimestamp(1, new Timestamp(today.getTime()));
 					ResultSet resultSet = statement.executeQuery();
 					if (resultSet.next()) {
 						return resultSet.getInt(1);
@@ -111,7 +116,9 @@ public abstract class StatisticsDao extends BaseDao {
 			public Integer doInConnection(Connection connection) {
 				try {
 					PreparedStatement statement = connection.prepareStatement("select count(*) from comments where create_date > ?");
-					statement.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
+					DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+					Date today = dateFormat.parse(dateFormat.format(new Date()));
+					statement.setTimestamp(1, new Timestamp(today.getTime()));
 					ResultSet resultSet = statement.executeQuery();
 					if (resultSet.next()) {
 						return resultSet.getInt(1);
@@ -150,7 +157,9 @@ public abstract class StatisticsDao extends BaseDao {
 			public Integer doInConnection(Connection connection) {
 				try {
 					PreparedStatement statement = connection.prepareStatement("select count(*) from users where create_date > ?");
-					statement.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
+					DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+					Date today = dateFormat.parse(dateFormat.format(new Date()));
+					statement.setTimestamp(1, new Timestamp(today.getTime()));
 					ResultSet resultSet = statement.executeQuery();
 					if (resultSet.next()) {
 						return resultSet.getInt(1);
