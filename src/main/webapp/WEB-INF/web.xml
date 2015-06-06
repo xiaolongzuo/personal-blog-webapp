@@ -14,6 +14,11 @@
     </filter>
     
     <filter>
+        <filter-name>admin</filter-name>
+        <filter-class>com.zuoxiaolong.filter.AdminFilter</filter-class>
+    </filter>
+    
+    <filter>
         <filter-name>dynamic</filter-name>
         <filter-class>com.zuoxiaolong.filter.DynamicFilter</filter-class>
     </filter>
@@ -36,6 +41,16 @@
     <filter-mapping>
         <filter-name>ip</filter-name>
         <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
+    <filter-mapping>
+        <filter-name>admin</filter-name>
+        <url-pattern>/admin</url-pattern>
+    </filter-mapping>
+    
+    <filter-mapping>
+        <filter-name>admin</filter-name>
+        <url-pattern>/admin/*</url-pattern>
     </filter-mapping>
     
     <filter-mapping>
@@ -98,6 +113,11 @@
         <servlet-class>com.zuoxiaolong.servlet.CommentRemark</servlet-class>
     </servlet>
     
+    <servlet>
+        <servlet-name>adminLogin</servlet-name>
+        <servlet-class>com.zuoxiaolong.servlet.AdminLogin</servlet-class>
+    </servlet>
+    
     <servlet-mapping>
         <servlet-name>counter</servlet-name>
         <url-pattern>/counter.do</url-pattern>
@@ -146,6 +166,11 @@
     <servlet-mapping>
         <servlet-name>commentRemark</servlet-name>
         <url-pattern>/commentRemark.do</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>adminLogin</servlet-name>
+        <url-pattern>/admin/login.do</url-pattern>
     </servlet-mapping>
 
     <listener>

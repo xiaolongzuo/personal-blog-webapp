@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -94,7 +95,7 @@ public abstract class UserDao extends BaseDao {
 					finalNickName = qqNickName;
 				}
 				String selectSql = "select id from users where username=?";
-				String insertSql = "insert into users (username,password,nick_name,qq_open_id,qq_nick_name,qq_avatar_url_30) values (?,?,?,?,?,?)";
+				String insertSql = "insert into users (username,password,nick_name,qq_open_id,qq_nick_name,qq_avatar_url_30,create_date) values (?,?,?,?,?,?,?)";
 				String updateSql = "update users set qq_open_id=?,nick_name=?,qq_nick_name=?,qq_avatar_url_30=? where username=?";
 				try {
 					PreparedStatement statement = connection.prepareStatement(selectSql);
@@ -113,6 +114,7 @@ public abstract class UserDao extends BaseDao {
 						saveOrUpdate.setString(4, qqOpenId);
 						saveOrUpdate.setString(5, qqNickName);
 						saveOrUpdate.setString(6, qqAvatarUrl30);
+						saveOrUpdate.setTimestamp(7, new Timestamp(System.currentTimeMillis()));
 					} else {
 						saveOrUpdate = connection.prepareStatement(updateSql);
 						saveOrUpdate.setString(1, qqOpenId);

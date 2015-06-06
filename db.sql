@@ -63,7 +63,6 @@ create table access_log (
 	primary key (id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT = 1;
 
---以下为刀塔传奇sql
 DROP TABLE IF EXISTS matches;
 DROP TABLE IF EXISTS hero;
 
@@ -166,3 +165,5 @@ create table images (
 	resource_url VARCHAR(200),
 	primary key (id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT = 1;
+
+ALTER TABLE users add create_date TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00';

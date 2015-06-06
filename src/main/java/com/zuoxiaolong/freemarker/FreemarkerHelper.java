@@ -61,6 +61,13 @@ public abstract class FreemarkerHelper {
         } else {
             data.put("indexUrl", IndexHelper.generateStaticPath());
         }
+        if (namespace.equals("admin")) {
+        	if (ViewMode.DYNAMIC == viewMode) {
+                data.put("newArticlesUrl", ArticleListHelper.generateDynamicPath("create_date", 1));
+            } else {
+                data.put("newArticlesUrl", ArticleListHelper.generateStaticPath("create_date", 1));
+            }
+		}
         if (namespace.equals("blog")) {
             List<Map<String, String>> articleList = ArticleDao.getArticles("create_date", viewMode);
             List<Map<String, String>> articleListCopy = new ArrayList<>(articleList);

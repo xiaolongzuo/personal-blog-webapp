@@ -167,6 +167,25 @@ public abstract class CommentDao extends BaseDao {
 		});
 	}
 	
+	public static List<Map<String, String>> getComments() {
+		return execute(new Operation<List<Map<String, String>>>() {
+			@Override
+			public List<Map<String, String>> doInConnection(Connection connection) {
+				List<Map<String, String>> comments = new ArrayList<Map<String,String>>();
+				try {
+					Statement statement = connection.createStatement();
+					ResultSet resultSet = statement.executeQuery("select * from comments order by create_date desc");
+					while (resultSet.next()) {
+						comments.add(transfer(resultSet));
+					}
+				} catch (SQLException e) {
+					error("get comments failed ..." , e);
+				}
+				return comments;
+			}
+		});
+	}
+	
 	public static Map<String, String> transfer(ResultSet resultSet){
 		Map<String, String> comment = new HashMap<String, String>();
 		try {
@@ -179,6 +198,8 @@ public abstract class CommentDao extends BaseDao {
 			} else {
 				comment.put("commenter", resultSet.getString("city") + "网友");
 			}
+			String contextPath = Configuration.isProductEnv() ? Configuration.get("context.path.product") : Configuration.get("context.path");
+			comment.put("articleUrl", contextPath + "/blog/article.ftl?id=" + resultSet.getInt("article_id"));
 			comment.put("good_times", resultSet.getString("good_times"));
 			comment.put("bad_times", resultSet.getString("bad_times"));
 		} catch (SQLException e) {
