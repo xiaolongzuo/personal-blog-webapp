@@ -25,17 +25,17 @@
 
     <filter-mapping>
         <filter-name>accessLog</filter-name>
-        <url-pattern>*.ftl</url-pattern>
+        <url-pattern>/blog/*</url-pattern>
     </filter-mapping>
 
     <filter-mapping>
         <filter-name>accessLog</filter-name>
-        <url-pattern>*.html</url-pattern>
+        <url-pattern>/html/*</url-pattern>
     </filter-mapping>
 
     <filter-mapping>
         <filter-name>accessLog</filter-name>
-        <url-pattern>*.do</url-pattern>
+        <url-pattern>/dota/*</url-pattern>
     </filter-mapping>
 
     <filter-mapping>
