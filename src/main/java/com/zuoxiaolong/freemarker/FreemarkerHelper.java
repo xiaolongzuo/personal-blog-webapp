@@ -1,13 +1,5 @@
 package com.zuoxiaolong.freemarker;
 
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.log4j.Logger;
-
 import com.zuoxiaolong.algorithm.Match;
 import com.zuoxiaolong.algorithm.Random;
 import com.zuoxiaolong.config.Configuration;
@@ -16,8 +8,14 @@ import com.zuoxiaolong.dao.MatchDao;
 import com.zuoxiaolong.dao.TagDao;
 import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.util.StringUtil;
-
 import freemarker.template.Template;
+import org.apache.log4j.Logger;
+
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -58,16 +56,11 @@ public abstract class FreemarkerHelper {
         data.put("contextPath", Configuration.isProductEnv() ? Configuration.get("context.path.product") : Configuration.get("context.path"));
         if (ViewMode.DYNAMIC == viewMode) {
             data.put("indexUrl", IndexHelper.generateDynamicPath());
+            data.put("newArticlesUrl", ArticleListHelper.generateDynamicPath("create_date", 1));
         } else {
             data.put("indexUrl", IndexHelper.generateStaticPath());
+            data.put("newArticlesUrl", ArticleListHelper.generateStaticPath("create_date", 1));
         }
-        if (namespace.equals("admin")) {
-        	if (ViewMode.DYNAMIC == viewMode) {
-                data.put("newArticlesUrl", ArticleListHelper.generateDynamicPath("create_date", 1));
-            } else {
-                data.put("newArticlesUrl", ArticleListHelper.generateStaticPath("create_date", 1));
-            }
-		}
         if (namespace.equals("blog")) {
             List<Map<String, String>> articleList = ArticleDao.getArticles("create_date", viewMode);
             List<Map<String, String>> articleListCopy = new ArrayList<>(articleList);
