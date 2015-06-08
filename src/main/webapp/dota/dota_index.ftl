@@ -14,11 +14,9 @@
 				data:{"h":$("#h1").val() + "," + $("#h2").val() + "," + $("#h3").val() + "," + $("#h4").val() + "," + $("#h5").val()},
 				success:function(data){
 					$("#showTable").html('<tbody id="tableBody"><tr> <th width="420">推荐阵容</th> <th width="90">胜率</th> <th width="90">对战次数</th> <th width="90">胜场次数</th></tr></tbody>');
-					if(data && data.orderList && data.orderList.length > 0 && data.totalMap && data.attackMap && data.defendMap) {
+					if(data && data.orderList && data.orderList.length > 0 && data.totalMap) {
 						var orderList = data.orderList;
 						var totalMap = data.totalMap;
-						var attackMap = data.attackMap;
-						var defendMap = data.defendMap;
 						var tableData = '';
 						for (var i = 0;i < orderList.length;i++) {
 							var keys = orderList[i];
