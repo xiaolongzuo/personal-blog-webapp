@@ -49,6 +49,25 @@ public abstract class ImageDao extends BaseDao {
 		return getId(resourceUrl) != null;
 	}
 	
+	public static String getPath(final String resourceUrl) {
+		return execute(new Operation<String>() {
+			@Override
+			public String doInConnection(Connection connection) {
+				try {
+					PreparedStatement statement = connection.prepareStatement("select path from images where resource_url=?");
+					statement.setString(1, resourceUrl);
+					ResultSet resultSet = statement.executeQuery();
+					if(resultSet.next()) {
+						return resultSet.getString(1);
+					}
+				} catch (SQLException e) {
+					error("query image failed ..." , e);
+				}
+				return null;
+			}
+		});
+	}
+	
 	public static Integer getId(final String resourceUrl) {
 		return execute(new Operation<Integer>() {
 			@Override

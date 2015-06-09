@@ -1,11 +1,14 @@
 package com.zuoxiaolong.listener;
 
+import java.io.IOException;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.apache.log4j.Logger;
 
 import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.reptile.Cnblogs;
 import com.zuoxiaolong.thread.BaiduPushTask;
 import com.zuoxiaolong.thread.DirtyWordsFlushTask;
 import com.zuoxiaolong.thread.Executor;
@@ -54,11 +57,11 @@ public class ConfigurationListener implements ServletContextListener {
         }
         if (!Configuration.isProductEnv()) {
             ImageUtil.loadArticleImages();
-//            try {
-//				Cnblogs.fetchArticlesCommon();
-//			} catch (IOException e) {
-//				throw new RuntimeException(e);
-//			}
+            try {
+				Cnblogs.fetchArticlesCommon();
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
 //			LuceneHelper.updateIndex();
 //            Generators.generate();
         } else {
