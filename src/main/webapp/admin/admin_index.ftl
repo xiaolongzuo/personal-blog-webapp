@@ -12,6 +12,8 @@
 		<tr>
 			<th>网站总访问量</th>
 			<th>网站本日访问量</th>
+            <th>网站总访问IP数</th>
+            <th>网站本日访问IP数</th>
 			<th>文章总访问量</th>
 			<th>评论总数</th>
 			<th>本日新增评论数</th>
@@ -21,6 +23,8 @@
 		<tr>
 			<td align="center">${siteTotalAccessTimes}</td>
 			<td align="center">${siteTodayAccessTimes}</td>
+            <td align="center">${siteTotalVisitorIpNumber}</td>
+            <td align="center">${siteTodayVisitorIpNumber}</td>
 			<td align="center">${articleTotalAccessTimes}</td>
 			<td align="center">${commentTotalNumber}</td>
 			<td align="center">${commentTodayNumber}</td>

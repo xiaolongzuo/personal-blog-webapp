@@ -1,10 +1,6 @@
 package com.zuoxiaolong.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -30,6 +26,47 @@ import java.util.Date;
  * @since 2015年6月6日 下午6:04:32
  */
 public abstract class StatisticsDao extends BaseDao {
+
+	public static int getSiteTotalVisitorIpNumber() {
+		return execute(new Operation<Integer>() {
+			@Override
+			public Integer doInConnection(Connection connection) {
+				try {
+					Statement statement = connection.createStatement();
+					ResultSet resultSet = statement.executeQuery("select count(distinct(visitor_ip)) from access_log");
+					if (resultSet.next()) {
+						return resultSet.getInt(1);
+					} else {
+						throw new RuntimeException();
+					}
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+	}
+
+	public static int getSiteTodayVisitorIpNumber() {
+		return execute(new Operation<Integer>() {
+			@Override
+			public Integer doInConnection(Connection connection) {
+				try {
+					PreparedStatement statement = connection.prepareStatement("select count(distinct(visitor_ip)) from access_log where access_date > ?");
+					DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+					Date today = dateFormat.parse(dateFormat.format(new Date()));
+					statement.setTimestamp(1, new Timestamp(today.getTime()));
+					ResultSet resultSet = statement.executeQuery();
+					if (resultSet.next()) {
+						return resultSet.getInt(1);
+					} else {
+						throw new RuntimeException();
+					}
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+	}
 
 	public static int getSiteTotalAccessTimes() {
 		return execute(new Operation<Integer>() {

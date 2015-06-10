@@ -1,12 +1,11 @@
 package com.zuoxiaolong.dynamic;
 
-import java.util.Map;
+import com.zuoxiaolong.dao.CommentDao;
+import com.zuoxiaolong.dao.StatisticsDao;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.zuoxiaolong.dao.CommentDao;
-import com.zuoxiaolong.dao.StatisticsDao;
+import java.util.Map;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -36,6 +35,8 @@ public class AdminIndex implements DataMap {
 		data.put("newComments", CommentDao.getComments());
 		data.put("siteTotalAccessTimes", StatisticsDao.getSiteTotalAccessTimes());
 		data.put("siteTodayAccessTimes", StatisticsDao.getSiteTodayAccessTimes());
+		data.put("siteTotalVisitorIpNumber", StatisticsDao.getSiteTotalVisitorIpNumber());
+		data.put("siteTodayVisitorIpNumber", StatisticsDao.getSiteTodayVisitorIpNumber());
 		data.put("articleTotalAccessTimes", StatisticsDao.getArticleTotalAccessTimes());
 		data.put("commentTotalNumber", StatisticsDao.getCommentTotalNumber());
 		data.put("commentTodayNumber", StatisticsDao.getCommentTodayNumber());
