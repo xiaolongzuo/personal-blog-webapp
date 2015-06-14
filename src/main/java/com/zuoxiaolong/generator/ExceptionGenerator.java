@@ -14,14 +14,14 @@ package com.zuoxiaolong.generator;/*
  * limitations under the License.
  */
 
-import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.freemarker.FreemarkerHelper;
-import com.zuoxiaolong.model.ViewMode;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
+
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.freemarker.FreemarkerHelper;
+import com.zuoxiaolong.model.ViewMode;
 
 /**
  * @author 左潇龙
@@ -37,12 +37,12 @@ public class ExceptionGenerator implements Generator {
             data.put("error", "网站发生内部错误，请联系站长！");
             String htmlPath = Configuration.getContextPath("html/error.html");
             writerError = new FileWriter(htmlPath);
-            FreemarkerHelper.generate("error", writerError, data);
+            FreemarkerHelper.generate("common","error", writerError, data);
 
             data.put("error", "该页面没有找到，请检查链接地址是否正确！");
             htmlPath = Configuration.getContextPath("html/not_found.html");
             writerNotFound = new FileWriter(htmlPath);
-            FreemarkerHelper.generate("error", writerNotFound, data);
+            FreemarkerHelper.generate("common","error", writerNotFound, data);
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {

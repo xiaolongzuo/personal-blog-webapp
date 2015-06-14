@@ -1,19 +1,15 @@
 package com.zuoxiaolong.listener;
 
-import java.io.IOException;
-
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.apache.log4j.Logger;
 
 import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.reptile.Cnblogs;
 import com.zuoxiaolong.thread.BaiduPushTask;
 import com.zuoxiaolong.thread.DirtyWordsFlushTask;
 import com.zuoxiaolong.thread.Executor;
 import com.zuoxiaolong.thread.FetchTask;
-import com.zuoxiaolong.util.ImageUtil;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -56,12 +52,12 @@ public class ConfigurationListener implements ServletContextListener {
             logger.info("DirtyWordsFlush thread has been started...");
         }
         if (!Configuration.isProductEnv()) {
-            ImageUtil.loadArticleImages();
-            try {
-				Cnblogs.fetchArticlesCommon();
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
+//            ImageUtil.loadArticleImages();
+//            try {
+//				Cnblogs.fetchArticlesCommon();
+//			} catch (IOException e) {
+//				throw new RuntimeException(e);
+//			}
 //			LuceneHelper.updateIndex();
 //            Generators.generate();
         } else {

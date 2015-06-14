@@ -1,5 +1,13 @@
 package com.zuoxiaolong.freemarker;
 
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+
 import com.zuoxiaolong.algorithm.Match;
 import com.zuoxiaolong.algorithm.Random;
 import com.zuoxiaolong.config.Configuration;
@@ -8,14 +16,8 @@ import com.zuoxiaolong.dao.MatchDao;
 import com.zuoxiaolong.dao.TagDao;
 import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.util.StringUtil;
-import freemarker.template.Template;
-import org.apache.log4j.Logger;
 
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import freemarker.template.Template;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -53,16 +55,27 @@ public abstract class FreemarkerHelper {
 
     public static Map<String, Object> buildCommonDataMap(String namespace, ViewMode viewMode) {
         Map<String, Object> data = new HashMap<>();
-        data.put("contextPath", Configuration.isProductEnv() ? Configuration.get("context.path.product") : Configuration.get("context.path"));
+        String contextPath = Configuration.isProductEnv() ? Configuration.get("context.path.product") : Configuration.get("context.path");
+        data.put("contextPath", contextPath);
+        data.put("questionUrl", contextPath + "/question/index.ftl");
         if (ViewMode.DYNAMIC == viewMode) {
             data.put("indexUrl", IndexHelper.generateDynamicPath());
-            data.put("newArticlesUrl", ArticleListHelper.generateDynamicPath("create_date", 1));
         } else {
             data.put("indexUrl", IndexHelper.generateStaticPath());
-            data.put("newArticlesUrl", ArticleListHelper.generateStaticPath("create_date", 1));
         }
-        if (namespace.equals("blog")) {
-            List<Map<String, String>> articleList = ArticleDao.getArticles("create_date", viewMode);
+        if (namespace.equals("dota")) {
+            List<Map<String, String>> matchList = MatchDao.getAll();
+            List<Map<String, Object>> hotCharts = new ArrayList<Map<String,Object>>();
+            List<Map<String, Object>> winCharts = new ArrayList<Map<String,Object>>();
+            List<Map<String, Object>> winTimesCharts = new ArrayList<Map<String,Object>>();
+            Map<String, int[]> resultCountMap = Match.computeHeroCharts(matchList);
+            Match.fillHeroCharts(resultCountMap, hotCharts, winCharts, winTimesCharts);
+            data.put("hotCharts", hotCharts);
+            data.put("winCharts", winCharts);
+            data.put("winTimesCharts", winTimesCharts);
+            data.put("totalCount", MatchDao.count());
+        } else {
+        	List<Map<String, String>> articleList = ArticleDao.getArticles("create_date", viewMode);
             List<Map<String, String>> articleListCopy = new ArrayList<>(articleList);
             data.put("accessCharts",ArticleDao.getArticles("access_times", viewMode));
             data.put("newCharts",articleList);
@@ -78,19 +91,7 @@ public abstract class FreemarkerHelper {
                 data.put("newArticlesUrl", ArticleListHelper.generateStaticPath("create_date", 1));
                 data.put("recommendArticlesUrl", ArticleListHelper.generateStaticPath("good_times", 1));
             }
-        }
-        if (namespace.equals("dota")) {
-            List<Map<String, String>> matchList = MatchDao.getAll();
-            List<Map<String, Object>> hotCharts = new ArrayList<Map<String,Object>>();
-            List<Map<String, Object>> winCharts = new ArrayList<Map<String,Object>>();
-            List<Map<String, Object>> winTimesCharts = new ArrayList<Map<String,Object>>();
-            Map<String, int[]> resultCountMap = Match.computeHeroCharts(matchList);
-            Match.fillHeroCharts(resultCountMap, hotCharts, winCharts, winTimesCharts);
-            data.put("hotCharts", hotCharts);
-            data.put("winCharts", winCharts);
-            data.put("winTimesCharts", winTimesCharts);
-            data.put("totalCount", MatchDao.count());
-        }
+		}
         return data;
     }
 

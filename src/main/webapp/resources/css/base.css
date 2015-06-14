@@ -66,3 +66,9 @@ _margin-bottom: 15px; }/*兼容IE6*/
 .charts_list ul li a { display: block; }
 .charts_list ul li a:hover { color: #000; }
 .charts_list ul li:hover { border-bottom: #000 1px solid; }
+
+/* 表单table */
+.form_table {width:100%;margin:20px 30px;padding:5px;}
+.form_table td.form_info {font-size:13px;width:90px;}
+.form_table td.form_input {line-height:30px;height:30px;}
+.form_table td.form_input select {width:150px;}
