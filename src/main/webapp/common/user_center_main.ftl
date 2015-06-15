@@ -4,7 +4,6 @@
 			$("input[type=password]").val("");
 			$("select").val("");
 		}
-	
 		$(document).ready(function(){
 			$("#improve_profile_a").click(function(){
 				$('#improve_profile_table').show();
@@ -18,28 +17,38 @@
 			});
 		});
 	</script>
-	<table class="float_left" style="width:100px;margin:30px 0px 30px 0px;">
-		<tr>
-			<td style="padding:10px;border-left:1px solid #000000;border-bottom:1px solid #000000">
-			&nbsp;&nbsp;<a id="improve_profile_a" href="javascript:void(0)" style="font-size:15px;color:#dacf00">完善资料</a>
-			</td>
-		</tr>
-		<tr>
-			<td style="padding:10px;border-left:1px solid #000000;border-bottom:1px solid #000000">
-			&nbsp;&nbsp;<a id="update_password_a" href="javascript:void(0)" style="font-size:15px;color:#dacf00">修改密码</a>
-			</td>
-		</tr>
-	<table>
-	<table id="improve_profile_table" class="form_table float_right" style="width:400px;">
+	<nav class="menu">
+	<h3 class="menu-heading">
+      用户中心
+    </h3>
+    <a id="improve_profile_a" class="menu-item" href="javascript:void(0)">完善资料</a>
+    <a id="update_password_a" class="menu-item" href="javascript:void(0)">修改密码</a>
+    </nav>
+	<table id="improve_profile_table" class="form_table float_left" >
+	<form method="POST" action="${contextPath}/saveProfile.do" enctype="multipart/form-data">
 		<tr>
 			<td class="form_info" align="right">上传照片：</td>
-			<td class="form_input"><input class="file_input" type="file" name="avatar"/></td>
+			<td class="form_input">
+          		<a class="file_input_a" href="#">
+          			选择图片
+				    <input class="file_input" type="file" name="imageFile" />
+				</a>
+			</td>
 		</tr>
 		<tr>
 			<td class="form_info" align="right">省份：</td>
 			<td class="form_input">
 				<select name="provice">
 					<option value="">请选择</option>
+					<#list provinces as province>
+						<option value="${province.name}"
+						<#if user?? && user.province?? && user.province == province.name>
+						selected="selected"
+						</#if>
+						>
+						${province.name}
+						</option>
+					</#list>
 				</select>
 			</td>
 		</tr>
@@ -48,33 +57,47 @@
 			<td class="form_input">
 				<select name="city">
 					<option value="">请选择</option>
+					<#if cities??>
+						<#list cities as city>
+							<option value="${city.name}"
+							<#if user?? && user.city?? && user.city == city.name>
+							selected="selected"
+							</#if>
+							>
+							${city.name}
+							</option>
+						</#list>
+					</#if>
 				</select>
 			</td>
 		</tr>
 		<tr>
 			<td class="form_info" align="right">语言：</td>
 			<td class="form_input">
-				<select name="provice">
+				<select name="language">
 					<option value="">请选择</option>
-					<option value="C">C</option>
-					<option value="C">C</option>
-					<option value="C">C</option>
-					<option value="C">C</option>
-					<option value="C">C</option>
-					<option value="C">C</option>
-					<option value="C">C</option>
-					<option value="C">C</option>
+					<#list languages as language>
+						<option value="${language.id}"
+						<#if user?? && user.languageId?? && user.languageId == language.id>
+						selected="selected"
+						</#if>
+						>
+						${language.name}
+						</option>
+					</#list>
 				</select>
 			</td>
 		</tr>
 		<tr>
 			<td class="form_info" >&nbsp;</td>
 			<td class="form_input">
-				<input id="save_profile_button" type="button" class="form_button" value="保存"/>
+				<input type="submit" class="form_button" value="保存"/>
 			</td>
 		</tr>
+	</form>
 	</table>
-	<table id="update_password_table" class="form_table float_right" style="width:400px;display:none;">
+	<table id="update_password_table" class="form_table float_left" style="display:none">
+	<form method="POST" action="${contextPath}/updatePassword.do">
 		<tr>
 			<td class="form_info" align="right">原密码：</td>
 			<td class="form_input"><input class="text_input" type="password" name="originPassword"/></td>
@@ -90,7 +113,8 @@
 		<tr>
 			<td class="form_info" >&nbsp;</td>
 			<td class="form_input">
-				<input id="update_password_button" type="button" class="button" value="保存"/>
+				<input type="submit" class="form_button" value="保存"/>
 			</td>
 		</tr>
+	</form>
 	</table>

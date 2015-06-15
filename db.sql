@@ -168,6 +168,35 @@ create table images (
 
 ALTER TABLE users add create_date TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00';
 
+create table dictionaries (
+	id INT NOT NULL AUTO_INCREMENT,
+	name VARCHAR(200) NOT NULL,
+	type VARCHAR(10),
+	primary key (id)
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT = 1;
+
+CREATE TABLE dictionary_province (  
+  id int(10) unsigned NOT NULL default 0,  
+  name varchar(30) NOT NULL,  
+  type varchar(1) default NULL COMMENT '1 - 直辖市\r\n2 - 行政省\r\n3 - 自治区\r\n4 - 特别行政区\r\n5 - 其他国家\r\n见全局数据字典[省份类型] \r\n',  
+  state varchar(1) default NULL COMMENT '0 - 禁用\r\n1 - 启用',  
+  PRIMARY KEY  (id)  
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;  
+   
+CREATE TABLE dictionary_city (  
+  id int(10) unsigned NOT NULL default '0',  
+  name varchar(30) NOT NULL,  
+  province_id int(10) unsigned NOT NULL,  
+  state varchar(1) default '1' COMMENT '0 - 禁用\r\n1 - 启用 \r\n',  
+  PRIMARY KEY  (id)  
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4; 
+
+alter table users add province VARCHAR (200);
+alter table users add city VARCHAR (200);
+alter table users add language_id int(11);
+
+alter table users add CONSTRAINT `USERS_FK_LANGUAGE_ID` FOREIGN KEY (`language_id`) REFERENCES dictionaries(`id`);
+
 create table questions (
 	id INT NOT NULL AUTO_INCREMENT,
 	title VARCHAR(200) NOT NULL,
@@ -199,23 +228,3 @@ create table chats (
   	chat_date DATE,
 	primary key (id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT = 1;
-
-alter table users add province VARCHAR (200);
-alter table users add city VARCHAR (200);
-alter table users add language VARCHAR (200);
-
-CREATE TABLE dictionary_province (  
-  id int(10) unsigned NOT NULL default 0,  
-  name varchar(30) NOT NULL,  
-  type varchar(1) default NULL COMMENT '1 - 直辖市\r\n2 - 行政省\r\n3 - 自治区\r\n4 - 特别行政区\r\n5 - 其他国家\r\n见全局数据字典[省份类型] \r\n',  
-  state varchar(1) default NULL COMMENT '0 - 禁用\r\n1 - 启用',  
-  PRIMARY KEY  (id)  
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;  
-   
-CREATE TABLE dictionary_city (  
-  id int(10) unsigned NOT NULL default '0',  
-  name varchar(30) NOT NULL,  
-  province_id int(10) unsigned NOT NULL,  
-  state varchar(1) default '1' COMMENT '0 - 禁用\r\n1 - 启用 \r\n',  
-  PRIMARY KEY  (id)  
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;  

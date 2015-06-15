@@ -1,16 +1,18 @@
 package com.zuoxiaolong.servlet;
 
-import com.zuoxiaolong.dao.UserDao;
-import com.zuoxiaolong.util.DirtyWordsUtil;
-import org.apache.commons.lang.StringUtils;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.zuoxiaolong.dao.UserDao;
+import com.zuoxiaolong.util.DirtyWordsUtil;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -97,11 +99,9 @@ public class Login extends BaseServlet {
 			writeText("用户名已存在或密码错误");
 			return;
 		}
-		if (user == null && UserDao.saveOrUpdate(username, password, username, null, username, null)) {
-			user = new HashMap<>();
-			user.put("username", username);
-			user.put("nickName", username);
-			request.getSession().setAttribute("user", user);
+		if (UserDao.saveOrUpdate(username, password, username, null, username, null)) {
+			Map<String, String> newUser = UserDao.getUser(username);
+			request.getSession().setAttribute("user", newUser);
 			result.put("success", true);
 			result.put("url", getDynamicUrl());
 			writeJsonObject(result);

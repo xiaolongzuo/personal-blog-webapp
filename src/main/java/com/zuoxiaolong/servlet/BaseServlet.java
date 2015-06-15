@@ -72,6 +72,10 @@ public abstract class BaseServlet extends HttpServlet {
 		}
 		return null;
 	}
+	
+	protected boolean isLogin() {
+		return getUser() != null;
+	}
 
 	protected Map<String, String> getUser() {
 		return getUser(getRequest());

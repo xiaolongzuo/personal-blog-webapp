@@ -53,12 +53,12 @@
                 <tbody>
                 <tr>
                     <td style="font-size: 12px;">用户名：</td>
-                    <td><input type="text" name="username"/></td>
+                    <td><input class="text_input" type="text" name="username"/></td>
                     <td><a id="login_register_button" href="#" class="button">登录&nbsp;|&nbsp;注册</a></td>
                 </tr>
                 <tr>
                     <td style="font-size: 12px;">密  码：</td>
-                    <td><input type="password" name="password"/></td>
+                    <td><input class="text_input" type="password" name="password"/></td>
                     <td>
                         <!--
                         <a href="#" id="qq_login_button"><img width="50" height="20" src="${contextPath}/resources/img/qq_login.png" title="使用QQ登录"></a>

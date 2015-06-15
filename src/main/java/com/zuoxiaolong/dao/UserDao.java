@@ -38,16 +38,12 @@ public abstract class UserDao extends BaseDao {
 		return execute(new Operation<Map<String, String>>() {
 			public Map<String, String> doInConnection(Connection connection) {
 				try {
-					PreparedStatement statement = connection.prepareStatement("select nick_name,qq_avatar_url_30 from users where username=? and password=?");
+					PreparedStatement statement = connection.prepareStatement("select * from users where username=? and password=?");
 					statement.setString(1, username);
 					statement.setString(2, EnrypyUtil.md5(password));
 					ResultSet resultSet = statement.executeQuery();
 					if (resultSet.next()) {
-						Map<String, String> result = new HashMap<String, String>();
-						result.put("username", username);
-						result.put("nickName", resultSet.getString("nick_name"));
-						result.put("qqAvatarUrl30", resultSet.getString("qq_avatar_url_30"));
-						return result;
+						return transfer(resultSet);
 					}
 				} catch (Exception e) {
 					throw new RuntimeException(e);
@@ -66,13 +62,7 @@ public abstract class UserDao extends BaseDao {
 					statement.setString(1, username);
 					ResultSet resultSet = statement.executeQuery();
 					if (resultSet.next()) {
-						Map<String, String> result = new HashMap<String, String>();
-						result.put("username", username);
-						result.put("nickName", resultSet.getString("nick_name"));
-						result.put("qqOpenId", resultSet.getString("qq_open_id"));
-						result.put("qqNickName", resultSet.getString("qq_nick_name"));
-						result.put("qqAvatarUrl30", resultSet.getString("qq_avatar_url_30"));
-						return result;
+						return transfer(resultSet);
 					}
 				} catch (SQLException e) {
 					throw new RuntimeException(e);
@@ -131,5 +121,24 @@ public abstract class UserDao extends BaseDao {
 			}
 		});
     }
+	
+	public static Map<String, String> transfer(ResultSet resultSet){
+		Map<String, String> tag = new HashMap<String, String>();
+		try {
+			tag.put("username", resultSet.getString("username"));
+			tag.put("nickName", resultSet.getString("nick_name"));
+			tag.put("qqOpenId", resultSet.getString("qq_open_id"));
+			tag.put("qqNickName", resultSet.getString("qq_nick_name"));
+			tag.put("qqAvatarUrl30", resultSet.getString("qq_avatar_url_30"));
+			tag.put("province", resultSet.getString("province"));
+			tag.put("city", resultSet.getString("city"));
+			Integer languageId = resultSet.getInt("language_id");
+			tag.put("languageId", String.valueOf(languageId));
+			tag.put("language", DictionaryDao.getName(languageId));
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+		return tag;
+	}
 	
 }
