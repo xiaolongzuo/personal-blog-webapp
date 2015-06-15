@@ -2,7 +2,7 @@
 <html>
 <head>
 <#include "../common/head.ftl">
-<link href="${contextPath}/resources/css/article.css" rel="stylesheet"/>
+<link href="${contextPath}/resources/css/common/article.css" rel="stylesheet"/>
 <style type="text/css">
 .left_box p {text-indent: 2em;line-height:30px;}
 </style>

@@ -2,7 +2,7 @@
 <html>
 <head>
 <#include "../common/head.ftl">
-<link href="${contextPath}/resources/css/list.css" rel="stylesheet"/>
+<link href="${contextPath}/resources/css/common/list.css" rel="stylesheet"/>
 </head>
 <body>
 <#include "../common/header.ftl">

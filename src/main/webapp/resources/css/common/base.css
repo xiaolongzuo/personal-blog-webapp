@@ -13,6 +13,7 @@ h1, h2, h3, h4, h5, h6 { font-size: 100%; font-weight: normal; }
 a { outline: none; }
 a:link, a:visited { text-decoration: none; color: #666 }
 a:hover { text-decoration: none; }
+
 .clear { clear: both; }
 .float_left { float: left }
 .float_right { float: right }
@@ -34,7 +35,7 @@ footer { background: #333; width: 100%; clear: both; text-align: center; }
 *html { background-image: url(about:blank); background-attachment: fixed; }/*兼容IE6*/
 #bottom_float_box { width: 54px; float: right; position: fixed; right: 50px; bottom: 15px; _position: absolute; _bottom: auto; _top:expression(eval(document.documentElement.scrollTop+document.documentElement.clientHeight-this.offsetHeight-(parseInt(this.currentStyle.marginTop, 10)||0)-(parseInt(this.currentStyle.marginBottom, 10)||0)));
 _margin-bottom: 15px; }/*兼容IE6*/
-#go_to_book, #go_to_top { width: 54px; height: 56px; display: block; background: url(../img/footer_icons.png) no-repeat #111; box-shadow: 0px 1px 0px rgba(255,255,255,.1), inset 0px 1px 1px rgba(0,0,0,.7); border-radius: 6px; }
+#go_to_book, #go_to_top { width: 54px; height: 56px; display: block; background: url(../../img/common/footer_icons.png) no-repeat #111; box-shadow: 0px 1px 0px rgba(255,255,255,.1), inset 0px 1px 1px rgba(0,0,0,.7); border-radius: 6px; }
 #go_to_book { margin: 5px 0; background-position: 10px -36px; }
 #go_to_top { background-position: 12px 10px; }
 #go_to_book:hover, #go_to_top:hover { opacity: 0.5 }
@@ -61,7 +62,7 @@ _margin-bottom: 15px; }/*兼容IE6*/
 #tab li a { float: left; height: 32px; cursor: pointer; line-height: 32px; list-style-type: none; padding: 0 15px; }
 #tab li.cur a { color: #fff; background: #f77825; }
 .display_none { display: none }
-.charts_list ul { padding: 10px 0 0 10px; background: url(../img/charts_number.png) no-repeat 10px 29px; }
+.charts_list ul { padding: 10px 0 0 10px; background: url(../../img/common/charts_number.png) no-repeat 10px 29px; }
 .charts_list ul li { border-bottom: solid 1px #EAEAEA; line-height: 30px; height: 30px; overflow: hidden; font-size: 14px; padding: 10px 0 0 30px; }
 .charts_list ul li a { display: block; }
 .charts_list ul li a:hover { color: #000; }
@@ -70,5 +71,65 @@ _margin-bottom: 15px; }/*兼容IE6*/
 /* 表单table */
 .form_table {width:100%;margin:20px 30px;padding:5px;}
 .form_table td.form_info {font-size:13px;width:90px;}
-.form_table td.form_input {line-height:30px;height:30px;}
-.form_table td.form_input select {width:150px;}
+input.file_input {
+    cursor: pointer;
+    height: 30px;
+    left: 0;
+    margin-left: 0;
+    padding: 0;
+    top: 0;
+    width: 300px;
+    line-height: 30px;
+    box-sizing: border-box;
+}
+select {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.075) inset;
+    color: #333;
+    font-size: 13px;
+    outline: medium none;
+    vertical-align: middle;
+    line-height:25px;
+    height:25px;
+    margin: 5px 0px;
+    padding: 3px 10px;
+}
+input.text_input {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.075) inset;
+    color: #333;
+    font-size: 13px;
+    outline: medium none;
+    vertical-align: middle;
+    line-height:20px;
+    height:20px;
+    margin: 5px 0px;
+}
+input.form_button {
+    -moz-user-select: none;
+    background-color: #eee;
+    background-image: linear-gradient(#fcfcfc, #eee);
+    border: 1px solid #d5d5d5;
+    border-radius: 3px;
+    color: #333;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 20px;
+    padding: 2px 12px;
+    position: relative;
+    vertical-align: middle;
+    white-space: nowrap;
+    box-sizing: border-box;
+    word-wrap: break-word;
+    margin: 5px 0px;
+}
+input.form_button:hover, input.form_button:active, input.form_button.zeroclipboard-is-hover, input.form_button.zeroclipboard-is-active {
+    background-color: #ddd;
+    background-image: linear-gradient(#eee, #ddd);
+    border-color: #ccc;
+    text-decoration: none;
+}

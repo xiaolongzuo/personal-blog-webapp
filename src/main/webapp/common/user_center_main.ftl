@@ -33,7 +33,7 @@
 	<table id="improve_profile_table" class="form_table float_right" style="width:400px;">
 		<tr>
 			<td class="form_info" align="right">上传照片：</td>
-			<td class="form_input"><input type="file" name="avatar"/></td>
+			<td class="form_input"><input class="file_input" type="file" name="avatar"/></td>
 		</tr>
 		<tr>
 			<td class="form_info" align="right">省份：</td>
@@ -70,22 +70,22 @@
 		<tr>
 			<td class="form_info" >&nbsp;</td>
 			<td class="form_input">
-				<input id="save_profile_button" type="button" class="button" value="保存"/>
+				<input id="save_profile_button" type="button" class="form_button" value="保存"/>
 			</td>
 		</tr>
 	</table>
 	<table id="update_password_table" class="form_table float_right" style="width:400px;display:none;">
 		<tr>
 			<td class="form_info" align="right">原密码：</td>
-			<td class="form_input"><input type="password" name="originPassword"/></td>
+			<td class="form_input"><input class="text_input" type="password" name="originPassword"/></td>
 		</tr>
 		<tr>
 			<td class="form_info" align="right">新密码：</td>
-			<td class="form_input"><input type="password" name="newPassword"/></td>
+			<td class="form_input"><input class="text_input"  type="password" name="newPassword"/></td>
 		</tr>
 		<tr>
 			<td class="form_info" align="right">确认新密码：</td>
-			<td class="form_input"><input type="password" name="repeatNewPassword"/></td>
+			<td class="form_input"><input class="text_input"  type="password" name="repeatNewPassword"/></td>
 		</tr>
 		<tr>
 			<td class="form_info" >&nbsp;</td>
