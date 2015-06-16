@@ -1,11 +1,5 @@
 <div class="main-div">
     <h2>
-           <!-- <span>
-                    <a href="#" >技术</a>
-                    <a href="#" >生活</a>
-                    <a href="#" >职场</a>
-                </span>
-           -->
         <b>文章</b>推荐
     </h2>
 <#if articles??>

@@ -1,22 +1,25 @@
 package com.zuoxiaolong.servlet;
 
-import com.zuoxiaolong.freemarker.ArticleHelper;
-import com.zuoxiaolong.freemarker.ArticleListHelper;
-import com.zuoxiaolong.freemarker.IndexHelper;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import org.apache.log4j.Logger;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+import org.apache.log4j.Logger;
+
+import com.zuoxiaolong.freemarker.ArticleHelper;
+import com.zuoxiaolong.freemarker.ArticleListHelper;
+import com.zuoxiaolong.freemarker.IndexHelper;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -47,6 +50,7 @@ public abstract class AbstractServlet implements Servlet {
 	private static ThreadLocal<HttpServletResponse> responseThreadLocal = new ThreadLocal<>();
 
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
 		requestThreadLocal.set(request);
 		response.setCharacterEncoding("UTF-8");
 		responseThreadLocal.set(response);

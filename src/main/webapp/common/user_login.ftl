@@ -41,10 +41,9 @@
                 </div>
                 </#if>
                 <div id="welcome_div" class="float_left">
-                <span id="nick_name_span" class="welcome_font">${user.nickName}</span><span class="welcome_font">，欢迎你！</span>
+                <u><i><a href="${contextPath}/common/user_center.ftl" style="font-size:15px;" title="用户中心">${user.nickName}</a></i></u><span class="welcome_font">，欢迎你！</span>
                 </div>
                 <div id="logout_div" class="float_right">
-                	<a href="${contextPath}/common/user_center.ftl" class="button">用户中心</a>
                     <a id="logout_button" href="#" class="button">注销</a>
                 </div>
             </div>

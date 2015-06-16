@@ -10,6 +10,7 @@
 <link type="text/css" rel="stylesheet" href="${contextPath}/resources/css/shbrush/shCoreDefault.css"/>
 <script type="text/javascript" src="${contextPath}/resources/js/common/jquery.min.js"></script>
 <script type="text/javascript" src="${contextPath}/resources/js/common/jquery-ui.min.js"></script>
+<script type="text/javascript" src="${contextPath}/resources/js/common/jquery.form.min.js"></script>
 <script type="text/javascript" src="${contextPath}/resources/js/common/sliders.js"></script>
 <script type="text/javascript" src="${contextPath}/resources/js/common/common.js"></script>
 <script type="text/javascript" src="${contextPath}/resources/js/shbrush/shCore.js"></script>

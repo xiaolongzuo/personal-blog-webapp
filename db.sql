@@ -204,6 +204,9 @@ create table questions (
 	id INT NOT NULL AUTO_INCREMENT,
 	title VARCHAR(200) NOT NULL,
 	description VARCHAR(1500),
+	username VARCHAR (40),
+  	nick_name VARCHAR (40),
+  	create_date DATE,
 	primary key (id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT = 1;
 
@@ -219,6 +222,8 @@ create table answers (
   	reference_comment_id INT,
 	primary key (id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT = 1;
+
+alter table answers add CONSTRAINT `ANSWERS_FK_QUESTION_ID` FOREIGN KEY (`question_id`) REFERENCES questions(`id`);
 
 create table chats (
 	id INT NOT NULL AUTO_INCREMENT,

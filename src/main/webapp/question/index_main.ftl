@@ -1,17 +1,10 @@
 <div class="main-div">
     <h2>
-           <!-- <span>
-                    <a href="#" >技术</a>
-                    <a href="#" >生活</a>
-                    <a href="#" >职场</a>
-                </span>
-           -->
-        <b>文章</b>推荐
+        <b>相关</b>问题
     </h2>
-<#if articles??>
-    <#list articles as article>
+<#if questions??>
+    <#list questions as question>
         <div class="blogs">
-            <figure><img src="${article.icon}"></figure>
             <ul>
                 <h3><a href="${contextPath}${article.url}">${article.subject}</a></h3>
                 <p>
@@ -26,5 +19,6 @@
             </ul>
         </div>
     </#list>
+	<#include "../common/page.ftl">
 </#if>
 </div>

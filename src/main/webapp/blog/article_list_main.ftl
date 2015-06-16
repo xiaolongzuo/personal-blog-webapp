@@ -22,6 +22,6 @@
             </div>
 
         </#list>
-        <#include "page.ftl">
+        <#include "../common/page.ftl">
     </#if>
     </div>

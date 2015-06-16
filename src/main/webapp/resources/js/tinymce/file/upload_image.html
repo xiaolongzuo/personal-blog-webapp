@@ -2,19 +2,148 @@
 <html>
 <head lang="zh_CN">
     <meta charset="UTF-8">
-    <link href="${contextPath}/resources/css/common/github_button.css" rel="stylesheet">
+    <style type="text/css">
+    * {
+		margin: 0;
+		padding: 0
+	}
+	
+	body {
+		font-size: 15px;
+		padding: 0;
+		margin: 0;
+		font-family: "微软雅黑", "宋体", Arial;
+		min-width: 1200px;
+	}
+	
+	img {
+		border: 0;
+		display: block
+	}
+	
+	ul {
+		list-style: none;
+	}
+	
+	h1, h2, h3, h4, h5, h6 {
+		font-size: 100%;
+		font-weight: normal;
+	}
+	
+	a {
+		outline: none;
+	}
+	
+	a:link, a:visited {
+		text-decoration: none;
+		color: #4078c0;
+		font-size: 13px;
+	}
+	
+	a:hover {
+		text-decoration: none;
+	}
+    input.text_input {
+		border: 1px solid #ccc;
+		border-radius: 3px;
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.075) inset;
+		color: #333;
+		font-size: 13px;
+		outline: medium none;
+		vertical-align: middle;
+		line-height: 20px;
+		height: 20px;
+		margin: 5px 0px;
+	}
+	
+	input.text_input:focus {
+		border-color: #51a7e8 !important;
+	}
+	
+	input.form_button {
+		-moz-user-select: none;
+		background-color: #eee;
+		background-image: linear-gradient(#fcfcfc, #eee);
+		border: 1px solid #d5d5d5;
+		border-radius: 3px;
+		color: #333;
+		cursor: pointer;
+		display: inline-block;
+		font-size: 13px;
+		font-weight: bold;
+		line-height: 20px;
+		padding: 2px 12px;
+		position: relative;
+		vertical-align: middle;
+		white-space: nowrap;
+		box-sizing: border-box;
+		word-wrap: break-word;
+		margin: 5px 0px;
+	}
+	
+	input.form_button:hover, input.form_button:active, input.form_button.zeroclipboard-is-hover,
+		input.form_button.zeroclipboard-is-active {
+		background-color: #ddd;
+		background-image: linear-gradient(#eee, #ddd);
+		border-color: #ccc;
+		text-decoration: none;
+	}
+	
+	a.file_input_a {
+		display: inline-block;
+		width: 60px;
+		height: 30px;
+		overflow: hidden;
+		-moz-user-select: none;
+		background-color: #eee;
+		background-image: linear-gradient(#fcfcfc, #eee);
+		border: 1px solid #d5d5d5;
+		border-radius: 3px;
+		color: #333;
+		cursor: pointer;
+		display: inline-block;
+		font-size: 13px;
+		font-weight: bold;
+		line-height: 30px;
+		padding: 0px 10px;
+		position: relative;
+		vertical-align: middle;
+		white-space: nowrap;
+	}
+	
+	input.file_input {
+		position: absolute;
+		right: 0;
+		top: 0;
+		font-size: 100px;
+		opacity: 0;
+		filter: alpha(opacity = 0);
+	}
+    </style>
     <title></title>
 </head>
 <body>
-    <table>
-        <tr>
-            <td>
-                <input class="button" type="file" name="image" style="overflow: hidden;">
-            </td>
-            <td>
-                <input type="button" class="button" value="上传">
-            </td>
-        </tr>
-    </table>
+    <table class="float_left" style="width: 340px;height: 90px;border: 1px solid #d5d5d5;margin: 5px;">
+            <form id="upload_image_form" method="POST" action="${contextPath}/uploadImage.do" enctype="multipart/form-data">
+                <tr>
+                    <td class="form_input">
+                        <a class="file_input_a" href="#">
+                            选择图片
+                            <input class="file_input" type="file" name="imageFile" />
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_input">
+                        <input type="text" class="text_input" id="file_path" readonly="readonly" style="width:340px;max-width: 340px;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form_input">
+                        <input type="submit" class="form_button" value="上传"/>
+                    </td>
+                </tr>
+            </form>
+        </table>
 </body>
 </html>

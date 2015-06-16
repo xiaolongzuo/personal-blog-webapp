@@ -1,6 +1,6 @@
 	<!-- 搜一搜模块 -->
-	<#include "../common/search.ftl">
-	    
+	<#include "../common/ask.ftl">
+		    
     <!-- 用户中心模块 -->
     <#include "../common/user_login.ftl">
 
@@ -12,9 +12,6 @@
 
     <!-- 标签模块 -->
     <#include "../common/tag.ftl">
-
-    <!-- 图文模块 -->
-    <#include "../common/random_article.ftl">
 
     <!-- 链接模块 -->
     <#include "../common/link.ftl">

@@ -5,6 +5,8 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.zuoxiaolong.dao.UserDao;
 
 /*
@@ -25,23 +27,36 @@ import com.zuoxiaolong.dao.UserDao;
 
 /**
  * @author 左潇龙
- * @since 2015年6月16日 上午12:05:05
+ * @since 2015年6月16日 下午10:58:20
  */
-public class SaveProfile extends AbstractServlet {
+public class UpdatePassword extends AbstractServlet {
 
 	@Override
 	protected void service() throws ServletException, IOException {
-		if (!isLogin()) {
-			throw new RuntimeException();
-		}
 		HttpServletRequest request = getRequest();
-		String province = request.getParameter("province");
-		String city = request.getParameter("city");
-		Integer languageId = Integer.valueOf(request.getParameter("languageId"));
-		if (UserDao.updateProfile(getUsername(), province, city, languageId)) {
+		String username = getUsername();
+		String originPassword = request.getParameter("originPassword");
+		String newPassword = request.getParameter("newPassword");
+		if (StringUtils.isBlank(newPassword)) {
+			writeText("密码不能为空");
+			return;
+		}
+		if (newPassword.length() < 6) {
+			writeText("密码长度不能小于6");
+			return;
+		}
+		if (newPassword.length() > 30) {
+			writeText("密码长度不能超过30");
+			return;
+		}
+		if (UserDao.login(username, originPassword) == null) {
+			writeText("原密码不正确");
+			return;
+		} 
+		if (UserDao.updatePassword(username, newPassword)) {
 			writeText("success");
 		} else {
-			writeText("更新资料失败");
+			writeText("更新密码失败");
 		}
 	}
 

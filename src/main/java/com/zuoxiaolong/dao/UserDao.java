@@ -1,10 +1,14 @@
 package com.zuoxiaolong.dao;
 
-import com.zuoxiaolong.util.EnrypyUtil;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.zuoxiaolong.util.EnrypyUtil;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -62,6 +66,24 @@ public abstract class UserDao extends BaseDao {
 					throw new RuntimeException(e);
 				}
 				return null;
+			}
+		});
+	}
+	
+	public static boolean updatePassword(String username, String password ) {
+		return execute(new TransactionalOperation<Boolean>() {
+			@Override
+			public Boolean doInConnection(Connection connection) {
+				String sql = "update users set password=? where username=?";
+				try {
+					PreparedStatement statement = connection.prepareStatement(sql);
+					statement.setString(1, EnrypyUtil.md5(password));
+					statement.setString(2, username);
+					int result = statement.executeUpdate();
+					return result > 0;
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
 			}
 		});
 	}

@@ -1,14 +1,15 @@
 package com.zuoxiaolong.mvc;
 
-import com.zuoxiaolong.servlet.Servlet;
-import com.zuoxiaolong.util.StringUtil;
+import java.io.IOException;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Map;
+
+import com.zuoxiaolong.servlet.Servlet;
+import com.zuoxiaolong.util.StringUtil;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -32,7 +33,9 @@ import java.util.Map;
  */
 public class DispatcherServlet extends HttpServlet {
 
-    private Map<String, Servlet> mapping;
+	private static final long serialVersionUID = -2086454661760376040L;
+	
+	private Map<String, Servlet> mapping;
 
     @Override
     public void init() throws ServletException {

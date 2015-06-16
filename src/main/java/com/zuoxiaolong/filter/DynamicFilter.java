@@ -1,5 +1,20 @@
 package com.zuoxiaolong.filter;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
+
 import com.zuoxiaolong.freemarker.FreemarkerHelper;
 import com.zuoxiaolong.freemarker.IndexHelper;
 import com.zuoxiaolong.model.ViewMode;
@@ -7,15 +22,6 @@ import com.zuoxiaolong.mvc.DataMap;
 import com.zuoxiaolong.mvc.DataMapLoader;
 import com.zuoxiaolong.servlet.AbstractServlet;
 import com.zuoxiaolong.util.StringUtil;
-import org.apache.commons.lang.StringUtils;
-
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.HashMap;
-import java.util.Map;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -53,8 +59,6 @@ public class DynamicFilter implements Filter {
 			if (StringUtils.isEmpty(StringUtil.replaceStartSlant(requestUri))) {
 				requestUri = IndexHelper.generateDynamicPath();
 			}
-			response.setCharacterEncoding("UTF-8");
-			Writer writer = response.getWriter();
 			Map<String, Object> data = FreemarkerHelper.buildCommonDataMap(FreemarkerHelper.getNamespace(requestUri), ViewMode.DYNAMIC);
 			String dataMapKey = requestUri.substring(0,requestUri.lastIndexOf("."));
 			DataMap current = dataMap.get(dataMapKey);
@@ -69,7 +73,8 @@ public class DynamicFilter implements Filter {
 				current.putCustomData(data, (HttpServletRequest)request, (HttpServletResponse)response);
 			}
 			data.put("user", AbstractServlet.getUser((HttpServletRequest) request));
-			FreemarkerHelper.generateByTemplatePath(dataMapKey + ".ftl", writer, data);
+			response.setCharacterEncoding("UTF-8");
+			FreemarkerHelper.generateByTemplatePath(dataMapKey + ".ftl", response.getWriter(), data);
 		} catch (Exception e) {
 			throw new RuntimeException(requestUri,e);
 		}

@@ -1,16 +1,18 @@
 package com.zuoxiaolong.servlet;
 
-import com.zuoxiaolong.dao.UserDao;
-import com.zuoxiaolong.util.DirtyWordsUtil;
-import org.apache.commons.lang.StringUtils;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.zuoxiaolong.dao.UserDao;
+import com.zuoxiaolong.util.DirtyWordsUtil;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -34,8 +36,6 @@ import java.util.regex.Pattern;
  */
 public class Login extends AbstractServlet {
 
-	private static final long serialVersionUID = -6892022662210485620L;
-	
 	private static final String pattern = "[a-zA-Z0-9_\u4e00-\u9fa5]+";
 
 	private static final Pattern chinesePattern = Pattern.compile("[\u4e00-\u9fa5]{1,1}");
