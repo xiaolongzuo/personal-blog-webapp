@@ -37,7 +37,7 @@ import com.zuoxiaolong.dao.MatchDao;
  * @author 左潇龙
  * @since 2015年5月10日 上午1:30:40
  */
-public class Search extends BaseServlet {
+public class Search extends AbstractServlet {
 
 	private static final long serialVersionUID = 4998713126399162358L;
 

@@ -6,8 +6,12 @@ import com.qq.connect.api.qzone.UserInfo;
 import com.qq.connect.javabeans.qzone.UserInfoBean;
 import com.qq.connect.oauth.Oauth;
 import com.zuoxiaolong.dao.UserDao;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,31 +36,35 @@ import java.util.Map;
  * @author 左潇龙
  * @since 2015年5月26日 下午9:23:04
  */
-public class Callback extends BaseServlet {
+public class Callback extends HttpServlet {
+
+	private static final Logger logger = Logger.getLogger(Callback.class);
 
 	private static final long serialVersionUID = 7842406487110985418L;
 
 	@Override
-	protected void service() throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request , HttpServletResponse response) throws ServletException, IOException {
 		try {
-			String accessToken = new Oauth().getAccessTokenByRequest(getRequest()).getAccessToken();
+			String accessToken = new Oauth().getAccessTokenByRequest(request).getAccessToken();
 			String openId = new OpenID(accessToken).getUserOpenID();
 			UserInfo qzoneUserInfo = new UserInfo(accessToken, openId);
 			UserInfoBean userInfoBean = qzoneUserInfo.getUserInfo();
 			if (userInfoBean.getRet() == 0) {
 				Map<String, String> userMap = new HashMap<>();
+				String nickName = userInfoBean.getNickname();
+				String imagePath = userInfoBean.getAvatar().getAvatarURL100();
 				userMap.put("username", openId);
-				userMap.put("nickName", userInfoBean.getNickname());
-				userMap.put("avatarUrl", userInfoBean.getAvatar().getAvatarURL30());
-				UserDao.saveOrUpdate(openId, null, userInfoBean.getNickname(), openId, userInfoBean.getNickname(), userInfoBean.getAvatar().getAvatarURL30());
-				getRequest().getSession().setAttribute("user", userMap);
-				getResponse().sendRedirect("/blog/index.ftl");
+				userMap.put("nickName", nickName);
+				userMap.put("imagePath", imagePath);
+				UserDao.saveOrUpdateQqLogin(openId, nickName, imagePath);
+				request.getSession().setAttribute("user", userMap);
+				response.sendRedirect("/blog/index.ftl");
 			} else {
-				writeText("很抱歉，我们没能正确获取到您的信息，原因是：" + userInfoBean.getMsg());
+				AbstractServlet.writeText(response, "很抱歉，我们没能正确获取到您的信息，原因是：" + userInfoBean.getMsg());
 			}
 		} catch (QQConnectException e) {
 			logger.error("getAccessTokenByRequest failed", e);
-			writeText("qq登陆授权失败！");
+			AbstractServlet.writeText(response, "qq登陆授权失败！");
 		}
 	}
 

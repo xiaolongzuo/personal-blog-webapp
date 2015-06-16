@@ -1,9 +1,6 @@
 package com.zuoxiaolong.dao;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +27,25 @@ import java.util.Map;
  * @since 2015年5月29日 上午1:04:31
  */
 public abstract class ProvinceDao extends BaseDao {
+
+	public static Integer getId(final String name) {
+		return execute(new Operation<Integer>() {
+			@Override
+			public Integer doInConnection(Connection connection) {
+				try {
+					PreparedStatement statement = connection.prepareStatement("select id from dictionary_province where name=?");
+					statement.setString(1, name);
+					ResultSet resultSet = statement.executeQuery();
+					if (resultSet.next()) {
+						return resultSet.getInt(1);
+					}
+				} catch (SQLException e) {
+					error("query dictionary_province failed ..." , e);
+				}
+				return null;
+			}
+		});
+	}
 	
 	public static List<Map<String, String>> getProvinces() {
 		return execute(new Operation<List<Map<String, String>>>() {

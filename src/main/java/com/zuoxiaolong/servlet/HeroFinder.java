@@ -28,7 +28,7 @@ import com.zuoxiaolong.dao.HeroDao;
  * @author 左潇龙
  * @since 2015年5月10日 上午1:30:40
  */
-public class HeroFinder extends BaseServlet {
+public class HeroFinder extends AbstractServlet {
 
 	private static final long serialVersionUID = 7397746086771972627L;
 

@@ -1,22 +1,13 @@
 package com.zuoxiaolong.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
-
 import com.zuoxiaolong.api.HttpApiHelper;
 import com.zuoxiaolong.config.Configuration;
+import org.apache.commons.lang.StringUtils;
+
+import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Date;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -198,8 +189,7 @@ public abstract class CommentDao extends BaseDao {
 			} else {
 				comment.put("commenter", resultSet.getString("city") + "网友");
 			}
-			String contextPath = Configuration.isProductEnv() ? Configuration.get("context.path.product") : Configuration.get("context.path");
-			comment.put("articleUrl", contextPath + "/blog/article.ftl?id=" + resultSet.getInt("article_id"));
+			comment.put("articleUrl", Configuration.getSiteUrl() + "/blog/article.ftl?id=" + resultSet.getInt("article_id"));
 			comment.put("good_times", resultSet.getString("good_times"));
 			comment.put("bad_times", resultSet.getString("bad_times"));
 		} catch (SQLException e) {

@@ -1,24 +1,11 @@
 package com.zuoxiaolong.reptile;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.dao.*;
+import com.zuoxiaolong.util.EnrypyUtil;
+import com.zuoxiaolong.util.IOUtil;
+import com.zuoxiaolong.util.ImageUtil;
 import net.sf.json.JSONObject;
-
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -27,16 +14,16 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
-import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.dao.ArticleCategoryDao;
-import com.zuoxiaolong.dao.ArticleDao;
-import com.zuoxiaolong.dao.ArticleTagDao;
-import com.zuoxiaolong.dao.CategoryDao;
-import com.zuoxiaolong.dao.CommentDao;
-import com.zuoxiaolong.dao.ImageDao;
-import com.zuoxiaolong.dao.TagDao;
-import com.zuoxiaolong.util.EnrypyUtil;
-import com.zuoxiaolong.util.IOUtil;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -347,42 +334,27 @@ public abstract class Cnblogs {
     }
     
     private static Map<String, String> saveImage(Document articleDocument) {
-    	String date = new SimpleDateFormat("yyyyMM").format(new Date());
-    	File dir = new File(Configuration.getContextPath("image/" + date));
-		if (!dir.exists()) {
-			dir.mkdirs();
-		}
     	Elements elements = articleDocument.getElementsByTag("img");
     	Map<String, String> result = new HashMap<>();
     	for (Element element : elements) {
 			String img = element.toString();
 			String imgUrl = element.attr("src");
-			String contextPath = Configuration.isProductEnv() ? Configuration.get("context.path.product") : Configuration.get("context.path");
 			String path = ImageDao.getPath(imgUrl);
 			if (path == null) {
-				String suffix = imgUrl.substring(imgUrl.lastIndexOf("."), imgUrl.length());
-				if (suffix.length() > 4) {
-					suffix = ".jpg";
-				}
-				path = "image/" + date + "/" + new SimpleDateFormat("ddHHmmssSSS").format(new Date()) + suffix;
+				path = ImageUtil.generatePath(imgUrl);
 				try {
 					File file = new File(Configuration.getContextPath(path));
-					if (file.exists()) {
-						continue;
+					if (!file.exists()) {
+                        HttpURLConnection connection = (HttpURLConnection) new URL(imgUrl).openConnection();
+                        connection.setRequestMethod("GET");
+                        IOUtil.copy(connection.getInputStream(), file);
 					}
-					HttpURLConnection connection = (HttpURLConnection) new URL(imgUrl).openConnection();
-					connection.setRequestMethod("GET");
-					InputStream inputStream = connection.getInputStream();
-					FileOutputStream outputStream = new FileOutputStream(file);
-					outputStream.write(IOUtil.readBytes(inputStream));
-					outputStream.flush();
-					outputStream.close();
 				} catch (Exception e) {
 					logger.error("save image error for : " + imgUrl, e);
 				}
 				ImageDao.save(path, imgUrl);
 			}
-			result.put(img, img.replace(imgUrl, contextPath + "/" + path));
+            result.put(img, img.replace(imgUrl, Configuration.getSiteUrl(path)));
 		}
     	return result;
     }

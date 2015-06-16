@@ -2,6 +2,8 @@ package com.zuoxiaolong.dynamic;
 
 import com.zuoxiaolong.dao.ArticleDao;
 import com.zuoxiaolong.freemarker.ArticleListHelper;
+import com.zuoxiaolong.mvc.DataMap;
+import com.zuoxiaolong.mvc.Namespace;
 import com.zuoxiaolong.util.StringUtil;
 import org.apache.commons.lang.StringUtils;
 

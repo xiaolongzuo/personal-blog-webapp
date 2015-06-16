@@ -121,4 +121,12 @@ public abstract class Configuration {
         return system.contains("linux");
     }
 
+    public static String getSiteUrl(){
+        return isProductEnv() ? get("context.path.product") : get("context.path");
+    }
+
+    public static String getSiteUrl(String path){
+        return getSiteUrl() + (path.startsWith("/") ? path : ("/" + path));
+    }
+
 }

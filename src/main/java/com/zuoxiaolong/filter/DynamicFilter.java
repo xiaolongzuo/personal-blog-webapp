@@ -1,28 +1,21 @@
 package com.zuoxiaolong.filter;
 
+import com.zuoxiaolong.freemarker.FreemarkerHelper;
+import com.zuoxiaolong.freemarker.IndexHelper;
+import com.zuoxiaolong.model.ViewMode;
+import com.zuoxiaolong.mvc.DataMap;
+import com.zuoxiaolong.mvc.DataMapLoader;
+import com.zuoxiaolong.servlet.AbstractServlet;
+import com.zuoxiaolong.util.StringUtil;
+import org.apache.commons.lang.StringUtils;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-
-import com.zuoxiaolong.dynamic.DataMap;
-import com.zuoxiaolong.dynamic.DataMapLoader;
-import com.zuoxiaolong.freemarker.FreemarkerHelper;
-import com.zuoxiaolong.freemarker.IndexHelper;
-import com.zuoxiaolong.model.ViewMode;
-import com.zuoxiaolong.servlet.BaseServlet;
-import com.zuoxiaolong.util.StringUtil;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -75,11 +68,7 @@ public class DynamicFilter implements Filter {
 			if (current != null) {
 				current.putCustomData(data, (HttpServletRequest)request, (HttpServletResponse)response);
 			}
-			Map<String, String> user = BaseServlet.getUser((HttpServletRequest) request);
-			if (user != null) {
-				data.put("nickName", user.get("nickName"));
-				data.put("avatarUrl", user.get("avatarUrl"));
-			}
+			data.put("user", AbstractServlet.getUser((HttpServletRequest) request));
 			FreemarkerHelper.generateByTemplatePath(dataMapKey + ".ftl", writer, data);
 		} catch (Exception e) {
 			throw new RuntimeException(requestUri,e);

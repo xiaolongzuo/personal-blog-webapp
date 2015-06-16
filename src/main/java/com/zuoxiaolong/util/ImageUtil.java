@@ -1,13 +1,15 @@
 package com.zuoxiaolong.util;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import com.zuoxiaolong.cache.CacheManager;
 import com.zuoxiaolong.config.Configuration;
+
+import java.io.File;
+import java.io.FileFilter;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -31,9 +33,27 @@ import com.zuoxiaolong.config.Configuration;
  */
 public abstract class ImageUtil {
 	
-	private static final String CONTEXT_PATH = (Configuration.isProductEnv() ? Configuration.get("context.path.product") : Configuration.get("context.path"));
+	private static final String CONTEXT_PATH = Configuration.getSiteUrl();
 
-    private static final String BASE_PATH = "resources/img/";
+    private static final String BASE_PATH = "resources/img/common/";
+
+    public static String generateDir() {
+        String date = new SimpleDateFormat("yyyyMM").format(new Date());
+        File dir = new File(Configuration.getContextPath("image/" + date));
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        return date;
+    }
+
+    public static String generatePath(String origin) {
+        String suffix = origin.substring(origin.lastIndexOf("."), origin.length());
+        if (suffix.length() > 4) {
+            suffix = ".jpg";
+        }
+        String path = "image/" + generateDir() + "/" + new SimpleDateFormat("ddHHmmssSSS").format(new Date()) + suffix;
+        return path;
+    }
 
     public static void loadArticleImages (){
         CacheManager.getConcurrentHashMapCache().set("articleImages",getAllActicleImages());

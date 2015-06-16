@@ -1,18 +1,16 @@
 package com.zuoxiaolong.servlet;
 
+import com.zuoxiaolong.dao.UserDao;
+import com.zuoxiaolong.util.DirtyWordsUtil;
+import org.apache.commons.lang.StringUtils;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang.StringUtils;
-
-import com.zuoxiaolong.dao.UserDao;
-import com.zuoxiaolong.util.DirtyWordsUtil;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -34,7 +32,7 @@ import com.zuoxiaolong.util.DirtyWordsUtil;
  * @author 左潇龙
  * @since 2015年5月27日 下午7:55:28
  */
-public class Login extends BaseServlet {
+public class Login extends AbstractServlet {
 
 	private static final long serialVersionUID = -6892022662210485620L;
 	
@@ -99,7 +97,7 @@ public class Login extends BaseServlet {
 			writeText("用户名已存在或密码错误");
 			return;
 		}
-		if (UserDao.saveOrUpdate(username, password, username, null, username, null)) {
+		if (UserDao.saveCommonLogin(username, password)) {
 			Map<String, String> newUser = UserDao.getUser(username);
 			request.getSession().setAttribute("user", newUser);
 			result.put("success", true);

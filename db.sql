@@ -197,6 +197,9 @@ alter table users add language_id int(11);
 
 alter table users add CONSTRAINT `USERS_FK_LANGUAGE_ID` FOREIGN KEY (`language_id`) REFERENCES dictionaries(`id`);
 
+alter table users drop qq_nick_name ;
+alter table users change qq_avatar_url_30 image_path VARCHAR(200);
+
 create table questions (
 	id INT NOT NULL AUTO_INCREMENT,
 	title VARCHAR(200) NOT NULL,

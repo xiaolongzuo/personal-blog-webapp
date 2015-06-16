@@ -1,13 +1,12 @@
-package com.zuoxiaolong.dynamic;
+package com.zuoxiaolong.servlet;
 
-import java.util.Map;
+import com.zuoxiaolong.dao.CityDao;
+import com.zuoxiaolong.dao.ProvinceDao;
+import com.zuoxiaolong.util.StringUtil;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
+import java.io.IOException;
 
-import com.zuoxiaolong.freemarker.ArticleHelper;
-import com.zuoxiaolong.mvc.DataMap;
-import com.zuoxiaolong.mvc.Namespace;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -27,15 +26,15 @@ import com.zuoxiaolong.mvc.Namespace;
 
 /**
  * @author 左潇龙
- * @since 2015年5月27日 上午2:12:01
+ * @since 6/16/2015 10:33 AM
  */
-@Namespace
-public class Article implements DataMap {
+public class GetCities extends AbstractServlet {
 
-	@Override
-	public void putCustomData(Map<String, Object> data, HttpServletRequest request, HttpServletResponse response) {
-		Integer id = Integer.valueOf(request.getParameter("id"));
-		ArticleHelper.putArticleDataMap(data, VIEW_MODE, id);
-	}
+    @Override
+    protected void service() throws ServletException, IOException {
+        String province = StringUtil.urlDecode(getRequest().getParameter("province"));
+        Integer provinceId = ProvinceDao.getId(province);
+        writeJsonArray(CityDao.getCities(provinceId));
+    }
 
 }

@@ -1,16 +1,10 @@
 package com.zuoxiaolong.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import com.zuoxiaolong.util.EnrypyUtil;
+
+import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
-
-import com.zuoxiaolong.util.EnrypyUtil;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -72,46 +66,93 @@ public abstract class UserDao extends BaseDao {
 		});
 	}
 
-	public static boolean saveOrUpdate(String username, String password, String nickName, String qqOpenId, String qqNickName, String qqAvatarUrl30) {
+	public static boolean uploadImage(String username, String imagePath ) {
+		return execute(new TransactionalOperation<Boolean>() {
+			@Override
+			public Boolean doInConnection(Connection connection) {
+				String sql = "update users set image_path=? where username=?";
+				try {
+					PreparedStatement statement = connection.prepareStatement(sql);
+					statement.setString(1, imagePath);
+					statement.setString(2, username);
+					int result = statement.executeUpdate();
+					return result > 0;
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+	}
+
+	public static boolean updateProfile(String username, String province, String city, Integer languageId) {
+		return execute(new TransactionalOperation<Boolean>() {
+			@Override
+			public Boolean doInConnection(Connection connection) {
+				String sql = "update users set province=?,city=?,language_id=? where username=?";
+				try {
+					PreparedStatement statement = connection.prepareStatement(sql);
+					statement.setString(1, province);
+					statement.setString(2, city);
+					statement.setInt(3, languageId);
+					statement.setString(4, username);
+					int result = statement.executeUpdate();
+					return result > 0;
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+	}
+
+	public static boolean saveCommonLogin(String username,String password) {
+		return execute(new TransactionalOperation<Boolean>() {
+			@Override
+			public Boolean doInConnection(Connection connection) {
+				String insertSql = "insert into users (username,password,nick_name,create_date) values (?,?,?,?)";
+				try {
+					PreparedStatement statement = connection.prepareStatement(insertSql);
+					statement.setString(1, username);
+					statement.setString(2, EnrypyUtil.md5(password));
+					statement.setString(3, username);
+					statement.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
+					int result = statement.executeUpdate();
+					return result > 0;
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+	}
+
+	public static boolean saveOrUpdateQqLogin(String qqOpenId,String nickName, String imagePath) {
     	return execute(new TransactionalOperation<Boolean>() {
 			@Override
 			public Boolean doInConnection(Connection connection) {
-				String finalUsername = username;
-				if (StringUtils.isEmpty(username)) {
-					finalUsername = qqOpenId;
-				}
-				String finalNickName = nickName;
-				if (StringUtils.isEmpty(nickName)) {
-					finalNickName = qqNickName;
-				}
-				String selectSql = "select id from users where username=?";
-				String insertSql = "insert into users (username,password,nick_name,qq_open_id,qq_nick_name,qq_avatar_url_30,create_date) values (?,?,?,?,?,?,?)";
-				String updateSql = "update users set qq_open_id=?,nick_name=?,qq_nick_name=?,qq_avatar_url_30=? where username=?";
+				String selectSql = "select id from users where qq_open_id=?";
+				String insertSql = "insert into users (username,nick_name,qq_open_id,image_path,create_date) values (?,?,?,?,?)";
+				String updateSql = "update users set username=?,nick_name=?,image_path=? where qq_open_id=?";
 				try {
 					PreparedStatement statement = connection.prepareStatement(selectSql);
-					statement.setString(1, finalUsername);
+					statement.setString(1, qqOpenId);
 					ResultSet resultSet = statement.executeQuery();
-					boolean exsits = false;
+					boolean exists = false;
 					if (resultSet.next()) {
-						exsits = true;
+						exists = true;
 					}
 					PreparedStatement saveOrUpdate = null;
-					if (!exsits) {
+					if (!exists) {
 						saveOrUpdate = connection.prepareStatement(insertSql);
-						saveOrUpdate.setString(1, finalUsername);
-						saveOrUpdate.setString(2, EnrypyUtil.md5(password));
-						saveOrUpdate.setString(3, finalNickName);
-						saveOrUpdate.setString(4, qqOpenId);
-						saveOrUpdate.setString(5, qqNickName);
-						saveOrUpdate.setString(6, qqAvatarUrl30);
-						saveOrUpdate.setTimestamp(7, new Timestamp(System.currentTimeMillis()));
+						saveOrUpdate.setString(1, qqOpenId);
+						saveOrUpdate.setString(2, nickName);
+						saveOrUpdate.setString(3, qqOpenId);
+						saveOrUpdate.setString(4, imagePath);
+						saveOrUpdate.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
 					} else {
 						saveOrUpdate = connection.prepareStatement(updateSql);
 						saveOrUpdate.setString(1, qqOpenId);
-						saveOrUpdate.setString(2, finalNickName);
-						saveOrUpdate.setString(3, qqNickName);
-						saveOrUpdate.setString(4, qqAvatarUrl30);
-						saveOrUpdate.setString(5, finalUsername);
+						saveOrUpdate.setString(2, nickName);
+						saveOrUpdate.setString(3, imagePath);
+						saveOrUpdate.setString(4, qqOpenId);
 					}
 					int result = saveOrUpdate.executeUpdate();
 					return result > 0;
@@ -123,22 +164,21 @@ public abstract class UserDao extends BaseDao {
     }
 	
 	public static Map<String, String> transfer(ResultSet resultSet){
-		Map<String, String> tag = new HashMap<String, String>();
+		Map<String, String> user = new HashMap<String, String>();
 		try {
-			tag.put("username", resultSet.getString("username"));
-			tag.put("nickName", resultSet.getString("nick_name"));
-			tag.put("qqOpenId", resultSet.getString("qq_open_id"));
-			tag.put("qqNickName", resultSet.getString("qq_nick_name"));
-			tag.put("qqAvatarUrl30", resultSet.getString("qq_avatar_url_30"));
-			tag.put("province", resultSet.getString("province"));
-			tag.put("city", resultSet.getString("city"));
+			user.put("username", resultSet.getString("username"));
+			user.put("nickName", resultSet.getString("nick_name"));
+			user.put("qqOpenId", resultSet.getString("qq_open_id"));
+			user.put("imagePath", resultSet.getString("image_path"));
+			user.put("province", resultSet.getString("province"));
+			user.put("city", resultSet.getString("city"));
 			Integer languageId = resultSet.getInt("language_id");
-			tag.put("languageId", String.valueOf(languageId));
-			tag.put("language", DictionaryDao.getName(languageId));
+			user.put("languageId", String.valueOf(languageId));
+			user.put("language", DictionaryDao.getName(languageId));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
-		return tag;
+		return user;
 	}
 	
 }

@@ -2,6 +2,8 @@ package com.zuoxiaolong.dynamic;
 
 import com.zuoxiaolong.dao.CommentDao;
 import com.zuoxiaolong.dao.StatisticsDao;
+import com.zuoxiaolong.mvc.DataMap;
+import com.zuoxiaolong.mvc.Namespace;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

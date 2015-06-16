@@ -1,18 +1,12 @@
 package com.zuoxiaolong.filter;
 
-import java.io.IOException;
+import com.zuoxiaolong.config.Configuration;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import com.zuoxiaolong.config.Configuration;
+import java.io.IOException;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -45,7 +39,7 @@ public class AdminFilter implements Filter {
     	String loginUrl = "/admin/login.do";
     	String indexUrl = "/admin/admin_index.ftl";
     	String adminDefaultUrl = "/admin";
-    	String contextPath = Configuration.isProductEnv() ? Configuration.get("context.path.product") : Configuration.get("context.path");
+    	String contextPath = Configuration.getSiteUrl();
     	String requestUri = ((HttpServletRequest)servletRequest).getRequestURI();
     	if (loginPage.equals(requestUri) || loginUrl.equals(requestUri)) {
 			filterChain.doFilter(servletRequest, servletResponse);

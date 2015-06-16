@@ -30,7 +30,7 @@ import com.zuoxiaolong.util.EnrypyUtil;
  * @author 左潇龙
  * @since 2015年5月27日 下午7:55:28
  */
-public class AdminLogin extends BaseServlet {
+public class AdminLogin extends AbstractServlet {
 
 	private static final long serialVersionUID = -6892022662210485620L;
 	

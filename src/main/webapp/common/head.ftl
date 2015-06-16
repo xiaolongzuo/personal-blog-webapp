@@ -39,6 +39,7 @@
 <script type="text/javascript" src="${contextPath}/resources/js/shbrush/shBrushSql.js"></script>
 <script type="text/javascript" src="${contextPath}/resources/js/shbrush/shBrushVb.js"></script>
 <script type="text/javascript" src="${contextPath}/resources/js/shbrush/shBrushXml.js"></script>
+<script type="text/javascript" src="${contextPath}/resources/js/common/forbidden.backspace.js"></script>
 <script type="text/javascript">
 	SyntaxHighlighter.all();
 	var contextPath = "${contextPath}";

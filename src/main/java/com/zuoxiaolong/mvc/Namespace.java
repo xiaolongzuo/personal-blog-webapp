@@ -1,4 +1,4 @@
-package com.zuoxiaolong.dynamic;
+package com.zuoxiaolong.mvc;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -30,5 +30,5 @@ import java.lang.annotation.Target;
 public @interface Namespace {
 
 	public String value() default "/blog";
-	
+
 }

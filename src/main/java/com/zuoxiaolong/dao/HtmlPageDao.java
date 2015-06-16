@@ -1,16 +1,11 @@
 package com.zuoxiaolong.dao;
 
+import com.zuoxiaolong.config.Configuration;
+
 import java.io.File;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.zuoxiaolong.config.Configuration;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -35,7 +30,7 @@ import com.zuoxiaolong.config.Configuration;
 public abstract class HtmlPageDao extends BaseDao {
 	
 	public static void flush() {
-		String contextPath = Configuration.isProductEnv() ? Configuration.get("context.path.product") : Configuration.get("context.path");
+		String contextPath = Configuration.getSiteUrl();
 		File[] htmlFiles = new File(Configuration.getContextPath("html")).listFiles();
 		List<String> htmlPageList = new ArrayList<String>();
 		htmlPageList.add(contextPath);

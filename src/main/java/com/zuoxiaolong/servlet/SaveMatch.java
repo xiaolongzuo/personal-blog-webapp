@@ -32,7 +32,7 @@ import com.zuoxiaolong.dao.MatchDao;
  * @author 左潇龙
  * @since 2015年5月10日 上午1:30:40
  */
-public class SaveMatch extends BaseServlet {
+public class SaveMatch extends AbstractServlet {
 
 	private static final long serialVersionUID = 4998713126399162358L;
 

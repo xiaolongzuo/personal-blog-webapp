@@ -25,7 +25,7 @@ import javax.servlet.ServletException;
  * @author 左潇龙
  * @since 5/27/2015 1:51 PM
  */
-public class Logout extends BaseServlet {
+public class Logout extends AbstractServlet {
 
 	private static final long serialVersionUID = -3057874850069731524L;
 

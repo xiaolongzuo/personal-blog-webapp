@@ -1,13 +1,5 @@
 package com.zuoxiaolong.freemarker;
 
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.log4j.Logger;
-
 import com.zuoxiaolong.algorithm.Match;
 import com.zuoxiaolong.algorithm.Random;
 import com.zuoxiaolong.config.Configuration;
@@ -16,8 +8,14 @@ import com.zuoxiaolong.dao.MatchDao;
 import com.zuoxiaolong.dao.TagDao;
 import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.util.StringUtil;
-
 import freemarker.template.Template;
+import org.apache.log4j.Logger;
+
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -55,7 +53,7 @@ public abstract class FreemarkerHelper {
 
     public static Map<String, Object> buildCommonDataMap(String namespace, ViewMode viewMode) {
         Map<String, Object> data = new HashMap<>();
-        String contextPath = Configuration.isProductEnv() ? Configuration.get("context.path.product") : Configuration.get("context.path");
+        String contextPath = Configuration.getSiteUrl();
         data.put("contextPath", contextPath);
         data.put("questionUrl", contextPath + "/question/index.ftl");
         if (ViewMode.DYNAMIC == viewMode) {

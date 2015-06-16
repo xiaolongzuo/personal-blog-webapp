@@ -27,7 +27,7 @@ import com.qq.connect.oauth.Oauth;
  * @author 左潇龙
  * @since 2015年5月26日 下午9:20:28
  */
-public class Redirect extends BaseServlet {
+public class Redirect extends AbstractServlet {
 
 	private static final long serialVersionUID = 3204459453635451541L;
 

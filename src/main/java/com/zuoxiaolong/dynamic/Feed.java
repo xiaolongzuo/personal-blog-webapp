@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.zuoxiaolong.dao.ArticleDao;
 import com.zuoxiaolong.model.ViewMode;
+import com.zuoxiaolong.mvc.DataMap;
+import com.zuoxiaolong.mvc.Namespace;
 import com.zuoxiaolong.util.DateUtil;
 
 /*

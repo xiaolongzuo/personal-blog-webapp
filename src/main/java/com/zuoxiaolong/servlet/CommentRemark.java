@@ -31,7 +31,7 @@ import com.zuoxiaolong.util.HttpUtil;
  * @author 左潇龙
  * @since 5/8/2015 4:12 PM
  */
-public class CommentRemark extends BaseServlet {
+public class CommentRemark extends AbstractServlet {
 
 	private static final long serialVersionUID = -2655585691431759816L;
 	

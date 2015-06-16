@@ -1,4 +1,4 @@
-package com.zuoxiaolong.dynamic;
+package com.zuoxiaolong.mvc;
 
 import com.zuoxiaolong.config.Configuration;
 

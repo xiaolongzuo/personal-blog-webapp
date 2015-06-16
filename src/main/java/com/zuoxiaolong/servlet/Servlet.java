@@ -1,13 +1,9 @@
-package com.zuoxiaolong.dynamic;
+package com.zuoxiaolong.servlet;
 
-import java.util.Map;
-
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.zuoxiaolong.freemarker.ArticleHelper;
-import com.zuoxiaolong.mvc.DataMap;
-import com.zuoxiaolong.mvc.Namespace;
+import java.io.IOException;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -27,15 +23,10 @@ import com.zuoxiaolong.mvc.Namespace;
 
 /**
  * @author 左潇龙
- * @since 2015年5月27日 上午2:12:01
+ * @since 6/16/2015 11:49 AM
  */
-@Namespace
-public class Article implements DataMap {
+public interface Servlet {
 
-	@Override
-	public void putCustomData(Map<String, Object> data, HttpServletRequest request, HttpServletResponse response) {
-		Integer id = Integer.valueOf(request.getParameter("id"));
-		ArticleHelper.putArticleDataMap(data, VIEW_MODE, id);
-	}
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException , IOException;
 
 }

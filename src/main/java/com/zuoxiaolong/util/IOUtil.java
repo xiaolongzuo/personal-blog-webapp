@@ -1,5 +1,7 @@
 package com.zuoxiaolong.util;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -24,6 +26,17 @@ import java.io.InputStream;
  * @since 5/22/2015 3:10 PM
  */
 public abstract class IOUtil {
+
+    public static void copy(InputStream inputStream , String file) throws IOException {
+        copy(inputStream , new File(file));
+    }
+
+    public static void copy(InputStream inputStream , File file) throws IOException {
+        FileOutputStream outputStream = new FileOutputStream(file);
+        outputStream.write(IOUtil.readBytes(inputStream));
+        outputStream.flush();
+        outputStream.close();
+    }
 
     public static String read(InputStream inputStream) throws IOException {
         return new String(readBytes(inputStream), "UTF-8");

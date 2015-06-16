@@ -1,12 +1,16 @@
 package com.zuoxiaolong.dynamic;
 
-import java.util.Map;
+import com.zuoxiaolong.dao.CityDao;
+import com.zuoxiaolong.dao.DictionaryDao;
+import com.zuoxiaolong.dao.ProvinceDao;
+import com.zuoxiaolong.mvc.DataMap;
+import com.zuoxiaolong.mvc.Namespace;
+import com.zuoxiaolong.servlet.AbstractServlet;
+import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.zuoxiaolong.dao.DictionaryDao;
-import com.zuoxiaolong.dao.ProvinceDao;
+import java.util.Map;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -33,6 +37,14 @@ public class UserCenter implements DataMap {
 
 	@Override
 	public void putCustomData(Map<String, Object> data, HttpServletRequest request, HttpServletResponse response) {
+		Map<String, String> user = AbstractServlet.getUser(request);
+		if (user == null) {
+			throw new RuntimeException();
+		}
+		if (StringUtils.isNotBlank(user.get("province"))) {
+			Integer provinceId = ProvinceDao.getId(user.get("province"));
+			data.put("cities", CityDao.getCities(provinceId));
+		}
 		data.put("provinces", ProvinceDao.getProvinces());
 		data.put("languages", DictionaryDao.getDictionariesByType("LANG"));
 	}

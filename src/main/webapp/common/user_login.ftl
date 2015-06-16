@@ -33,15 +33,15 @@
             });
         </script>
         <h3>用户中心</h3>
-        <#if nickName??>
+        <#if user?? && user.nickName??>
             <div id="user_info_div">
-                <#if avatarUrl??>
+                <#if user.imagePath??>
                 <div id="avatar_div" class="float_left">
-                    <img id="avatar_img" src="${avatarUrl}">
+                    <img id="avatar_img" src="${user.imagePath}" height="30" width="30">
                 </div>
                 </#if>
                 <div id="welcome_div" class="float_left">
-                <span id="nick_name_span" class="welcome_font">${nickName}</span><span class="welcome_font">，欢迎你！</span>
+                <span id="nick_name_span" class="welcome_font">${user.nickName}</span><span class="welcome_font">，欢迎你！</span>
                 </div>
                 <div id="logout_div" class="float_right">
                 	<a href="${contextPath}/common/user_center.ftl" class="button">用户中心</a>

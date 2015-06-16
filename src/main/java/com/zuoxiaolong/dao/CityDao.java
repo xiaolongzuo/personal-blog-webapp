@@ -1,9 +1,9 @@
 package com.zuoxiaolong.dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,14 +31,15 @@ import java.util.Map;
  */
 public abstract class CityDao extends BaseDao {
 	
-	public static List<Map<String, String>> getCities() {
+	public static List<Map<String, String>> getCities(Integer provinceId) {
 		return execute(new Operation<List<Map<String, String>>>() {
 			@Override
 			public List<Map<String, String>> doInConnection(Connection connection) {
 				List<Map<String, String>> result = new ArrayList<Map<String,String>>();
 				try {
-					Statement statement = connection.createStatement();
-					ResultSet resultSet = statement.executeQuery("select * from dictionary_city");
+					PreparedStatement statement = connection.prepareStatement("select * from dictionary_city where province_id=?");
+					statement.setInt(1, provinceId);
+					ResultSet resultSet = statement.executeQuery();
 					while (resultSet.next()) {
 						result.add(transfer(resultSet));
 					}
