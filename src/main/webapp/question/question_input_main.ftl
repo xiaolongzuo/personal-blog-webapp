@@ -34,6 +34,10 @@
 						});
 					}
 				});
+				editor.on('init', function(e) {
+		            editor.setContent('<pre class="brush:java;">public class</pre>');
+		            editor.dom.setStyle(tinymce.activeEditor.dom.select('pre'), 'border', '1px solid #aaa');
+		        });
 	        },
 	        plugins: [
 	            "advlist autolink lists link image charmap print preview anchor textcolor",
