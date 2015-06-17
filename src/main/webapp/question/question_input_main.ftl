@@ -36,7 +36,7 @@
 				});
 				editor.on('init', function(e) {
 		            editor.setContent('<pre class="brush:java;">public class</pre>');
-		            editor.dom.setStyle(tinymce.activeEditor.dom.select('pre'), 'border', '1px solid #aaa');
+		            editor.dom.addStyle('pre {border:1px solid #aaa;} ');
 		        });
 	        },
 	        plugins: [
