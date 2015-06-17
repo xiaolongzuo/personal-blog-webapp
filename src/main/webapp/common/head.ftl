@@ -45,3 +45,5 @@
 	SyntaxHighlighter.all();
 	var contextPath = "${contextPath}";
 </script>
+<script type="text/javascript" src="${contextPath}/resources/js/tinymce/tinymce.min.js"></script>
+<script type="text/javascript" src="${contextPath}/resources/js/tinymce/tinymce.init.js"></script>

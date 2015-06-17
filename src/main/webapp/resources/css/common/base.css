@@ -452,3 +452,7 @@ input.file_input {
 	float: left;
 	margin: 20px 0px 0px 20px;
 }
+
+.syntaxhighlighter {
+	border:1px solid #aaa;
+}

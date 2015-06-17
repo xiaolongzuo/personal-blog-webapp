@@ -1,11 +1,22 @@
 package com.zuoxiaolong.reptile;
 
-import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.dao.*;
-import com.zuoxiaolong.util.EnrypyUtil;
-import com.zuoxiaolong.util.IOUtil;
-import com.zuoxiaolong.util.ImageUtil;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import net.sf.json.JSONObject;
+
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -14,16 +25,17 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.dao.ArticleCategoryDao;
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.dao.ArticleTagDao;
+import com.zuoxiaolong.dao.CategoryDao;
+import com.zuoxiaolong.dao.CommentDao;
+import com.zuoxiaolong.dao.ImageDao;
+import com.zuoxiaolong.dao.TagDao;
+import com.zuoxiaolong.util.EnrypyUtil;
+import com.zuoxiaolong.util.IOUtil;
+import com.zuoxiaolong.util.ImageUtil;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -489,7 +501,7 @@ public abstract class Cnblogs {
         return codeList;
     }
 
-    private static void appendText(Element element, StringBuffer stringBuffer) {
+    public static void appendText(Element element, StringBuffer stringBuffer) {
         List<Node> nodes = element.childNodes();
         if (nodes != null && nodes.size() > 0) {
             for (int i = 0; i < nodes.size(); i++) {

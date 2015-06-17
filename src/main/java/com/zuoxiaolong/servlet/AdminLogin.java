@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.mvc.RequestMapping;
 import com.zuoxiaolong.util.EnrypyUtil;
 
 /*
@@ -30,10 +31,9 @@ import com.zuoxiaolong.util.EnrypyUtil;
  * @author 左潇龙
  * @since 2015年5月27日 下午7:55:28
  */
+@RequestMapping("/admin/login.do")
 public class AdminLogin extends AbstractServlet {
 
-	private static final long serialVersionUID = -6892022662210485620L;
-	
 	@Override
 	protected void service() throws ServletException, IOException {
 		HttpServletRequest request = getRequest();

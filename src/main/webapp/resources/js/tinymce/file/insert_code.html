@@ -16,14 +16,9 @@
     <script type="application/javascript">
         $(document).ready(function(){
             $("#insert_code_button").click(function(){
-            	/*
                 var content = '<pre class="brush: ' + $("#language_select").val() + '; ';
                 content = content + 'collapse :' + ($("#is_collapse_input").attr("checked") == 'checked') + ';';
                 content = content + 'gutter :' + ($("#show_line_number_input").attr("checked") == 'checked') + ';">';
-                content = content + $("#code_textarea").val() + '</pre>';
-                */
-                
-                var content = '<pre class="brush: java">';
                 content = content + $("#code_textarea").val() + '</pre><br/>';
                 top.tinymce.activeEditor.insertContent(content);
                 top.tinymce.activeEditor.windowManager.close();
@@ -51,7 +46,7 @@
                         <option value="Diff">Diff</option>
                         <option value="Erlang">Erlang</option>
                         <option value="Groovy">Groovy</option>
-                        <option value="Java" selected="selected">Java</option>
+                        <option value="java" selected="selected">Java</option>
                         <option value="JavaFX">JavaFX</option>
                         <option value="JScript">JScript</option>
                         <option value="Perl">Perl</option>

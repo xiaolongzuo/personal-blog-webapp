@@ -2,7 +2,6 @@
 <html>
 <head>
 <#include "../common/head.ftl">
-<script type="text/javascript" src="${contextPath}/resources/js/tinymce/tinymce.min.js"></script>
 </head>
 <body>
 <#include "../common/header.ftl">

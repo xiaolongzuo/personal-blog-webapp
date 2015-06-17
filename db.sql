@@ -225,6 +225,9 @@ create table answers (
 
 alter table answers add CONSTRAINT `ANSWERS_FK_QUESTION_ID` FOREIGN KEY (`question_id`) REFERENCES questions(`id`);
 
+ALTER TABLE articles CHANGE COLUMN resource_id resource_id VARCHAR(200) NULL ;
+
+
 create table chats (
 	id INT NOT NULL AUTO_INCREMENT,
 	content VARCHAR(1500),

@@ -122,6 +122,36 @@ public abstract class ArticleDao extends BaseDao {
 		});
 	}
     
+    public static Integer save(String subject, Integer status,String username, String html, String content, String icon) {
+    	return execute(new TransactionalOperation<Integer>() {
+			@Override
+			public Integer doInConnection(Connection connection) {
+				String sql = "insert into articles (subject,username,icon,create_date," +
+                "html,content,status) values (?,?,?,?,?,?,?)";
+				try {
+					PreparedStatement statement = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
+					statement.setString(1, subject);
+					statement.setString(2, username);
+					statement.setString(3, icon);
+					statement.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
+					statement.setString(5, html);
+					statement.setString(6, content);
+					statement.setInt(7, status);
+					int result = statement.executeUpdate();
+					if (result > 0) {
+						ResultSet keyResultSet = statement.getGeneratedKeys();
+						if (keyResultSet.next()) {
+							return keyResultSet.getInt(1);
+						}
+					} 
+				} catch (SQLException e) {
+					throw new RuntimeException(e);
+				}
+				return null;
+			}
+		});
+    }
+    
     public static Integer saveOrUpdate(String resourceId, String subject, String createDate, Integer status,String username, Integer accessTimes, Integer goodTimes, String html, String content) {
     	return execute(new TransactionalOperation<Integer>() {
 			@Override

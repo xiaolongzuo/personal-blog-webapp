@@ -6,41 +6,23 @@
 <script type="text/javascript">
 $(document).ready(function(){
 	$("#submitButton").click(function(){
-		alert(tinyMCE.activeEditor.getContent());
+		$.ajax({
+			url:"${contextPath}/admin/updateArticle.do",
+			data:{
+			"content":tinymce.activeEditor.getContent(),"subject":"测试文章","status":1,
+			"icon":"http://localhost:8080/resources/img/article_09.jpg"},
+			type:"POST",
+			success:function(data){
+			}
+		});
 	});
-    tinymce.init({
-        selector: "textarea",
-        language: "zh_CN",
-        width: 900,
-        height: 400,
-        setup: function(editor) {
-            editor.addButton('example',
-            {
-                title: 'My title',
-                onclick: function() {
-                    editor.windowManager.open({
-                        title: "上传图片",
-                        url: "${contextPath}/resources/js/tinymce/file/upload_image.html",
-                        width: 320,
-                        height: 70
-                    });
-                }
-            });
-        },
-        plugins: [
-            "advlist autolink lists link image charmap print preview anchor",
-            "searchreplace visualblocks code fullscreen",
-            "insertdatetime media table contextmenu paste"
-        ],
-        toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | code | example"
-    });
 });
 </script>
 </head>
 <body>
 <#include "../common/header.ftl">
 <article>
-    <textarea style="width:100%"></textarea>
+    <textarea class="html_editor" style="width:100%"></textarea>
     <input class="button" style="margin:10px 0px;" id="submitButton" type="button" value="保存"/>
 </article>
 <#include "../common/footer.ftl">
