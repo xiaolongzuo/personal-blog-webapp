@@ -304,8 +304,18 @@ footer {
 }
 
 .form_table td.form_info {
+	height: 25px;
+	line-height: 25px;
 	font-size: 14px;
 	width: 90px;
+	text-align: right;
+	padding: 0px 15px 0px 0px;
+}
+
+.form_table td.form_input {
+	line-height: 25px;
+	font-size: 13px;
+	padding: 3px;
 }
 
 select {
@@ -320,6 +330,10 @@ select {
 	height: 25px;
 	margin: 5px 0px;
 	padding: 3px 10px;
+}
+
+input[type=checkbox] {
+	vertical-align: middle;
 }
 
 input.text_input {

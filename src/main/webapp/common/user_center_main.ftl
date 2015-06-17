@@ -154,7 +154,7 @@
 	<table id="improve_profile_table" class="form_table float_left" style="display:none">
 	<form id="improve_profile_form" method="POST" action="${contextPath}/saveProfile.do">
 		<tr>
-			<td class="form_info" align="right">省份：</td>
+			<td class="form_info">省份：</td>
 			<td class="form_input">
 				<select id="province_select" name="province">
 					<option value="">请选择</option>
@@ -171,7 +171,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="form_info" align="right">城市：</td>
+			<td class="form_info">城市：</td>
 			<td class="form_input">
 				<select id="city_select" name="city">
 					<option value="">请选择</option>
@@ -190,7 +190,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="form_info" align="right">语言：</td>
+			<td class="form_info">语言：</td>
 			<td class="form_input">
 				<select id="language_select" name="languageId">
 					<option value="">请选择</option>
@@ -219,15 +219,15 @@
 	<table id="update_password_table" class="form_table float_left" style="display:none">
 	<form id="update_password_form" method="POST" action="${contextPath}/updatePassword.do">
 		<tr>
-			<td class="form_info" align="right">原密码：</td>
+			<td class="form_info">原密码：</td>
 			<td class="form_input"><input class="text_input" type="password" name="originPassword"/></td>
 		</tr>
 		<tr>
-			<td class="form_info" align="right">新密码：</td>
+			<td class="form_info">新密码：</td>
 			<td class="form_input"><input class="text_input"  type="password" name="newPassword"/></td>
 		</tr>
 		<tr>
-			<td class="form_info" align="right">确认新密码：</td>
+			<td class="form_info">确认新密码：</td>
 			<td class="form_input"><input class="text_input"  type="password" name="repeatNewPassword"/></td>
 		</tr>
 		<tr>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="keywords" content="左潇龙,个人博客,Zeus">
+    <meta name="description" content="左潇龙的个人博客，记录了工作与生活当中的点点滴滴">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <link href="../../../css/common/base.css" rel="stylesheet">
+    <link href="../../../css/common/index.css" rel="stylesheet">
+    <script type="application/javascript" src="../../common/jquery.min.js"></script>
+    <script type="application/javascript" src="../../common/jquery-ui.min.js"></script>
+    <script type="application/javascript" src="../../common/jquery.form.min.js"></script>
+    <title>插入代码</title>
+    <style>
+        body { overflow: hidden;}
+    </style>
+    <script type="application/javascript">
+        $(document).ready(function(){
+            $("#insert_code_button").click(function(){
+                var content = '<pre class="brush: ' + $("#language_select").val() + '; ';
+                content = content + 'collapse :' + ($("#is_collapse_input").attr("checked") == 'checked') + ';';
+                content = content + 'gutter :' + ($("#show_line_number_input").attr("checked") == 'checked') + ';">';
+                content = content + $("#code_textarea").val() + '</pre>';
+                top.tinymce.activeEditor.insertContent(content);
+                top.tinymce.activeEditor.windowManager.close();
+                top.SyntaxHighlighter.all();
+            });
+        });
+    </script>
+</head>
+<body>
+    <div>
+        <table class="form_table"  style="width:780px;height:380px;border: hidden;margin: 10px;">
+            <tr>
+                <td class="form_info">
+                    编程语言:
+                </td>
+                <td class="form_input">
+                    <select name="language" id="language_select">
+                        <option value="AppleScript">AppleScript</option>
+                        <option value="AS3">AS3</option>
+                        <option value="Bash">Bash</option>
+                        <option value="ColdFusion">ColdFusion</option>
+                        <option value="Cpp">C++</option>
+                        <option value="CSharp">C#</option>
+                        <option value="Css">Css</option>
+                        <option value="Delphi">Delphi</option>
+                        <option value="Diff">Diff</option>
+                        <option value="Erlang">Erlang</option>
+                        <option value="Groovy">Groovy</option>
+                        <option value="Java" selected="selected">Java</option>
+                        <option value="JavaFX">JavaFX</option>
+                        <option value="JScript">JScript</option>
+                        <option value="Perl">Perl</option>
+                        <option value="Php">Php</option>
+                        <option value="Plain">Plain</option>
+                        <option value="PowerShell">PowerShell</option>
+                        <option value="Python">Python</option>
+                        <option value="Ruby">Ruby</option>
+                        <option value="Sass">Sass</option>
+                        <option value="Scala">Scala</option>
+                        <option value="Sql">Sql</option>
+                        <option value="Vb">Vb</option>
+                        <option value="Xml">Xml</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="form_info">
+                    代码标题:
+                </td>
+                <td class="form_input">
+                    <input name="title" type="text" value="代码" class="text_input" id="title_input" style="width: 150px" />
+                </td>
+            </tr>
+            <tr>
+                <td class="form_info">
+                    选项:
+                </td>
+                <td class="form_input">
+                    <span style="font-size: 12px;line-height: 25px;height: 25px;margin: 3px 0px;">
+                        <input id="is_collapse_input" type="checkbox" name="isCollapse"/>
+                        <label for="is_collapse_input">是否折叠</label>
+                        &nbsp;
+                        <input id="show_line_number_input" type="checkbox" name="showLineNumber" />
+                        <label for="show_line_number_input">显示行号</label>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td valign="top"  class="form_info">
+                    代码:
+                </td>
+                <td class="form_input">
+                    <textarea name="code" id="code_textarea" style="width:600px;height:200px;"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;
+                </td>
+                <td>
+                    <input class="form_button" type="button" value="确定" id="insert_code_button" />&nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

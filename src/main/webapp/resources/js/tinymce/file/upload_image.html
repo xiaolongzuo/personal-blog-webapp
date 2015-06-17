@@ -1,130 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head lang="zh_CN">
-    <meta charset="UTF-8">
-    <style type="text/css">
-    * {
-		margin: 0;
-		padding: 0
-	}
-	
-	body {
-		font-size: 15px;
-		padding: 0;
-		margin: 0;
-		font-family: "微软雅黑", "宋体", Arial;
-		min-width: 1200px;
-	}
-	
-	img {
-		border: 0;
-		display: block
-	}
-	
-	ul {
-		list-style: none;
-	}
-	
-	h1, h2, h3, h4, h5, h6 {
-		font-size: 100%;
-		font-weight: normal;
-	}
-	
-	a {
-		outline: none;
-	}
-	
-	a:link, a:visited {
-		text-decoration: none;
-		color: #4078c0;
-		font-size: 13px;
-	}
-	
-	a:hover {
-		text-decoration: none;
-	}
-    input.text_input {
-		border: 1px solid #ccc;
-		border-radius: 3px;
-		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.075) inset;
-		color: #333;
-		font-size: 13px;
-		outline: medium none;
-		vertical-align: middle;
-		line-height: 20px;
-		height: 20px;
-		margin: 5px 0px;
-	}
-	
-	input.text_input:focus {
-		border-color: #51a7e8 !important;
-	}
-	
-	input.form_button {
-		-moz-user-select: none;
-		background-color: #eee;
-		background-image: linear-gradient(#fcfcfc, #eee);
-		border: 1px solid #d5d5d5;
-		border-radius: 3px;
-		color: #333;
-		cursor: pointer;
-		display: inline-block;
-		font-size: 13px;
-		font-weight: bold;
-		line-height: 20px;
-		padding: 2px 12px;
-		position: relative;
-		vertical-align: middle;
-		white-space: nowrap;
-		box-sizing: border-box;
-		word-wrap: break-word;
-		margin: 5px 0px;
-	}
-	
-	input.form_button:hover, input.form_button:active, input.form_button.zeroclipboard-is-hover,
-		input.form_button.zeroclipboard-is-active {
-		background-color: #ddd;
-		background-image: linear-gradient(#eee, #ddd);
-		border-color: #ccc;
-		text-decoration: none;
-	}
-	
-	a.file_input_a {
-		display: inline-block;
-		width: 60px;
-		height: 30px;
-		overflow: hidden;
-		-moz-user-select: none;
-		background-color: #eee;
-		background-image: linear-gradient(#fcfcfc, #eee);
-		border: 1px solid #d5d5d5;
-		border-radius: 3px;
-		color: #333;
-		cursor: pointer;
-		display: inline-block;
-		font-size: 13px;
-		font-weight: bold;
-		line-height: 30px;
-		padding: 0px 10px;
-		position: relative;
-		vertical-align: middle;
-		white-space: nowrap;
-	}
-	
-	input.file_input {
-		position: absolute;
-		right: 0;
-		top: 0;
-		font-size: 100px;
-		opacity: 0;
-		filter: alpha(opacity = 0);
-	}
-    </style>
+	<meta name="keywords" content="左潇龙,个人博客,Zeus">
+	<meta name="description" content="左潇龙的个人博客，记录了工作与生活当中的点点滴滴">
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<link href="../../../css/common/base.css" rel="stylesheet">
+	<link href="../../../css/common/index.css" rel="stylesheet">
+	<script type="application/javascript" src="../../common/jquery.min.js"></script>
+	<script type="application/javascript" src="../../common/jquery-ui.min.js"></script>
+	<script type="application/javascript" src="../../common/jquery.form.min.js"></script>
+	<style type="text/css">
+		body {overflow: hidden;}
+	</style>
+	<script type="application/javascript">
+		$(document).ready(function(){
+			$("input[name=imageFile]").change(function(){
+				$("#file_path").val($(this).val());
+			});
+			$("#upload_image_form").ajaxForm({
+				beforeSubmit:function(){
+					if(!$("input[name=imageFile]").val()) {
+						window.parent.alert("请选择图片");
+						return false;
+					}
+					return true;
+				},
+				success:function(url){
+					if(url) {
+						top.tinymce.activeEditor.insertContent("<img src='" + url + "'/>");
+						top.tinymce.activeEditor.windowManager.close();
+					}
+				}
+			});
+		});
+	</script>
     <title></title>
 </head>
 <body>
     <table class="float_left" style="width: 340px;height: 90px;border: 1px solid #d5d5d5;margin: 5px;">
-            <form id="upload_image_form" method="POST" action="${contextPath}/uploadImage.do" enctype="multipart/form-data">
+            <form id="upload_image_form" method="POST" action="http://localhost:8080/uploadImage.do" enctype="multipart/form-data">
                 <tr>
                     <td class="form_input">
                         <a class="file_input_a" href="#">

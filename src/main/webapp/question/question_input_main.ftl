@@ -1,42 +1,58 @@
 	<script type="text/javascript">
-	$(document).ready(function(){
+	$(document).ready(function() {
 	    tinymce.init({
 	        selector: "textarea",
 	        language: "zh_CN",
+            menubar : false,
 	        width: 600,
 	        height: 400,
+            toolbar_items_size:'small',
 	        setup: function(editor) {
-	            editor.addButton('example',
+	            editor.addButton('upload',
 	            {
-	                title: 'My title',
+	                icon: 'print',
+					title: '上传本地图片',
 	                onclick: function() {
 	                    editor.windowManager.open({
-	                        title: "上传/插入图片", 
+	                        title: "上传本地图片",
 	                        url: "${contextPath}/resources/js/tinymce/file/upload_image.html",
 	                        width: 400,
 	                        height: 150
 	                    });
 	                }
 	            });
+                editor.addButton('insertcode',
+				{
+					icon: 'paste',
+					title: '插入代码',
+					onclick: function() {
+						editor.windowManager.open({
+							title: "插入代码",
+							url: "${contextPath}/resources/js/tinymce/file/insert_code.html",
+							width: 800,
+							height: 400
+						});
+					}
+				});
 	        },
 	        plugins: [
-	            "advlist autolink lists link image charmap print preview anchor",
+	            "advlist autolink lists link image charmap print preview anchor textcolor",
 	            "searchreplace visualblocks code fullscreen",
-	            "insertdatetime media table contextmenu paste"
+	            "insertdatetime media table contextmenu paste emoticons"
 	        ],
-	        toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | code | example"
+	        toolbar: "undo redo | styleselect bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | code preview fullscreen | link upload image insertcode table blockquote media emoticons"
 	    });
 	});
 	</script>
 	<table>
 		<tr>
-			<td>标题：</td>
+			<td class="form_info">标题：</td>
 			<td>
 				<input class="text_input" type="text" name="title" style="width:600px;"/>
 			</td>
 		</tr>
 		<tr>
-			<td>描述：</td>
+			<td valign="top" class="form_info">描述：</td>
 			<td>
 				<textarea name="description"></textarea>
 			</td>
