@@ -81,12 +81,7 @@
         </#if>
         </div>
 		<script type="application/javascript">
-			function getTinymceSize() {
-				return {width:700,height:150};
-			}
-			function getTinymceSkin() {
-				return 'comment';
-			}
+			tinymceInit({width:700,height:150,skin:'comment'});
 		</script>
         <!-- 提交评论 -->
         <div id="comment_container">

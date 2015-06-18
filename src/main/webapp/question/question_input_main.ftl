@@ -1,6 +1,9 @@
+	<script type="application/javascript">
+		tinymceInit({width:600,height:300});
+	</script>
 	<table>
 		<tr>
-			<td class="form_info">标题：</td>
+			<td class="form_info">问题：</td>
 			<td>
 				<input class="text_input" type="text" name="title" style="width:600px;"/>
 			</td>

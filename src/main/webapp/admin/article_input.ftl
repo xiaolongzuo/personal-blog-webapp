@@ -3,16 +3,11 @@
 <head>
 <#include "../common/head.ftl">
 <script type="text/javascript">
-function getTinymceSize(){
-	return {width:900,height:400};
-}
-function getTinymceContent(){
-	<#if article?? && article.escapeHtml??>
-		return '${article.escapeHtml}';
-	<#else>
-		return '';
-	</#if>
-}
+var settings = {width:900,height:400,content:''};
+<#if article?? && article.escapeHtml??>
+	settings.content = '${article.escapeHtml}';
+</#if>
+tinymceInit(settings);
 $(document).ready(function(){
 	$("#submitButton").click(function(){
 		var status = $("input[name=status]").is(":checked");
