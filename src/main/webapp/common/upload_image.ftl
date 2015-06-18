@@ -1,14 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head lang="zh_CN">
-	<meta name="keywords" content="左潇龙,个人博客,Zeus">
-	<meta name="description" content="左潇龙的个人博客，记录了工作与生活当中的点点滴滴">
-	<meta http-equiv="content-type" content="text/html; charset=utf-8">
-	<link href="../../../css/common/base.css" rel="stylesheet">
-	<link href="../../../css/common/index.css" rel="stylesheet">
-	<script type="application/javascript" src="../../common/jquery.min.js"></script>
-	<script type="application/javascript" src="../../common/jquery-ui.min.js"></script>
-	<script type="application/javascript" src="../../common/jquery.form.min.js"></script>
+	<#include "../common/head.ftl">
 	<style type="text/css">
 		body {overflow: hidden;}
 	</style>
@@ -38,7 +31,7 @@
 </head>
 <body>
     <table class="float_left" style="width: 340px;height: 90px;border: 1px solid #d5d5d5;margin: 5px;">
-            <form id="upload_image_form" method="POST" action="http://localhost:8080/uploadImage.do" enctype="multipart/form-data">
+            <form id="upload_image_form" method="POST" action="${contextPath}/uploadImage.do" enctype="multipart/form-data">
                 <tr>
                     <td class="form_input">
                         <a class="file_input_a" href="#">

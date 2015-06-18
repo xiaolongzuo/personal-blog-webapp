@@ -9,6 +9,7 @@ import org.jsoup.Jsoup;
 import com.zuoxiaolong.dao.ArticleDao;
 import com.zuoxiaolong.mvc.RequestMapping;
 import com.zuoxiaolong.reptile.Cnblogs;
+import com.zuoxiaolong.util.StringUtil;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -35,13 +36,19 @@ public class AdminUpdateArticle extends AbstractServlet {
 
 	@Override
 	protected void service() throws ServletException, IOException {
+		String id = getRequest().getParameter("id");
 		String subject = getRequest().getParameter("subject");
 		String html = getRequest().getParameter("content");
 		String status = getRequest().getParameter("status");
 		String icon = getRequest().getParameter("icon");
+		String quotePrefix = "<fieldset class=\"comment_quote\"><legend>引用</legend>";
+		String quoteSuffix = "</fieldset>";
+		html = StringUtil.replace(html, "<blockquote>", "</blockquote>", quotePrefix, quoteSuffix);
+		
 		StringBuffer stringBuffer = new StringBuffer();
 		Cnblogs.appendText(Jsoup.parse(html), stringBuffer);
-		ArticleDao.save(subject, Integer.valueOf(status), "左潇龙", html, stringBuffer.toString(), icon);
+		ArticleDao.saveOrUpdate(id, subject, Integer.valueOf(status), "左潇龙", html, stringBuffer.toString(), icon);
+		writeText("success");
 	}
 
 }

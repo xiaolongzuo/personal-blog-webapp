@@ -71,6 +71,10 @@ public abstract class AbstractServlet implements Servlet {
 	protected boolean isLogin() {
 		return getUser() != null;
 	}
+	
+	protected boolean isAdminLogin() {
+		return isAdminLogin(getRequest());
+	}
 
 	protected Map<String, String> getUser() {
 		return getUser(getRequest());
@@ -108,6 +112,14 @@ public abstract class AbstractServlet implements Servlet {
 
 	private static final Pattern STATIC_ARTICLE_LIST_PATTERN = Pattern.compile("/html/article_list_[a-zA-Z_]+_[0-9]+\\.html");
 
+	public static boolean isAdminLogin(HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
+		if (session != null && session.getAttribute("admin") != null && "admin".equals(session.getAttribute("admin"))) {
+			return true;
+		}
+		return false;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public static Map<String, String> getUser(HttpServletRequest request) {
 		HttpSession session = request.getSession(false);

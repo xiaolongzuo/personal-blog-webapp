@@ -14,7 +14,6 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.lang.StringUtils;
 
 import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.dao.UserDao;
 import com.zuoxiaolong.util.IOUtil;
 import com.zuoxiaolong.util.ImageUtil;
 
@@ -42,9 +41,6 @@ public class UploadImage extends AbstractServlet {
 
 	@Override
 	protected void service() throws ServletException, IOException {
-		if (!isLogin()) {
-			throw new RuntimeException();
-		}
 		HttpServletRequest request = getRequest();
 		String path = null;
 		DiskFileItemFactory factory = new DiskFileItemFactory(5 * 1024, new File(Configuration.getContextPath("temp")));
@@ -57,10 +53,7 @@ public class UploadImage extends AbstractServlet {
 				path = ImageUtil.generatePath(fileItem.getName());
 				IOUtil.copy(fileItem.getInputStream(), Configuration.getContextPath(path));
 				fileItem.delete();
-				String url = Configuration.getSiteUrl(path);
-				if (UserDao.uploadImage(getUsername(), url)) {
-					writeText(url);
-				}
+				writeText(Configuration.getSiteUrl(path));
 			}
 		} catch (FileUploadException e) {
 			throw new RuntimeException(e);

@@ -41,13 +41,12 @@
 .comment_vote a { padding-left: 10px; text-decoration: none !important;}
 #comment_container {margin:10px;}
 #comment_container a {color:#EE9A00; margin:0px 20px;}
-#comment_title {  color:#EE9A00;  background-image:none;  background-repeat:no-repeat;  margin-bottom:10px;  padding:10px 20px 10px 10px;  font-size:18px;  font-weight:bold;  border-bottom:solid 2px #EE9A00;  }
-/*评论输入域*/
-#comment_textarea {  font-family:'MIcrosoft Yahei';  margin:10px 0px;  width:700px;  max-width:700px;  min-width:700px;  background:white;  color:#333;  border:2px solid #fff;  box-shadow:inset 0 0 8px #aaa;  padding:10px;  height:120px;  font-size:14px;  min-height:120px;  }
+#comment_title {  color:#EE9A00;  background-image:none;  background-repeat:no-repeat;  margin-bottom:10px;  padding:10px 20px 10px 10px;  font-size:15px;  font-weight:bold;  border-bottom:solid 2px #EE9A00;  }
 /*评论按钮*/
 #btn_comment_submit {  border:none;  height:30px;  width:90px;  }
 /*评论按钮*/
-.comment_btn {  font-family:'Microsoft Yahei';  border:none;  height:30px;  width:90px;  font-size:15px;  cursor:pointer;  position:relative;  vertical-align:middle;  display:inline-block;  background:#EE9A00;  color:#fff;  }
+#reply_div {margin:10px 0px; font-size:13px;}
+.comment_btn { margin:10px 0px; font-family:'Microsoft Yahei';  border:none;  height:25px; line-height:25px; width:90px;  font-size:13px;  cursor:pointer;  position:relative;  vertical-align:middle;  display:inline-block;  background:#EE9A00;  color:#fff;  }
 #btn_comment_submit:hover {  background:#CDC5BF;  }
 
 

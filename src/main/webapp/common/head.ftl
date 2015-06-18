@@ -7,7 +7,8 @@
 <link href="${contextPath}/resources/css/common/index.css" rel="stylesheet">
 <link href="${contextPath}/resources/css/common/github_button.css" rel="stylesheet">
 <link href="${contextPath}/resources/css/common/jquery-ui.min.css" rel="stylesheet">
-<link type="text/css" rel="stylesheet" href="${contextPath}/resources/css/shbrush/shCoreDefault.css"/>
+<link type="text/css" rel="stylesheet" href="${contextPath}/resources/css/shbrush/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="${contextPath}/resources/css/shbrush/shThemeDefault.css"/>
 <script type="text/javascript" src="${contextPath}/resources/js/common/jquery.min.js"></script>
 <script type="text/javascript" src="${contextPath}/resources/js/common/jquery-ui.min.js"></script>
 <script type="text/javascript" src="${contextPath}/resources/js/common/jquery.form.min.js"></script>

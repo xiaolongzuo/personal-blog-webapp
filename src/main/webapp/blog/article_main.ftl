@@ -80,7 +80,14 @@
             暂无评论
         </#if>
         </div>
-
+		<script type="application/javascript">
+			function getTinymceSize() {
+				return {width:700,height:150};
+			}
+			function getTinymceSkin() {
+				return 'comment';
+			}
+		</script>
         <!-- 提交评论 -->
         <div id="comment_container">
             <div id="comment_title">发表评论</div>
@@ -88,7 +95,7 @@
             	<div id="reply_div" class="clear"></div>
 				<input type="hidden" name="referenceCommentId" id="reference_comment_id_input"/>
 				<input type="hidden" name="referenceCommenter" id="reference_commenter_input"/>
-                <textarea name="content" id="comment_textarea" class="comment_textarea" rows="20" cols="30"></textarea>
+                <textarea name="content" id="comment_textarea" class="html_editor"></textarea>
             </div>
             <p id="commentbox_opt">
                 <input id="submit_comment_button" class="comment_btn" value="提交评论" type="button">

@@ -28,7 +28,7 @@ function reply(id) {
 	$("#reply_div").html(html);
 	$("#reference_comment_id_input").val(id);
 	$("#reference_commenter_input").val($("#commenter_a_" + id).html());
-	scrollTo("#comment_textarea");
+	scrollTo("#reply_div");
 }
 
 /*
@@ -37,12 +37,12 @@ function reply(id) {
 function quote(id) {
 	reply(id);
 	var content = generateQuote(id);
-	$("#comment_textarea").val(content);
-	scrollTo("#comment_textarea");
+	tinymce.activeEditor.insertContent(content);
+	scrollTo("#reply_div");
 }
 
 function generateQuote(id) {
-	var content = '[quote]' + $("#comment_content_" + id).html() + '[/quote]';
+	var content = '<blockquote>' + $("#comment_content_" + id).html() + '</blockquote><br/>';
 	return content;
 }
 
@@ -120,7 +120,7 @@ function remark(){
  * 评论
  */
 function comment() {
-	var comment = $("#comment_textarea").val();
+	var comment = tinymce.activeEditor.getContent();
 	var referenceCommentId = $("#reference_comment_id_input").val();
 	var referenceCommenter = $("#reference_commenter_input").val();
 	if(!comment || !$.trim(comment)) {
@@ -140,7 +140,7 @@ function comment() {
 					$("#comment_list").html('');
 				}
 				appendComment(id,data.content,size);
-				$("#comment_textarea").val('');
+				tinymce.activeEditor.setContent('');
 				cancelReply();
 			} else {
 				alert(data);

@@ -28,6 +28,23 @@ import java.util.regex.Pattern;
 public abstract class StringUtil {
 	
 	private static final String chinesePattern = "[\u4e00-\u9fa5]{1,1}";
+	
+	public static String escapeHtml(String html) {
+		StringBuffer stringBuffer = new StringBuffer();
+        char[] chars = html.toCharArray();
+        for (int i = 0; i < chars.length; i++) {
+			if (chars[i] == '\'') {
+				stringBuffer.append("\\'");
+			} else if (chars[i] == '\n') {
+				stringBuffer.append("\\n");
+			} else if (chars[i] == '\r') {
+				stringBuffer.append("\\r");
+			} else {
+				stringBuffer.append(chars[i]);
+			}
+		}
+        return stringBuffer.toString();
+	}
 
 	public static String urlEncode(String param) {
 		try {

@@ -1,10 +1,23 @@
 $(document).ready(function() {
+	var tinymceSize = {width:600,height:400};
+	if (window.getTinymceSize) {
+		tinymceSize = getTinymceSize();
+	}
+	var content = '';
+	if (window.getTinymceContent) {
+		content = getTinymceContent();
+	}
+	var skin = 'lightgray';
+	if (window.getTinymceSkin) {
+		skin = getTinymceSkin();
+	}
     tinymce.init({
         selector: "textarea.html_editor",
         language: "zh_CN",
         menubar : false,
-        width: 600,
-        height: 400,
+        skin: skin,
+        width: tinymceSize.width,
+        height: tinymceSize.height,
         toolbar_items_size:'small',
         setup: function(editor) {
             editor.addButton('upload',
@@ -14,7 +27,7 @@ $(document).ready(function() {
                 onclick: function() {
                     editor.windowManager.open({
                         title: "上传本地图片",
-                        url: contextPath + "/resources/js/tinymce/file/upload_image.html",
+                        url: contextPath + "/html/upload_image.html",
                         width: 400,
                         height: 150
                     });
@@ -27,14 +40,18 @@ $(document).ready(function() {
 				onclick: function() {
 					editor.windowManager.open({
 						title: "插入代码",
-						url: contextPath + "/resources/js/tinymce/file/insert_code.html",
+						url: contextPath + "/html/insert_code.html",
 						width: 800,
 						height: 400
 					});
 				}
 			});
 			editor.on('init', function(e) {
-	            editor.dom.addStyle('pre {border:1px solid #aaa;padding:5px;line-height:15px;} ');
+	            editor.dom.addStyle('pre {border:1px solid #aaa;padding:5px;line-height:15px;background-color:#FFD700;} ');
+	            editor.dom.addStyle('blockquote {border: 1px solid #aaa;padding: 0px;} ');
+	            if (content) {
+	            	editor.setContent(content);
+	            }
 	        });
         },
         plugins: [

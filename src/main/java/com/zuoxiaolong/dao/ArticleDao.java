@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.zuoxiaolong.freemarker.ArticleHelper;
 import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.util.DateUtil;
@@ -39,6 +41,26 @@ import com.zuoxiaolong.util.StringUtil;
  * @since 5/7/2015 3:40 PM
  */
 public abstract class ArticleDao extends BaseDao {
+	
+	public static Boolean delete(Integer id) {
+    	return execute(new TransactionalOperation<Boolean>() {
+			@Override
+			public Boolean doInConnection(Connection connection) {
+				String updateSql = "update articles set status=0 where id=?";
+				try {
+					PreparedStatement statement = connection.prepareStatement(updateSql);
+					statement.setInt(1, id);
+					int result = statement.executeUpdate();
+					if (result > 0) {
+						return true;
+					}
+				} catch (SQLException e) {
+					throw new RuntimeException(e);
+				}
+				return false;
+			}
+		});
+    }
 	
     public static List<Map<String, String>> getPageArticlesByTag(final Map<String, Integer> pager,final int tagId, ViewMode viewMode) {
 		return execute(new Operation<List<Map<String, String>>>() {
@@ -122,28 +144,45 @@ public abstract class ArticleDao extends BaseDao {
 		});
 	}
     
-    public static Integer save(String subject, Integer status,String username, String html, String content, String icon) {
+    public static Integer saveOrUpdate(String id, String subject, Integer status,String username, String html, String content, String icon) {
     	return execute(new TransactionalOperation<Integer>() {
 			@Override
 			public Integer doInConnection(Connection connection) {
-				String sql = "insert into articles (subject,username,icon,create_date," +
+				String insertSql = "insert into articles (subject,username,icon,create_date," +
                 "html,content,status) values (?,?,?,?,?,?,?)";
+				String updateSql = "update articles set subject=?,username=?,icon=?,create_date=?,html=?,content=?,status=? where id=?";
 				try {
-					PreparedStatement statement = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
-					statement.setString(1, subject);
-					statement.setString(2, username);
-					statement.setString(3, icon);
-					statement.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
-					statement.setString(5, html);
-					statement.setString(6, content);
-					statement.setInt(7, status);
+					PreparedStatement statement = null;
+					if (StringUtils.isBlank(id)) {
+						statement = connection.prepareStatement(insertSql,Statement.RETURN_GENERATED_KEYS);
+						statement.setString(1, subject);
+						statement.setString(2, username);
+						statement.setString(3, icon == null ? ImageUtil.randomArticleImage() : icon);
+						statement.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
+						statement.setString(5, html);
+						statement.setString(6, content);
+						statement.setInt(7, status);
+					} else {
+						statement = connection.prepareStatement(updateSql);
+						statement.setString(1, subject);
+						statement.setString(2, username);
+						statement.setString(3, icon == null ? ImageUtil.randomArticleImage() : icon);
+						statement.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
+						statement.setString(5, html);
+						statement.setString(6, content);
+						statement.setInt(7, status);
+						statement.setInt(8, Integer.valueOf(id));
+					}
 					int result = statement.executeUpdate();
-					if (result > 0) {
+					if (result > 0 && StringUtils.isBlank(id)) {
 						ResultSet keyResultSet = statement.getGeneratedKeys();
 						if (keyResultSet.next()) {
 							return keyResultSet.getInt(1);
 						}
 					} 
+					if (result > 0) {
+						return Integer.valueOf(id);
+					}
 				} catch (SQLException e) {
 					throw new RuntimeException(e);
 				}
@@ -319,6 +358,7 @@ public abstract class ArticleDao extends BaseDao {
             Timestamp createDate = resultSet.getTimestamp("create_date");
             article.put("create_date", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(createDate));
             article.put("us_create_date", DateUtil.rfc822(createDate));
+            article.put("status", resultSet.getString("status"));
             article.put("access_times", resultSet.getString("access_times"));
             article.put("comment_times", resultSet.getString("comment_times"));
 
@@ -330,7 +370,9 @@ public abstract class ArticleDao extends BaseDao {
             article.put("bored_times", resultSet.getString("bored_times"));
             article.put("water_times", resultSet.getString("water_times"));
             article.put("surprise_times", resultSet.getString("surprise_times"));
-            article.put("html", resultSet.getString("html"));
+            String html = resultSet.getString("html");
+            article.put("html", html);
+            article.put("escapeHtml", StringUtil.escapeHtml(html));
             String content = resultSet.getString("content");
             article.put("content", content);
             article.put("summary", StringUtil.substring(content, 100));

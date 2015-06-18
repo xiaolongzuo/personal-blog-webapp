@@ -45,8 +45,17 @@
 				},
 				success:function(url){
 					if(url) {
-						alert("上传成功");
-						$("#image_div").html('<img src="' + url + '" height="100" width="100">');
+						$.ajax({
+							url:"${contextPath}/updateImagePath.do",
+							type:"POST",
+							data:{"imagePath":url},
+							success:function(data) {
+								if (data && data == 'success') {
+									alert("上传成功");
+									$("#image_div").html('<img src="' + url + '" height="100" width="100">');
+								}
+							}
+						});
 					} else {
 						alert("上传失败");
 					}

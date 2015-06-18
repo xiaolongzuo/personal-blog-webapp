@@ -1,13 +1,13 @@
 package com.zuoxiaolong.dynamic;
 
-import com.zuoxiaolong.dao.CommentDao;
-import com.zuoxiaolong.dao.StatisticsDao;
-import com.zuoxiaolong.mvc.DataMap;
-import com.zuoxiaolong.mvc.Namespace;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
+
+import com.zuoxiaolong.dao.CommentDao;
+import com.zuoxiaolong.mvc.DataMap;
+import com.zuoxiaolong.mvc.Namespace;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -30,20 +30,11 @@ import java.util.Map;
  * @since 2015年5月27日 上午1:54:53
  */
 @Namespace("admin")
-public class AdminIndex implements DataMap {
+public class NewComment implements DataMap {
 	
 	@Override
 	public void putCustomData(Map<String, Object> data,HttpServletRequest request, HttpServletResponse response) {
 		data.put("newComments", CommentDao.getComments());
-		data.put("siteTotalAccessTimes", StatisticsDao.getSiteTotalAccessTimes());
-		data.put("siteTodayAccessTimes", StatisticsDao.getSiteTodayAccessTimes());
-		data.put("siteTotalVisitorIpNumber", StatisticsDao.getSiteTotalVisitorIpNumber());
-		data.put("siteTodayVisitorIpNumber", StatisticsDao.getSiteTodayVisitorIpNumber());
-		data.put("articleTotalAccessTimes", StatisticsDao.getArticleTotalAccessTimes());
-		data.put("commentTotalNumber", StatisticsDao.getCommentTotalNumber());
-		data.put("commentTodayNumber", StatisticsDao.getCommentTodayNumber());
-		data.put("userTotalNumber", StatisticsDao.getUserTotalNumber());
-		data.put("userTodayNumber", StatisticsDao.getUserTodayNumber());
 	}
 
 }

@@ -39,8 +39,6 @@ import com.zuoxiaolong.util.StringUtil;
  */
 public class Comment extends AbstractServlet {
 
-	private static final long serialVersionUID = 1250411762987530784L;
-	
 	@Override
 	protected void service() throws ServletException, IOException {
 		HttpServletRequest request = getRequest();
@@ -70,7 +68,7 @@ public class Comment extends AbstractServlet {
 		}
 		String quotePrefix = "<fieldset class=\"comment_quote\"><legend>引用</legend>";
 		String quoteSuffix = "</fieldset>";
-		content = StringUtil.replace(content, "[quote]", "[/quote]", quotePrefix, quoteSuffix);
+		content = StringUtil.replace(content, "<blockquote>", "</blockquote>", quotePrefix, quoteSuffix);
 		Integer id = CommentDao.save(articleId, visitorIp, new Date(), content, username, nickName, null, referenceCommentId);
 		if (id == null) {
 			logger.error("save comment error!");
