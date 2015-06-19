@@ -44,6 +44,10 @@
 					return true;
 				},
 				success:function(url){
+                    if (url && url == 'format_error') {
+                        alert("只能上传png,jpg,gif格式的文件");
+                        return;
+                    }
 					if(url) {
 						$.ajax({
 							url:"${contextPath}/updateImagePath.do",
