@@ -2,6 +2,9 @@
 <title>Zeus个人博客</title>
 <meta name="keywords" content="左潇龙,个人博客,Zeus">
 <meta name="description" content="左潇龙的个人博客，记录了工作与生活当中的点点滴滴">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="expires" content="0">
 <meta property="qc:admins" content="11436637076257011747676375" />
 <link href="${contextPath}/resources/css/common/base.css" rel="stylesheet">
 <link href="${contextPath}/resources/css/common/index.css" rel="stylesheet">
