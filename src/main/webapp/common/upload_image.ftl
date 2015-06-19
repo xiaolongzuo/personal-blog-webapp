@@ -19,7 +19,11 @@
 					return true;
 				},
 				success:function(url){
-					if(url) {
+					if (url && url == 'format_error') {
+						alert("只能上传png,jpg,gif格式的文件");
+						return;
+					}
+					if (url) {
 						top.tinymce.activeEditor.insertContent("<img src='" + url + "'/>");
 						top.tinymce.activeEditor.windowManager.close();
 					}
