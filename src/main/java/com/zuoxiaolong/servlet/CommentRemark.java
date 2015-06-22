@@ -1,16 +1,5 @@
 package com.zuoxiaolong.servlet;
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.log4j.Logger;
-
-import com.zuoxiaolong.dao.CommentDao;
-import com.zuoxiaolong.dao.CommentIdVisitorIpDao;
-import com.zuoxiaolong.generator.Generators;
-import com.zuoxiaolong.util.HttpUtil;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -26,6 +15,19 @@ import com.zuoxiaolong.util.HttpUtil;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
+
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.orm.DaoFactory;
+import org.apache.log4j.Logger;
+
+import com.zuoxiaolong.dao.CommentDao;
+import com.zuoxiaolong.dao.CommentIdVisitorIpDao;
+import com.zuoxiaolong.generator.Generators;
+import com.zuoxiaolong.util.HttpUtil;
 
 /**
  * @author 左潇龙
@@ -48,16 +50,16 @@ public class CommentRemark extends AbstractServlet {
         }
 		String ip = HttpUtil.getVisitorIp(request);
 		String username = getUsername();
-		if (CommentIdVisitorIpDao.exsits(commentId, ip, username)) {
+		if (DaoFactory.getDao(CommentIdVisitorIpDao.class).exsits(commentId, ip, username)) {
 			writeText("exists");
 			if (logger.isInfoEnabled()) {
 				logger.info(ip + " has remarked...");
 			}
 			return ;
 		} else {
-			CommentIdVisitorIpDao.save(commentId, ip, username);
+			DaoFactory.getDao(CommentIdVisitorIpDao.class).save(commentId, ip, username);
 		}
-        boolean result = CommentDao.updateCount(commentId, column);
+        boolean result = DaoFactory.getDao(CommentDao.class).updateCount(commentId, column);
         if (!result) {
 			logger.error("updateCount error!");
 			return;

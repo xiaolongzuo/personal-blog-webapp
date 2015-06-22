@@ -1,10 +1,5 @@
 package com.zuoxiaolong.servlet;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -21,12 +16,17 @@ import java.io.IOException;
  * limitations under the License.
  */
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 /**
  * @author 左潇龙
  * @since 6/16/2015 11:49 AM
  */
 public interface Servlet {
 
-    public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException , IOException;
+    void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException , IOException;
 
 }

@@ -1,22 +1,5 @@
 package com.zuoxiaolong.freemarker;
 
-import com.zuoxiaolong.algorithm.Match;
-import com.zuoxiaolong.algorithm.Random;
-import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.dao.ArticleDao;
-import com.zuoxiaolong.dao.MatchDao;
-import com.zuoxiaolong.dao.TagDao;
-import com.zuoxiaolong.model.ViewMode;
-import com.zuoxiaolong.util.StringUtil;
-import freemarker.template.Template;
-import org.apache.log4j.Logger;
-
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -32,6 +15,24 @@ import java.util.Map;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import com.zuoxiaolong.algorithm.Match;
+import com.zuoxiaolong.algorithm.Random;
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.dao.MatchDao;
+import com.zuoxiaolong.dao.TagDao;
+import com.zuoxiaolong.model.ViewMode;
+import com.zuoxiaolong.orm.DaoFactory;
+import com.zuoxiaolong.util.StringUtil;
+import freemarker.template.Template;
+import org.apache.log4j.Logger;
+
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author 左潇龙
@@ -55,14 +56,14 @@ public abstract class FreemarkerHelper {
         Map<String, Object> data = new HashMap<>();
         String contextPath = Configuration.getSiteUrl();
         data.put("contextPath", contextPath);
-        data.put("questionUrl", contextPath + "/question/index.ftl");
+        data.put("questionUrl", contextPath + "/question/question_index.ftl");
         if (ViewMode.DYNAMIC == viewMode) {
             data.put("indexUrl", IndexHelper.generateDynamicPath());
         } else {
             data.put("indexUrl", IndexHelper.generateStaticPath());
         }
         if (namespace.equals("dota")) {
-            List<Map<String, String>> matchList = MatchDao.getAll();
+            List<Map<String, String>> matchList = DaoFactory.getDao(MatchDao.class).getAll();
             List<Map<String, Object>> hotCharts = new ArrayList<Map<String,Object>>();
             List<Map<String, Object>> winCharts = new ArrayList<Map<String,Object>>();
             List<Map<String, Object>> winTimesCharts = new ArrayList<Map<String,Object>>();
@@ -71,15 +72,15 @@ public abstract class FreemarkerHelper {
             data.put("hotCharts", hotCharts);
             data.put("winCharts", winCharts);
             data.put("winTimesCharts", winTimesCharts);
-            data.put("totalCount", MatchDao.count());
+            data.put("totalCount", DaoFactory.getDao(MatchDao.class).count());
         } else {
-        	List<Map<String, String>> articleList = ArticleDao.getArticles("create_date", viewMode);
+        	List<Map<String, String>> articleList = DaoFactory.getDao(ArticleDao.class).getArticles("create_date", viewMode);
             List<Map<String, String>> articleListCopy = new ArrayList<>(articleList);
-            data.put("accessCharts",ArticleDao.getArticles("access_times", viewMode));
+            data.put("accessCharts",DaoFactory.getDao(ArticleDao.class).getArticles("access_times", viewMode));
             data.put("newCharts",articleList);
-            data.put("recommendCharts",ArticleDao.getArticles("good_times", viewMode));
+            data.put("recommendCharts",DaoFactory.getDao(ArticleDao.class).getArticles("good_times", viewMode));
             data.put("imageArticles",Random.random(articleListCopy, DEFAULT_RIGHT_ARTICLE_NUMBER));
-            data.put("hotTags", Random.random(TagDao.getHotTags(), DEFAULT_RIGHT_TAG_NUMBER));
+            data.put("hotTags", Random.random(DaoFactory.getDao(TagDao.class).getHotTags(), DEFAULT_RIGHT_TAG_NUMBER));
             if (ViewMode.DYNAMIC == viewMode) {
                 data.put("accessArticlesUrl", ArticleListHelper.generateDynamicPath("access_times", 1));
                 data.put("newArticlesUrl", ArticleListHelper.generateDynamicPath("create_date", 1));

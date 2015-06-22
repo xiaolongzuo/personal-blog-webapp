@@ -1,10 +1,5 @@
 package com.zuoxiaolong.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -21,13 +16,23 @@ import java.sql.SQLException;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.orm.BaseDao;
+import com.zuoxiaolong.orm.Operation;
+import com.zuoxiaolong.orm.TransactionalOperation;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Map;
+
 /**
  * @author 左潇龙
  * @since 2015年5月12日 下午5:47:40
  */
-public abstract class CommentIdVisitorIpDao extends BaseDao {
+public class CommentIdVisitorIpDao extends BaseDao {
 
-	public static boolean save(final int commentId, final String visitorIp, final String username) {
+	public boolean save(final int commentId, final String visitorIp, final String username) {
 		return execute(new TransactionalOperation<Boolean>() {
 			@Override
 			public Boolean doInConnection(Connection connection) {
@@ -46,7 +51,7 @@ public abstract class CommentIdVisitorIpDao extends BaseDao {
 		});
 	} 
 	
-	public static boolean exsits(final int commentId, final String visitorIp, final String username) {
+	public boolean exsits(final int commentId, final String visitorIp, final String username) {
 		return execute(new Operation<Boolean>() {
 			@Override
 			public Boolean doInConnection(Connection connection) {
@@ -69,5 +74,9 @@ public abstract class CommentIdVisitorIpDao extends BaseDao {
 			}
 		});
 	}
-	
+
+	@Override
+	public Map<String, String> transfer(ResultSet resultSet) {
+		throw new UnsupportedOperationException();
+	}
 }

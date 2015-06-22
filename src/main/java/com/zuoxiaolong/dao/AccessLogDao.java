@@ -1,18 +1,5 @@
 package com.zuoxiaolong.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import com.zuoxiaolong.api.HttpApiHelper;
-import com.zuoxiaolong.cache.CacheManager;
-import com.zuoxiaolong.config.Configuration;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -29,15 +16,31 @@ import com.zuoxiaolong.config.Configuration;
  * limitations under the License.
  */
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
+
+import com.zuoxiaolong.api.HttpApiHelper;
+import com.zuoxiaolong.cache.CacheManager;
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.orm.BaseDao;
+import com.zuoxiaolong.orm.TransactionalOperation;
+
 /**
  * @author 左潇龙
  * @since 5/14/2015 12:03 PM
  */
-public abstract class AccessLogDao extends BaseDao {
+public class AccessLogDao extends BaseDao {
 
     private static final long TIMES_PER_SECOND = Long.valueOf(Configuration.get("max.access.times.per.second"));
 
-    public static boolean save(final String visitorIp, final String url, final String params) {
+    public boolean save(final String visitorIp, final String url, final String params) {
         return execute(new TransactionalOperation<Boolean>() {
             @Override
             public Boolean doInConnection(Connection connection) {
@@ -63,6 +66,11 @@ public abstract class AccessLogDao extends BaseDao {
                 return false;
             }
         });
+    }
+
+    @Override
+    public Map<String, String> transfer(ResultSet resultSet) {
+        throw new UnsupportedOperationException();
     }
 
 }

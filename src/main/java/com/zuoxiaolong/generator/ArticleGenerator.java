@@ -1,16 +1,5 @@
 package com.zuoxiaolong.generator;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.List;
-import java.util.Map;
-
-import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.dao.ArticleDao;
-import com.zuoxiaolong.freemarker.ArticleHelper;
-import com.zuoxiaolong.freemarker.FreemarkerHelper;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -27,6 +16,19 @@ import com.zuoxiaolong.freemarker.FreemarkerHelper;
  * limitations under the License.
  */
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.List;
+import java.util.Map;
+
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.dao.UserDao;
+import com.zuoxiaolong.freemarker.ArticleHelper;
+import com.zuoxiaolong.freemarker.FreemarkerHelper;
+import com.zuoxiaolong.orm.DaoFactory;
+
 /**
  * @author 左潇龙
  * @since 5/7/2015 6:06 PM
@@ -35,7 +37,7 @@ public class ArticleGenerator implements Generator {
 
 	@Override
 	public void generate() {
-		List<Map<String, String>> articles = ArticleDao.getArticles("create_date", VIEW_MODE);
+		List<Map<String, String>> articles = DaoFactory.getDao(ArticleDao.class).getArticles("create_date", VIEW_MODE);
 		for (int i = 0; i < articles.size(); i++) {
 			generateArticle(Integer.valueOf(articles.get(i).get("id")));
 		}

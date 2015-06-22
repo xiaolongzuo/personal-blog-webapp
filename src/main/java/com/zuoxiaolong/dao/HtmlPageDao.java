@@ -1,12 +1,5 @@
 package com.zuoxiaolong.dao;
 
-import com.zuoxiaolong.config.Configuration;
-
-import java.io.File;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -23,13 +16,24 @@ import java.util.List;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.orm.BaseDao;
+import com.zuoxiaolong.orm.Operation;
+import com.zuoxiaolong.orm.TransactionalOperation;
+
+import java.io.File;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author 左潇龙
  * @since 2015年5月26日 上午1:14:47
  */
-public abstract class HtmlPageDao extends BaseDao {
+public class HtmlPageDao extends BaseDao {
 	
-	public static void flush() {
+	public void flush() {
 		String contextPath = Configuration.getSiteUrl();
 		File[] htmlFiles = new File(Configuration.getContextPath("html")).listFiles();
 		List<String> htmlPageList = new ArrayList<String>();
@@ -43,7 +47,7 @@ public abstract class HtmlPageDao extends BaseDao {
 		info("flush html_page success...");
 	}
 
-	public static boolean save(final String url) {
+	public boolean save(final String url) {
         return execute(new TransactionalOperation<Boolean>() {
             @Override
             public Boolean doInConnection(Connection connection) {
@@ -67,7 +71,7 @@ public abstract class HtmlPageDao extends BaseDao {
         });
     }
 	
-	public static boolean updateIsPush(final String url) {
+	public boolean updateIsPush(final String url) {
         return execute(new TransactionalOperation<Boolean>() {
             @Override
             public Boolean doInConnection(Connection connection) {
@@ -85,7 +89,7 @@ public abstract class HtmlPageDao extends BaseDao {
         });
     }
 	
-	public static String findPushUrl() {
+	public String findPushUrl() {
 		return execute(new Operation<String>() {
             @Override
             public String doInConnection(Connection connection) {
@@ -102,5 +106,11 @@ public abstract class HtmlPageDao extends BaseDao {
             }
         });
 	}
-	
+
+
+    @Override
+    public Map<String, String> transfer(ResultSet resultSet) {
+        throw new UnsupportedOperationException();
+    }
+
 }

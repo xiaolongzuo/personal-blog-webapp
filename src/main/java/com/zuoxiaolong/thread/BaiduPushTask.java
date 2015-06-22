@@ -1,11 +1,5 @@
 package com.zuoxiaolong.thread;
 
-import org.apache.log4j.Logger;
-
-import com.zuoxiaolong.api.HttpApiHelper;
-import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.dao.HtmlPageDao;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -21,6 +15,13 @@ import com.zuoxiaolong.dao.HtmlPageDao;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import com.zuoxiaolong.orm.DaoFactory;
+import org.apache.log4j.Logger;
+
+import com.zuoxiaolong.api.HttpApiHelper;
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.dao.HtmlPageDao;
 
 /**
  * @author 左潇龙
@@ -39,7 +40,7 @@ public class BaiduPushTask implements Runnable {
 					first = false;
 					Thread.sleep(1000 * 60 * Integer.valueOf(Configuration.get("baidu.push.thread.wait.minutes")));
 				}
-				HtmlPageDao.flush();
+				DaoFactory.getDao(HtmlPageDao.class).flush();
 				HttpApiHelper.baiduPush(1);
 				Thread.sleep(1000 * 60 * 60 * 24);
 			} catch (Exception e) {

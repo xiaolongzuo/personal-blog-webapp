@@ -1,10 +1,5 @@
 package com.zuoxiaolong.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -21,13 +16,23 @@ import java.sql.SQLException;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.orm.BaseDao;
+import com.zuoxiaolong.orm.Operation;
+import com.zuoxiaolong.orm.TransactionalOperation;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Map;
+
 /**
  * @author 左潇龙
  * @since 2015年5月29日 上午1:04:31
  */
-public abstract class ArticleCategoryDao extends BaseDao {
+public class ArticleCategoryDao extends BaseDao {
 	
-	public static boolean save(final int articleId, final int categoryId) {
+	public boolean save(final int articleId, final int categoryId) {
 		return execute(new TransactionalOperation<Boolean>() {
 			@Override
 			public Boolean doInConnection(Connection connection) {
@@ -45,7 +50,7 @@ public abstract class ArticleCategoryDao extends BaseDao {
 		});
 	} 
 	
-	public static boolean exsits(final int articleId, final int categoryId) {
+	public boolean exsits(final int articleId, final int categoryId) {
 		return execute(new Operation<Boolean>() {
 			@Override
 			public Boolean doInConnection(Connection connection) {
@@ -62,5 +67,9 @@ public abstract class ArticleCategoryDao extends BaseDao {
 			}
 		});
 	}
-	
+
+	@Override
+	public Map<String, String> transfer(ResultSet resultSet) {
+		throw new UnsupportedOperationException();
+	}
 }

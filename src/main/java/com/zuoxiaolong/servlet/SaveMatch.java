@@ -1,17 +1,5 @@
 package com.zuoxiaolong.servlet;
 
-import java.io.IOException;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-
-import net.sf.json.JSONArray;
-
-import com.zuoxiaolong.dao.HeroDao;
-import com.zuoxiaolong.dao.MatchDao;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -27,6 +15,19 @@ import com.zuoxiaolong.dao.MatchDao;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import java.io.IOException;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+
+import com.zuoxiaolong.orm.DaoFactory;
+import net.sf.json.JSONArray;
+
+import com.zuoxiaolong.dao.HeroDao;
+import com.zuoxiaolong.dao.MatchDao;
 
 /**
  * @author 左潇龙
@@ -79,11 +80,11 @@ public class SaveMatch extends AbstractServlet {
 				writeText("防守方第" + (i + 1) + "位英雄重复！");
 				return;
 			}
-			if (!HeroDao.exsits(a[i].trim())) {
+			if (!DaoFactory.getDao(HeroDao.class).exsits(a[i].trim())) {
 				writeText("进攻方第" + (i + 1) + "位英雄在英雄库中没找到，请按照提示输入英雄！");
 				return;
 			}
-			if (!HeroDao.exsits(d[i].trim())) {
+			if (!DaoFactory.getDao(HeroDao.class).exsits(d[i].trim())) {
 				writeText("防守方第" + (i + 1) + "位英雄在英雄库中没找到，请按照提示输入英雄");
 				return;
 			}
@@ -96,7 +97,7 @@ public class SaveMatch extends AbstractServlet {
 			writeText("进攻方和防守方阵容一样，不能进行保存！");
 			return;
 		}
-		if (MatchDao.save(attack,defend,result,count)) {
+		if (DaoFactory.getDao(MatchDao.class).save(attack, defend, result, count)) {
 			writeText("success");
 		} else {
 			writeText("发生未知错误，请联系男神！");

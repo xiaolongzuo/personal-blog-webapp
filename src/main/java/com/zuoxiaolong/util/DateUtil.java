@@ -1,12 +1,5 @@
 package com.zuoxiaolong.util;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.SimpleTimeZone;
-import java.util.TimeZone;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -22,6 +15,13 @@ import java.util.TimeZone;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.SimpleTimeZone;
+import java.util.TimeZone;
 
 /**
  * @author 左潇龙

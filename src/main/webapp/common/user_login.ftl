@@ -22,7 +22,7 @@
 						data:{"username":$("input[name=username]").val(),"password":$("input[name=password]").val()},
 						success:function(data){
 							if(data && data.success){
-								window.location.href="${contextPath}" + data.url;
+								window.location.href=data.url;
 							} else {
                                 $("#login_error_td").css("color","red");
 								$("#login_error_td").html(data);

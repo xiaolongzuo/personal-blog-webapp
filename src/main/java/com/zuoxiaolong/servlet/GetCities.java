@@ -1,13 +1,5 @@
 package com.zuoxiaolong.servlet;
 
-import com.zuoxiaolong.dao.CityDao;
-import com.zuoxiaolong.dao.ProvinceDao;
-import com.zuoxiaolong.util.StringUtil;
-
-import javax.servlet.ServletException;
-import java.io.IOException;
-
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -24,6 +16,14 @@ import java.io.IOException;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.dao.CityDao;
+import com.zuoxiaolong.dao.ProvinceDao;
+import com.zuoxiaolong.orm.DaoFactory;
+import com.zuoxiaolong.util.StringUtil;
+
+import javax.servlet.ServletException;
+import java.io.IOException;
+
 /**
  * @author 左潇龙
  * @since 6/16/2015 10:33 AM
@@ -33,8 +33,8 @@ public class GetCities extends AbstractServlet {
     @Override
     protected void service() throws ServletException, IOException {
         String province = StringUtil.urlDecode(getRequest().getParameter("province"));
-        Integer provinceId = ProvinceDao.getId(province);
-        writeJsonArray(CityDao.getCities(provinceId));
+        Integer provinceId = DaoFactory.getDao(ProvinceDao.class).getId(province);
+        writeJsonArray(DaoFactory.getDao(CityDao.class).getCities(provinceId));
     }
 
 }

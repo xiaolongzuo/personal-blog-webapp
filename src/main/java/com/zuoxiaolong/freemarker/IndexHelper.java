@@ -1,12 +1,5 @@
 package com.zuoxiaolong.freemarker;
 
-import com.zuoxiaolong.algorithm.Random;
-import com.zuoxiaolong.dao.ArticleDao;
-import com.zuoxiaolong.model.ViewMode;
-
-import java.util.List;
-import java.util.Map;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -23,6 +16,14 @@ import java.util.Map;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.algorithm.Random;
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.model.ViewMode;
+import com.zuoxiaolong.orm.DaoFactory;
+
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author 左潇龙
  * @since 2015年5月31日 下午5:07:46
@@ -32,7 +33,7 @@ public abstract class IndexHelper {
 	private static final int DEFAULT_INDEX_ARTICLE_NUMBER = 6;
 
 	public static void putArticleDataMap(Map<String, Object> data, ViewMode viewMode) {
-		List<Map<String, String>> randomList = Random.random(ArticleDao.getArticles("create_date", viewMode), DEFAULT_INDEX_ARTICLE_NUMBER);
+		List<Map<String, String>> randomList = Random.random(DaoFactory.getDao(ArticleDao.class).getArticles("create_date", viewMode), DEFAULT_INDEX_ARTICLE_NUMBER);
         data.put("articles", randomList);
 	}
 	

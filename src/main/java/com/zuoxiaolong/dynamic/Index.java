@@ -1,14 +1,5 @@
 package com.zuoxiaolong.dynamic;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.zuoxiaolong.freemarker.IndexHelper;
-import com.zuoxiaolong.mvc.DataMap;
-import com.zuoxiaolong.mvc.Namespace;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -24,6 +15,15 @@ import com.zuoxiaolong.mvc.Namespace;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.zuoxiaolong.freemarker.IndexHelper;
+import com.zuoxiaolong.mvc.DataMap;
+import com.zuoxiaolong.mvc.Namespace;
 
 /**
  * @author 左潇龙

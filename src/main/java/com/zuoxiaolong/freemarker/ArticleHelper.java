@@ -1,13 +1,5 @@
 package com.zuoxiaolong.freemarker;
 
-import java.util.Map;
-
-import com.zuoxiaolong.dao.ArticleDao;
-import com.zuoxiaolong.dao.CategoryDao;
-import com.zuoxiaolong.dao.CommentDao;
-import com.zuoxiaolong.dao.TagDao;
-import com.zuoxiaolong.model.ViewMode;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -24,6 +16,12 @@ import com.zuoxiaolong.model.ViewMode;
  * limitations under the License.
  */
 
+import java.util.Map;
+
+import com.zuoxiaolong.dao.*;
+import com.zuoxiaolong.model.ViewMode;
+import com.zuoxiaolong.orm.DaoFactory;
+
 /**
  * @author 左潇龙
  * @since 2015年5月31日 下午5:07:46
@@ -31,12 +29,12 @@ import com.zuoxiaolong.model.ViewMode;
 public abstract class ArticleHelper {
 
 	public static void putArticleDataMap(Map<String, Object> data, ViewMode viewMode,int articleId) {
-		ArticleDao.updateCommentCount(articleId);
-		Map<String, String> article = ArticleDao.getArticle(articleId, viewMode);
+		DaoFactory.getDao(ArticleDao.class).updateCommentCount(articleId);
+		Map<String, String> article = DaoFactory.getDao(ArticleDao.class).getArticle(articleId, viewMode);
 		data.put("article", article);
-		data.put("comments", CommentDao.getComments(articleId));
-		data.put("tags", TagDao.getTags(articleId));
-		data.put("categories", CategoryDao.getCategories(articleId));
+		data.put("comments", DaoFactory.getDao(CommentDao.class).getComments(articleId));
+		data.put("tags", DaoFactory.getDao(TagDao.class).getTags(articleId));
+		data.put("categories", DaoFactory.getDao(CategoryDao.class).getCategories(articleId));
 	}
 	
 	public static String generateStaticPath(int articleId) {

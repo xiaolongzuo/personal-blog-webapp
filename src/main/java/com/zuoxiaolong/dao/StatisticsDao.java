@@ -1,10 +1,5 @@
 package com.zuoxiaolong.dao;
 
-import java.sql.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -21,13 +16,22 @@ import java.util.Date;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.orm.BaseDao;
+import com.zuoxiaolong.orm.Operation;
+
+import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
+
 /**
  * @author 左潇龙
  * @since 2015年6月6日 下午6:04:32
  */
-public abstract class StatisticsDao extends BaseDao {
+public class StatisticsDao extends BaseDao {
 
-	public static int getSiteTotalVisitorIpNumber() {
+	public int getSiteTotalVisitorIpNumber() {
 		return execute(new Operation<Integer>() {
 			@Override
 			public Integer doInConnection(Connection connection) {
@@ -46,7 +50,7 @@ public abstract class StatisticsDao extends BaseDao {
 		});
 	}
 
-	public static int getSiteTodayVisitorIpNumber() {
+	public int getSiteTodayVisitorIpNumber() {
 		return execute(new Operation<Integer>() {
 			@Override
 			public Integer doInConnection(Connection connection) {
@@ -68,7 +72,7 @@ public abstract class StatisticsDao extends BaseDao {
 		});
 	}
 
-	public static int getSiteTotalAccessTimes() {
+	public int getSiteTotalAccessTimes() {
 		return execute(new Operation<Integer>() {
 			@Override
 			public Integer doInConnection(Connection connection) {
@@ -87,7 +91,7 @@ public abstract class StatisticsDao extends BaseDao {
 		});
 	}
 	
-	public static int getSiteTodayAccessTimes() {
+	public int getSiteTodayAccessTimes() {
 		return execute(new Operation<Integer>() {
 			@Override
 			public Integer doInConnection(Connection connection) {
@@ -109,7 +113,7 @@ public abstract class StatisticsDao extends BaseDao {
 		});
 	}
 	
-	public static int getArticleTotalAccessTimes() {
+	public int getArticleTotalAccessTimes() {
 		return execute(new Operation<Integer>() {
 			@Override
 			public Integer doInConnection(Connection connection) {
@@ -128,7 +132,7 @@ public abstract class StatisticsDao extends BaseDao {
 		});
 	}
 	
-	public static int getCommentTotalNumber() {
+	public int getCommentTotalNumber() {
 		return execute(new Operation<Integer>() {
 			@Override
 			public Integer doInConnection(Connection connection) {
@@ -147,7 +151,7 @@ public abstract class StatisticsDao extends BaseDao {
 		});
 	}
 	
-	public static int getCommentTodayNumber() {
+	public int getCommentTodayNumber() {
 		return execute(new Operation<Integer>() {
 			@Override
 			public Integer doInConnection(Connection connection) {
@@ -169,7 +173,7 @@ public abstract class StatisticsDao extends BaseDao {
 		});
 	}
 	
-	public static int getUserTotalNumber() {
+	public int getUserTotalNumber() {
 		return execute(new Operation<Integer>() {
 			@Override
 			public Integer doInConnection(Connection connection) {
@@ -188,7 +192,7 @@ public abstract class StatisticsDao extends BaseDao {
 		});
 	}
 	
-	public static int getUserTodayNumber() {
+	public int getUserTodayNumber() {
 		return execute(new Operation<Integer>() {
 			@Override
 			public Integer doInConnection(Connection connection) {
@@ -209,4 +213,10 @@ public abstract class StatisticsDao extends BaseDao {
 			}
 		});
 	}
+
+	@Override
+	public Map<String, String> transfer(ResultSet resultSet) {
+		throw new UnsupportedOperationException();
+	}
+
 }

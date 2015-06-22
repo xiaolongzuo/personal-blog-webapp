@@ -1,25 +1,5 @@
 package com.zuoxiaolong.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
-
-import com.zuoxiaolong.freemarker.ArticleHelper;
-import com.zuoxiaolong.model.ViewMode;
-import com.zuoxiaolong.util.DateUtil;
-import com.zuoxiaolong.util.ImageUtil;
-import com.zuoxiaolong.util.StringUtil;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -36,13 +16,36 @@ import com.zuoxiaolong.util.StringUtil;
  * limitations under the License.
  */
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.zuoxiaolong.orm.BaseDao;
+import com.zuoxiaolong.orm.Operation;
+import com.zuoxiaolong.orm.TransactionalOperation;
+import org.apache.commons.lang.StringUtils;
+
+import com.zuoxiaolong.freemarker.ArticleHelper;
+import com.zuoxiaolong.model.ViewMode;
+import com.zuoxiaolong.util.DateUtil;
+import com.zuoxiaolong.util.ImageUtil;
+import com.zuoxiaolong.util.StringUtil;
+
 /**
  * @author 左潇龙
  * @since 5/7/2015 3:40 PM
  */
-public abstract class ArticleDao extends BaseDao {
+public class ArticleDao extends BaseDao {
 	
-	public static Boolean delete(Integer id) {
+	public Boolean delete(Integer id) {
     	return execute(new TransactionalOperation<Boolean>() {
 			@Override
 			public Boolean doInConnection(Connection connection) {
@@ -62,7 +65,7 @@ public abstract class ArticleDao extends BaseDao {
 		});
     }
 	
-    public static List<Map<String, String>> getPageArticlesByTag(final Map<String, Integer> pager,final int tagId, ViewMode viewMode) {
+    public List<Map<String, String>> getPageArticlesByTag(final Map<String, Integer> pager,final int tagId, ViewMode viewMode) {
 		return execute(new Operation<List<Map<String, String>>>() {
 			@Override
 			public List<Map<String, String>> doInConnection(Connection connection) {
@@ -73,7 +76,7 @@ public abstract class ArticleDao extends BaseDao {
 					statement.setInt(2 , (pager.get("current") - 1) * 10);
 					ResultSet resultSet = statement.executeQuery();
 					while (resultSet.next()) {
-						result.add(ArticleDao.transfer(resultSet, viewMode));
+						result.add(transfer(resultSet, viewMode));
 					}
 				} catch (SQLException e) {
 					error("query article_category failed ..." , e);
@@ -83,7 +86,7 @@ public abstract class ArticleDao extends BaseDao {
 		});
 	}
     
-    public static List<Map<String, String>> getArticlesByTag(final int tagId, ViewMode viewMode) {
+    public List<Map<String, String>> getArticlesByTag(final int tagId, ViewMode viewMode) {
 		return execute(new Operation<List<Map<String, String>>>() {
 			@Override
 			public List<Map<String, String>> doInConnection(Connection connection) {
@@ -93,7 +96,7 @@ public abstract class ArticleDao extends BaseDao {
 					statement.setInt(1 , tagId);
 					ResultSet resultSet = statement.executeQuery();
 					while (resultSet.next()) {
-						result.add(ArticleDao.transfer(resultSet, viewMode));
+						result.add(transfer(resultSet, viewMode));
 					}
 				} catch (SQLException e) {
 					error("query article_category failed ..." , e);
@@ -103,7 +106,7 @@ public abstract class ArticleDao extends BaseDao {
 		});
 	}
     
-    public static List<Map<String, String>> getPageArticlesByCategory(final Map<String, Integer> pager,final int categoryId, ViewMode viewMode) {
+    public List<Map<String, String>> getPageArticlesByCategory(final Map<String, Integer> pager,final int categoryId, ViewMode viewMode) {
 		return execute(new Operation<List<Map<String, String>>>() {
 			@Override
 			public List<Map<String, String>> doInConnection(Connection connection) {
@@ -114,7 +117,7 @@ public abstract class ArticleDao extends BaseDao {
 					statement.setInt(2 , (pager.get("current") - 1) * 10);
 					ResultSet resultSet = statement.executeQuery();
 					while (resultSet.next()) {
-						result.add(ArticleDao.transfer(resultSet, viewMode));
+						result.add(transfer(resultSet, viewMode));
 					}
 				} catch (SQLException e) {
 					error("query article_category failed ..." , e);
@@ -124,7 +127,7 @@ public abstract class ArticleDao extends BaseDao {
 		});
 	}
     
-    public static List<Map<String, String>> getArticlesByCategory(final int categoryId, ViewMode viewMode) {
+    public List<Map<String, String>> getArticlesByCategory(final int categoryId, ViewMode viewMode) {
 		return execute(new Operation<List<Map<String, String>>>() {
 			@Override
 			public List<Map<String, String>> doInConnection(Connection connection) {
@@ -134,7 +137,7 @@ public abstract class ArticleDao extends BaseDao {
 					statement.setInt(1, categoryId);
 					ResultSet resultSet = statement.executeQuery();
 					while (resultSet.next()) {
-						result.add(ArticleDao.transfer(resultSet, viewMode));
+						result.add(transfer(resultSet, viewMode));
 					}
 				} catch (SQLException e) {
 					error("query article_category failed ..." , e);
@@ -144,7 +147,7 @@ public abstract class ArticleDao extends BaseDao {
 		});
 	}
     
-    public static Integer saveOrUpdate(String id, String subject, Integer status,String username, String html, String content, String icon) {
+    public Integer saveOrUpdate(String id, String subject, Integer status,String username, String html, String content, String icon) {
     	return execute(new TransactionalOperation<Integer>() {
 			@Override
 			public Integer doInConnection(Connection connection) {
@@ -191,7 +194,7 @@ public abstract class ArticleDao extends BaseDao {
 		});
     }
     
-    public static Integer saveOrUpdate(String resourceId, String subject, String createDate, Integer status,String username, Integer accessTimes, Integer goodTimes, String html, String content) {
+    public Integer saveOrUpdate(String resourceId, String subject, String createDate, Integer status,String username, Integer accessTimes, Integer goodTimes, String html, String content) {
     	return execute(new TransactionalOperation<Integer>() {
 			@Override
 			public Integer doInConnection(Connection connection) {
@@ -248,7 +251,7 @@ public abstract class ArticleDao extends BaseDao {
 		});
     }
     
-    public static List<Map<String, String>> getPageArticles(final Map<String, Integer> pager, final String orderColumn, final ViewMode viewMode ) {
+    public List<Map<String, String>> getPageArticles(final Map<String, Integer> pager, final String orderColumn, final ViewMode viewMode ) {
         return execute(new Operation<List<Map<String, String>>>() {
             @Override
             public List<Map<String, String>> doInConnection(Connection connection) {
@@ -269,7 +272,7 @@ public abstract class ArticleDao extends BaseDao {
         });
     }
 
-    public static List<Map<String, String>> getArticles(final String order, final ViewMode viewMode ) {
+    public List<Map<String, String>> getArticles(final String order, final ViewMode viewMode ) {
         return execute(new Operation<List<Map<String, String>>>() {
             @Override
             public List<Map<String, String>> doInConnection(Connection connection) {
@@ -289,7 +292,7 @@ public abstract class ArticleDao extends BaseDao {
         });
     }
 
-    public static Map<String, String> getArticle(final int id, final ViewMode viewMode ) {
+    public Map<String, String> getArticle(final int id, final ViewMode viewMode ) {
         return execute(new Operation<Map<String, String>>() {
             @Override
             public Map<String, String> doInConnection(Connection connection) {
@@ -309,40 +312,15 @@ public abstract class ArticleDao extends BaseDao {
         });
     }
     
-    public static boolean updateCommentCount(final int id) {
-        return execute(new TransactionalOperation<Boolean>() {
-            @Override
-            public Boolean doInConnection(Connection connection) {
-                try {
-                    PreparedStatement preparedStatement = connection.prepareStatement("update articles set comment_times=(select count(id) from comments where article_id=?) where id = ?");
-                    preparedStatement.setInt(1, id);
-                    preparedStatement.setInt(2, id);
-                    int number = preparedStatement.executeUpdate();
-                    return number > 0;
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
+    public boolean updateCommentCount(final int id) {
+		return updateTimesCount("articles", "comment_times", "comments", "article_id", id);
     }
 
-    public static boolean updateCount(final int id, final String column) {
-        return execute(new TransactionalOperation<Boolean>() {
-            @Override
-            public Boolean doInConnection(Connection connection) {
-                try {
-                    PreparedStatement preparedStatement = connection.prepareStatement("update articles set " + column + " = " + column + " + 1 where id = ?");
-                    preparedStatement.setInt(1, id);
-                    int number = preparedStatement.executeUpdate();
-                    return number > 0;
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
+    public boolean updateCount(final int id, final String column) {
+		return updateCount(id, "articles", column);
     }
-    
-    private static Map<String, String> transfer(ResultSet resultSet, ViewMode viewMode) {
+
+    public Map<String, String> transfer(ResultSet resultSet, ViewMode viewMode) {
         Map<String, String> article = new HashMap<String, String>();
         try {
             String id = resultSet.getString("id");
@@ -386,7 +364,7 @@ public abstract class ArticleDao extends BaseDao {
         return article;
     }
 
-    private static void putAllTimesHeight(Map<String, String> article) {
+    private void putAllTimesHeight(Map<String, String> article) {
         int max = 10;
         for (String key : article.keySet()) {
             if (key.endsWith("_times") && !key.startsWith("access") && !key.startsWith("comment")) {
@@ -403,5 +381,10 @@ public abstract class ArticleDao extends BaseDao {
             }
         }
     }
+
+	@Override
+	public Map<String, String> transfer(ResultSet resultSet) {
+		throw new UnsupportedOperationException();
+	}
 
 }

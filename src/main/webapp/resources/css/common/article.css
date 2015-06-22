@@ -36,7 +36,7 @@
 .feedbackListSubtitle {  font-weight:normal; font-size:12px;  color:#EE9A00;   }
 .feedbackListSubtitle a {  color:#EE9A00;  }
 .feedbackCon a {color:#EE9A00; }
-.comment_quote {background: #FAEBD7 none repeat scroll 0 0;border: 1px solid #ccc;padding: 15px;}
+.comment_quote {margin:0px 40px;background: #FAEBD7 none repeat scroll 0 0;border: 1px solid #ccc;padding: 15px;}
 .comment_vote {text-align: right;}
 .comment_vote a { padding-left: 10px; text-decoration: none !important;}
 #comment_container {margin:10px;}

@@ -1,10 +1,5 @@
 package com.zuoxiaolong.util;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.regex.Pattern;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -21,6 +16,11 @@ import java.util.regex.Pattern;
  * limitations under the License.
  */
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.regex.Pattern;
+
 /**
  * @author 左潇龙
  * @since 2015年5月30日 下午8:05:03
@@ -28,7 +28,11 @@ import java.util.regex.Pattern;
 public abstract class StringUtil {
 	
 	private static final String chinesePattern = "[\u4e00-\u9fa5]{1,1}";
-	
+
+	public static String replaceSlants(String url) {
+		return url.replaceAll("/+", "/");
+	}
+
 	public static String escapeHtml(String html) {
 		StringBuffer stringBuffer = new StringBuffer();
         char[] chars = html.toCharArray();

@@ -1,13 +1,5 @@
 package com.zuoxiaolong.servlet;
 
-import java.io.IOException;
-import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-
-import com.zuoxiaolong.dao.HeroDao;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -24,6 +16,16 @@ import com.zuoxiaolong.dao.HeroDao;
  * limitations under the License.
  */
 
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.dao.HeroDao;
+import com.zuoxiaolong.orm.DaoFactory;
+
 /**
  * @author 左潇龙
  * @since 2015年5月10日 上午1:30:40
@@ -36,7 +38,7 @@ public class HeroFinder extends AbstractServlet {
 	protected void service() throws ServletException, IOException {
 		HttpServletRequest request = getRequest();
 		String param = request.getParameter("term");
-		List<String> heroList = HeroDao.getList(param);
+		List<String> heroList = DaoFactory.getDao(HeroDao.class).getList(param);
 		writeJsonArray(heroList);
 	}
 

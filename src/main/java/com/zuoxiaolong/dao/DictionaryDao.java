@@ -1,14 +1,5 @@
 package com.zuoxiaolong.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -25,13 +16,25 @@ import java.util.Map;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.orm.BaseDao;
+import com.zuoxiaolong.orm.Operation;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author 左潇龙
  * @since 2015年5月29日 上午1:04:31
  */
-public abstract class DictionaryDao extends BaseDao {
+public class DictionaryDao extends BaseDao {
 	
-	public static List<Map<String, String>> getDictionariesByType(final String type) {
+	public List<Map<String, String>> getDictionariesByType(final String type) {
 		return execute(new Operation<List<Map<String, String>>>() {
 			@Override
 			public List<Map<String, String>> doInConnection(Connection connection) {
@@ -50,7 +53,7 @@ public abstract class DictionaryDao extends BaseDao {
 			}
 		});
 	}
-	public static String getName(final Integer id) {
+	public String getName(final Integer id) {
 		return execute(new Operation<String>() {
 			@Override
 			public String doInConnection(Connection connection) {
@@ -69,7 +72,7 @@ public abstract class DictionaryDao extends BaseDao {
 		});
 	}
 	
-	public static Map<String, String> transfer(ResultSet resultSet){
+	public Map<String, String> transfer(ResultSet resultSet){
 		Map<String, String> tag = new HashMap<String, String>();
 		try {
 			tag.put("id", resultSet.getString("id"));

@@ -1,12 +1,5 @@
 package com.zuoxiaolong.algorithm;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import net.sf.json.JSONArray;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -22,6 +15,13 @@ import net.sf.json.JSONArray;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import net.sf.json.JSONArray;
 
 /**
  * @author 左潇龙

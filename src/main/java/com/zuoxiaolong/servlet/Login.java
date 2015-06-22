@@ -1,19 +1,5 @@
 package com.zuoxiaolong.servlet;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang.StringUtils;
-
-import com.zuoxiaolong.dao.UserDao;
-import com.zuoxiaolong.util.DirtyWordsUtil;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -29,6 +15,22 @@ import com.zuoxiaolong.util.DirtyWordsUtil;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+
+import com.zuoxiaolong.dao.StatisticsDao;
+import com.zuoxiaolong.orm.DaoFactory;
+import org.apache.commons.lang.StringUtils;
+
+import com.zuoxiaolong.dao.UserDao;
+import com.zuoxiaolong.util.DirtyWordsUtil;
 
 /**
  * @author 左潇龙
@@ -84,7 +86,7 @@ public class Login extends AbstractServlet {
 			writeText("密码长度不能超过30");
 			return;
 		}
-		Map<String, String> user = UserDao.login(username, password);
+		Map<String, String> user = DaoFactory.getDao(UserDao.class).login(username, password);
 		if (user != null) {
 			request.getSession().setAttribute("user", user);
 			result.put("success", true);
@@ -92,13 +94,13 @@ public class Login extends AbstractServlet {
 			writeJsonObject(result);
 			return;
 		}
-		Map<String, String> userInDB = UserDao.getUser(username);
+		Map<String, String> userInDB = DaoFactory.getDao(UserDao.class).getUser(username);
 		if (userInDB != null) {
 			writeText("用户名已存在或密码错误");
 			return;
 		}
-		if (UserDao.saveCommonLogin(username, password)) {
-			Map<String, String> newUser = UserDao.getUser(username);
+		if (DaoFactory.getDao(UserDao.class).saveCommonLogin(username, password)) {
+			Map<String, String> newUser = DaoFactory.getDao(UserDao.class).getUser(username);
 			request.getSession().setAttribute("user", newUser);
 			result.put("success", true);
 			result.put("url", getDynamicUrl());

@@ -1,5 +1,21 @@
 package com.zuoxiaolong.reptile;
 
+/*
+ * Copyright 2002-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -15,6 +31,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.zuoxiaolong.orm.DaoFactory;
+import com.zuoxiaolong.util.JsoupUtil;
 import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
@@ -36,22 +54,6 @@ import com.zuoxiaolong.dao.TagDao;
 import com.zuoxiaolong.util.EnrypyUtil;
 import com.zuoxiaolong.util.IOUtil;
 import com.zuoxiaolong.util.ImageUtil;
-
-/*
- * Copyright 2002-2015 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 /**
  * @author 左潇龙
@@ -173,7 +175,7 @@ public abstract class Cnblogs {
         
         //获取纯文本内容
         StringBuffer stringBuffer = new StringBuffer();
-        appendText(bodyElement, stringBuffer);
+        JsoupUtil.appendText(bodyElement, stringBuffer);
         String content = stringBuffer.toString().replace("'", "\"");
 
         //获取文章基本属性，使用文章索引里面的postdesc获取
@@ -207,7 +209,7 @@ public abstract class Cnblogs {
 		}
 
         //如果resourceId已经存在则更新，否则保存
-		Integer id = ArticleDao.saveOrUpdate(resourceId, subject, createDate, status, username, accessTimes, goodTimes, html, content);
+		Integer id = DaoFactory.getDao(ArticleDao.class).saveOrUpdate(resourceId, subject, createDate, status, username, accessTimes, goodTimes, html, content);
         if (logger.isInfoEnabled()) {
     		logger.info("saveOrUpdate article : [" + resourceId + ":" + subject + "]");
 		}
@@ -243,22 +245,22 @@ public abstract class Cnblogs {
         }
         for (int i = 0; i < tags.length; i++) {
             String tag = Jsoup.parseBodyFragment(tags[i]).text().trim();
-            Integer tagId = TagDao.getId(tag);
+            Integer tagId = DaoFactory.getDao(TagDao.class).getId(tag);
             if (tagId == null) {
-                tagId = TagDao.save(tag);
+                tagId = DaoFactory.getDao(TagDao.class).save(tag);
             }
-            if (!ArticleTagDao.exsits(id, tagId)) {
-                ArticleTagDao.save(id, tagId);
+            if (!DaoFactory.getDao(ArticleTagDao.class).exsits(id, tagId)) {
+                DaoFactory.getDao(ArticleTagDao.class).save(id, tagId);
             }
         }
         for (int i = 0; i < categories.length; i++) {
             String category = Jsoup.parseBodyFragment(categories[i]).text().trim();
-            Integer categoryId = CategoryDao.getId(category);
+            Integer categoryId = DaoFactory.getDao(CategoryDao.class).getId(category);
             if (categoryId == null) {
-                categoryId = CategoryDao.save(category);
+                categoryId = DaoFactory.getDao(CategoryDao.class).save(category);
             }
-            if (!ArticleCategoryDao.exsits(id, categoryId)) {
-                ArticleCategoryDao.save(id, categoryId);
+            if (!DaoFactory.getDao(ArticleCategoryDao.class).exsits(id, categoryId)) {
+                DaoFactory.getDao(ArticleCategoryDao.class).save(id, categoryId);
             }
         }
     }
@@ -314,7 +316,7 @@ public abstract class Cnblogs {
                 }
                 StringBuffer commentContent = new StringBuffer();
                 List<Node> nodes = commentContentElement.childNodes();
-                refCommentId = CommentDao.getId(String.valueOf(refCommentId));
+                refCommentId = DaoFactory.getDao(CommentDao.class).getId(String.valueOf(refCommentId));
                 boolean find = true;
                 for (int j = 0 ; j < nodes.size(); j++) {
                 	Node node = nodes.get(j);
@@ -326,17 +328,17 @@ public abstract class Cnblogs {
                         commentContent.append(node.toString());
                     }
                 }
-                Integer commentId = CommentDao.getId(commentResourceId);
+                Integer commentId = DaoFactory.getDao(CommentDao.class).getId(commentResourceId);
                 if (commentId != null) {
-                	CommentDao.updateContent(commentId, commentContent.toString());
+                    DaoFactory.getDao(CommentDao.class).updateContent(commentId, commentContent.toString());
 					continue;
 				}
-            	commentId = CommentDao.save(id, "127.0.0.1", commentDate, commentContent.toString(), null, nickName, commentResourceId, refCommentId);
+            	commentId = DaoFactory.getDao(CommentDao.class).save(id, "127.0.0.1", commentDate, commentContent.toString(), null, nickName, commentResourceId, refCommentId);
             	if (commentGoodTimes > 0) {
-                	CommentDao.updateCount(commentId, "good_times", commentGoodTimes);
+                    DaoFactory.getDao(CommentDao.class).updateCount(commentId, "good_times", commentGoodTimes);
 				}
                 if (commentBadTimes > 0) {
-                	CommentDao.updateCount(commentId, "bad_times", commentBadTimes);
+                    DaoFactory.getDao(CommentDao.class).updateCount(commentId, "bad_times", commentBadTimes);
 				}
             }
             if (commentElements.size() < 50) {
@@ -351,7 +353,7 @@ public abstract class Cnblogs {
     	for (Element element : elements) {
 			String img = element.toString();
 			String imgUrl = element.attr("src");
-			String path = ImageDao.getPath(imgUrl);
+			String path = DaoFactory.getDao(ImageDao.class).getPath(imgUrl);
 			if (path == null) {
 				path = ImageUtil.generatePath(imgUrl);
 				try {
@@ -364,7 +366,7 @@ public abstract class Cnblogs {
 				} catch (Exception e) {
 					logger.error("save image error for : " + imgUrl, e);
 				}
-				ImageDao.save(path, imgUrl);
+                DaoFactory.getDao(ImageDao.class).save(path, imgUrl);
 			}
             result.put(img, img.replace(imgUrl, Configuration.getSiteUrl(path)));
 		}
@@ -433,7 +435,7 @@ public abstract class Cnblogs {
 
         //获取纯文本内容
         StringBuffer stringBuffer = new StringBuffer();
-        appendText(bodyElement, stringBuffer);
+        JsoupUtil.appendText(bodyElement, stringBuffer);
         String content = stringBuffer.toString().replace("'", "\"");
 
         //获取文章基本属性，使用文章索引里面的postdesc获取
@@ -449,7 +451,7 @@ public abstract class Cnblogs {
 
         Integer status = 1;
         //如果resourceId已经存在则更新，否则保存
-		Integer id = ArticleDao.saveOrUpdate(resourceId, subject, createDate, status, username, accessTimes, goodTimes, html, content);
+		Integer id = DaoFactory.getDao(ArticleDao.class).saveOrUpdate(resourceId, subject, createDate, status, username, accessTimes, goodTimes, html, content);
         if (logger.isInfoEnabled()) {
     		logger.info("saveOrUpdate article : [" + resourceId + ":" + subject + "]");
 		}
@@ -501,24 +503,6 @@ public abstract class Cnblogs {
         return codeList;
     }
 
-    public static void appendText(Element element, StringBuffer stringBuffer) {
-        List<Node> nodes = element.childNodes();
-        if (nodes != null && nodes.size() > 0) {
-            for (int i = 0; i < nodes.size(); i++) {
-                Node node = nodes.get(i);
-                if (node instanceof TextNode) {
-                    String text = ((TextNode) node).text();
-                    if (text.trim().length() > 0) {
-                        stringBuffer.append(text);
-                    }
-                } else {
-                    Element child = (Element) node;
-                    appendText(child, stringBuffer);
-                }
-            }
-        }
-    }
-    
     public static void main(String[] args) throws IOException {
 		fetchArticlesCommon();
 	}

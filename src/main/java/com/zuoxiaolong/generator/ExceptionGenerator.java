@@ -1,4 +1,6 @@
-package com.zuoxiaolong.generator;/*
+package com.zuoxiaolong.generator;
+
+/*
  * Copyright 2002-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -41,6 +43,11 @@ public class ExceptionGenerator implements Generator {
 
             data.put("error", "该页面没有找到，请检查链接地址是否正确！");
             htmlPath = Configuration.getContextPath("html/not_found.html");
+            writerNotFound = new FileWriter(htmlPath);
+            FreemarkerHelper.generate("common","error", writerNotFound, data);
+
+            data.put("error", "该页面需要先登录才能访问！");
+            htmlPath = Configuration.getContextPath("html/login_warn.html");
             writerNotFound = new FileWriter(htmlPath);
             FreemarkerHelper.generate("common","error", writerNotFound, data);
         } catch (IOException e) {

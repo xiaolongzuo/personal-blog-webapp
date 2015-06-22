@@ -1,14 +1,5 @@
 package com.zuoxiaolong.dynamic;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.zuoxiaolong.dao.CommentDao;
-import com.zuoxiaolong.mvc.DataMap;
-import com.zuoxiaolong.mvc.Namespace;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -25,6 +16,16 @@ import com.zuoxiaolong.mvc.Namespace;
  * limitations under the License.
  */
 
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.zuoxiaolong.dao.CommentDao;
+import com.zuoxiaolong.mvc.DataMap;
+import com.zuoxiaolong.mvc.Namespace;
+import com.zuoxiaolong.orm.DaoFactory;
+
 /**
  * @author 左潇龙
  * @since 2015年5月27日 上午1:54:53
@@ -34,7 +35,7 @@ public class NewComment implements DataMap {
 	
 	@Override
 	public void putCustomData(Map<String, Object> data,HttpServletRequest request, HttpServletResponse response) {
-		data.put("newComments", CommentDao.getComments());
+		data.put("newComments", DaoFactory.getDao(CommentDao.class).getComments());
 	}
 
 }

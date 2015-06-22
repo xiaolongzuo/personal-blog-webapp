@@ -1,13 +1,5 @@
 package com.zuoxiaolong.filter;
 
-import com.zuoxiaolong.config.Configuration;
-
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -23,6 +15,16 @@ import java.io.IOException;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.servlet.AbstractServlet;
+import com.zuoxiaolong.util.StringUtil;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 /**
  * @author 左潇龙
@@ -40,7 +42,7 @@ public class AdminFilter implements Filter {
     	String indexUrl = "/admin/admin_index.ftl";
     	String adminDefaultUrl = "/admin";
     	String contextPath = Configuration.getSiteUrl();
-    	String requestUri = ((HttpServletRequest)servletRequest).getRequestURI();
+    	String requestUri = StringUtil.replaceSlants(((HttpServletRequest)servletRequest).getRequestURI());
     	if (loginPage.equals(requestUri) || loginUrl.equals(requestUri)) {
 			filterChain.doFilter(servletRequest, servletResponse);
 			return;
@@ -49,8 +51,7 @@ public class AdminFilter implements Filter {
     		((HttpServletResponse)servletResponse).sendRedirect(contextPath + indexUrl);
     		return;
 		}
-    	HttpSession session = ((HttpServletRequest)servletRequest).getSession(false);
-        if (session == null || session.getAttribute("admin") == null || !session.getAttribute("admin").equals("admin")) {
+        if (!AbstractServlet.isAdminLogin((HttpServletRequest)servletRequest)) {
         	((HttpServletResponse)servletResponse).sendRedirect(contextPath + loginPage);
         	return;
 		}

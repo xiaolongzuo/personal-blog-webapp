@@ -1,11 +1,5 @@
 package com.zuoxiaolong.mvc;
 
-import com.zuoxiaolong.config.Configuration;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -21,6 +15,12 @@ import java.util.Map;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import com.zuoxiaolong.config.Configuration;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author 左潇龙

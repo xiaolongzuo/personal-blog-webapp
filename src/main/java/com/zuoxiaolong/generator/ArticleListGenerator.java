@@ -1,16 +1,5 @@
 package com.zuoxiaolong.generator;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.List;
-import java.util.Map;
-
-import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.dao.ArticleDao;
-import com.zuoxiaolong.freemarker.ArticleListHelper;
-import com.zuoxiaolong.freemarker.FreemarkerHelper;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -27,6 +16,18 @@ import com.zuoxiaolong.freemarker.FreemarkerHelper;
  * limitations under the License.
  */
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.List;
+import java.util.Map;
+
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.freemarker.ArticleListHelper;
+import com.zuoxiaolong.freemarker.FreemarkerHelper;
+import com.zuoxiaolong.orm.DaoFactory;
+
 /**
  * @author 左潇龙
  * @since 2015年5月10日 下午3:17:37
@@ -41,7 +42,7 @@ public class ArticleListGenerator implements Generator {
 	}
 	
 	private void generateArticleList(String orderColumn) {
-		List<Map<String, String>> articles = ArticleDao.getArticles(orderColumn, VIEW_MODE);
+		List<Map<String, String>> articles = DaoFactory.getDao(ArticleDao.class).getArticles(orderColumn, VIEW_MODE);
 		int total = articles.size();
 		int page = (total % 10 == 0) ? (total / 10) : (total / 10 + 1);
 		for (int i = 1; i < page + 1; i++) {

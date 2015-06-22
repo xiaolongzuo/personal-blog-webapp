@@ -1,20 +1,5 @@
 package com.zuoxiaolong.filter;
 
-import java.io.IOException;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-
-import net.sf.json.JSONObject;
-
-import com.zuoxiaolong.dao.AccessLogDao;
-import com.zuoxiaolong.util.HttpUtil;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -30,6 +15,23 @@ import com.zuoxiaolong.util.HttpUtil;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import java.io.IOException;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+
+import com.zuoxiaolong.dao.UserDao;
+import com.zuoxiaolong.orm.DaoFactory;
+import net.sf.json.JSONObject;
+
+import com.zuoxiaolong.dao.AccessLogDao;
+import com.zuoxiaolong.util.HttpUtil;
 
 /**
  * @author 左潇龙
@@ -48,7 +50,7 @@ public class AccessLogFilter implements Filter {
             String visitorIp = HttpUtil.getVisitorIp(httpServletRequest);
             String url = httpServletRequest.getRequestURI();
             String params = httpServletRequest.getParameterMap() == null ? "" : JSONObject.fromObject(httpServletRequest.getParameterMap()).toString();
-            AccessLogDao.save(visitorIp, url, params);
+            DaoFactory.getDao(AccessLogDao.class).save(visitorIp, url, params);
         }
         filterChain.doFilter(servletRequest, servletResponse);
     }

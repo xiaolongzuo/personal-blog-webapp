@@ -1,8 +1,5 @@
 package com.zuoxiaolong.cache;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -18,6 +15,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author 左潇龙

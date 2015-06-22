@@ -1,18 +1,5 @@
 package com.zuoxiaolong.listener;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-
-import org.apache.log4j.Logger;
-
-import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.generator.Generators;
-import com.zuoxiaolong.search.LuceneHelper;
-import com.zuoxiaolong.thread.BaiduPushTask;
-import com.zuoxiaolong.thread.DirtyWordsFlushTask;
-import com.zuoxiaolong.thread.Executor;
-import com.zuoxiaolong.thread.FetchTask;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -28,6 +15,19 @@ import com.zuoxiaolong.thread.FetchTask;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+
+import org.apache.log4j.Logger;
+
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.generator.Generators;
+import com.zuoxiaolong.search.LuceneHelper;
+import com.zuoxiaolong.thread.BaiduPushTask;
+import com.zuoxiaolong.thread.DirtyWordsFlushTask;
+import com.zuoxiaolong.thread.Executor;
+import com.zuoxiaolong.thread.FetchTask;
 
 /**
  * @author 左潇龙
@@ -60,8 +60,8 @@ public class ConfigurationListener implements ServletContextListener {
 //			} catch (IOException e) {
 //				throw new RuntimeException(e);
 //			}
-			LuceneHelper.updateIndex();
-            Generators.generate();
+//			LuceneHelper.updateIndex();
+//            Generators.generate();
         } else {
             if (logger.isInfoEnabled()) {
                 logger.info("starting fetch and generate thread...");

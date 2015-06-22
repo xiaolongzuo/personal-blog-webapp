@@ -1,16 +1,5 @@
 package com.zuoxiaolong.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -27,13 +16,28 @@ import java.util.Map;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.orm.BaseDao;
+import com.zuoxiaolong.orm.Operation;
+import com.zuoxiaolong.orm.TransactionalOperation;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author 左潇龙
  * @since 5/19/2015 10:15 AM
  */
-public abstract class MatchDao extends BaseDao {
+public class MatchDao extends BaseDao {
 
-    public static int count() {
+    public int count() {
         return execute(new Operation<Integer>() {
             @Override
             public Integer doInConnection(Connection connection) {
@@ -51,7 +55,7 @@ public abstract class MatchDao extends BaseDao {
         });
     }
     
-    public static List<Map<String,String>> getAll() {
+    public List<Map<String,String>> getAll() {
         return execute(new Operation<List<Map<String,String>>>() {
             @Override
             public List<Map<String,String>> doInConnection(Connection connection) {
@@ -75,7 +79,7 @@ public abstract class MatchDao extends BaseDao {
         });
     }
 
-    public static List<Map<String,String>> findMatchesResult(String h) {
+    public List<Map<String,String>> findMatchesResult(String h) {
         return execute(new Operation<List<Map<String,String>>>() {
             @Override
             public List<Map<String,String>> doInConnection(Connection connection) {
@@ -101,7 +105,7 @@ public abstract class MatchDao extends BaseDao {
         });
     }
 
-    public static boolean save(final String a, final String d , final Integer result,final Integer count) {
+    public boolean save(final String a, final String d , final Integer result,final Integer count) {
         return execute(new TransactionalOperation<Boolean>() {
             @Override
             public Boolean doInConnection(Connection connection) {
@@ -127,6 +131,11 @@ public abstract class MatchDao extends BaseDao {
                 return false;
             }
         });
+    }
+
+    @Override
+    public Map<String, String> transfer(ResultSet resultSet) {
+        throw new UnsupportedOperationException();
     }
 
 }

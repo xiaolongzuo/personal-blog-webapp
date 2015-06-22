@@ -200,28 +200,28 @@ alter table users add CONSTRAINT `USERS_FK_LANGUAGE_ID` FOREIGN KEY (`language_i
 alter table users drop qq_nick_name ;
 alter table users change qq_avatar_url_30 image_path VARCHAR(200);
 
---到此
+--生产环境到此
+
+alter table comments change nick_name resource_username VARCHAR (40);
 
 create table questions (
 	id INT NOT NULL AUTO_INCREMENT,
 	title VARCHAR(200) NOT NULL,
-	description VARCHAR(1500),
+	description TEXT NOT NULL,
 	username VARCHAR (40),
-  	nick_name VARCHAR (40),
-  	create_date DATE,
+  create_date TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
 	primary key (id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT = 1;
 
 create table answers (
 	id INT NOT NULL AUTO_INCREMENT,
 	question_id INT NOT NULL,
-	answer VARCHAR(1500),
+	answer TEXT NOT NULL,
 	visitor_ip char(20) NOT NULL,
-  	city char(20) NOT NULL,
-  	username VARCHAR (40),
-  	nick_name VARCHAR (40),
-  	answer_date DATE,
-  	reference_comment_id INT,
+	city char(20) NOT NULL,
+	username VARCHAR (40),
+	answer_date TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+	reference_answer_id INT,
 	primary key (id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT = 1;
 
@@ -229,15 +229,20 @@ alter table answers add CONSTRAINT `ANSWERS_FK_QUESTION_ID` FOREIGN KEY (`questi
 
 ALTER TABLE articles CHANGE COLUMN resource_id resource_id VARCHAR(200) NULL ;
 
+alter table questions add content TEXT NOT NULL;
+alter table questions add access_times INT DEFAULT 0;
+alter table questions add answer_number INT DEFAULT 0;
+alter table questions add is_resolved TINYINT DEFAULT 0;
+
+alter table answers add is_solution TINYINT DEFAULT 0;
 
 create table chats (
 	id INT NOT NULL AUTO_INCREMENT,
 	content VARCHAR(1500),
 	visitor_ip char(20) NOT NULL,
-  	city char(20) NOT NULL,
-  	username VARCHAR (40),
-  	nick_name VARCHAR (40),
-  	reference_comment_id INT,
-  	chat_date DATE,
+	city char(20) NOT NULL,
+	username VARCHAR (40),
+	reference_comment_id INT,
+	chat_date TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
 	primary key (id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT = 1;

@@ -1,16 +1,5 @@
 package com.zuoxiaolong.mvc;
 
-import java.io.IOException;
-import java.util.Map;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.zuoxiaolong.servlet.Servlet;
-import com.zuoxiaolong.util.StringUtil;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -26,6 +15,17 @@ import com.zuoxiaolong.util.StringUtil;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import java.io.IOException;
+import java.util.Map;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.zuoxiaolong.servlet.Servlet;
+import com.zuoxiaolong.util.StringUtil;
 
 /**
  * @author 左潇龙

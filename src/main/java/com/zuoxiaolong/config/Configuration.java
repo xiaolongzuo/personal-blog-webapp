@@ -1,15 +1,5 @@
 package com.zuoxiaolong.config;
 
-import freemarker.template.Version;
-import org.apache.log4j.Logger;
-
-import javax.servlet.ServletContext;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -25,6 +15,16 @@ import java.util.Properties;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import freemarker.template.Version;
+import org.apache.log4j.Logger;
+
+import javax.servlet.ServletContext;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
 
 /**
  * @author 左潇龙

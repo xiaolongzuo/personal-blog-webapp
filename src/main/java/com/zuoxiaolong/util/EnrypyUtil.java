@@ -1,13 +1,5 @@
 package com.zuoxiaolong.util;
 
-import java.security.Key;
-import java.security.KeyFactory;
-import java.security.MessageDigest;
-import java.security.spec.X509EncodedKeySpec;
-import java.util.Base64;
-
-import javax.crypto.Cipher;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -23,6 +15,14 @@ import javax.crypto.Cipher;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import java.security.Key;
+import java.security.KeyFactory;
+import java.security.MessageDigest;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
+
+import javax.crypto.Cipher;
 
 /**
  * @author 左潇龙

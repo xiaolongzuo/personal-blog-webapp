@@ -1,26 +1,5 @@
 package com.zuoxiaolong.servlet;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
-import org.apache.log4j.Logger;
-
-import com.zuoxiaolong.freemarker.ArticleHelper;
-import com.zuoxiaolong.freemarker.ArticleListHelper;
-import com.zuoxiaolong.freemarker.IndexHelper;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -36,6 +15,29 @@ import com.zuoxiaolong.freemarker.IndexHelper;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.util.StringUtil;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+import org.apache.log4j.Logger;
+
+import com.zuoxiaolong.freemarker.ArticleHelper;
+import com.zuoxiaolong.freemarker.ArticleListHelper;
+import com.zuoxiaolong.freemarker.IndexHelper;
 
 /**
  * @author 左潇龙
@@ -112,6 +114,13 @@ public abstract class AbstractServlet implements Servlet {
 
 	private static final Pattern STATIC_ARTICLE_LIST_PATTERN = Pattern.compile("/html/article_list_[a-zA-Z_]+_[0-9]+\\.html");
 
+	public static String handleQuote(String html) {
+		String quotePrefix = "<fieldset class=\"comment_quote\"><legend>引用</legend>";
+		String quoteSuffix = "</fieldset>";
+		html = StringUtil.replace(html, "<blockquote>", "</blockquote>", quotePrefix, quoteSuffix);
+		return html;
+	}
+
 	public static boolean isAdminLogin(HttpServletRequest request) {
 		HttpSession session = request.getSession(false);
 		if (session != null && session.getAttribute("admin") != null && "admin".equals(session.getAttribute("admin"))) {
@@ -133,13 +142,24 @@ public abstract class AbstractServlet implements Servlet {
 		String requestUri = request.getHeader("Referer");
 		Matcher matcher = STATIC_ARTICLE_PATTERN.matcher(requestUri);
 		if (matcher.find()) {
-			return ArticleHelper.generateDynamicPath(matcher.group());
+			return Configuration.getSiteUrl(ArticleHelper.generateDynamicPath(matcher.group()));
 		}
 		matcher = STATIC_ARTICLE_LIST_PATTERN.matcher(requestUri);
 		if (matcher.find()) {
-			return ArticleListHelper.generateDynamicPath(matcher.group());
+			return Configuration.getSiteUrl(ArticleListHelper.generateDynamicPath(matcher.group()));
 		}
-		return IndexHelper.generateDynamicPath();
+		int urlEnd = requestUri.lastIndexOf("?");
+		if (urlEnd < 0) {
+			urlEnd = requestUri.length();
+		}
+		if (requestUri.substring(0, urlEnd).endsWith(".ftl")) {
+			if (requestUri.startsWith("http://")) {
+				return requestUri;
+			} else {
+				return Configuration.getSiteUrl(requestUri);
+			}
+		}
+		return Configuration.getSiteUrl(IndexHelper.generateDynamicPath());
 	}
 
 	public static void writeJsonObject(HttpServletResponse response, Object object) {

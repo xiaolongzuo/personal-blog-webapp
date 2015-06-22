@@ -1,21 +1,5 @@
 package com.zuoxiaolong.servlet;
 
-import com.qq.connect.QQConnectException;
-import com.qq.connect.api.OpenID;
-import com.qq.connect.api.qzone.UserInfo;
-import com.qq.connect.javabeans.qzone.UserInfoBean;
-import com.qq.connect.oauth.Oauth;
-import com.zuoxiaolong.dao.UserDao;
-import org.apache.log4j.Logger;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -31,6 +15,23 @@ import java.util.Map;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import com.qq.connect.QQConnectException;
+import com.qq.connect.api.OpenID;
+import com.qq.connect.api.qzone.UserInfo;
+import com.qq.connect.javabeans.qzone.UserInfoBean;
+import com.qq.connect.oauth.Oauth;
+import com.zuoxiaolong.dao.UserDao;
+import com.zuoxiaolong.orm.DaoFactory;
+import org.apache.log4j.Logger;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author 左潇龙
@@ -56,9 +57,9 @@ public class Callback extends HttpServlet {
 				userMap.put("username", openId);
 				userMap.put("nickName", nickName);
 				userMap.put("imagePath", imagePath);
-				UserDao.saveOrUpdateQqLogin(openId, nickName, imagePath);
+				DaoFactory.getDao(UserDao.class).saveOrUpdateQqLogin(openId, nickName, imagePath);
 				request.getSession().setAttribute("user", userMap);
-				response.sendRedirect("/blog/index.ftl");
+				response.sendRedirect("/blog/question_index.ftl");
 			} else {
 				AbstractServlet.writeText(response, "很抱歉，我们没能正确获取到您的信息，原因是：" + userInfoBean.getMsg());
 			}

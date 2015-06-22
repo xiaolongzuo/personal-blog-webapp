@@ -1,16 +1,5 @@
 package com.zuoxiaolong.util;
 
-import com.zuoxiaolong.cache.CacheManager;
-import com.zuoxiaolong.config.Configuration;
-
-import java.io.File;
-import java.io.FileFilter;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -26,6 +15,17 @@ import java.util.Random;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import com.zuoxiaolong.cache.CacheManager;
+import com.zuoxiaolong.config.Configuration;
+
+import java.io.File;
+import java.io.FileFilter;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
 
 /**
  * @author 左潇龙

@@ -1,14 +1,5 @@
 package com.zuoxiaolong.servlet;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang.StringUtils;
-
-import com.zuoxiaolong.dao.UserDao;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -24,6 +15,17 @@ import com.zuoxiaolong.dao.UserDao;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.orm.DaoFactory;
+import org.apache.commons.lang.StringUtils;
+
+import com.zuoxiaolong.dao.UserDao;
 
 /**
  * @author 左潇龙
@@ -49,11 +51,11 @@ public class UpdatePassword extends AbstractServlet {
 			writeText("密码长度不能超过30");
 			return;
 		}
-		if (UserDao.login(username, originPassword) == null) {
+		if (DaoFactory.getDao(UserDao.class).login(username, originPassword) == null) {
 			writeText("原密码不正确");
 			return;
 		} 
-		if (UserDao.updatePassword(username, newPassword)) {
+		if (DaoFactory.getDao(UserDao.class).updatePassword(username, newPassword)) {
 			writeText("success");
 		} else {
 			writeText("更新密码失败");

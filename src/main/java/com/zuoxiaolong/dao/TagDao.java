@@ -1,17 +1,5 @@
 package com.zuoxiaolong.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.zuoxiaolong.util.StringUtil;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -28,13 +16,28 @@ import com.zuoxiaolong.util.StringUtil;
  * limitations under the License.
  */
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.zuoxiaolong.orm.BaseDao;
+import com.zuoxiaolong.orm.Operation;
+import com.zuoxiaolong.orm.TransactionalOperation;
+import com.zuoxiaolong.util.StringUtil;
+
 /**
  * @author 左潇龙
  * @since 2015年5月29日 上午1:04:31
  */
-public abstract class TagDao extends BaseDao {
+public class TagDao extends BaseDao {
 	
-	public static List<Map<String, String>> getHotTags() {
+	public List<Map<String, String>> getHotTags() {
 		return execute(new Operation<List<Map<String, String>>>() {
 			@Override
 			public List<Map<String, String>> doInConnection(Connection connection) {
@@ -53,7 +56,7 @@ public abstract class TagDao extends BaseDao {
 		});
 	}
 	
-	public static List<Map<String, String>> getTags(final int articleId) {
+	public List<Map<String, String>> getTags(final int articleId) {
 		return execute(new Operation<List<Map<String, String>>>() {
 			@Override
 			public List<Map<String, String>> doInConnection(Connection connection) {
@@ -73,7 +76,7 @@ public abstract class TagDao extends BaseDao {
 		});
 	}
 
-	public static Integer save(final String tagName) {
+	public Integer save(final String tagName) {
 		return execute(new TransactionalOperation<Integer>() {
 			@Override
 			public Integer doInConnection(Connection connection) {
@@ -95,7 +98,7 @@ public abstract class TagDao extends BaseDao {
 		});
 	} 
 	
-	public static Integer getId(final String tagName) {
+	public Integer getId(final String tagName) {
 		return execute(new Operation<Integer>() {
 			@Override
 			public Integer doInConnection(Connection connection) {
@@ -114,7 +117,7 @@ public abstract class TagDao extends BaseDao {
 		});
 	}
 	
-	public static Map<String, String> transfer(ResultSet resultSet){
+	public Map<String, String> transfer(ResultSet resultSet){
 		Map<String, String> tag = new HashMap<String, String>();
 		try {
 			tag.put("id", resultSet.getString("id"));

@@ -1,16 +1,5 @@
 package com.zuoxiaolong.servlet;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-
-import org.jsoup.Jsoup;
-
-import com.zuoxiaolong.dao.ArticleDao;
-import com.zuoxiaolong.mvc.RequestMapping;
-import com.zuoxiaolong.reptile.Cnblogs;
-import com.zuoxiaolong.util.StringUtil;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -27,6 +16,19 @@ import com.zuoxiaolong.util.StringUtil;
  * limitations under the License.
  */
 
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+
+import com.zuoxiaolong.orm.DaoFactory;
+import com.zuoxiaolong.util.JsoupUtil;
+import org.jsoup.Jsoup;
+
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.mvc.RequestMapping;
+import com.zuoxiaolong.reptile.Cnblogs;
+import com.zuoxiaolong.util.StringUtil;
+
 /**
  * @author 左潇龙
  * @since 2015年6月18日 上午2:28:03
@@ -41,13 +43,11 @@ public class AdminUpdateArticle extends AbstractServlet {
 		String html = getRequest().getParameter("content");
 		String status = getRequest().getParameter("status");
 		String icon = getRequest().getParameter("icon");
-		String quotePrefix = "<fieldset class=\"comment_quote\"><legend>引用</legend>";
-		String quoteSuffix = "</fieldset>";
-		html = StringUtil.replace(html, "<blockquote>", "</blockquote>", quotePrefix, quoteSuffix);
+		html = handleQuote(html);
 		
 		StringBuffer stringBuffer = new StringBuffer();
-		Cnblogs.appendText(Jsoup.parse(html), stringBuffer);
-		ArticleDao.saveOrUpdate(id, subject, Integer.valueOf(status), "左潇龙", html, stringBuffer.toString(), icon);
+		JsoupUtil.appendText(Jsoup.parse(html), stringBuffer);
+		DaoFactory.getDao(ArticleDao.class).saveOrUpdate(id, subject, Integer.valueOf(status), "左潇龙", html, stringBuffer.toString(), icon);
 		writeText("success");
 	}
 

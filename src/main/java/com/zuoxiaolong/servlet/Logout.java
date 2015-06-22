@@ -1,10 +1,5 @@
 package com.zuoxiaolong.servlet;
 
-import java.io.IOException;
-import java.util.Map;
-
-import javax.servlet.ServletException;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -20,6 +15,11 @@ import javax.servlet.ServletException;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import java.io.IOException;
+import java.util.Map;
+
+import javax.servlet.ServletException;
 
 /**
  * @author 左潇龙

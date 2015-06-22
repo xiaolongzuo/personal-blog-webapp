@@ -1,15 +1,5 @@
 package com.zuoxiaolong.generator;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.log4j.Logger;
-
-import com.zuoxiaolong.config.Configuration;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -25,6 +15,16 @@ import com.zuoxiaolong.config.Configuration;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+
+import com.zuoxiaolong.config.Configuration;
 
 /**
  * @author 左潇龙

@@ -1,8 +1,5 @@
 package com.zuoxiaolong.servlet;
 
-import javax.servlet.ServletException;
-import java.io.IOException;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -19,6 +16,14 @@ import java.io.IOException;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.dao.QuestionDao;
+import com.zuoxiaolong.orm.DaoFactory;
+import com.zuoxiaolong.util.JsoupUtil;
+
+import javax.servlet.ServletException;
+import java.io.IOException;
+import java.util.Map;
+
 /**
  * @author 左潇龙
  * @since 6/19/2015 6:18 PM
@@ -29,7 +34,17 @@ public class Ask extends AbstractServlet {
     protected void service() throws ServletException, IOException {
         String title = getRequest().getParameter("title");
         String description = getRequest().getParameter("description");
-
+        if (!isLogin()) {
+            throw new RuntimeException();
+        }
+        String content = "";
+        if (description.trim().length() > 0) {
+            content = JsoupUtil.getText(description);
+        }
+        Integer id = DaoFactory.getDao(QuestionDao.class).save(getUsername(), title, handleQuote(description), content);
+        if (id != null) {
+            writeText("success");
+        }
     }
 
 }

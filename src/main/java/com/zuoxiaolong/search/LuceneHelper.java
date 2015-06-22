@@ -1,8 +1,25 @@
 package com.zuoxiaolong.search;
 
+/*
+ * Copyright 2002-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import com.zuoxiaolong.config.Configuration;
 import com.zuoxiaolong.dao.ArticleDao;
 import com.zuoxiaolong.model.ViewMode;
+import com.zuoxiaolong.orm.DaoFactory;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
@@ -33,22 +50,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/*
- * Copyright 2002-2015 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 /**
  * @author 左潇龙
  * @since 2015年5月31日 下午11:20:02
@@ -63,7 +64,7 @@ public abstract class LuceneHelper {
 
     public static void updateIndex() {
         try {
-            List<Map<String, String>> articles = ArticleDao.getArticles("create_date", ViewMode.DYNAMIC);
+            List<Map<String, String>> articles = DaoFactory.getDao(ArticleDao.class).getArticles("create_date", ViewMode.DYNAMIC);
             Directory dir = FSDirectory.open(Paths.get(INDEX_PATH));
             Analyzer analyzer = new SmartChineseAnalyzer();
             IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
@@ -107,7 +108,7 @@ public abstract class LuceneHelper {
                 if (!idList.contains(id)) {
                     String indexedContent = doc.get("indexedContent");
                     TokenStream tokenStream = analyzer.tokenStream("indexedContent", indexedContent);
-                    Map<String, String> article = ArticleDao.getArticle(id, ViewMode.DYNAMIC);
+                    Map<String, String> article = DaoFactory.getDao(ArticleDao.class).getArticle(id, ViewMode.DYNAMIC);
                     String highlighterString = highlighter.getBestFragment(tokenStream, indexedContent);
                     if (highlighterString.contains(SUBJECT_CONTENT_SEPARATOR)) {
                         article.put("subject",highlighterString.split(SUBJECT_CONTENT_SEPARATOR)[0]);

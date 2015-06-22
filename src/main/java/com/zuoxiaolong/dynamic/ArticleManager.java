@@ -1,18 +1,5 @@
 package com.zuoxiaolong.dynamic;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-
-import com.zuoxiaolong.dao.ArticleDao;
-import com.zuoxiaolong.model.ViewMode;
-import com.zuoxiaolong.mvc.DataMap;
-import com.zuoxiaolong.mvc.Namespace;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -29,6 +16,20 @@ import com.zuoxiaolong.mvc.Namespace;
  * limitations under the License.
  */
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.zuoxiaolong.orm.DaoFactory;
+import org.apache.commons.lang.StringUtils;
+
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.model.ViewMode;
+import com.zuoxiaolong.mvc.DataMap;
+import com.zuoxiaolong.mvc.Namespace;
+
 /**
  * @author 左潇龙
  * @since 2015年5月27日 上午2:13:35
@@ -43,13 +44,13 @@ public class ArticleManager implements DataMap {
 		if (StringUtils.isNotBlank(currentString)) {
 			current = Integer.valueOf(currentString);
 		}
-		int total = ArticleDao.getArticles("create_date", VIEW_MODE).size();
+		int total = DaoFactory.getDao(ArticleDao.class).getArticles("create_date", VIEW_MODE).size();
 		int page = (total % 10 == 0) ? (total / 10) : (total / 10 + 1);
 		Map<String, Integer> pager = new HashMap<String, Integer>();
 		pager.put("current", current);
 		pager.put("total", total);
 		pager.put("page", page);
-		data.put("pageArticles", ArticleDao.getPageArticles(pager, "create_date", ViewMode.DYNAMIC));
+		data.put("pageArticles", DaoFactory.getDao(ArticleDao.class).getPageArticles(pager, "create_date", ViewMode.DYNAMIC));
 		data.put("pager", pager);
 		data.put("firstArticleListUrl", "/admin/article_manager.ftl?current=1");
 		data.put("preArticleListUrl", "/admin/article_manager.ftl?current=" + (current - 1));

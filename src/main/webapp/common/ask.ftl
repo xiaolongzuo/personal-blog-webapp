@@ -1,7 +1,11 @@
     <script type="application/javascript">
     $(document).ready(function(){
-    	$("#ask_button").click(function(){
-	    	window.location.href="${contextPath}/question/question_input.ftl";
+    	$("#ask_button").click(function() {
+            if (isLogin()) {
+                window.location.href="${contextPath}/question/question_input.ftl";
+            } else {
+                alert("请先在右侧登录以后才能提问");
+            }
 	    });
     });
 	</script>

@@ -101,6 +101,11 @@
         <error-code>404</error-code>
         <location>/html/not_found.html</location>
     </error-page>
+
+    <error-page>
+        <error-code>403</error-code>
+        <location>/html/login_warn.html</location>
+    </error-page>
     
     <error-page>
         <exception-type>java.lang.Throwable</exception-type>

@@ -1,10 +1,5 @@
 package com.zuoxiaolong.util;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -20,6 +15,11 @@ import java.io.InputStream;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * @author 左潇龙

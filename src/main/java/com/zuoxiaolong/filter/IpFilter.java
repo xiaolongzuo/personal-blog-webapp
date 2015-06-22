@@ -1,19 +1,5 @@
 package com.zuoxiaolong.filter;
 
-import java.io.IOException;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.zuoxiaolong.cache.CacheManager;
-import com.zuoxiaolong.util.HttpUtil;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -30,6 +16,20 @@ import com.zuoxiaolong.util.HttpUtil;
  * limitations under the License.
  */
 
+import java.io.IOException;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.zuoxiaolong.cache.CacheManager;
+import com.zuoxiaolong.util.HttpUtil;
+
 /**
  * @author 左潇龙
  * @since 5/15/2015 5:30 PM
@@ -43,7 +43,7 @@ public class IpFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         String visitorIp = HttpUtil.getVisitorIp((HttpServletRequest) servletRequest);
         if (CacheManager.getConcurrentHashMapCache().get(visitorIp) != null) {
-            ((HttpServletResponse)servletResponse).sendError(HttpServletResponse.SC_FORBIDDEN);
+            ((HttpServletResponse)servletResponse).sendError(HttpServletResponse.SC_BAD_REQUEST);
             return ;
         }
         filterChain.doFilter(servletRequest,servletResponse);

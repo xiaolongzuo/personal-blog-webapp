@@ -1,8 +1,5 @@
 package com.zuoxiaolong.thread;
 
-import com.zuoxiaolong.util.DirtyWordsUtil;
-import org.apache.log4j.Logger;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -18,6 +15,9 @@ import org.apache.log4j.Logger;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import com.zuoxiaolong.util.DirtyWordsUtil;
+import org.apache.log4j.Logger;
 
 /**
  * @author 左潇龙

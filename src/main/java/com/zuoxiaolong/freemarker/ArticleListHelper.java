@@ -1,16 +1,5 @@
 package com.zuoxiaolong.freemarker;
 
-import com.zuoxiaolong.dao.ArticleDao;
-import com.zuoxiaolong.dao.CategoryDao;
-import com.zuoxiaolong.dao.TagDao;
-import com.zuoxiaolong.model.ViewMode;
-import com.zuoxiaolong.search.LuceneHelper;
-import com.zuoxiaolong.util.StringUtil;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -27,6 +16,19 @@ import java.util.Map;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.dao.CategoryDao;
+import com.zuoxiaolong.dao.TagDao;
+import com.zuoxiaolong.dao.UserDao;
+import com.zuoxiaolong.model.ViewMode;
+import com.zuoxiaolong.orm.DaoFactory;
+import com.zuoxiaolong.search.LuceneHelper;
+import com.zuoxiaolong.util.StringUtil;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author 左潇龙
  * @since 2015年5月31日 下午5:14:48
@@ -39,18 +41,18 @@ public class ArticleListHelper {
 		pager.put("current", current);
 		pager.put("total", total);
 		pager.put("page", page);
-		data.put("pageArticles", ArticleDao.getPageArticles(pager, orderColumn, viewMode));
+		data.put("pageArticles", DaoFactory.getDao(ArticleDao.class).getPageArticles(pager, orderColumn, viewMode));
 		data.put("pager", pager);
 		if (viewMode == ViewMode.STATIC) {
-			data.put("firstArticleListUrl", ArticleListHelper.generateStaticPath(orderColumn, 1));
-			data.put("preArticleListUrl", ArticleListHelper.generateStaticPath(orderColumn, current - 1));
-			data.put("nextArticleListUrl", ArticleListHelper.generateStaticPath(orderColumn, current + 1));
-			data.put("lastArticleListUrl", ArticleListHelper.generateStaticPath(orderColumn, page));
+			data.put("firstPageUrl", ArticleListHelper.generateStaticPath(orderColumn, 1));
+			data.put("prePageUrl", ArticleListHelper.generateStaticPath(orderColumn, current - 1));
+			data.put("nextPageUrl", ArticleListHelper.generateStaticPath(orderColumn, current + 1));
+			data.put("lastPageUrl", ArticleListHelper.generateStaticPath(orderColumn, page));
 		} else {
-			data.put("firstArticleListUrl", ArticleListHelper.generateDynamicPath(orderColumn, 1));
-			data.put("preArticleListUrl", ArticleListHelper.generateDynamicPath(orderColumn, current - 1));
-			data.put("nextArticleListUrl", ArticleListHelper.generateDynamicPath(orderColumn, current + 1));
-			data.put("lastArticleListUrl", ArticleListHelper.generateDynamicPath(orderColumn, page));
+			data.put("firstPageUrl", ArticleListHelper.generateDynamicPath(orderColumn, 1));
+			data.put("prePageUrl", ArticleListHelper.generateDynamicPath(orderColumn, current - 1));
+			data.put("nextPageUrl", ArticleListHelper.generateDynamicPath(orderColumn, current + 1));
+			data.put("lastPageUrl", ArticleListHelper.generateDynamicPath(orderColumn, page));
 		}
 	}
 
@@ -65,42 +67,42 @@ public class ArticleListHelper {
 		data.put("searchText", searchText);
 		data.put("pageArticles", articles.subList((current - 1) * 10, current * 10 > articles.size() ? articles.size() : current * 10));
 		data.put("pager", pager);
-		data.put("firstArticleListUrl", ArticleListHelper.generateDynamicSearchTextPath(searchText, 1));
-		data.put("preArticleListUrl", ArticleListHelper.generateDynamicSearchTextPath(searchText, current - 1));
-		data.put("nextArticleListUrl", ArticleListHelper.generateDynamicSearchTextPath(searchText, current + 1));
-		data.put("lastArticleListUrl", ArticleListHelper.generateDynamicSearchTextPath(searchText, page));
+		data.put("firstPageUrl", ArticleListHelper.generateDynamicSearchTextPath(searchText, 1));
+		data.put("prePageUrl", ArticleListHelper.generateDynamicSearchTextPath(searchText, current - 1));
+		data.put("nextPageUrl", ArticleListHelper.generateDynamicSearchTextPath(searchText, current + 1));
+		data.put("lastPageUrl", ArticleListHelper.generateDynamicSearchTextPath(searchText, page));
 	}
 	
 	public static void putArticleListDataMapByTag(Map<String, Object> data, ViewMode viewMode, String tag, int current) {
-		int tagId = TagDao.getId(tag);
-		int total = ArticleDao.getArticlesByTag(tagId, viewMode).size();
+		int tagId = DaoFactory.getDao(TagDao.class).getId(tag);
+		int total = DaoFactory.getDao(ArticleDao.class).getArticlesByTag(tagId, viewMode).size();
 		int page = (total % 10 == 0) ? (total / 10) : (total / 10 + 1);
 		Map<String, Integer> pager = new HashMap<String, Integer>();
 		pager.put("current", current);
 		pager.put("total", total);
 		pager.put("page", page);
-		data.put("pageArticles", ArticleDao.getPageArticlesByTag(pager, tagId, viewMode));
+		data.put("pageArticles", DaoFactory.getDao(ArticleDao.class).getPageArticlesByTag(pager, tagId, viewMode));
 		data.put("pager", pager);
-		data.put("firstArticleListUrl", ArticleListHelper.generateDynamicTagPath(tag, 1));
-		data.put("preArticleListUrl", ArticleListHelper.generateDynamicTagPath(tag, current - 1));
-		data.put("nextArticleListUrl", ArticleListHelper.generateDynamicTagPath(tag, current + 1));
-		data.put("lastArticleListUrl", ArticleListHelper.generateDynamicTagPath(tag, page));
+		data.put("firstPageUrl", ArticleListHelper.generateDynamicTagPath(tag, 1));
+		data.put("prePageUrl", ArticleListHelper.generateDynamicTagPath(tag, current - 1));
+		data.put("nextPageUrl", ArticleListHelper.generateDynamicTagPath(tag, current + 1));
+		data.put("lastPageUrl", ArticleListHelper.generateDynamicTagPath(tag, page));
 	}
 	
 	public static void putArticleListDataMapByCategory(Map<String, Object> data, ViewMode viewMode, String category, int current) {
-		int categoryId = CategoryDao.getId(category);
-		int total = ArticleDao.getArticlesByCategory(categoryId, viewMode).size();
+		int categoryId = DaoFactory.getDao(CategoryDao.class).getId(category);
+		int total = DaoFactory.getDao(ArticleDao.class).getArticlesByCategory(categoryId, viewMode).size();
 		int page = (total % 10 == 0) ? (total / 10) : (total / 10 + 1);
 		Map<String, Integer> pager = new HashMap<String, Integer>();
 		pager.put("current", current);
 		pager.put("total", total);
 		pager.put("page", page);
-		data.put("pageArticles", ArticleDao.getPageArticlesByCategory(pager, categoryId, viewMode));
+		data.put("pageArticles", DaoFactory.getDao(ArticleDao.class).getPageArticlesByCategory(pager, categoryId, viewMode));
 		data.put("pager", pager);
-		data.put("firstArticleListUrl", ArticleListHelper.generateDynamicCategoryPath(category, 1));
-		data.put("preArticleListUrl", ArticleListHelper.generateDynamicCategoryPath(category, current - 1));
-		data.put("nextArticleListUrl", ArticleListHelper.generateDynamicCategoryPath(category, current + 1));
-		data.put("lastArticleListUrl", ArticleListHelper.generateDynamicCategoryPath(category, page));
+		data.put("firstPageUrl", ArticleListHelper.generateDynamicCategoryPath(category, 1));
+		data.put("prePageUrl", ArticleListHelper.generateDynamicCategoryPath(category, current - 1));
+		data.put("nextPageUrl", ArticleListHelper.generateDynamicCategoryPath(category, current + 1));
+		data.put("lastPageUrl", ArticleListHelper.generateDynamicCategoryPath(category, page));
 	}
 
 	public static String generateStaticPath(String column, int current) {

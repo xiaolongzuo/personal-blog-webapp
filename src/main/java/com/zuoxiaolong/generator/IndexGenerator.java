@@ -1,14 +1,5 @@
 package com.zuoxiaolong.generator;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Map;
-
-import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.freemarker.FreemarkerHelper;
-import com.zuoxiaolong.freemarker.IndexHelper;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -24,6 +15,15 @@ import com.zuoxiaolong.freemarker.IndexHelper;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Map;
+
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.freemarker.FreemarkerHelper;
+import com.zuoxiaolong.freemarker.IndexHelper;
 
 /**
  * @author 左潇龙

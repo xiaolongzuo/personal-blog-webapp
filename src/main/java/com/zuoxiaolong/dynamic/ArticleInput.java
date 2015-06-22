@@ -1,15 +1,5 @@
 package com.zuoxiaolong.dynamic;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.zuoxiaolong.dao.ArticleDao;
-import com.zuoxiaolong.model.ViewMode;
-import com.zuoxiaolong.mvc.DataMap;
-import com.zuoxiaolong.mvc.Namespace;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -26,6 +16,17 @@ import com.zuoxiaolong.mvc.Namespace;
  * limitations under the License.
  */
 
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.model.ViewMode;
+import com.zuoxiaolong.mvc.DataMap;
+import com.zuoxiaolong.mvc.Namespace;
+import com.zuoxiaolong.orm.DaoFactory;
+
 /**
  * @author 左潇龙
  * @since 2015年6月18日 下午2:47:47
@@ -37,7 +38,7 @@ public class ArticleInput implements DataMap {
 	public void putCustomData(Map<String, Object> data, HttpServletRequest request, HttpServletResponse response) {
 		String id = request.getParameter("id");
 		if (id != null) {
-			data.put("article", ArticleDao.getArticle(Integer.valueOf(id), ViewMode.DYNAMIC));
+			data.put("article", DaoFactory.getDao(ArticleDao.class).getArticle(Integer.valueOf(id), ViewMode.DYNAMIC));
 		}
 	}
 

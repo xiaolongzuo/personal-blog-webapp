@@ -4,8 +4,8 @@
 <#include "../common/head.ftl">
 <link href="${contextPath}/resources/css/common/article.css" rel="stylesheet"/>
 <link href="${contextPath}/resources/css/common/code.css" rel="stylesheet"/>
-<script type="text/javascript" src="${contextPath}/resources/js/common/counter.js"></script>
 <script type="text/javascript">
+	counter({"articleId":$("#articleId").val(),"type":1,"column":"access_times"});
 	$(document).ready(function(){
 		$("body").on("click",".content_reply_a",function(){
 			scrollTo("#comment_div_"+$(this).attr("reference_comment_id"));

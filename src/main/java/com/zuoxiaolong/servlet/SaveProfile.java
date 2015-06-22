@@ -1,12 +1,5 @@
 package com.zuoxiaolong.servlet;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-
-import com.zuoxiaolong.dao.UserDao;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -23,6 +16,14 @@ import com.zuoxiaolong.dao.UserDao;
  * limitations under the License.
  */
 
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+
+import com.zuoxiaolong.dao.UserDao;
+import com.zuoxiaolong.orm.DaoFactory;
+
 /**
  * @author 左潇龙
  * @since 2015年6月16日 上午12:05:05
@@ -38,7 +39,7 @@ public class SaveProfile extends AbstractServlet {
 		String province = request.getParameter("province");
 		String city = request.getParameter("city");
 		Integer languageId = Integer.valueOf(request.getParameter("languageId"));
-		if (UserDao.updateProfile(getUsername(), province, city, languageId)) {
+		if (DaoFactory.getDao(UserDao.class).updateProfile(getUsername(), province, city, languageId)) {
 			writeText("success");
 		} else {
 			writeText("更新资料失败");

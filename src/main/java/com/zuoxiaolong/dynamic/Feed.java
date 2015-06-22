@@ -1,18 +1,5 @@
 package com.zuoxiaolong.dynamic;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.zuoxiaolong.dao.ArticleDao;
-import com.zuoxiaolong.model.ViewMode;
-import com.zuoxiaolong.mvc.DataMap;
-import com.zuoxiaolong.mvc.Namespace;
-import com.zuoxiaolong.util.DateUtil;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -29,6 +16,20 @@ import com.zuoxiaolong.util.DateUtil;
  * limitations under the License.
  */
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.model.ViewMode;
+import com.zuoxiaolong.mvc.DataMap;
+import com.zuoxiaolong.mvc.Namespace;
+import com.zuoxiaolong.orm.DaoFactory;
+import com.zuoxiaolong.util.DateUtil;
+
 /**
  * @author 左潇龙
  * @since 5/28/2015 7:08 PM
@@ -41,7 +42,7 @@ public class Feed implements DataMap {
         response.addHeader("Content-Type","text/xml; charset=utf-8");
         Map<String, Integer> pager = new HashMap<>();
         pager.put("current", 1);
-        data.put("articles", ArticleDao.getPageArticles(pager , "create_date", ViewMode.STATIC));
+        data.put("articles", DaoFactory.getDao(ArticleDao.class).getPageArticles(pager, "create_date", ViewMode.STATIC));
         data.put("lastBuildDate", DateUtil.rfc822(new Date()));
     }
 

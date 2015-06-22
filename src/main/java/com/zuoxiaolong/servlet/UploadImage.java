@@ -1,20 +1,5 @@
 package com.zuoxiaolong.servlet;
 
-import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.util.IOUtil;
-import com.zuoxiaolong.util.ImageUtil;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.lang.StringUtils;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -30,6 +15,21 @@ import java.util.List;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.util.IOUtil;
+import com.zuoxiaolong.util.ImageUtil;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.lang.StringUtils;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * @author 左潇龙

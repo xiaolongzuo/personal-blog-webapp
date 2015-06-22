@@ -1,11 +1,5 @@
 package com.zuoxiaolong.servlet;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-
-import com.zuoxiaolong.dao.UserDao;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -22,6 +16,13 @@ import com.zuoxiaolong.dao.UserDao;
  * limitations under the License.
  */
 
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+
+import com.zuoxiaolong.dao.UserDao;
+import com.zuoxiaolong.orm.DaoFactory;
+
 /**
  * @author 左潇龙
  * @since 2015年6月18日 下午7:08:23
@@ -33,7 +34,7 @@ public class UpdateImagePath extends AbstractServlet {
 		if (!isLogin()) {
 			throw new RuntimeException();
 		}
-		if (UserDao.uploadImage(getUsername(), getRequest().getParameter("imagePath"))) {
+		if (DaoFactory.getDao(UserDao.class).uploadImage(getUsername(), getRequest().getParameter("imagePath"))) {
 			writeText("success");
 		}
 	}

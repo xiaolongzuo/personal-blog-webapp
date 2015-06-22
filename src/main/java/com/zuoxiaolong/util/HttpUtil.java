@@ -1,10 +1,5 @@
 package com.zuoxiaolong.util;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
-import javax.servlet.http.HttpServletRequest;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -20,6 +15,11 @@ import javax.servlet.http.HttpServletRequest;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author 左潇龙

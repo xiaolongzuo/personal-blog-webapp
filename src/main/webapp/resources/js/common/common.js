@@ -1,3 +1,26 @@
+function counter(data) {
+	$(document).ready(function() {
+		$.ajax({
+			url:contextPath + "/counter.do",
+			type:"POST",
+			data:data
+		});
+	});
+}
+
+function isLogin() {
+	var isLogin;
+	$.ajax({
+		url: contextPath + "/isLogin.do",
+		type: "GET",
+		async: false,
+		success: function(result) {
+			isLogin = result;
+		}
+	});
+	return isLogin && isLogin == 'true';
+}
+
 function searchArticles(name, value) {
 	var url = contextPath + '/blog/article_list.ftl?current=1';
 	url = url + '&' + name + '=' + encodeURI(value);
@@ -88,7 +111,7 @@ function remark(){
     	url:contextPath + "/counter.do",
     	async: false,
     	type:"POST",
-        data:{"articleId":articleId,"column":checked},
+        data:{"type":1,"articleId":articleId,"column":checked},
         success:function(data){
         	result = data;
         	if(data && data == 'exists') {

@@ -1,28 +1,5 @@
 package com.zuoxiaolong.filter;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-
-import com.zuoxiaolong.freemarker.FreemarkerHelper;
-import com.zuoxiaolong.freemarker.IndexHelper;
-import com.zuoxiaolong.model.ViewMode;
-import com.zuoxiaolong.mvc.DataMap;
-import com.zuoxiaolong.mvc.DataMapLoader;
-import com.zuoxiaolong.servlet.AbstractServlet;
-import com.zuoxiaolong.util.StringUtil;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -39,6 +16,31 @@ import com.zuoxiaolong.util.StringUtil;
  * limitations under the License.
  */
 
+import java.io.IOException;
+import java.util.*;
+import java.util.regex.Pattern;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.zuoxiaolong.cache.CacheManager;
+import com.zuoxiaolong.config.Configuration;
+import org.apache.commons.lang.StringUtils;
+
+import com.zuoxiaolong.freemarker.FreemarkerHelper;
+import com.zuoxiaolong.freemarker.IndexHelper;
+import com.zuoxiaolong.model.ViewMode;
+import com.zuoxiaolong.mvc.DataMap;
+import com.zuoxiaolong.mvc.DataMapLoader;
+import com.zuoxiaolong.servlet.AbstractServlet;
+import com.zuoxiaolong.util.StringUtil;
+
 /**
  * @author 左潇龙
  * @since 2015年5月24日 上午1:24:45
@@ -47,42 +49,96 @@ public class DynamicFilter implements Filter {
 	
 	private Map<String, DataMap> dataMap = new HashMap<String, DataMap>();
 
+	private String[] loginFilterUrls;
+
 	@Override
 	public void destroy() {
 	}
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		String requestUri = null;
+		String requestUri = StringUtil.replaceSlants(((HttpServletRequest)request).getRequestURI());
 		try {
-			requestUri = ((HttpServletRequest)request).getRequestURI();
-			if (StringUtils.isEmpty(StringUtil.replaceStartSlant(requestUri))) {
-				requestUri = IndexHelper.generateDynamicPath();
-			}
 			Map<String, Object> data = FreemarkerHelper.buildCommonDataMap(FreemarkerHelper.getNamespace(requestUri), ViewMode.DYNAMIC);
-			String dataMapKey = requestUri.substring(0,requestUri.lastIndexOf("."));
-			DataMap current = dataMap.get(dataMapKey);
-			if (current == null) {
-				if (dataMapKey.startsWith("/")) {
-					current = dataMap.get(dataMapKey.substring(1));
-				} else {
-					current = dataMap.get("/" + dataMapKey);
-				}
+			boolean forbidden = loginFilter(data, requestUri, request);
+			if (forbidden) {
+				((HttpServletResponse)response).sendError(HttpServletResponse.SC_FORBIDDEN);
+				return;
 			}
-			if (current != null) {
-				current.putCustomData(data, (HttpServletRequest)request, (HttpServletResponse)response);
-			}
-			data.put("user", AbstractServlet.getUser((HttpServletRequest) request));
+			String template = putCustomData(data, requestUri, request, response);
 			response.setCharacterEncoding("UTF-8");
-			FreemarkerHelper.generateByTemplatePath(dataMapKey + ".ftl", response.getWriter(), data);
+			FreemarkerHelper.generateByTemplatePath(template + ".ftl", response.getWriter(), data);
 		} catch (Exception e) {
-			throw new RuntimeException(requestUri,e);
+			throw new RuntimeException(requestUri, e);
+		}
+	}
+
+	private String putCustomData(Map<String, Object> data,String requestUri, ServletRequest request,ServletResponse response) {
+		if (StringUtils.isEmpty(StringUtil.replaceStartSlant(requestUri))) {
+			requestUri = IndexHelper.generateDynamicPath();
+		}
+		String dataMapKey = requestUri.substring(0,requestUri.lastIndexOf("."));
+		DataMap current = dataMap.get(dataMapKey);
+		if (current == null) {
+			if (dataMapKey.startsWith("/")) {
+				current = dataMap.get(dataMapKey.substring(1));
+			} else {
+				current = dataMap.get("/" + dataMapKey);
+			}
+		}
+		if (current != null) {
+			current.putCustomData(data, (HttpServletRequest)request, (HttpServletResponse)response);
+		}
+		return dataMapKey;
+	}
+
+	private boolean loginFilter(Map<String, Object> data, String requesturi, ServletRequest request) {
+		Map<String, String> user = AbstractServlet.getUser((HttpServletRequest) request);
+		if (user != null) {
+			data.put("user", user);
+			return false;
+		}
+		Set<String> cachedLoginFilterExcludeUrls = (Set<String>)CacheManager.getConcurrentHashMapCache().get("loginFilterExcludeUrls");
+		if (cachedLoginFilterExcludeUrls != null && cachedLoginFilterExcludeUrls.contains(requesturi)) {
+			return false;
+		}
+		Set<String> cachedLoginFilterUrls = (Set<String>)CacheManager.getConcurrentHashMapCache().get("loginFilterUrls");
+		if (cachedLoginFilterUrls != null && cachedLoginFilterUrls.contains(requesturi)) {
+			return true;
+		}
+		boolean isLoginFilterUrl = false;
+		for (int i = 0; i < loginFilterUrls.length; i++) {
+			if (Pattern.matches(loginFilterUrls[i], requesturi)) {
+				isLoginFilterUrl = true;
+				break;
+			}
+		}
+		synchronized (this) {
+			if (isLoginFilterUrl) {
+				if (cachedLoginFilterUrls == null) {
+					cachedLoginFilterUrls = new HashSet<>();
+				}
+				cachedLoginFilterUrls.add(requesturi);
+				CacheManager.getConcurrentHashMapCache().set("loginFilterUrls", cachedLoginFilterUrls);
+			} else {
+				if (cachedLoginFilterExcludeUrls == null) {
+					cachedLoginFilterExcludeUrls = new HashSet<>();
+				}
+				cachedLoginFilterExcludeUrls.add(requesturi);
+				CacheManager.getConcurrentHashMapCache().set("loginFilterExcludeUrls", cachedLoginFilterExcludeUrls);
+			}
+		}
+		if (isLoginFilterUrl) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 
 	@Override
 	public void init(FilterConfig arg0) throws ServletException {
 		dataMap = DataMapLoader.load();
+		loginFilterUrls = Configuration.get("login.filter.url") == null ? new String[0] : Configuration.get("login.filter.url").split(",");
 	}
 	
 }

@@ -1,12 +1,5 @@
 package com.zuoxiaolong.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -23,13 +16,24 @@ import java.util.List;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.orm.BaseDao;
+import com.zuoxiaolong.orm.Operation;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author 左潇龙
  * @since 2015年5月19日 上午12:51:37
  */
-public abstract class HeroDao extends BaseDao {
+public class HeroDao extends BaseDao {
 
-	public static Boolean exsits(final String fullName) {
+	public Boolean exsits(final String fullName) {
 		return execute(new Operation<Boolean>() {
 			@Override
 			public Boolean doInConnection(Connection connection) {
@@ -46,7 +50,7 @@ public abstract class HeroDao extends BaseDao {
 		});
 	}
 
-	public static List<String> getList(final String param) {
+	public List<String> getList(final String param) {
 		return execute(new Operation<List<String>>() {
 			@Override
 			public List<String> doInConnection(Connection connection) {
@@ -66,4 +70,10 @@ public abstract class HeroDao extends BaseDao {
 			}
 		});
 	}
+
+	@Override
+	public Map<String, String> transfer(ResultSet resultSet) {
+		throw new UnsupportedOperationException();
+	}
+
 }

@@ -1,15 +1,5 @@
 package com.zuoxiaolong.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.Map;
-
-import com.zuoxiaolong.util.EnrypyUtil;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -26,13 +16,27 @@ import com.zuoxiaolong.util.EnrypyUtil;
  * limitations under the License.
  */
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.zuoxiaolong.orm.BaseDao;
+import com.zuoxiaolong.orm.DaoFactory;
+import com.zuoxiaolong.orm.Operation;
+import com.zuoxiaolong.orm.TransactionalOperation;
+import com.zuoxiaolong.util.EnrypyUtil;
+
 /**
  * @author 左潇龙
  * @since 2015年5月27日 上午12:04:43
  */
-public abstract class UserDao extends BaseDao {
+public class UserDao extends BaseDao {
 	
-	public static Map<String, String> login(String username , String password) {
+	public Map<String, String> login(String username , String password) {
 		return execute(new Operation<Map<String, String>>() {
 			public Map<String, String> doInConnection(Connection connection) {
 				try {
@@ -51,7 +55,7 @@ public abstract class UserDao extends BaseDao {
 		});
 	}
 	
-	public static Map<String, String> getUser(String username) {
+	public Map<String, String> getUser(String username) {
 		return execute(new Operation<Map<String, String>>() {
 			@Override
 			public Map<String, String> doInConnection(Connection connection) {
@@ -70,7 +74,7 @@ public abstract class UserDao extends BaseDao {
 		});
 	}
 	
-	public static boolean updatePassword(String username, String password ) {
+	public boolean updatePassword(String username, String password ) {
 		return execute(new TransactionalOperation<Boolean>() {
 			@Override
 			public Boolean doInConnection(Connection connection) {
@@ -88,7 +92,7 @@ public abstract class UserDao extends BaseDao {
 		});
 	}
 
-	public static boolean uploadImage(String username, String imagePath ) {
+	public boolean uploadImage(String username, String imagePath ) {
 		return execute(new TransactionalOperation<Boolean>() {
 			@Override
 			public Boolean doInConnection(Connection connection) {
@@ -106,7 +110,7 @@ public abstract class UserDao extends BaseDao {
 		});
 	}
 
-	public static boolean updateProfile(String username, String province, String city, Integer languageId) {
+	public boolean updateProfile(String username, String province, String city, Integer languageId) {
 		return execute(new TransactionalOperation<Boolean>() {
 			@Override
 			public Boolean doInConnection(Connection connection) {
@@ -126,7 +130,7 @@ public abstract class UserDao extends BaseDao {
 		});
 	}
 
-	public static boolean saveCommonLogin(String username,String password) {
+	public boolean saveCommonLogin(String username,String password) {
 		return execute(new TransactionalOperation<Boolean>() {
 			@Override
 			public Boolean doInConnection(Connection connection) {
@@ -146,7 +150,7 @@ public abstract class UserDao extends BaseDao {
 		});
 	}
 
-	public static boolean saveOrUpdateQqLogin(String qqOpenId,String nickName, String imagePath) {
+	public boolean saveOrUpdateQqLogin(String qqOpenId,String nickName, String imagePath) {
     	return execute(new TransactionalOperation<Boolean>() {
 			@Override
 			public Boolean doInConnection(Connection connection) {
@@ -185,7 +189,7 @@ public abstract class UserDao extends BaseDao {
 		});
     }
 	
-	public static Map<String, String> transfer(ResultSet resultSet){
+	public Map<String, String> transfer(ResultSet resultSet){
 		Map<String, String> user = new HashMap<String, String>();
 		try {
 			user.put("username", resultSet.getString("username"));
@@ -196,7 +200,7 @@ public abstract class UserDao extends BaseDao {
 			user.put("city", resultSet.getString("city"));
 			Integer languageId = resultSet.getInt("language_id");
 			user.put("languageId", String.valueOf(languageId));
-			user.put("language", DictionaryDao.getName(languageId));
+			user.put("language", DaoFactory.getDao(DictionaryDao.class).getName(languageId));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}

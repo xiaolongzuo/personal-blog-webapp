@@ -1,15 +1,5 @@
 package com.zuoxiaolong.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -26,13 +16,27 @@ import java.util.Map;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.orm.BaseDao;
+import com.zuoxiaolong.orm.Operation;
+import com.zuoxiaolong.orm.TransactionalOperation;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author 左潇龙
  * @since 2015年5月29日 上午1:04:31
  */
-public abstract class CategoryDao extends BaseDao {
+public class CategoryDao extends BaseDao {
 	
-	public static List<Map<String, String>> getCategories(final int articleId) {
+	public List<Map<String, String>> getCategories(final int articleId) {
 		return execute(new Operation<List<Map<String, String>>>() {
 			@Override
 			public List<Map<String, String>> doInConnection(Connection connection) {
@@ -55,7 +59,7 @@ public abstract class CategoryDao extends BaseDao {
 		});
 	}
 
-	public static Integer save(final String categoryName) {
+	public Integer save(final String categoryName) {
 		return execute(new TransactionalOperation<Integer>() {
 			@Override
 			public Integer doInConnection(Connection connection) {
@@ -77,7 +81,7 @@ public abstract class CategoryDao extends BaseDao {
 		});
 	} 
 	
-	public static Integer getId(final String categoryName) {
+	public Integer getId(final String categoryName) {
 		return execute(new Operation<Integer>() {
 			@Override
 			public Integer doInConnection(Connection connection) {
@@ -95,5 +99,9 @@ public abstract class CategoryDao extends BaseDao {
 			}
 		});
 	}
-	
+
+	@Override
+	public Map<String, String> transfer(ResultSet resultSet) {
+		throw new UnsupportedOperationException();
+	}
 }

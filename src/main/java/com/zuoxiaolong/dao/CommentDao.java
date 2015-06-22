@@ -1,14 +1,5 @@
 package com.zuoxiaolong.dao;
 
-import com.zuoxiaolong.api.HttpApiHelper;
-import com.zuoxiaolong.config.Configuration;
-import org.apache.commons.lang.StringUtils;
-
-import java.sql.*;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.Date;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -25,17 +16,29 @@ import java.util.Date;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.api.HttpApiHelper;
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.orm.BaseDao;
+import com.zuoxiaolong.orm.Operation;
+import com.zuoxiaolong.orm.TransactionalOperation;
+import org.apache.commons.lang.StringUtils;
+
+import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Date;
+
 /**
  * @author 左潇龙
  * @since 2015年5月9日 下午11:34:14
  */
-public abstract class CommentDao extends BaseDao {
+public class CommentDao extends BaseDao {
 
-	public static boolean updateCount(final int id, final String column) {
+	public boolean updateCount(final int id, final String column) {
 		return updateCount(id, column, 1);
 	}
 	
-	public static boolean updateCount(final int id, final String column, final int count) {
+	public boolean updateCount(final int id, final String column, final int count) {
 		return execute(new TransactionalOperation<Boolean>() {
 			@Override
 			public Boolean doInConnection(Connection connection) {
@@ -55,7 +58,7 @@ public abstract class CommentDao extends BaseDao {
 		});
 	}
 
-	public static Integer getId(String resourceId) {
+	public Integer getId(String resourceId) {
 		return execute(new Operation<Integer>() {
 			@Override
 			public Integer doInConnection(Connection connection) {
@@ -74,7 +77,7 @@ public abstract class CommentDao extends BaseDao {
 		});
 	}
 	
-	public static boolean updateContent(Integer id, String content) {
+	public boolean updateContent(Integer id, String content) {
 		return execute(new TransactionalOperation<Boolean>() {
 			@Override
 			public Boolean doInConnection(Connection connection) {
@@ -91,8 +94,8 @@ public abstract class CommentDao extends BaseDao {
 		});
 	}
 	
-	public static Integer save(final Integer articleId, final String visitorIp,final Date commentDate,
-		final String content,final String username,final String nickName,final String resourceId,final Integer referenceCommentId) {
+	public Integer save(final Integer articleId, final String visitorIp,final Date commentDate,
+		final String content,final String username,final String resourceUsername,final String resourceId,final Integer referenceCommentId) {
 		return execute(new TransactionalOperation<Integer>() {
 			@Override
 			public Integer doInConnection(Connection connection) {
@@ -100,10 +103,10 @@ public abstract class CommentDao extends BaseDao {
 					PreparedStatement statement = null;
 					if (referenceCommentId == null) {
 						statement = connection.prepareStatement("insert into comments (visitor_ip,city,content,article_id,"
-								+ "create_date,username,nick_name,resource_id) values (?,?,?,?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
+								+ "create_date,username,resource_username,resource_id) values (?,?,?,?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
 					} else {
 						statement = connection.prepareStatement("insert into comments (visitor_ip,city,content,article_id,"
-								+ "create_date,username,nick_name,resource_id,reference_comment_id) values (?,?,?,?,?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
+								+ "create_date,username,resource_username,resource_id,reference_comment_id) values (?,?,?,?,?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
 					}
 					statement.setString(1, visitorIp);
 					statement.setString(2, Configuration.isProductEnv() ? HttpApiHelper.getCity(visitorIp) : "来自星星的");
@@ -115,7 +118,7 @@ public abstract class CommentDao extends BaseDao {
 					}
 					statement.setTimestamp(5, new Timestamp(finalCommentDate.getTime()));
 					statement.setString(6, username);
-					statement.setString(7, nickName);
+					statement.setString(7, resourceUsername);
 					statement.setString(8, resourceId);
 					if (referenceCommentId != null) {
 						statement.setInt(9, referenceCommentId);
@@ -138,7 +141,7 @@ public abstract class CommentDao extends BaseDao {
 		});
 	}
 
-	public static List<Map<String, String>> getComments(final Integer articleId) {
+	public List<Map<String, String>> getComments(final Integer articleId) {
 		return execute(new Operation<List<Map<String, String>>>() {
 			@Override
 			public List<Map<String, String>> doInConnection(Connection connection) {
@@ -158,34 +161,22 @@ public abstract class CommentDao extends BaseDao {
 		});
 	}
 	
-	public static List<Map<String, String>> getComments() {
-		return execute(new Operation<List<Map<String, String>>>() {
-			@Override
-			public List<Map<String, String>> doInConnection(Connection connection) {
-				List<Map<String, String>> comments = new ArrayList<Map<String,String>>();
-				try {
-					Statement statement = connection.createStatement();
-					ResultSet resultSet = statement.executeQuery("select * from comments order by create_date desc");
-					while (resultSet.next()) {
-						comments.add(transfer(resultSet));
-					}
-				} catch (SQLException e) {
-					error("get comments failed ..." , e);
-				}
-				return comments;
-			}
-		});
+	public List<Map<String, String>> getComments() {
+		return getAll("comments", "create_date");
 	}
 	
-	public static Map<String, String> transfer(ResultSet resultSet){
+	public Map<String, String> transfer(ResultSet resultSet){
 		Map<String, String> comment = new HashMap<String, String>();
 		try {
 			comment.put("id", resultSet.getString("id"));
 			comment.put("content", resultSet.getString("content"));
 			comment.put("create_date", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(resultSet.getTimestamp("create_date")));
-			String nickName = resultSet.getString("nick_name");
-			if (!StringUtils.isEmpty(nickName)) {
-				comment.put("commenter", nickName);
+			String username = resultSet.getString("username");
+			String resourceUsername = resultSet.getString("resource_username");
+			if (!StringUtils.isEmpty(username)) {
+				comment.put("commenter", username);
+			} else if (!StringUtils.isEmpty(resourceUsername)) {
+				comment.put("commenter", resourceUsername);
 			} else {
 				comment.put("commenter", resultSet.getString("city") + "网友");
 			}

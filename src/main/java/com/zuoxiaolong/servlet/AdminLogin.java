@@ -1,16 +1,5 @@
 package com.zuoxiaolong.servlet;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.mvc.RequestMapping;
-import com.zuoxiaolong.util.EnrypyUtil;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -26,6 +15,17 @@ import com.zuoxiaolong.util.EnrypyUtil;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.mvc.RequestMapping;
+import com.zuoxiaolong.util.EnrypyUtil;
 
 /**
  * @author 左潇龙

@@ -1,18 +1,5 @@
 package com.zuoxiaolong.api;
 
-import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.dao.HtmlPageDao;
-import com.zuoxiaolong.util.IOUtil;
-import net.sf.json.JSONObject;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -29,6 +16,20 @@ import java.net.URL;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.dao.HtmlPageDao;
+import com.zuoxiaolong.orm.DaoFactory;
+import com.zuoxiaolong.util.IOUtil;
+import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 /**
  * @author 左潇龙
  * @since 2015年5月12日 下午4:58:52
@@ -44,7 +45,7 @@ public abstract class HttpApiHelper {
 	private static final String token = Configuration.isProductEnv() ? Configuration.get("baidu.push.token.product") : Configuration.get("baidu.push.token");
 	
 	public static void baiduPush(int remain) {
-		String pushUrl = HtmlPageDao.findPushUrl();
+		String pushUrl = DaoFactory.getDao(HtmlPageDao.class).findPushUrl();
 		if (pushUrl == null) {
 			if (logger.isInfoEnabled()) {
 				logger.info("all html page has been pushed!");
@@ -82,7 +83,7 @@ public abstract class HttpApiHelper {
 				}
 				JSONObject result = JSONObject.fromObject(response);
 				if (result.getInt("success") >= 1) {
-					HtmlPageDao.updateIsPush(pushUrl);
+					DaoFactory.getDao(HtmlPageDao.class).updateIsPush(pushUrl);
 				} else {
 					logger.warn("push url failed : " + pushUrl);
 				}

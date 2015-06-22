@@ -1,16 +1,5 @@
 package com.zuoxiaolong.dynamic;
 
-import com.zuoxiaolong.dao.ArticleDao;
-import com.zuoxiaolong.freemarker.ArticleListHelper;
-import com.zuoxiaolong.mvc.DataMap;
-import com.zuoxiaolong.mvc.Namespace;
-import com.zuoxiaolong.util.StringUtil;
-import org.apache.commons.lang.StringUtils;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -26,6 +15,18 @@ import java.util.Map;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.freemarker.ArticleListHelper;
+import com.zuoxiaolong.mvc.DataMap;
+import com.zuoxiaolong.mvc.Namespace;
+import com.zuoxiaolong.orm.DaoFactory;
+import com.zuoxiaolong.util.StringUtil;
+import org.apache.commons.lang.StringUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 /**
  * @author 左潇龙
@@ -46,7 +47,7 @@ public class ArticleList implements DataMap {
 			current = Integer.valueOf(currentString);
 		}
 		if (StringUtils.isNotBlank(orderColumn)) {
-			int total = ArticleDao.getArticles(orderColumn, VIEW_MODE).size();
+			int total = DaoFactory.getDao(ArticleDao.class).getArticles(orderColumn, VIEW_MODE).size();
 			ArticleListHelper.putArticleListDataMap(data, VIEW_MODE, orderColumn, current, total);
 
 		} else if (StringUtils.isNotBlank(searchText)) {

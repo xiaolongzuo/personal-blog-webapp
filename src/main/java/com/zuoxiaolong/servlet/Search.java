@@ -1,22 +1,5 @@
 package com.zuoxiaolong.servlet;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-
-import net.sf.json.JSONArray;
-
-import com.zuoxiaolong.algorithm.Match;
-import com.zuoxiaolong.dao.HeroDao;
-import com.zuoxiaolong.dao.MatchDao;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -32,6 +15,25 @@ import com.zuoxiaolong.dao.MatchDao;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.orm.DaoFactory;
+import net.sf.json.JSONArray;
+
+import com.zuoxiaolong.algorithm.Match;
+import com.zuoxiaolong.dao.HeroDao;
+import com.zuoxiaolong.dao.MatchDao;
 
 /**
  * @author 左潇龙
@@ -59,7 +61,7 @@ public class Search extends AbstractServlet {
 				writeText("第" + (i + 1) + "位英雄重复");
 				return;
 			}
-			if (!HeroDao.exsits(h[i].trim())) {
+			if (!DaoFactory.getDao(HeroDao.class).exsits(h[i].trim())) {
 				writeText("第" + (i + 1) + "位英雄在英雄库中没找到，请按照提示输入英雄");
 				return;
 			}
@@ -69,7 +71,7 @@ public class Search extends AbstractServlet {
 		if (logger.isInfoEnabled()) {
 			logger.info("search servlet's currentBattle is : " + currentBattle);
 		}
-		List<Map<String,String>> matches = MatchDao.findMatchesResult(currentBattle);
+		List<Map<String,String>> matches = DaoFactory.getDao(MatchDao.class).findMatchesResult(currentBattle);
 		if (logger.isInfoEnabled()) {
 			logger.info("search servlet's matches is : " + matches);
 		}

@@ -1,14 +1,5 @@
 package com.zuoxiaolong.dynamic;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.zuoxiaolong.dao.StatisticsDao;
-import com.zuoxiaolong.mvc.DataMap;
-import com.zuoxiaolong.mvc.Namespace;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -25,6 +16,17 @@ import com.zuoxiaolong.mvc.Namespace;
  * limitations under the License.
  */
 
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.dao.StatisticsDao;
+import com.zuoxiaolong.mvc.DataMap;
+import com.zuoxiaolong.mvc.Namespace;
+import com.zuoxiaolong.orm.DaoFactory;
+
 /**
  * @author 左潇龙
  * @since 2015年5月27日 上午1:54:53
@@ -34,15 +36,15 @@ public class Statistics implements DataMap {
 	
 	@Override
 	public void putCustomData(Map<String, Object> data,HttpServletRequest request, HttpServletResponse response) {
-		data.put("siteTotalAccessTimes", StatisticsDao.getSiteTotalAccessTimes());
-		data.put("siteTodayAccessTimes", StatisticsDao.getSiteTodayAccessTimes());
-		data.put("siteTotalVisitorIpNumber", StatisticsDao.getSiteTotalVisitorIpNumber());
-		data.put("siteTodayVisitorIpNumber", StatisticsDao.getSiteTodayVisitorIpNumber());
-		data.put("articleTotalAccessTimes", StatisticsDao.getArticleTotalAccessTimes());
-		data.put("commentTotalNumber", StatisticsDao.getCommentTotalNumber());
-		data.put("commentTodayNumber", StatisticsDao.getCommentTodayNumber());
-		data.put("userTotalNumber", StatisticsDao.getUserTotalNumber());
-		data.put("userTodayNumber", StatisticsDao.getUserTodayNumber());
+		data.put("siteTotalAccessTimes", DaoFactory.getDao(StatisticsDao.class).getSiteTotalAccessTimes());
+		data.put("siteTodayAccessTimes", DaoFactory.getDao(StatisticsDao.class).getSiteTodayAccessTimes());
+		data.put("siteTotalVisitorIpNumber", DaoFactory.getDao(StatisticsDao.class).getSiteTotalVisitorIpNumber());
+		data.put("siteTodayVisitorIpNumber", DaoFactory.getDao(StatisticsDao.class).getSiteTodayVisitorIpNumber());
+		data.put("articleTotalAccessTimes", DaoFactory.getDao(StatisticsDao.class).getArticleTotalAccessTimes());
+		data.put("commentTotalNumber", DaoFactory.getDao(StatisticsDao.class).getCommentTotalNumber());
+		data.put("commentTodayNumber", DaoFactory.getDao(StatisticsDao.class).getCommentTodayNumber());
+		data.put("userTotalNumber", DaoFactory.getDao(StatisticsDao.class).getUserTotalNumber());
+		data.put("userTodayNumber", DaoFactory.getDao(StatisticsDao.class).getUserTodayNumber());
 	}
 
 }

@@ -1,16 +1,5 @@
 package com.zuoxiaolong.servlet;
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.log4j.Logger;
-
-import com.zuoxiaolong.dao.ArticleDao;
-import com.zuoxiaolong.dao.ArticleIdVisitorIpDao;
-import com.zuoxiaolong.generator.Generators;
-import com.zuoxiaolong.util.HttpUtil;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -27,42 +16,70 @@ import com.zuoxiaolong.util.HttpUtil;
  * limitations under the License.
  */
 
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
+
+import com.zuoxiaolong.dao.QuestionDao;
+import com.zuoxiaolong.orm.DaoFactory;
+import org.apache.log4j.Logger;
+
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.dao.ArticleIdVisitorIpDao;
+import com.zuoxiaolong.generator.Generators;
+import com.zuoxiaolong.util.HttpUtil;
+
 /**
  * @author 左潇龙
  * @since 5/8/2015 4:12 PM
  */
 public class Counter extends AbstractServlet {
 
-	private static final long serialVersionUID = -2655585691431759816L;
-	
 	private static final Logger logger = Logger.getLogger(Counter.class);
 	
     @Override
     protected void service() throws IOException {
     	HttpServletRequest request = getRequest();
-        Integer articleId = Integer.valueOf(request.getParameter("articleId"));
-        String column = request.getParameter("column");
-        if (logger.isInfoEnabled()) {
-            logger.info("counter param : articleId = " + articleId + "   , column = " + column);
-        }
-        if (!column.equals("access_times")) {
-        	if (logger.isInfoEnabled()) {
-        		logger.info("there is someone remarking...");
+		Integer type = Integer.valueOf(request.getParameter("type"));
+		if (type == 1) {
+			updateArticle(request);
+		} else if (type == 2) {
+			updateQuestion(request);
+		} else {
+			throw new RuntimeException("unknown type.");
+		}
+    }
+
+	private void updateQuestion(HttpServletRequest request) {
+		Integer questionId = Integer.valueOf(request.getParameter("questionId"));
+		DaoFactory.getDao(QuestionDao.class).updateCount(questionId);
+		writeText("success");
+	}
+
+	private void updateArticle(HttpServletRequest request) {
+		Integer articleId = Integer.valueOf(request.getParameter("articleId"));
+		String column = request.getParameter("column");
+		if (logger.isInfoEnabled()) {
+			logger.info("counter param : articleId = " + articleId + "   , column = " + column);
+		}
+		if (!column.equals("access_times")) {
+			if (logger.isInfoEnabled()) {
+				logger.info("there is someone remarking...");
 			}
-        	String username = getUsername();
+			String username = getUsername();
 			String ip = HttpUtil.getVisitorIp(request);
-			if (ArticleIdVisitorIpDao.exsits(articleId, ip, username)) {
+			if (DaoFactory.getDao(ArticleIdVisitorIpDao.class).exsits(articleId, ip, username)) {
 				writeText("exists");
 				if (logger.isInfoEnabled()) {
 					logger.info(ip + " has remarked...");
 				}
 				return ;
 			} else {
-				ArticleIdVisitorIpDao.save(articleId, ip, username);
+				DaoFactory.getDao(ArticleIdVisitorIpDao.class).save(articleId, ip, username);
 			}
 		}
-        boolean result = ArticleDao.updateCount(articleId, column);
-        if (!result) {
+		boolean result = DaoFactory.getDao(ArticleDao.class).updateCount(articleId, column);
+		if (!result) {
 			logger.error("updateCount error!");
 			return;
 		}
@@ -70,8 +87,8 @@ public class Counter extends AbstractServlet {
 			logger.info("updateCount success!");
 		}
 		writeText("success");
-        Generators.generate(articleId);
-    }
+		Generators.generate(articleId);
+	}
 
 }
 

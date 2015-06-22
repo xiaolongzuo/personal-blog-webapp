@@ -1,17 +1,5 @@
 package com.zuoxiaolong.dynamic;
 
-import com.zuoxiaolong.dao.CityDao;
-import com.zuoxiaolong.dao.DictionaryDao;
-import com.zuoxiaolong.dao.ProvinceDao;
-import com.zuoxiaolong.mvc.DataMap;
-import com.zuoxiaolong.mvc.Namespace;
-import com.zuoxiaolong.servlet.AbstractServlet;
-import org.apache.commons.lang.StringUtils;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -28,6 +16,20 @@ import java.util.Map;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.dao.CityDao;
+import com.zuoxiaolong.dao.DictionaryDao;
+import com.zuoxiaolong.dao.ProvinceDao;
+import com.zuoxiaolong.dao.UserDao;
+import com.zuoxiaolong.mvc.DataMap;
+import com.zuoxiaolong.mvc.Namespace;
+import com.zuoxiaolong.orm.DaoFactory;
+import com.zuoxiaolong.servlet.AbstractServlet;
+import org.apache.commons.lang.StringUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
+
 /**
  * @author 左潇龙
  * @since 2015年6月16日 上午1:35:04
@@ -42,11 +44,11 @@ public class UserCenter implements DataMap {
 			throw new RuntimeException();
 		}
 		if (StringUtils.isNotBlank(user.get("province"))) {
-			Integer provinceId = ProvinceDao.getId(user.get("province"));
-			data.put("cities", CityDao.getCities(provinceId));
+			Integer provinceId = DaoFactory.getDao(ProvinceDao.class).getId(user.get("province"));
+			data.put("cities", DaoFactory.getDao(CityDao.class).getCities(provinceId));
 		}
-		data.put("provinces", ProvinceDao.getProvinces());
-		data.put("languages", DictionaryDao.getDictionariesByType("LANG"));
+		data.put("provinces", DaoFactory.getDao(ProvinceDao.class).getProvinces());
+		data.put("languages", DaoFactory.getDao(DictionaryDao.class).getDictionariesByType("LANG"));
 	}
 
 }

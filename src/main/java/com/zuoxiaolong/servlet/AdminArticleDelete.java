@@ -1,13 +1,5 @@
 package com.zuoxiaolong.servlet;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-
-import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.dao.ArticleDao;
-import com.zuoxiaolong.mvc.RequestMapping;
-
 /*
  * Copyright 2002-2015 the original author or authors.
  *
@@ -24,6 +16,15 @@ import com.zuoxiaolong.mvc.RequestMapping;
  * limitations under the License.
  */
 
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.mvc.RequestMapping;
+import com.zuoxiaolong.orm.DaoFactory;
+
 /**
  * @author 左潇龙
  * @since 2015年6月18日 下午6:50:20
@@ -34,7 +35,7 @@ public class AdminArticleDelete extends AbstractServlet {
 	@Override
 	protected void service() throws ServletException, IOException {
 		Integer id = Integer.valueOf(getRequest().getParameter("id"));
-		if (ArticleDao.delete(id)) {
+		if (DaoFactory.getDao(ArticleDao.class).delete(id)) {
 			getResponse().sendRedirect(Configuration.getSiteUrl("/admin/article_manager.ftl"));
 		}
 	}
