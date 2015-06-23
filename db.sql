@@ -200,6 +200,8 @@ alter table users add CONSTRAINT `USERS_FK_LANGUAGE_ID` FOREIGN KEY (`language_i
 alter table users drop qq_nick_name ;
 alter table users change qq_avatar_url_30 image_path VARCHAR(200);
 
+ALTER TABLE articles CHANGE COLUMN resource_id resource_id VARCHAR(200) NULL ;
+
 --生产环境到此
 
 alter table comments change nick_name resource_username VARCHAR (40);
@@ -226,8 +228,6 @@ create table answers (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT = 1;
 
 alter table answers add CONSTRAINT `ANSWERS_FK_QUESTION_ID` FOREIGN KEY (`question_id`) REFERENCES questions(`id`);
-
-ALTER TABLE articles CHANGE COLUMN resource_id resource_id VARCHAR(200) NULL ;
 
 alter table questions add content TEXT NOT NULL;
 alter table questions add access_times INT DEFAULT 0;
