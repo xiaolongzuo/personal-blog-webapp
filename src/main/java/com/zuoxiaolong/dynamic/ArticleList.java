@@ -18,6 +18,7 @@ package com.zuoxiaolong.dynamic;
 
 import com.zuoxiaolong.dao.ArticleDao;
 import com.zuoxiaolong.freemarker.ArticleListHelper;
+import com.zuoxiaolong.model.Status;
 import com.zuoxiaolong.mvc.DataMap;
 import com.zuoxiaolong.mvc.Namespace;
 import com.zuoxiaolong.orm.DaoFactory;
@@ -47,7 +48,7 @@ public class ArticleList implements DataMap {
 			current = Integer.valueOf(currentString);
 		}
 		if (StringUtils.isNotBlank(orderColumn)) {
-			int total = DaoFactory.getDao(ArticleDao.class).getArticles(orderColumn, VIEW_MODE).size();
+			int total = DaoFactory.getDao(ArticleDao.class).getArticles(orderColumn, Status.published, VIEW_MODE).size();
 			ArticleListHelper.putArticleListDataMap(data, VIEW_MODE, orderColumn, current, total);
 
 		} else if (StringUtils.isNotBlank(searchText)) {

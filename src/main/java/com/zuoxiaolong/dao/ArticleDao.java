@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.zuoxiaolong.model.Status;
 import com.zuoxiaolong.orm.BaseDao;
 import com.zuoxiaolong.orm.Operation;
 import com.zuoxiaolong.orm.TransactionalOperation;
@@ -251,15 +252,16 @@ public class ArticleDao extends BaseDao {
 		});
     }
     
-    public List<Map<String, String>> getPageArticles(final Map<String, Integer> pager, final String orderColumn, final ViewMode viewMode ) {
+    public List<Map<String, String>> getPageArticles(final Map<String, Integer> pager,final Status status, final String orderColumn, final ViewMode viewMode ) {
         return execute(new Operation<List<Map<String, String>>>() {
             @Override
             public List<Map<String, String>> doInConnection(Connection connection) {
-                String sql = "select * from articles where status = 1 order by " + orderColumn + " desc limit ?,10";
+                String sql = "select * from articles where status = ? order by " + orderColumn + " desc limit ?,10";
                 List<Map<String, String>> result = new ArrayList<Map<String, String>>();
                 try {
                     PreparedStatement statement = connection.prepareStatement(sql);
-                    statement.setInt(1 , (pager.get("current") - 1) * 10);
+					statement.setInt(1 , status.getIntValue());
+                    statement.setInt(2 , (pager.get("current") - 1) * 10);
                     ResultSet resultSet = statement.executeQuery();
                     while (resultSet.next()) {
                         result.add(transfer(resultSet, viewMode));
@@ -272,15 +274,16 @@ public class ArticleDao extends BaseDao {
         });
     }
 
-    public List<Map<String, String>> getArticles(final String order, final ViewMode viewMode ) {
+    public List<Map<String, String>> getArticles(final String order,final Status status, final ViewMode viewMode ) {
         return execute(new Operation<List<Map<String, String>>>() {
             @Override
             public List<Map<String, String>> doInConnection(Connection connection) {
-                String sql = "select * from articles where status = 1 order by " + order + " desc";
+                String sql = "select * from articles where status = ? order by " + order + " desc";
                 List<Map<String, String>> result = new ArrayList<Map<String, String>>();
                 try {
-                    Statement statement = connection.createStatement();
-                    ResultSet resultSet = statement.executeQuery(sql);
+					PreparedStatement statement = connection.prepareStatement(sql);
+					statement.setInt(1 , status.getIntValue());
+                    ResultSet resultSet = statement.executeQuery();
                     while (resultSet.next()) {
                         result.add(transfer(resultSet, viewMode));
                     }
@@ -292,15 +295,16 @@ public class ArticleDao extends BaseDao {
         });
     }
 
-    public Map<String, String> getArticle(final int id, final ViewMode viewMode ) {
+    public Map<String, String> getArticle(final int id,final Status status, final ViewMode viewMode ) {
         return execute(new Operation<Map<String, String>>() {
             @Override
             public Map<String, String> doInConnection(Connection connection) {
-                String sql = "select * from articles where status = 1 and id = " + id;
+                String sql = "select * from articles where status = ? and id = " + id;
                 Map<String, String> result = new HashMap<String, String>();
                 try {
-                    Statement statement = connection.createStatement();
-                    ResultSet resultSet = statement.executeQuery(sql);
+					PreparedStatement statement = connection.prepareStatement(sql);
+					statement.setInt(1 , status.getIntValue());
+                    ResultSet resultSet = statement.executeQuery();
                     if (resultSet.next()) {
                         result = transfer(resultSet, viewMode);
                     }

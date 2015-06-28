@@ -1,10 +1,8 @@
 function counter(data) {
-	$(document).ready(function() {
-		$.ajax({
-			url:contextPath + "/counter.do",
-			type:"POST",
-			data:data
-		});
+	$.ajax({
+		url:contextPath + "/counter.do",
+		type:"POST",
+		data:data
 	});
 }
 
@@ -142,7 +140,7 @@ function remark(){
 /*
  * 评论
  */
-function comment() {
+function comment(url) {
 	var comment = tinymce.activeEditor.getContent();
 	var referenceCommentId = $("#reference_comment_id_input").val();
 	var referenceCommenter = $("#reference_commenter_input").val();
@@ -151,7 +149,7 @@ function comment() {
 		return false;
 	}
 	$.ajax({
-		url:contextPath + "/comment.do",
+		url:contextPath + url,
 		type:"POST",
 		data:{"articleId":$("#articleId").val(),"content":comment,"referenceCommentId":referenceCommentId,"referenceCommenter":referenceCommenter},
 		success:function(data) {

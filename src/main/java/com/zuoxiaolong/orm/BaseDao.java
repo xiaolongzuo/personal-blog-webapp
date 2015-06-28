@@ -231,7 +231,7 @@ public abstract class BaseDao {
                 try {
                     PreparedStatement statement = connection.prepareStatement(sql);
                     statement.setInt(1, id);
-                    ResultSet resultSet = statement.executeQuery(sql);
+                    ResultSet resultSet = statement.executeQuery();
                     if (resultSet.next()) {
                         result = transfer(resultSet);
                     }

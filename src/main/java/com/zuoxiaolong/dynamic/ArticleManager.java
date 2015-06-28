@@ -22,6 +22,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.zuoxiaolong.model.Status;
 import com.zuoxiaolong.orm.DaoFactory;
 import org.apache.commons.lang.StringUtils;
 
@@ -44,13 +45,13 @@ public class ArticleManager implements DataMap {
 		if (StringUtils.isNotBlank(currentString)) {
 			current = Integer.valueOf(currentString);
 		}
-		int total = DaoFactory.getDao(ArticleDao.class).getArticles("create_date", VIEW_MODE).size();
+		int total = DaoFactory.getDao(ArticleDao.class).getArticles("create_date", Status.draft, VIEW_MODE).size();
 		int page = (total % 10 == 0) ? (total / 10) : (total / 10 + 1);
 		Map<String, Integer> pager = new HashMap<String, Integer>();
 		pager.put("current", current);
 		pager.put("total", total);
 		pager.put("page", page);
-		data.put("pageArticles", DaoFactory.getDao(ArticleDao.class).getPageArticles(pager, "create_date", ViewMode.DYNAMIC));
+		data.put("pageArticles", DaoFactory.getDao(ArticleDao.class).getPageArticles(pager, Status.draft, "create_date", ViewMode.DYNAMIC));
 		data.put("pager", pager);
 		data.put("firstArticleListUrl", "/admin/article_manager.ftl?current=1");
 		data.put("preArticleListUrl", "/admin/article_manager.ftl?current=" + (current - 1));

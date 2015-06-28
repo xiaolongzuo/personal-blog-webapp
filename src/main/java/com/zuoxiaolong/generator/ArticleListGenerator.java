@@ -26,6 +26,7 @@ import com.zuoxiaolong.config.Configuration;
 import com.zuoxiaolong.dao.ArticleDao;
 import com.zuoxiaolong.freemarker.ArticleListHelper;
 import com.zuoxiaolong.freemarker.FreemarkerHelper;
+import com.zuoxiaolong.model.Status;
 import com.zuoxiaolong.orm.DaoFactory;
 
 /**
@@ -42,7 +43,7 @@ public class ArticleListGenerator implements Generator {
 	}
 	
 	private void generateArticleList(String orderColumn) {
-		List<Map<String, String>> articles = DaoFactory.getDao(ArticleDao.class).getArticles(orderColumn, VIEW_MODE);
+		List<Map<String, String>> articles = DaoFactory.getDao(ArticleDao.class).getArticles(orderColumn, Status.published, VIEW_MODE);
 		int total = articles.size();
 		int page = (total % 10 == 0) ? (total / 10) : (total / 10 + 1);
 		for (int i = 1; i < page + 1; i++) {

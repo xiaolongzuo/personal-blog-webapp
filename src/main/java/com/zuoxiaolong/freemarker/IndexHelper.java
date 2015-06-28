@@ -18,6 +18,7 @@ package com.zuoxiaolong.freemarker;
 
 import com.zuoxiaolong.algorithm.Random;
 import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.model.Status;
 import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.orm.DaoFactory;
 
@@ -33,7 +34,7 @@ public abstract class IndexHelper {
 	private static final int DEFAULT_INDEX_ARTICLE_NUMBER = 6;
 
 	public static void putArticleDataMap(Map<String, Object> data, ViewMode viewMode) {
-		List<Map<String, String>> randomList = Random.random(DaoFactory.getDao(ArticleDao.class).getArticles("create_date", viewMode), DEFAULT_INDEX_ARTICLE_NUMBER);
+		List<Map<String, String>> randomList = Random.random(DaoFactory.getDao(ArticleDao.class).getArticles("create_date", Status.published, viewMode), DEFAULT_INDEX_ARTICLE_NUMBER);
         data.put("articles", randomList);
 	}
 	

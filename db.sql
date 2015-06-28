@@ -202,9 +202,9 @@ alter table users change qq_avatar_url_30 image_path VARCHAR(200);
 
 ALTER TABLE articles CHANGE COLUMN resource_id resource_id VARCHAR(200) NULL ;
 
---生产环境到此
-
 alter table comments change nick_name resource_username VARCHAR (40);
+
+--生产环境到此
 
 create table questions (
 	id INT NOT NULL AUTO_INCREMENT,

@@ -27,6 +27,7 @@ import com.zuoxiaolong.dao.ArticleDao;
 import com.zuoxiaolong.dao.UserDao;
 import com.zuoxiaolong.freemarker.ArticleHelper;
 import com.zuoxiaolong.freemarker.FreemarkerHelper;
+import com.zuoxiaolong.model.Status;
 import com.zuoxiaolong.orm.DaoFactory;
 
 /**
@@ -37,7 +38,7 @@ public class ArticleGenerator implements Generator {
 
 	@Override
 	public void generate() {
-		List<Map<String, String>> articles = DaoFactory.getDao(ArticleDao.class).getArticles("create_date", VIEW_MODE);
+		List<Map<String, String>> articles = DaoFactory.getDao(ArticleDao.class).getArticles("create_date", Status.published, VIEW_MODE);
 		for (int i = 0; i < articles.size(); i++) {
 			generateArticle(Integer.valueOf(articles.get(i).get("id")));
 		}

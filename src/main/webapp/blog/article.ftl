@@ -5,8 +5,8 @@
 <link href="${contextPath}/resources/css/common/article.css" rel="stylesheet"/>
 <link href="${contextPath}/resources/css/common/code.css" rel="stylesheet"/>
 <script type="text/javascript">
-	counter({"articleId":$("#articleId").val(),"type":1,"column":"access_times"});
-	$(document).ready(function(){
+	$(document).ready(function() {
+        counter({"articleId":$("#articleId").val(),"type":1,"column":"access_times"});
 		$("body").on("click",".content_reply_a",function(){
 			scrollTo("#comment_div_"+$(this).attr("reference_comment_id"));
 		});
@@ -26,7 +26,7 @@
 			remark();
 		});		
 		$("#submit_comment_button").click(function(){
-			comment();
+			comment("/comment.do");
 		});
 	});
 </script>

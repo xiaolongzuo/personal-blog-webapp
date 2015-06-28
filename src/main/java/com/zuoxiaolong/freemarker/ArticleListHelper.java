@@ -20,6 +20,7 @@ import com.zuoxiaolong.dao.ArticleDao;
 import com.zuoxiaolong.dao.CategoryDao;
 import com.zuoxiaolong.dao.TagDao;
 import com.zuoxiaolong.dao.UserDao;
+import com.zuoxiaolong.model.Status;
 import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.orm.DaoFactory;
 import com.zuoxiaolong.search.LuceneHelper;
@@ -41,7 +42,7 @@ public class ArticleListHelper {
 		pager.put("current", current);
 		pager.put("total", total);
 		pager.put("page", page);
-		data.put("pageArticles", DaoFactory.getDao(ArticleDao.class).getPageArticles(pager, orderColumn, viewMode));
+		data.put("pageArticles", DaoFactory.getDao(ArticleDao.class).getPageArticles(pager, Status.published, orderColumn, viewMode));
 		data.put("pager", pager);
 		if (viewMode == ViewMode.STATIC) {
 			data.put("firstPageUrl", ArticleListHelper.generateStaticPath(orderColumn, 1));

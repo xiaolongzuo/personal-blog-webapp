@@ -19,6 +19,7 @@ package com.zuoxiaolong.freemarker;
 import java.util.Map;
 
 import com.zuoxiaolong.dao.*;
+import com.zuoxiaolong.model.Status;
 import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.orm.DaoFactory;
 
@@ -30,7 +31,7 @@ public abstract class ArticleHelper {
 
 	public static void putArticleDataMap(Map<String, Object> data, ViewMode viewMode,int articleId) {
 		DaoFactory.getDao(ArticleDao.class).updateCommentCount(articleId);
-		Map<String, String> article = DaoFactory.getDao(ArticleDao.class).getArticle(articleId, viewMode);
+		Map<String, String> article = DaoFactory.getDao(ArticleDao.class).getArticle(articleId, Status.published, viewMode);
 		data.put("article", article);
 		data.put("comments", DaoFactory.getDao(CommentDao.class).getComments(articleId));
 		data.put("tags", DaoFactory.getDao(TagDao.class).getTags(articleId));

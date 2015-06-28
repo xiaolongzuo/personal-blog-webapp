@@ -18,6 +18,7 @@ package com.zuoxiaolong.search;
 
 import com.zuoxiaolong.config.Configuration;
 import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.model.Status;
 import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.orm.DaoFactory;
 import org.apache.log4j.Logger;
@@ -64,7 +65,7 @@ public abstract class LuceneHelper {
 
     public static void updateIndex() {
         try {
-            List<Map<String, String>> articles = DaoFactory.getDao(ArticleDao.class).getArticles("create_date", ViewMode.DYNAMIC);
+            List<Map<String, String>> articles = DaoFactory.getDao(ArticleDao.class).getArticles("create_date", Status.published, ViewMode.DYNAMIC);
             Directory dir = FSDirectory.open(Paths.get(INDEX_PATH));
             Analyzer analyzer = new SmartChineseAnalyzer();
             IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
@@ -108,7 +109,7 @@ public abstract class LuceneHelper {
                 if (!idList.contains(id)) {
                     String indexedContent = doc.get("indexedContent");
                     TokenStream tokenStream = analyzer.tokenStream("indexedContent", indexedContent);
-                    Map<String, String> article = DaoFactory.getDao(ArticleDao.class).getArticle(id, ViewMode.DYNAMIC);
+                    Map<String, String> article = DaoFactory.getDao(ArticleDao.class).getArticle(id, Status.published, ViewMode.DYNAMIC);
                     String highlighterString = highlighter.getBestFragment(tokenStream, indexedContent);
                     if (highlighterString.contains(SUBJECT_CONTENT_SEPARATOR)) {
                         article.put("subject",highlighterString.split(SUBJECT_CONTENT_SEPARATOR)[0]);
