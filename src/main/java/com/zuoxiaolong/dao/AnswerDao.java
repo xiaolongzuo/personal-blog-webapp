@@ -47,7 +47,7 @@ public class AnswerDao extends BaseDao {
 					finalCount = 1;
 				}
 				try {
-					PreparedStatement preparedStatement = connection.prepareStatement("update comments set " + column + " = " + column + " + " + finalCount + " where id = ?");
+					PreparedStatement preparedStatement = connection.prepareStatement("update answers set " + column + " = " + column + " + " + finalCount + " where id = ?");
 					preparedStatement.setInt(1, id);
 					int number = preparedStatement.executeUpdate();
 					return number > 0;
@@ -58,13 +58,13 @@ public class AnswerDao extends BaseDao {
 		});
 	}
 
-	public boolean updateContent(Integer id, String content) {
+	public boolean updateContent(Integer id, String answer) {
 		return execute(new TransactionalOperation<Boolean>() {
 			@Override
 			public Boolean doInConnection(Connection connection) {
 				try {
-					PreparedStatement preparedStatement = connection.prepareStatement("update comments set content=? where id = ?");
-					preparedStatement.setString(1, content);
+					PreparedStatement preparedStatement = connection.prepareStatement("update answers set answer=? where id = ?");
+					preparedStatement.setString(1, answer);
 					preparedStatement.setInt(2, id);
 					int number = preparedStatement.executeUpdate();
 					return number > 0;
@@ -83,26 +83,24 @@ public class AnswerDao extends BaseDao {
 				try {
 					PreparedStatement statement = null;
 					if (referenceAnswerId == null) {
-						statement = connection.prepareStatement("insert into comments (visitor_ip,city,content,article_id,"
-								+ "create_date,username,resource_username,resource_id) values (?,?,?,?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
+						statement = connection.prepareStatement("insert into comments (visitor_ip,city,answer,question_id,"
+								+ "answer_date,username) values (?,?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
 					} else {
-						statement = connection.prepareStatement("insert into comments (visitor_ip,city,content,article_id,"
-								+ "create_date,username,resource_username,resource_id,reference_comment_id) values (?,?,?,?,?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
+						statement = connection.prepareStatement("insert into comments (visitor_ip,city,answer,question_id,"
+								+ "answer_date,username,reference_answer_id) values (?,?,?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
 					}
 					statement.setString(1, visitorIp);
 					statement.setString(2, Configuration.isProductEnv() ? HttpApiHelper.getCity(visitorIp) : "来自星星的");
-					statement.setString(3, content);
-					statement.setInt(4, articleId);
-					Date finalCommentDate = commentDate;
-					if (commentDate == null) {
+					statement.setString(3, answer);
+					statement.setInt(4, questionId);
+					Date finalCommentDate = answerDate;
+					if (answerDate == null) {
 						finalCommentDate = new Date();
 					}
 					statement.setTimestamp(5, new Timestamp(finalCommentDate.getTime()));
 					statement.setString(6, username);
-					statement.setString(7, resourceUsername);
-					statement.setString(8, resourceId);
-					if (referenceCommentId != null) {
-						statement.setInt(9, referenceCommentId);
+					if (referenceAnswerId != null) {
+						statement.setInt(7, referenceAnswerId);
 					}
 					int result = statement.executeUpdate();
 					if (result > 0) {
@@ -112,38 +110,35 @@ public class AnswerDao extends BaseDao {
 						}
 					}
 				} catch (SQLException e) {
-					String dString = content;
-					System.out.println(articleId);
-					System.out.println(dString);
-					error("save comments failed ..." , e);
+					error("save answers failed ..." , e);
 				}
 				return null;
 			}
 		});
 	}
 
-	public List<Map<String, String>> getComments(final Integer articleId) {
+	public List<Map<String, String>> getAnswers(final Integer questionId) {
 		return execute(new Operation<List<Map<String, String>>>() {
 			@Override
 			public List<Map<String, String>> doInConnection(Connection connection) {
 				List<Map<String, String>> comments = new ArrayList<Map<String,String>>();
 				try {
-					PreparedStatement statement = connection.prepareStatement("select * from comments where article_id=? order by create_date");
-					statement.setInt(1, articleId);
+					PreparedStatement statement = connection.prepareStatement("select * from answers where question_id=? order by answer_date");
+					statement.setInt(1, questionId);
 					ResultSet resultSet = statement.executeQuery();
 					while (resultSet.next()) {
 						comments.add(transfer(resultSet));
 					}
 				} catch (SQLException e) {
-					error("get comments for article[" + articleId + "] failed ..." , e);
+					error("get answers for question[" + questionId + "] failed ..." , e);
 				}
 				return comments;
 			}
 		});
 	}
 	
-	public List<Map<String, String>> getComments() {
-		return getAll("comments", "create_date");
+	public List<Map<String, String>> getAnswers() {
+		return getAll("answers", "answer_date");
 	}
 	
 	public Map<String, String> transfer(ResultSet resultSet){

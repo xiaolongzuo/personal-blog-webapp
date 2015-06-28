@@ -131,9 +131,6 @@ public class CommentDao extends BaseDao {
 						}
 					}
 				} catch (SQLException e) {
-					String dString = content;
-					System.out.println(articleId);
-					System.out.println(dString);
 					error("save comments failed ..." , e);
 				}
 				return null;
