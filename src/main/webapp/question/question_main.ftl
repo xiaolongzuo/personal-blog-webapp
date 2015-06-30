@@ -10,7 +10,7 @@
         </ul>
         <div id="comments_pager_top"></div>
         <!-- 答案列表 -->
-        <div class="feedback_area_title">答案列表（共<span id="answer_number"><#if answers??>${answers?size}<#else>0</#if></span>条答案）</div>
+        <div class="feedback_area_title">答案列表（共<span id="comment_size"><#if answers??>${answers?size}<#else>0</#if></span>条答案）</div>
         <div class="feedbackNoItems"></div>
         <div class="feedbackItem" id="comment_list">
         <#if answers?? && answers?size gt 0 >
@@ -30,7 +30,8 @@
                 <div class="feedbackCon">
                     <div id="comment_content_${answer.id}" class="blog_comment_body">${answer.answer}</div>
 					<div class="comment_vote">
-						<a class="comment_remark_button" comment_id="${answer.id}" column="good_times" href="javascript:void(0)">支持(<span id="comment_good_span_${answer.id}">${answer.good_times?default(0)}</span>)</a>
+                        <a class="comment_solution_button" comment_id="${answer.id}" href="javascript:void(0)">采纳为答案</a>
+                        <a class="comment_remark_button" comment_id="${answer.id}" column="good_times" href="javascript:void(0)">支持(<span id="comment_good_span_${answer.id}">${answer.good_times?default(0)}</span>)</a>
 						<a class="comment_remark_button" comment_id="${answer.id}" column="bad_times" href="javascript:void(0)">反对(<span id="comment_bad_span_${answer.id}">${answer.bad_times?default(0)}</span>)</a>
 					</div>
                 </div>

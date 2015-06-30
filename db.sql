@@ -235,6 +235,17 @@ alter table questions add answer_number INT DEFAULT 0;
 alter table questions add is_resolved TINYINT DEFAULT 0;
 
 alter table answers add is_solution TINYINT DEFAULT 0;
+alter table answers add good_times INT DEFAULT 0;
+alter table answers add bad_times INT DEFAULT 0;
+
+
+create table answer_id_visitor_ip (
+  answer_id INT NOT NULL,
+	visitor_ip char(20) NOT NULL,
+	primary key (answer_id,visitor_ip)
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 ;
+
+ALTER TABLE answer_id_visitor_ip add username VARCHAR(40) ;
 
 create table chats (
 	id INT NOT NULL AUTO_INCREMENT,

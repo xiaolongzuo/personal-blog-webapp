@@ -17,7 +17,12 @@
 			quote($(this).attr("comment_id"));
 		});
 		$(".comment_remark_button").click(function(){
-			comment_remark($(this).attr("comment_id"),$(this).attr("column"));
+			comment_remark({
+				"type":1,
+				"articleId":$("#articleId").val(),
+				"commentId":$(this).attr("comment_id"),
+				"column":$(this).attr("column")
+			});
 		});
 		$("body").on("click","#cancel_reply_button",function(){
 			cancelReply();
@@ -26,7 +31,17 @@
 			remark();
 		});		
 		$("#submit_comment_button").click(function(){
-			comment("/comment.do");
+            var content = tinymce.activeEditor.getContent();
+            if(!content || !$.trim(content)) {
+                alert("评论不能为空啊，亲！");
+                return false;
+            }
+			comment("/comment.do",{
+				"articleId":$("#articleId").val(),
+				"content":content,
+				"referenceCommentId":$("#reference_comment_id_input").val(),
+				"referenceCommenter":$("#reference_commenter_input").val()
+			});
 		});
 	});
 </script>

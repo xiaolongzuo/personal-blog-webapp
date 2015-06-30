@@ -244,6 +244,49 @@ public abstract class BaseDao {
         });
     }
 
+    public boolean saveIpRecord(final String table, final String idColumn, final int id, final String visitorIp, final String username) {
+        return execute(new TransactionalOperation<Boolean>() {
+            @Override
+            public Boolean doInConnection(Connection connection) {
+                try {
+                    PreparedStatement statement = connection.prepareStatement("insert into " + table + " (visitor_ip," + idColumn + ",username) values (?,?,?)");
+                    statement.setString(1, visitorIp);
+                    statement.setInt(2, id);
+                    statement.setString(3, username);
+                    int result = statement.executeUpdate();
+                    return result > 0;
+                } catch (SQLException e) {
+                    error("save VisitorIp failed ..." , e);
+                }
+                return false;
+            }
+        });
+    }
+
+    public boolean existsIpRecord(final String table, final String idColumn, final int id, final String visitorIp, final String username) {
+        return execute(new Operation<Boolean>() {
+            @Override
+            public Boolean doInConnection(Connection connection) {
+                try {
+                    PreparedStatement statement = connection.prepareStatement("select * from " + table + " where visitor_ip=? and " + idColumn + "=?");
+                    statement.setString(1, visitorIp);
+                    statement.setInt(2, id);
+                    ResultSet resultSet = statement.executeQuery();
+                    boolean result = resultSet.next();
+                    statement = connection.prepareStatement("select * from " + table + " where username=? and " + idColumn + "=?");
+                    statement.setString(1, username);
+                    statement.setInt(2, id);
+                    resultSet = statement.executeQuery();
+                    result = result || resultSet.next();
+                    return result;
+                } catch (SQLException e) {
+                    error("query VisitorIp failed ..." , e);
+                }
+                return false;
+            }
+        });
+    }
+
 
     public abstract Map<String, String> transfer(ResultSet resultSet);
 

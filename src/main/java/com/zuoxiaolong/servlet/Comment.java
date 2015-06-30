@@ -82,7 +82,7 @@ public class Comment extends AbstractServlet {
 			writeText("保存评论失败，请稍后再试");
 			return;
 		}
-		Generators.generate(articleId);
+		Generators.generateArticle(articleId);
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", true);
 		result.put("id", id);

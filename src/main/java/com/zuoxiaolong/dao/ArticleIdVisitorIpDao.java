@@ -33,46 +33,11 @@ import java.util.Map;
 public class ArticleIdVisitorIpDao extends BaseDao {
 
 	public boolean save(final int articleId, final String visitorIp, final String username) {
-		return execute(new TransactionalOperation<Boolean>() {
-			@Override
-			public Boolean doInConnection(Connection connection) {
-				try {
-					PreparedStatement statement = connection.prepareStatement("insert into article_id_visitor_ip (visitor_ip,article_id,username) values (?,?,?)");
-					statement.setString(1, visitorIp);
-					statement.setInt(2, articleId);
-					statement.setString(3, username);
-					int result = statement.executeUpdate();
-					return result > 0;
-				} catch (SQLException e) {
-					error("save remarkVisitorIp failed ..." , e);
-				}
-				return false;
-			}
-		});
-	} 
+		return saveIpRecord("article_id_visitor_ip", "article_id", articleId, visitorIp, username);
+	}
 	
-	public boolean exsits(final int articleId, final String visitorIp, final String username) {
-		return execute(new Operation<Boolean>() {
-			@Override
-			public Boolean doInConnection(Connection connection) {
-				try {
-					PreparedStatement statement = connection.prepareStatement("select * from article_id_visitor_ip where visitor_ip=? and article_id=?");
-					statement.setString(1, visitorIp);
-					statement.setInt(2, articleId);
-					ResultSet resultSet = statement.executeQuery();
-					boolean result = resultSet.next();
-					statement = connection.prepareStatement("select * from article_id_visitor_ip where username=? and article_id=?");
-					statement.setString(1, username);
-					statement.setInt(2, articleId);
-					resultSet = statement.executeQuery();
-					result = result || resultSet.next();
-					return result;
-				} catch (SQLException e) {
-					error("query remarkVisitorIp failed ..." , e);
-				}
-				return false;
-			}
-		});
+	public boolean exists(final int articleId, final String visitorIp, final String username) {
+		return existsIpRecord("article_id_visitor_ip", "article_id", articleId, visitorIp, username);
 	}
 
 	@Override

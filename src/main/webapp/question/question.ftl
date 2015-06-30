@@ -17,13 +17,28 @@
             quote($(this).attr("comment_id"));
         });
         $(".comment_remark_button").click(function(){
-            comment_remark($(this).attr("comment_id"),$(this).attr("column"));
+            comment_remark({
+                "type":2,
+                "questionId":$("#questionId").val(),
+                "commentId":$(this).attr("comment_id"),
+                "column":$(this).attr("column")
+            });
         });
         $("body").on("click","#cancel_reply_button",function(){
             cancelReply();
         });
         $("#submit_comment_button").click(function(){
-            comment("/answer.do");
+            var content = tinymce.activeEditor.getContent();
+            if(!content || !$.trim(content)) {
+                alert("评论不能为空啊，亲！");
+                return false;
+            }
+            comment("/answer.do",{
+                "questionId":$("#questionId").val(),
+                "content":content,
+                "referenceCommentId":$("#reference_comment_id_input").val(),
+                "referenceCommenter":$("#reference_commenter_input").val()
+            });
         });
 	});
 </script>

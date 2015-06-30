@@ -16,6 +16,7 @@ package com.zuoxiaolong.servlet;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.dao.AnswerDao;
 import com.zuoxiaolong.dao.ArticleDao;
 import com.zuoxiaolong.dao.CommentDao;
 import com.zuoxiaolong.generator.Generators;
@@ -58,26 +59,25 @@ public class Answer extends AbstractServlet {
 		String visitorIp = HttpUtil.getVisitorIp(request);
 		Map<String, String> user = getUser();
 		String username = user == null ? null : user.get("username");
-		String nickName = user == null ? null : user.get("nickName");
 		Integer referenceCommentId = null;
 		if (!StringUtils.isBlank(referenceCommentIdString) && !StringUtils.isBlank(referenceCommenter)) {
 			referenceCommentId = Integer.valueOf(referenceCommentIdString);
 			content = "<a href=\"javascript:void(0);\" class=\"content_reply_a\" reference_comment_id=\""+referenceCommentId+"\">@"+referenceCommenter+"</a><br/>" + content;
 		}
 		content = handleQuote(content);
-		Integer id = DaoFactory.getDao(CommentDao.class).save(questionId, visitorIp, new Date(), content, username, nickName, null, referenceCommentId);
+		Integer id = DaoFactory.getDao(AnswerDao.class).save(questionId, visitorIp, new Date(), content, username,referenceCommentId);
 		if (id == null) {
-			logger.error("save comment error!");
+			logger.error("save answer error!");
 			writeText("保存评论失败，请稍后再试");
 			return;
 		}
 		if (DaoFactory.getDao(ArticleDao.class).updateCount(questionId, "comment_times") && logger.isInfoEnabled()) {
-			logger.info("save comment and updateCount success!");
+			logger.info("save answer and updateCount success!");
 		} else {
 			writeText("保存评论失败，请稍后再试");
 			return;
 		}
-		Generators.generate(questionId);
+		Generators.generateArticle(questionId);
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("success", true);
 		result.put("id", id);

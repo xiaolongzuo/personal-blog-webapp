@@ -83,10 +83,10 @@ public class AnswerDao extends BaseDao {
 				try {
 					PreparedStatement statement = null;
 					if (referenceAnswerId == null) {
-						statement = connection.prepareStatement("insert into comments (visitor_ip,city,answer,question_id,"
+						statement = connection.prepareStatement("insert into answers (visitor_ip,city,answer,question_id,"
 								+ "answer_date,username) values (?,?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
 					} else {
-						statement = connection.prepareStatement("insert into comments (visitor_ip,city,answer,question_id,"
+						statement = connection.prepareStatement("insert into answers (visitor_ip,city,answer,question_id,"
 								+ "answer_date,username,reference_answer_id) values (?,?,?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS);
 					}
 					statement.setString(1, visitorIp);
@@ -123,7 +123,7 @@ public class AnswerDao extends BaseDao {
 			public List<Map<String, String>> doInConnection(Connection connection) {
 				List<Map<String, String>> comments = new ArrayList<Map<String,String>>();
 				try {
-					PreparedStatement statement = connection.prepareStatement("select * from answers where question_id=? order by answer_date");
+					PreparedStatement statement = connection.prepareStatement("select * from answers where question_id=? order by good_times DESC , answer_date ASC ");
 					statement.setInt(1, questionId);
 					ResultSet resultSet = statement.executeQuery();
 					while (resultSet.next()) {
@@ -145,20 +145,17 @@ public class AnswerDao extends BaseDao {
 		Map<String, String> comment = new HashMap<String, String>();
 		try {
 			comment.put("id", resultSet.getString("id"));
-			comment.put("content", resultSet.getString("content"));
-			comment.put("create_date", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(resultSet.getTimestamp("create_date")));
+			comment.put("answer", resultSet.getString("answer"));
+			comment.put("answer_date", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(resultSet.getTimestamp("answer_date")));
 			String username = resultSet.getString("username");
-			String resourceUsername = resultSet.getString("resource_username");
 			if (!StringUtils.isEmpty(username)) {
-				comment.put("commenter", username);
-			} else if (!StringUtils.isEmpty(resourceUsername)) {
-				comment.put("commenter", resourceUsername);
+				comment.put("answerer", username);
 			} else {
-				comment.put("commenter", resultSet.getString("city") + "网友");
+				comment.put("answerer", resultSet.getString("city") + "网友");
 			}
-			comment.put("articleUrl", Configuration.getSiteUrl() + "/blog/article.ftl?id=" + resultSet.getInt("article_id"));
 			comment.put("good_times", resultSet.getString("good_times"));
 			comment.put("bad_times", resultSet.getString("bad_times"));
+			comment.put("is_solution", resultSet.getString("is_solution"));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}

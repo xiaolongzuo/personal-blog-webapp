@@ -16,6 +16,8 @@ package com.zuoxiaolong.dao;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.model.Status;
+import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.orm.BaseDao;
 import com.zuoxiaolong.orm.Operation;
 import com.zuoxiaolong.orm.TransactionalOperation;
@@ -33,6 +35,10 @@ import java.util.Map;
  * @since 15/6/21 00:25
  */
 public class QuestionDao extends BaseDao {
+
+    public boolean updateCommentCount(final int id) {
+        return updateTimesCount("questions", "answer_number", "answers", "question_id", id);
+    }
 
     public boolean updateCount(Integer id) {
         return updateCount(id, "questions", "access_times");
@@ -86,6 +92,10 @@ public class QuestionDao extends BaseDao {
                 return 0;
             }
         });
+    }
+
+    public List<Map<String, String>> getAll() {
+        return getAll("questions");
     }
 
     public List<Map<String, String>> getQuestions(Map<String, Integer> pager) {

@@ -16,9 +16,11 @@ package com.zuoxiaolong.dynamic;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.dao.AnswerDao;
 import com.zuoxiaolong.dao.ArticleDao;
 import com.zuoxiaolong.dao.QuestionDao;
 import com.zuoxiaolong.freemarker.ArticleHelper;
+import com.zuoxiaolong.freemarker.QuestionHelper;
 import com.zuoxiaolong.mvc.DataMap;
 import com.zuoxiaolong.mvc.Namespace;
 import com.zuoxiaolong.orm.DaoFactory;
@@ -37,7 +39,7 @@ public class Question implements DataMap {
 	@Override
 	public void putCustomData(Map<String, Object> data, HttpServletRequest request, HttpServletResponse response) {
 		Integer id = Integer.valueOf(request.getParameter("id"));
-		data.put("question", DaoFactory.getDao(QuestionDao.class).getQuestion(id));
+		QuestionHelper.putQuestionDataMap(data, VIEW_MODE, id);
 	}
 
 }

@@ -17,27 +17,22 @@ package com.zuoxiaolong.dao;
  */
 
 import com.zuoxiaolong.orm.BaseDao;
-import com.zuoxiaolong.orm.Operation;
-import com.zuoxiaolong.orm.TransactionalOperation;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Map;
 
 /**
  * @author 左潇龙
  * @since 2015年5月12日 下午5:47:40
  */
-public class CommentIdVisitorIpDao extends BaseDao {
+public class AnswerIdVisitorIpDao extends BaseDao {
 
-	public boolean save(final int commentId, final String visitorIp, final String username) {
-		return saveIpRecord("comment_id_visitor_ip", "comment_id", commentId, visitorIp, username);
-	} 
+	public boolean save(final int answerId, final String visitorIp, final String username) {
+		return saveIpRecord("answer_id_visitor_ip", "answer_id", answerId, visitorIp, username);
+	}
 	
-	public boolean exists(final int commentId, final String visitorIp, final String username) {
-		return existsIpRecord("comment_id_visitor_ip", "comment_id", commentId, visitorIp, username);
+	public boolean exists(final int answerId, final String visitorIp, final String username) {
+		return existsIpRecord("answer_id_visitor_ip", "answer_id", answerId, visitorIp, username);
 	}
 
 	@Override

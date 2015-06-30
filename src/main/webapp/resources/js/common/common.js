@@ -70,14 +70,13 @@ function generateQuote(id) {
 /*
  * 评价评论
  */
-function comment_remark(commentId,column){
-	var articleId = $("#articleId").val();
+function comment_remark(data){
 	var result = null;
 	$.ajax({
     	url:contextPath + "/commentRemark.do",
     	async: false,
     	type:"POST",
-        data:{"articleId":articleId,"commentId":commentId,"column":column},
+        data:data,
         success:function(data){
         	result = data;
         	if(data && data == 'exists') {
@@ -88,13 +87,13 @@ function comment_remark(commentId,column){
 	if(!result || result != 'success') {
 		return;
 	}
-	if(column == 'good_times') {
-		var times = parseInt($("#comment_good_span_"+commentId).html()) + 1;
-		$("#comment_good_span_"+commentId).html(times);
+	if(data.column == 'good_times') {
+		var times = parseInt($("#comment_good_span_"+data.commentId).html()) + 1;
+		$("#comment_good_span_"+data.commentId).html(times);
 	}
-	if(column == 'bad_times') {
-		var times = parseInt($("#comment_bad_span_"+commentId).html()) + 1;
-		$("#comment_bad_span_"+commentId).html(times);
+	if(data.column == 'bad_times') {
+		var times = parseInt($("#comment_bad_span_"+data.commentId).html()) + 1;
+		$("#comment_bad_span_"+data.commentId).html(times);
 	}
 }
 
@@ -140,18 +139,11 @@ function remark(){
 /*
  * 评论
  */
-function comment(url) {
-	var comment = tinymce.activeEditor.getContent();
-	var referenceCommentId = $("#reference_comment_id_input").val();
-	var referenceCommenter = $("#reference_commenter_input").val();
-	if(!comment || !$.trim(comment)) {
-		alert("评论不能为空啊，亲！");
-		return false;
-	}
+function comment(url,data) {
 	$.ajax({
 		url:contextPath + url,
 		type:"POST",
-		data:{"articleId":$("#articleId").val(),"content":comment,"referenceCommentId":referenceCommentId,"referenceCommenter":referenceCommenter},
+		data:data,
 		success:function(data) {
 			if (data && data.success) {
 				var size = parseInt($("#comment_size").html()) + 1;

@@ -44,12 +44,14 @@ public abstract class Generators {
     	ArticleListGenerator articleListGenerator = new ArticleListGenerator();
 		ExceptionGenerator exceptionGenerator = new ExceptionGenerator();
 		CommonGenerator commonGenerator = new CommonGenerator();
+		QuestionGenerator questionGenerator = new QuestionGenerator();
     	generatorMap = new HashMap<>();
     	generatorMap.put(IndexGenerator.class, indexGenerator);
     	generatorMap.put(ArticleGenerator.class, articleGenerator);
     	generatorMap.put(ArticleListGenerator.class, articleListGenerator);
 		generatorMap.put(ExceptionGenerator.class, exceptionGenerator);
 		generatorMap.put(CommonGenerator.class, commonGenerator);
+		generatorMap.put(QuestionGenerator.class, questionGenerator);
     	
     	generatorList = new ArrayList<>();
     	generatorList.add(indexGenerator);
@@ -57,6 +59,7 @@ public abstract class Generators {
     	generatorList.add(articleGenerator);
 		generatorList.add(exceptionGenerator);
 		generatorList.add(commonGenerator);
+		generatorList.add(questionGenerator);
     }
 
     public static void generate() {
@@ -71,8 +74,12 @@ public abstract class Generators {
 		}
     }
 
-    public static void generate(Integer id) {
+    public static void generateArticle(Integer id) {
         ((ArticleGenerator)generatorMap.get(ArticleGenerator.class)).generateArticle(id);
     }
+
+	public static void generateQuestion(Integer id) {
+		((QuestionGenerator)generatorMap.get(QuestionGenerator.class)).generateQuestion(id);
+	}
     
 }

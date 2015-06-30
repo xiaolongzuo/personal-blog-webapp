@@ -68,7 +68,7 @@ public class Counter extends AbstractServlet {
 			}
 			String username = getUsername();
 			String ip = HttpUtil.getVisitorIp(request);
-			if (DaoFactory.getDao(ArticleIdVisitorIpDao.class).exsits(articleId, ip, username)) {
+			if (DaoFactory.getDao(ArticleIdVisitorIpDao.class).exists(articleId, ip, username)) {
 				writeText("exists");
 				if (logger.isInfoEnabled()) {
 					logger.info(ip + " has remarked...");
@@ -87,7 +87,7 @@ public class Counter extends AbstractServlet {
 			logger.info("updateCount success!");
 		}
 		writeText("success");
-		Generators.generate(articleId);
+		Generators.generateArticle(articleId);
 	}
 
 }
