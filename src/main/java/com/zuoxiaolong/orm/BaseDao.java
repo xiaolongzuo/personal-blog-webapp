@@ -27,6 +27,8 @@ import org.apache.log4j.Logger;
 
 import com.zuoxiaolong.jdbc.ConnectionFactory;
 
+import javax.swing.text.View;
+
 /**
  * @author 左潇龙
  * @since 5/7/2015 11:44 AM
@@ -159,6 +161,26 @@ public abstract class BaseDao {
     }
 
     protected List<Map<String, String>> getPager(final Map<String, Integer> pager, final String table, final String orderColumn) {
+        return getPager(pager, table, orderColumn, null);
+    }
+
+    public List<Map<String, String>> getAll(final String table) {
+        return getAll(table, (ViewMode)null);
+    }
+
+    public List<Map<String, String>> getAll(final String table, final String order) {
+        return getAll(table, order, null);
+    }
+
+    public Map<String, String> getById(String table, final int id) {
+        return getById(table, id, null);
+    }
+
+    protected List<Map<String, String>> getPager(final Map<String, Integer> pager, final String table, ViewMode viewMode) {
+        return getPager(pager, table, "create_date", viewMode);
+    }
+
+    protected List<Map<String, String>> getPager(final Map<String, Integer> pager, final String table, final String orderColumn, ViewMode viewMode) {
         return execute(new Operation<List<Map<String, String>>>() {
             @Override
             public List<Map<String, String>> doInConnection(Connection connection) {
@@ -169,7 +191,7 @@ public abstract class BaseDao {
                     statement.setInt(1 , (pager.get("current") - 1) * 10);
                     ResultSet resultSet = statement.executeQuery();
                     while (resultSet.next()) {
-                        result.add(transfer(resultSet));
+                        result.add(transfer(resultSet, viewMode));
                     }
                 } catch (SQLException e) {
                     error("query " + table + " failed ..." , e);
@@ -180,7 +202,7 @@ public abstract class BaseDao {
         });
     }
 
-    public List<Map<String, String>> getAll(final String table) {
+    public List<Map<String, String>> getAll(final String table, ViewMode viewMode) {
         return execute(new Operation<List<Map<String, String>>>() {
             @Override
             public List<Map<String, String>> doInConnection(Connection connection) {
@@ -190,7 +212,7 @@ public abstract class BaseDao {
                     Statement statement = connection.createStatement();
                     ResultSet resultSet = statement.executeQuery(sql);
                     while (resultSet.next()) {
-                        result.add(transfer(resultSet));
+                        result.add(transfer(resultSet, viewMode));
                     }
                 } catch (SQLException e) {
                     error("query " + table + " failed ..." , e);
@@ -201,7 +223,7 @@ public abstract class BaseDao {
         });
     }
 
-    public List<Map<String, String>> getAll(final String table, final String order) {
+    public List<Map<String, String>> getAll(final String table, final String order, ViewMode viewMode) {
         return execute(new Operation<List<Map<String, String>>>() {
             @Override
             public List<Map<String, String>> doInConnection(Connection connection) {
@@ -211,7 +233,7 @@ public abstract class BaseDao {
                     Statement statement = connection.createStatement();
                     ResultSet resultSet = statement.executeQuery(sql);
                     while (resultSet.next()) {
-                        result.add(transfer(resultSet));
+                        result.add(transfer(resultSet, viewMode));
                     }
                 } catch (SQLException e) {
                     error("query " + table + " failed ..." , e);
@@ -222,7 +244,7 @@ public abstract class BaseDao {
         });
     }
 
-    public Map<String, String> getById(String table, final int id) {
+    public Map<String, String> getById(String table, final int id, ViewMode viewMode) {
         return execute(new Operation<Map<String, String>>() {
             @Override
             public Map<String, String> doInConnection(Connection connection) {
@@ -233,7 +255,7 @@ public abstract class BaseDao {
                     statement.setInt(1, id);
                     ResultSet resultSet = statement.executeQuery();
                     if (resultSet.next()) {
-                        result = transfer(resultSet);
+                        result = transfer(resultSet, viewMode);
                     }
                 } catch (SQLException e) {
                     error("query " + table + " failed ..." , e);
@@ -287,7 +309,6 @@ public abstract class BaseDao {
         });
     }
 
-
-    public abstract Map<String, String> transfer(ResultSet resultSet);
+    public abstract Map<String, String> transfer(ResultSet resultSet, ViewMode viewMode);
 
 }

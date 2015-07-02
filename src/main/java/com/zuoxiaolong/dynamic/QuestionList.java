@@ -16,16 +16,15 @@ package com.zuoxiaolong.dynamic;
  * limitations under the License.
  */
 
-import com.zuoxiaolong.dao.ArticleDao;
 import com.zuoxiaolong.dao.QuestionDao;
+import com.zuoxiaolong.freemarker.QuestionListHelper;
+import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.mvc.DataMap;
 import com.zuoxiaolong.mvc.Namespace;
 import com.zuoxiaolong.orm.DaoFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,7 +32,7 @@ import java.util.Map;
  * @since 15/6/21 00:56
  */
 @Namespace("question")
-public class QuestionIndex implements DataMap {
+public class QuestionList implements DataMap {
 
     @Override
     public void putCustomData(Map<String, Object> data, HttpServletRequest request, HttpServletResponse response) {
@@ -41,18 +40,8 @@ public class QuestionIndex implements DataMap {
         if (request.getParameter("current") != null) {
             current = Integer.valueOf(request.getParameter("current"));
         }
-        Map<String, Integer> pager = new HashMap<>();
-        int total = DaoFactory.getDao(QuestionDao.class).getTotal();
-        int page = (total % 10 == 0) ? (total / 10) : (total / 10 + 1);
-        pager.put("current", current);
-        pager.put("total", total);
-        pager.put("page", page);
-        data.put("pager", pager);
-        data.put("questions", DaoFactory.getDao(QuestionDao.class).getQuestions(pager));
-        data.put("firstPageUrl", "/question/question_index.ftl?current=1");
-        data.put("prePageUrl", "/question/question_index.ftl?current=" + (current - 1));
-        data.put("nextPageUrl", "/question/question_index.ftl?current=" + (current + 1));
-        data.put("lastPageUrl", "/question/question_index.ftl?current=" + page);
+        String searchText = request.getParameter("searchText");
+        QuestionListHelper.putQuestionDataMap(searchText, current, data, ViewMode.DYNAMIC);
     }
 
 }

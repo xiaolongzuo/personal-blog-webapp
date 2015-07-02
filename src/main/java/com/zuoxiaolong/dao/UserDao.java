@@ -24,6 +24,7 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.orm.BaseDao;
 import com.zuoxiaolong.orm.DaoFactory;
 import com.zuoxiaolong.orm.Operation;
@@ -45,7 +46,7 @@ public class UserDao extends BaseDao {
 					statement.setString(2, EnrypyUtil.md5(password));
 					ResultSet resultSet = statement.executeQuery();
 					if (resultSet.next()) {
-						return transfer(resultSet);
+						return transfer(resultSet, null);
 					}
 				} catch (Exception e) {
 					throw new RuntimeException(e);
@@ -64,7 +65,7 @@ public class UserDao extends BaseDao {
 					statement.setString(1, username);
 					ResultSet resultSet = statement.executeQuery();
 					if (resultSet.next()) {
-						return transfer(resultSet);
+						return transfer(resultSet, null);
 					}
 				} catch (SQLException e) {
 					throw new RuntimeException(e);
@@ -189,7 +190,7 @@ public class UserDao extends BaseDao {
 		});
     }
 	
-	public Map<String, String> transfer(ResultSet resultSet){
+	public Map<String, String> transfer(ResultSet resultSet, ViewMode viewMode) {
 		Map<String, String> user = new HashMap<String, String>();
 		try {
 			user.put("username", resultSet.getString("username"));

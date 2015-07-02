@@ -29,15 +29,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.freemarker.*;
 import com.zuoxiaolong.util.StringUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
-
-import com.zuoxiaolong.freemarker.ArticleHelper;
-import com.zuoxiaolong.freemarker.ArticleListHelper;
-import com.zuoxiaolong.freemarker.IndexHelper;
 
 /**
  * @author 左潇龙
@@ -63,11 +60,7 @@ public abstract class AbstractServlet implements Servlet {
 
 	/*  user profile method */
 	protected String getUsername() {
-		Map<String, String> user = getUser();
-		if (user != null) {
-			return user.get("username");
-		}
-		return null;
+		return getUsername(getRequest());
 	}
 	
 	protected boolean isLogin() {
@@ -112,6 +105,10 @@ public abstract class AbstractServlet implements Servlet {
 
 	private static final Pattern STATIC_ARTICLE_PATTERN = Pattern.compile("html/article_[0-9]+\\.html");
 
+    private static final Pattern STATIC_QUESTION_PATTERN = Pattern.compile("html/question_[0-9]+\\.html");
+
+    private static final Pattern STATIC_QUESTION_INDEX_PATTERN = Pattern.compile("html/question_index_[0-9]+\\.html");
+
 	private static final Pattern STATIC_ARTICLE_LIST_PATTERN = Pattern.compile("/html/article_list_[a-zA-Z_]+_[0-9]+\\.html");
 
 	public static String handleQuote(String html) {
@@ -138,6 +135,14 @@ public abstract class AbstractServlet implements Servlet {
 		return null;
 	}
 
+    public static String getUsername(HttpServletRequest request) {
+        Map<String, String> user = getUser(request);
+        if (user != null) {
+            return user.get("username");
+        }
+        return null;
+    }
+
 	public static String getDynamicUrl(HttpServletRequest request) {
 		String requestUri = request.getHeader("Referer");
 		Matcher matcher = STATIC_ARTICLE_PATTERN.matcher(requestUri);
@@ -148,6 +153,14 @@ public abstract class AbstractServlet implements Servlet {
 		if (matcher.find()) {
 			return Configuration.getSiteUrl(ArticleListHelper.generateDynamicPath(matcher.group()));
 		}
+        matcher = STATIC_QUESTION_PATTERN.matcher(requestUri);
+        if (matcher.find()) {
+            return Configuration.getSiteUrl(QuestionHelper.generateDynamicPath(matcher.group()));
+        }
+        matcher = STATIC_QUESTION_INDEX_PATTERN.matcher(requestUri);
+        if (matcher.find()) {
+            return Configuration.getSiteUrl(QuestionListHelper.generateDynamicPath(matcher.group()));
+        }
 		int urlEnd = requestUri.lastIndexOf("?");
 		if (urlEnd < 0) {
 			urlEnd = requestUri.length();

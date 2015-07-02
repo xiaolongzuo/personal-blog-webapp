@@ -45,6 +45,7 @@ public abstract class Generators {
 		ExceptionGenerator exceptionGenerator = new ExceptionGenerator();
 		CommonGenerator commonGenerator = new CommonGenerator();
 		QuestionGenerator questionGenerator = new QuestionGenerator();
+        QuestionListGenerator questionListGenerator = new QuestionListGenerator();
     	generatorMap = new HashMap<>();
     	generatorMap.put(IndexGenerator.class, indexGenerator);
     	generatorMap.put(ArticleGenerator.class, articleGenerator);
@@ -52,6 +53,7 @@ public abstract class Generators {
 		generatorMap.put(ExceptionGenerator.class, exceptionGenerator);
 		generatorMap.put(CommonGenerator.class, commonGenerator);
 		generatorMap.put(QuestionGenerator.class, questionGenerator);
+        generatorMap.put(QuestionListGenerator.class, questionListGenerator);
     	
     	generatorList = new ArrayList<>();
     	generatorList.add(indexGenerator);
@@ -60,6 +62,7 @@ public abstract class Generators {
 		generatorList.add(exceptionGenerator);
 		generatorList.add(commonGenerator);
 		generatorList.add(questionGenerator);
+        generatorList.add(questionListGenerator);
     }
 
     public static void generate() {

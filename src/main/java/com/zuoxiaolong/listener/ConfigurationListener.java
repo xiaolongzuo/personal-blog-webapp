@@ -60,8 +60,8 @@ public class ConfigurationListener implements ServletContextListener {
 //			} catch (IOException e) {
 //				throw new RuntimeException(e);
 //			}
-//			LuceneHelper.updateIndex();
-//            Generators.generate();
+			LuceneHelper.generateIndex();
+            Generators.generate();
         } else {
             if (logger.isInfoEnabled()) {
                 logger.info("starting fetch and generate thread...");

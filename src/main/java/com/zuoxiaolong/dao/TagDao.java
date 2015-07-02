@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.orm.BaseDao;
 import com.zuoxiaolong.orm.Operation;
 import com.zuoxiaolong.orm.TransactionalOperation;
@@ -46,7 +47,7 @@ public class TagDao extends BaseDao {
 					Statement statement = connection.createStatement();
 					ResultSet resultSet = statement.executeQuery("select * from tags order by (select count(article_id) from article_tag where tag_id=id) desc");
 					while (resultSet.next()) {
-						result.add(transfer(resultSet));
+						result.add(transfer(resultSet, null));
 					}
 				} catch (SQLException e) {
 					error("query article_category failed ..." , e);
@@ -66,7 +67,7 @@ public class TagDao extends BaseDao {
 					statement.setInt(1, articleId);
 					ResultSet resultSet = statement.executeQuery();
 					while (resultSet.next()) {
-						result.add(transfer(resultSet));
+						result.add(transfer(resultSet, null));
 					}
 				} catch (SQLException e) {
 					error("query article_category failed ..." , e);
@@ -117,7 +118,7 @@ public class TagDao extends BaseDao {
 		});
 	}
 	
-	public Map<String, String> transfer(ResultSet resultSet){
+	public Map<String, String> transfer(ResultSet resultSet, ViewMode viewMode) {
 		Map<String, String> tag = new HashMap<String, String>();
 		try {
 			tag.put("id", resultSet.getString("id"));

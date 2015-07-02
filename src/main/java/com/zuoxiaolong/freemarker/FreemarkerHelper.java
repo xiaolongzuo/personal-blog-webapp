@@ -60,8 +60,10 @@ public abstract class FreemarkerHelper {
         data.put("questionUrl", contextPath + "/question/question_index.ftl");
         if (ViewMode.DYNAMIC == viewMode) {
             data.put("indexUrl", IndexHelper.generateDynamicPath());
+            data.put("questionIndexUrl", QuestionListHelper.generateDynamicPath(1));
         } else {
             data.put("indexUrl", IndexHelper.generateStaticPath());
+            data.put("questionIndexUrl", QuestionListHelper.generateStaticPath(1));
         }
         if (namespace.equals("dota")) {
             List<Map<String, String>> matchList = DaoFactory.getDao(MatchDao.class).getAll();

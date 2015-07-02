@@ -15,13 +15,18 @@
         <div class="feedbackItem" id="comment_list">
         <#if answers?? && answers?size gt 0 >
             <#list answers as answer>
-			<div id="comment_div_${answer.id}" class="feedbackItem">
+			<div id="comment_div_${answer.id}" class="feedbackItem" <#if answer.is_solution??>style="background-color: #EEE0E5;"</#if>>
                 <div class="feedbackListSubtitle">
                 	<div class="feedbackManage">
-					<span class="comment_actions">
-						<a comment_id="${answer.id}" class="reply_button" href="javascript:void(0)">回复</a>
-						<a comment_id="${answer.id}" class="quite_button" href="javascript:void(0)">引用</a>
-					</span>
+                        <span class="comment_actions">
+                            <a comment_id="${answer.id}" class="reply_button" href="javascript:void(0)">回复</a>
+                            <a comment_id="${answer.id}" class="quite_button" href="javascript:void(0)">引用</a>
+                        </span>
+                        <#if answer.is_solution??>
+                            <div class="float_right" style="height:30px;line-height:30px;color: black; font-family: 微软雅黑;font-size: 18px;">
+                                提问者采纳<img class="float_right" src="${contextPath}/resources/img/common/solution.png" width="30" height="30">
+                            </div>
+                        </#if>
 					</div>
                     <a href="javascript:void(0)" class="layer">#${answer_index + 1}楼</a>&nbsp;&nbsp;&nbsp;&nbsp;
                     时间：<span class="comment_date">${answer.answer_date}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -30,7 +35,9 @@
                 <div class="feedbackCon">
                     <div id="comment_content_${answer.id}" class="blog_comment_body">${answer.answer}</div>
 					<div class="comment_vote">
-                        <a class="comment_solution_button" comment_id="${answer.id}" href="javascript:void(0)">采纳为答案</a>
+                        <#if answer.show_solution_button??>
+                            <a class="comment_solution_button" comment_id="${answer.id}" href="javascript:void(0)">采纳为答案</a>
+                        </#if>
                         <a class="comment_remark_button" comment_id="${answer.id}" column="good_times" href="javascript:void(0)">支持(<span id="comment_good_span_${answer.id}">${answer.good_times?default(0)}</span>)</a>
 						<a class="comment_remark_button" comment_id="${answer.id}" column="bad_times" href="javascript:void(0)">反对(<span id="comment_bad_span_${answer.id}">${answer.bad_times?default(0)}</span>)</a>
 					</div>

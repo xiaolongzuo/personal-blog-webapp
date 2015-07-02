@@ -18,6 +18,7 @@ package com.zuoxiaolong.dao;
 
 import com.zuoxiaolong.api.HttpApiHelper;
 import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.orm.BaseDao;
 import com.zuoxiaolong.orm.Operation;
 import com.zuoxiaolong.orm.TransactionalOperation;
@@ -127,7 +128,7 @@ public class AnswerDao extends BaseDao {
 					statement.setInt(1, questionId);
 					ResultSet resultSet = statement.executeQuery();
 					while (resultSet.next()) {
-						comments.add(transfer(resultSet));
+						comments.add(transfer(resultSet, null));
 					}
 				} catch (SQLException e) {
 					error("get answers for question[" + questionId + "] failed ..." , e);
@@ -141,7 +142,7 @@ public class AnswerDao extends BaseDao {
 		return getAll("answers", "answer_date");
 	}
 	
-	public Map<String, String> transfer(ResultSet resultSet){
+	public Map<String, String> transfer(ResultSet resultSet, ViewMode viewMode){
 		Map<String, String> comment = new HashMap<String, String>();
 		try {
 			comment.put("id", resultSet.getString("id"));
@@ -155,7 +156,6 @@ public class AnswerDao extends BaseDao {
 			}
 			comment.put("good_times", resultSet.getString("good_times"));
 			comment.put("bad_times", resultSet.getString("bad_times"));
-			comment.put("is_solution", resultSet.getString("is_solution"));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}

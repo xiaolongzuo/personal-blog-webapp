@@ -8,7 +8,7 @@ DROP TABLE IF EXISTS access_log;
 CREATE TABLE articles
 (
   id INT NOT NULL AUTO_INCREMENT,
-  username CHAR(15) NOT NULL CHECK(username !=''),
+  username CHAR(15) NOT NULL,
   resource_id VARCHAR(200) NOT NULL,
   subject VARCHAR (100) NOT NULL,
   html LONGTEXT NOT NULL,
@@ -204,7 +204,7 @@ ALTER TABLE articles CHANGE COLUMN resource_id resource_id VARCHAR(200) NULL ;
 
 alter table comments change nick_name resource_username VARCHAR (40);
 
---生产环境到此
+/* 生产到此 */
 
 create table questions (
 	id INT NOT NULL AUTO_INCREMENT,
@@ -233,8 +233,8 @@ alter table questions add content TEXT NOT NULL;
 alter table questions add access_times INT DEFAULT 0;
 alter table questions add answer_number INT DEFAULT 0;
 alter table questions add is_resolved TINYINT DEFAULT 0;
+alter table questions add solution_id INT DEFAULT 0;
 
-alter table answers add is_solution TINYINT DEFAULT 0;
 alter table answers add good_times INT DEFAULT 0;
 alter table answers add bad_times INT DEFAULT 0;
 

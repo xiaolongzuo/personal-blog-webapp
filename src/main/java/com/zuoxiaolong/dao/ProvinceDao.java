@@ -16,6 +16,7 @@ package com.zuoxiaolong.dao;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.orm.BaseDao;
 import com.zuoxiaolong.orm.Operation;
 
@@ -54,7 +55,7 @@ public class ProvinceDao extends BaseDao {
 		return getAll("dictionary_province");
 	}
 	
-	public Map<String, String> transfer(ResultSet resultSet){
+	public Map<String, String> transfer(ResultSet resultSet, ViewMode viewMode) {
 		Map<String, String> tag = new HashMap<String, String>();
 		try {
 			tag.put("id", resultSet.getString("id"));

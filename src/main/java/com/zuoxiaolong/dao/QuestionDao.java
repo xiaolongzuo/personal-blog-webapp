@@ -16,6 +16,7 @@ package com.zuoxiaolong.dao;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.freemarker.QuestionHelper;
 import com.zuoxiaolong.model.Status;
 import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.orm.BaseDao;
@@ -44,8 +45,26 @@ public class QuestionDao extends BaseDao {
         return updateCount(id, "questions", "access_times");
     }
 
-    public Map<String, String> getQuestion(final Integer id) {
-        return getById("questions", id);
+    public boolean updateIsResolved(Integer id, Integer answerId) {
+        return execute(new TransactionalOperation<Boolean>() {
+            @Override
+            public Boolean doInConnection(Connection connection) {
+                String sql = "update questions set is_resolved = 1,solution_id=? where id=?";
+                try {
+                    PreparedStatement statement = connection.prepareStatement(sql);
+                    statement.setInt(1, answerId);
+                    statement.setInt(2, id);
+                    int result = statement.executeUpdate();
+                    return result > 0;
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+    }
+
+    public Map<String, String> getQuestion(final Integer id, ViewMode viewMode) {
+        return getById("questions", id, viewMode);
     }
 
     public Integer save(String username, String title, String description, String content) {
@@ -79,7 +98,6 @@ public class QuestionDao extends BaseDao {
         return execute(new Operation<Integer>() {
             @Override
             public Integer doInConnection(Connection connection) {
-                List<Map<String, String>> questions = new ArrayList<Map<String,String>>();
                 try {
                     Statement statement = connection.createStatement();
                     ResultSet resultSet = statement.executeQuery("select count(*) from questions");
@@ -94,16 +112,16 @@ public class QuestionDao extends BaseDao {
         });
     }
 
-    public List<Map<String, String>> getAll() {
-        return getAll("questions");
+    public List<Map<String, String>> getAll(ViewMode viewMode) {
+        return getAll("questions", viewMode);
     }
 
-    public List<Map<String, String>> getQuestions(Map<String, Integer> pager) {
-        return getPager(pager, "questions");
+    public List<Map<String, String>> getQuestions(Map<String, Integer> pager, ViewMode viewMode) {
+        return getPager(pager, "questions", viewMode);
     }
 
-    public Map<String, String> transfer(ResultSet resultSet){
-        Map<String, String> question = new HashMap<String, String>();
+    public Map<String, String> transfer(ResultSet resultSet, ViewMode viewMode) {
+        Map<String, String> question = new HashMap<>();
         try {
             question.put("id", resultSet.getString("id"));
             question.put("create_date", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(resultSet.getTimestamp("create_date")));
@@ -115,6 +133,18 @@ public class QuestionDao extends BaseDao {
             question.put("access_times", resultSet.getString("access_times"));
             question.put("answer_number", resultSet.getString("answer_number"));
             question.put("is_resolved", resultSet.getString("is_resolved"));
+            question.put("solution_id", resultSet.getString("solution_id"));
+            boolean isResolved = Integer.valueOf(question.get("is_resolved")) == 1;
+            if (isResolved) {
+                question.put("title",  "<span style=\"color:green;\">［已解决］</span>" + question.get("title"));
+            } else {
+                question.put("title",  "<span style=\"color:red;\">［未解决］</span>" + question.get("title"));
+            }
+            if (ViewMode.DYNAMIC == viewMode) {
+                question.put("url", QuestionHelper.generateDynamicPath(Integer.valueOf(question.get("id"))));
+            } else {
+                question.put("url", QuestionHelper.generateStaticPath(Integer.valueOf(question.get("id"))));
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

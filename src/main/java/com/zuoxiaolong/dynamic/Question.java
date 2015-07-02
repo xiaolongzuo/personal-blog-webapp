@@ -39,7 +39,7 @@ public class Question implements DataMap {
 	@Override
 	public void putCustomData(Map<String, Object> data, HttpServletRequest request, HttpServletResponse response) {
 		Integer id = Integer.valueOf(request.getParameter("id"));
-		QuestionHelper.putQuestionDataMap(data, VIEW_MODE, id);
+		QuestionHelper.putQuestionDataMap(request, data, VIEW_MODE, id);
 	}
 
 }

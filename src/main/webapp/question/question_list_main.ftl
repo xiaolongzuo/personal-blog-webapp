@@ -7,7 +7,7 @@
         <div class="questions">
             <ul>
                 <h3>
-                    <a href="${contextPath}/question/question.ftl?id=${question.id}">${question.title}</a>
+                    <a href="${contextPath}${question.url}">${question.title}</a>
                 </h3>
                 <p>
                 ${question.summary}...

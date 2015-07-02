@@ -8,7 +8,7 @@
 <#include "../common/header.ftl">
 <article>
 	<div class="left_box float_left">
-        <#include "question_index_main.ftl">
+        <#include "question_list_main.ftl">
 	</div>
 	<div class="right_box float_right">
 		<#include "right.ftl">

@@ -386,9 +386,4 @@ public class ArticleDao extends BaseDao {
         }
     }
 
-	@Override
-	public Map<String, String> transfer(ResultSet resultSet) {
-		throw new UnsupportedOperationException();
-	}
-
 }

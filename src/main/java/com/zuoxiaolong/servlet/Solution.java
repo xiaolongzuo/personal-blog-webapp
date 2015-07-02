@@ -1,4 +1,4 @@
-package com.zuoxiaolong.generator;
+package com.zuoxiaolong.servlet;
 
 /*
  * Copyright 2002-2015 the original author or authors.
@@ -16,16 +16,25 @@ package com.zuoxiaolong.generator;
  * limitations under the License.
  */
 
-import com.zuoxiaolong.model.ViewMode;
+import com.zuoxiaolong.dao.QuestionDao;
+import com.zuoxiaolong.orm.DaoFactory;
+
+import javax.servlet.ServletException;
+import java.io.IOException;
 
 /**
  * @author 左潇龙
- * @since 5/7/2015 5:45 PM
+ * @since 15/7/1 21:40
  */
-public interface Generator {
+public class Solution extends AbstractServlet {
 
-    ViewMode VIEW_MODE = ViewMode.STATIC;
-
-    void generate();
+    @Override
+    protected void service() throws ServletException, IOException {
+        Integer questionId = Integer.valueOf(getRequest().getParameter("questionId"));
+        Integer answerId = Integer.valueOf(getRequest().getParameter("answerId"));
+        if (DaoFactory.getDao(QuestionDao.class).updateIsResolved(questionId, answerId)) {
+            writeText("success");
+        }
+    }
 
 }

@@ -16,6 +16,7 @@ package com.zuoxiaolong.dao;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.orm.BaseDao;
 import com.zuoxiaolong.orm.Operation;
 
@@ -44,7 +45,7 @@ public class CityDao extends BaseDao {
 					statement.setInt(1, provinceId);
 					ResultSet resultSet = statement.executeQuery();
 					while (resultSet.next()) {
-						result.add(transfer(resultSet));
+						result.add(transfer(resultSet, null));
 					}
 				} catch (SQLException e) {
 					error("query dictionary_city failed ..." , e);
@@ -54,7 +55,7 @@ public class CityDao extends BaseDao {
 		});
 	}
 	
-	public Map<String, String> transfer(ResultSet resultSet){
+	public Map<String, String> transfer(ResultSet resultSet, ViewMode viewMode){
 		Map<String, String> tag = new HashMap<String, String>();
 		try {
 			tag.put("id", resultSet.getString("id"));

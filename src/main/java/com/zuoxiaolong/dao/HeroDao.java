@@ -16,6 +16,7 @@ package com.zuoxiaolong.dao;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.orm.BaseDao;
 import com.zuoxiaolong.orm.Operation;
 
@@ -72,7 +73,7 @@ public class HeroDao extends BaseDao {
 	}
 
 	@Override
-	public Map<String, String> transfer(ResultSet resultSet) {
+	public Map<String, String> transfer(ResultSet resultSet, ViewMode viewMode) {
 		throw new UnsupportedOperationException();
 	}
 

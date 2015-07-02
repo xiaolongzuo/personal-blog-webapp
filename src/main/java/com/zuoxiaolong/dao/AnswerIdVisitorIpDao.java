@@ -16,6 +16,7 @@ package com.zuoxiaolong.dao;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.orm.BaseDao;
 
 import java.sql.ResultSet;
@@ -36,7 +37,7 @@ public class AnswerIdVisitorIpDao extends BaseDao {
 	}
 
 	@Override
-	public Map<String, String> transfer(ResultSet resultSet) {
+	public Map<String, String> transfer(ResultSet resultSet, ViewMode viewMode) {
 		throw new UnsupportedOperationException();
 	}
 }

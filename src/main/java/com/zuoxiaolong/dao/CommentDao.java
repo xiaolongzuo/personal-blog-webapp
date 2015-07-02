@@ -18,6 +18,7 @@ package com.zuoxiaolong.dao;
 
 import com.zuoxiaolong.api.HttpApiHelper;
 import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.orm.BaseDao;
 import com.zuoxiaolong.orm.Operation;
 import com.zuoxiaolong.orm.TransactionalOperation;
@@ -148,7 +149,7 @@ public class CommentDao extends BaseDao {
 					statement.setInt(1, articleId);
 					ResultSet resultSet = statement.executeQuery();
 					while (resultSet.next()) {
-						comments.add(transfer(resultSet));
+						comments.add(transfer(resultSet, null));
 					}
 				} catch (SQLException e) {
 					error("get comments for article[" + articleId + "] failed ..." , e);
@@ -162,7 +163,7 @@ public class CommentDao extends BaseDao {
 		return getAll("comments", "create_date");
 	}
 	
-	public Map<String, String> transfer(ResultSet resultSet){
+	public Map<String, String> transfer(ResultSet resultSet, ViewMode viewMode){
 		Map<String, String> comment = new HashMap<String, String>();
 		try {
 			comment.put("id", resultSet.getString("id"));

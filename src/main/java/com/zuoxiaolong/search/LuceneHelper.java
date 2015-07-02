@@ -18,6 +18,7 @@ package com.zuoxiaolong.search;
 
 import com.zuoxiaolong.config.Configuration;
 import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.dao.QuestionDao;
 import com.zuoxiaolong.model.Status;
 import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.orm.DaoFactory;
@@ -61,12 +62,82 @@ public abstract class LuceneHelper {
 
     private static final String INDEX_PATH = Configuration.getContextPath("index");
 
-    private static final String SUBJECT_CONTENT_SEPARATOR = "##########!!!!!!!!!!&&&&&&&&&&";
+    private static final String SEPARATOR = "##########!!!!!!!!!!&&&&&&&&&&";
 
-    public static void updateIndex() {
+    public static void generateIndex() {
+        generateArticleIndex();
+        generateQuestionIndex();
+    }
+
+    private static void generateQuestionIndex() {
+        try {
+            List<Map<String, String>> questions = DaoFactory.getDao(QuestionDao.class).getAll(ViewMode.DYNAMIC);
+            Directory dir = FSDirectory.open(Paths.get(INDEX_PATH + "/question"));
+            Analyzer analyzer = new SmartChineseAnalyzer();
+            IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
+            indexWriterConfig.setOpenMode(OpenMode.CREATE);
+            IndexWriter writer = new IndexWriter(dir, indexWriterConfig);
+            for (Map<String, String> question : questions) {
+                Document document = new Document();
+                Field idField = new IntField("id", Integer.valueOf(question.get("id")), Field.Store.YES);
+                Field indexedContentField = new TextField("indexedContent", question.get("title") + SEPARATOR + question.get("content") + "]", Field.Store.YES);
+                document.add(idField);
+                document.add(indexedContentField);
+                writer.addDocument(document);
+                if (logger.isInfoEnabled()) {
+                    logger.info("add question index for : [" + question.get("title") + "]");
+                }
+            }
+            writer.close();
+        } catch (Exception e) {
+            logger.error("add question index failed ..." , e);
+        }
+    }
+
+    public static List<Map<String, String>> searchQuestion(String searchText) {
+        try {
+            IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get(INDEX_PATH + "/question")));
+            IndexSearcher searcher = new IndexSearcher(reader);
+            Analyzer analyzer = new SmartChineseAnalyzer();
+            QueryParser parser = new QueryParser("indexedContent", analyzer);
+            Query query = parser.parse(searchText);
+            TopDocs resultDocs = searcher.search(query, 100);
+            ScoreDoc[] scoreDocs = resultDocs.scoreDocs;
+            //高亮设置
+            SimpleHTMLFormatter simpleHtmlFormatter = new SimpleHTMLFormatter("<span style=\"color:red;\">", "</span>");
+            Highlighter highlighter = new Highlighter(simpleHtmlFormatter, new QueryScorer(query));
+            highlighter.setTextFragmenter(new SimpleFragmenter(150));
+            List<Map<String, String>> result = new ArrayList<>();
+            List<Integer> idList = new ArrayList<>();
+            for (int i = 0; i < scoreDocs.length; i++) {
+                Document doc = searcher.doc(scoreDocs[i].doc);
+                Integer id = Integer.valueOf(doc.get("id"));
+                if (!idList.contains(id)) {
+                    String indexedContent = doc.get("indexedContent");
+                    TokenStream tokenStream = analyzer.tokenStream("indexedContent", indexedContent);
+                    Map<String, String> question = DaoFactory.getDao(QuestionDao.class).getQuestion(id, ViewMode.DYNAMIC);
+                    String highlighterString = highlighter.getBestFragment(tokenStream, indexedContent);
+                    if (highlighterString.contains(SEPARATOR)) {
+                        question.put("title",highlighterString.split(SEPARATOR)[0]);
+                        question.put("summary" , highlighterString.split(SEPARATOR)[1]);
+                    } else {
+                        question.put("summary" , highlighterString);
+                    }
+                    result.add(question);
+                    idList.add(id);
+                }
+            }
+            return result;
+        } catch (Exception e) {
+            logger.error("search failed ..." , e);
+        }
+        return new ArrayList<>();
+    }
+
+    private static void generateArticleIndex() {
         try {
             List<Map<String, String>> articles = DaoFactory.getDao(ArticleDao.class).getArticles("create_date", Status.published, ViewMode.DYNAMIC);
-            Directory dir = FSDirectory.open(Paths.get(INDEX_PATH));
+            Directory dir = FSDirectory.open(Paths.get(INDEX_PATH + "/article"));
             Analyzer analyzer = new SmartChineseAnalyzer();
             IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
             indexWriterConfig.setOpenMode(OpenMode.CREATE);
@@ -74,23 +145,23 @@ public abstract class LuceneHelper {
             for (Map<String, String> article : articles) {
                 Document document = new Document();
                 Field idField = new IntField("id", Integer.valueOf(article.get("id")), Field.Store.YES);
-                Field indexedContentField = new TextField("indexedContent", article.get("subject") + SUBJECT_CONTENT_SEPARATOR + article.get("content") + "]", Field.Store.YES);
+                Field indexedContentField = new TextField("indexedContent", article.get("subject") + SEPARATOR + article.get("content") + "]", Field.Store.YES);
                 document.add(idField);
                 document.add(indexedContentField);
                 writer.addDocument(document);
                 if (logger.isInfoEnabled()) {
-                    logger.info("add index for : [" + article.get("subject") + "]");
+                    logger.info("add article index for : [" + article.get("subject") + "]");
                 }
             }
             writer.close();
         } catch (Exception e) {
-            logger.error("add index failed ..." , e);
+            logger.error("add article index failed ..." , e);
         }
     }
 
-    public static List<Map<String, String>> search(String searchText) {
+    public static List<Map<String, String>> searchArticle(String searchText) {
         try {
-            IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get(INDEX_PATH)));
+            IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get(INDEX_PATH + "/article")));
             IndexSearcher searcher = new IndexSearcher(reader);
             Analyzer analyzer = new SmartChineseAnalyzer();
             QueryParser parser = new QueryParser("indexedContent", analyzer);
@@ -111,9 +182,9 @@ public abstract class LuceneHelper {
                     TokenStream tokenStream = analyzer.tokenStream("indexedContent", indexedContent);
                     Map<String, String> article = DaoFactory.getDao(ArticleDao.class).getArticle(id, Status.published, ViewMode.DYNAMIC);
                     String highlighterString = highlighter.getBestFragment(tokenStream, indexedContent);
-                    if (highlighterString.contains(SUBJECT_CONTENT_SEPARATOR)) {
-                        article.put("subject",highlighterString.split(SUBJECT_CONTENT_SEPARATOR)[0]);
-                        article.put("summary" , highlighterString.split(SUBJECT_CONTENT_SEPARATOR)[1]);
+                    if (highlighterString.contains(SEPARATOR)) {
+                        article.put("subject",highlighterString.split(SEPARATOR)[0]);
+                        article.put("summary" , highlighterString.split(SEPARATOR)[1]);
                     } else {
                         article.put("summary" , highlighterString);
                     }

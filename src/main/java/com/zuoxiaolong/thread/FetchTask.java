@@ -43,7 +43,7 @@ public class FetchTask implements Runnable {
 				} else {
 					Cnblogs.fetchArticlesCommon();
 				}
-				LuceneHelper.updateIndex();
+				LuceneHelper.generateIndex();
 				Generators.generate();
 				Thread.sleep(1000 * 60 * THREAD_SLEEP_MINUTES);
 			} catch (Exception e) {

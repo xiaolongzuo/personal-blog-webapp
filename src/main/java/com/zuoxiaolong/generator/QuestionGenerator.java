@@ -39,7 +39,7 @@ public class QuestionGenerator implements Generator {
 
     @Override
     public void generate() {
-        List<Map<String, String>> questions = DaoFactory.getDao(QuestionDao.class).getAll();
+        List<Map<String, String>> questions = DaoFactory.getDao(QuestionDao.class).getAll(VIEW_MODE);
         for (int i = 0; i < questions.size(); i++) {
             generateQuestion(Integer.valueOf(questions.get(i).get("id")));
         }
@@ -49,7 +49,7 @@ public class QuestionGenerator implements Generator {
         Writer writer = null;
         try {
             Map<String, Object> data = FreemarkerHelper.buildCommonDataMap("question", VIEW_MODE);
-            QuestionHelper.putQuestionDataMap(data, VIEW_MODE, id);
+            QuestionHelper.putQuestionDataMap(null, data, VIEW_MODE, id);
             String htmlPath = Configuration.getContextPath(QuestionHelper.generateStaticPath(id));
             writer = new FileWriter(htmlPath);
             FreemarkerHelper.generate("question", "question", writer, data);

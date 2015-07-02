@@ -40,6 +40,22 @@
                 "referenceCommenter":$("#reference_commenter_input").val()
             });
         });
+        $(".comment_solution_button").click(function(){
+            var id = $("#questionId").val();
+            $.ajax({
+                url:"${contextPath}/solution.do",
+                type:"POST",
+                data:{"questionId":id,"answerId":$(this).attr("comment_id")},
+                success:function(data) {
+                    if (data && data == 'success') {
+                        alert("采纳答案成功！");
+                        window.location.href="${contextPath}/question/question.ftl?id=" + id;
+                    } else {
+                        alert("采纳答案失败！");
+                    }
+                }
+            });
+        });
 	});
 </script>
 </head>

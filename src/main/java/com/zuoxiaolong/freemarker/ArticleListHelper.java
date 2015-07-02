@@ -58,7 +58,7 @@ public class ArticleListHelper {
 	}
 
 	public static void putArticleListDataMapBySearchText(Map<String, Object> data, String searchText, int current) {
-		List<Map<String, String>> articles = LuceneHelper.search(searchText);
+		List<Map<String, String>> articles = LuceneHelper.searchArticle(searchText);
 		int total = articles.size();
 		int page = (total % 10 == 0) ? (total / 10) : (total / 10 + 1);
 		Map<String, Integer> pager = new HashMap<>();

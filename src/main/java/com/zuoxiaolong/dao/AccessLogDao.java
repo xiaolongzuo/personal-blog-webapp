@@ -29,6 +29,7 @@ import java.util.Map;
 import com.zuoxiaolong.api.HttpApiHelper;
 import com.zuoxiaolong.cache.CacheManager;
 import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.orm.BaseDao;
 import com.zuoxiaolong.orm.TransactionalOperation;
 
@@ -69,7 +70,7 @@ public class AccessLogDao extends BaseDao {
     }
 
     @Override
-    public Map<String, String> transfer(ResultSet resultSet) {
+    public Map<String, String> transfer(ResultSet resultSet, ViewMode viewMode) {
         throw new UnsupportedOperationException();
     }
 

@@ -7,6 +7,16 @@
                 alert("请先在右侧登录以后才能提问");
             }
 	    });
+        $("#answer_search_button").click(function(){
+            var searchText = $("#search_text_input").val();
+            if (!searchText || !$.trim(searchText)) {
+                alert("请输入搜索内容");
+                return false;
+            }
+            var url = contextPath + '/question/question_list.ftl?current=1';
+            url = url + '&searchText=' + encodeURI(searchText);
+            window.location.href=url;
+        });
     });
 	</script>
     <div class="answer_search_div">
