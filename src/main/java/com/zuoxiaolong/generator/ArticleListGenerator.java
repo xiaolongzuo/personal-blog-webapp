@@ -34,8 +34,13 @@ import com.zuoxiaolong.orm.DaoFactory;
  * @since 2015年5月10日 下午3:17:37
  */
 public class ArticleListGenerator implements Generator {
-	
-	@Override
+
+    @Override
+    public int order() {
+        return 1;
+    }
+
+    @Override
 	public void generate() {
 		generateArticleList("create_date");
 		generateArticleList("access_times");
@@ -50,7 +55,7 @@ public class ArticleListGenerator implements Generator {
 	        Writer writer = null;
 	        try {
 	            Map<String, Object> data = FreemarkerHelper.buildCommonDataMap(VIEW_MODE);
-	            ArticleListHelper.putArticleListDataMap(data, VIEW_MODE, orderColumn, i, total);
+	            ArticleListHelper.putDataMap(data, VIEW_MODE, orderColumn, i, total);
 	            String htmlPath = Configuration.getContextPath(ArticleListHelper.generateStaticPath(orderColumn, i));
 	            writer = new FileWriter(htmlPath);
 				FreemarkerHelper.generate("article_list", writer, data);

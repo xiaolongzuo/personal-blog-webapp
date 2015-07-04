@@ -30,12 +30,17 @@ import com.zuoxiaolong.freemarker.IndexHelper;
  * @since 5/7/2015 3:06 PM
  */
 public class IndexGenerator implements Generator {
-	
+
+    @Override
+    public int order() {
+        return 0;
+    }
+
     public void generate() {
         Writer writer = null;
         try {
             Map<String, Object> data = FreemarkerHelper.buildCommonDataMap(VIEW_MODE);
-            IndexHelper.putArticleDataMap(data, VIEW_MODE);
+            IndexHelper.putDataMap(data, VIEW_MODE);
             String htmlPath = Configuration.getContextPath(IndexHelper.generateStaticPath());
             writer = new FileWriter(htmlPath);
             FreemarkerHelper.generate("index", writer, data);

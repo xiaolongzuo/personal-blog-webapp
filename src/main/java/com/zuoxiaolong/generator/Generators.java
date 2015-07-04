@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.zuoxiaolong.orm.BaseDao;
 import org.apache.log4j.Logger;
 
 import com.zuoxiaolong.config.Configuration;
@@ -39,30 +40,34 @@ public abstract class Generators {
     private static final List<Generator> generatorList;
 
     static {
-    	IndexGenerator indexGenerator = new IndexGenerator();
-    	ArticleGenerator articleGenerator = new ArticleGenerator();
-    	ArticleListGenerator articleListGenerator = new ArticleListGenerator();
-		ExceptionGenerator exceptionGenerator = new ExceptionGenerator();
-		CommonGenerator commonGenerator = new CommonGenerator();
-		QuestionGenerator questionGenerator = new QuestionGenerator();
-        QuestionListGenerator questionListGenerator = new QuestionListGenerator();
-    	generatorMap = new HashMap<>();
-    	generatorMap.put(IndexGenerator.class, indexGenerator);
-    	generatorMap.put(ArticleGenerator.class, articleGenerator);
-    	generatorMap.put(ArticleListGenerator.class, articleListGenerator);
-		generatorMap.put(ExceptionGenerator.class, exceptionGenerator);
-		generatorMap.put(CommonGenerator.class, commonGenerator);
-		generatorMap.put(QuestionGenerator.class, questionGenerator);
-        generatorMap.put(QuestionListGenerator.class, questionListGenerator);
-    	
-    	generatorList = new ArrayList<>();
-    	generatorList.add(indexGenerator);
-    	generatorList.add(articleListGenerator);
-    	generatorList.add(articleGenerator);
-		generatorList.add(exceptionGenerator);
-		generatorList.add(commonGenerator);
-		generatorList.add(questionGenerator);
-        generatorList.add(questionListGenerator);
+        generatorMap = new HashMap<>();
+        generatorList = new ArrayList<>();
+        File[] files = Configuration.getClasspathFile("com/zuoxiaolong/generator").listFiles();
+        for (int i = 0; i < files.length; i++) {
+            String fileName = files[i].getName();
+            if (fileName.endsWith(".class")) {
+                fileName = fileName.substring(0, fileName.lastIndexOf(".class"));
+            }
+            try {
+                Class<?> clazz = Configuration.getClassLoader().loadClass("com.zuoxiaolong.generator." + fileName);
+                if (Generator.class.isAssignableFrom(clazz) && Generator.class != clazz) {
+                    Generator generator = (Generator) clazz.newInstance();
+                    generatorMap.put((Class<? extends Generator>) clazz, generator);
+                    List<Generator> copy = new ArrayList<>(generatorList);
+                    for (int j = 0; j < copy.size() ; j++) {
+                        if (copy.get(j).order() > generator.order()) {
+                            generatorList.add(j, generator);
+                            break;
+                        }
+                    }
+                    if (generatorList.size() == copy.size()) {
+                        generatorList.add(generator);
+                    }
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     public static void generate() {
@@ -84,5 +89,9 @@ public abstract class Generators {
 	public static void generateQuestion(Integer id) {
 		((QuestionGenerator)generatorMap.get(QuestionGenerator.class)).generateQuestion(id);
 	}
+
+    public static void generateRecord(Integer id) {
+        ((RecordGenerator)generatorMap.get(RecordGenerator.class)).generateRecord(id);
+    }
     
 }

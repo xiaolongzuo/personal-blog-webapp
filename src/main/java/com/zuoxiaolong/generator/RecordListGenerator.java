@@ -18,8 +18,10 @@ package com.zuoxiaolong.generator;
 
 import com.zuoxiaolong.config.Configuration;
 import com.zuoxiaolong.dao.QuestionDao;
+import com.zuoxiaolong.dao.RecordDao;
 import com.zuoxiaolong.freemarker.FreemarkerHelper;
 import com.zuoxiaolong.freemarker.QuestionListHelper;
+import com.zuoxiaolong.freemarker.RecordListHelper;
 import com.zuoxiaolong.orm.DaoFactory;
 
 import java.io.FileWriter;
@@ -31,25 +33,25 @@ import java.util.Map;
  * @author 左潇龙
  * @since 2015年5月10日 下午3:17:37
  */
-public class QuestionListGenerator implements Generator {
+public class RecordListGenerator implements Generator {
 
     @Override
     public int order() {
-        return 2;
+        return 3;
     }
 
     @Override
 	public void generate() {
-        int total = DaoFactory.getDao(QuestionDao.class).getTotal();
+        int total = DaoFactory.getDao(RecordDao.class).getTotal();
         int page = (total % 10 == 0) ? (total / 10) : (total / 10 + 1);
         for (int i = 1; i < page + 1; i++) {
             Writer writer = null;
             try {
                 Map<String, Object> data = FreemarkerHelper.buildCommonDataMap(VIEW_MODE);
-                QuestionListHelper.putDataMap(null, i, data, VIEW_MODE);
-                String htmlPath = Configuration.getContextPath(QuestionListHelper.generateStaticPath(i));
+                RecordListHelper.putDataMap(i, data, VIEW_MODE);
+                String htmlPath = Configuration.getContextPath(RecordListHelper.generateStaticPath(i));
                 writer = new FileWriter(htmlPath);
-                FreemarkerHelper.generate("question", "question_list", writer, data);
+                FreemarkerHelper.generate("record", "record_list", writer, data);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             } finally {

@@ -34,7 +34,7 @@ public class Index implements DataMap {
 	
 	@Override
 	public void putCustomData(Map<String, Object> data,HttpServletRequest request, HttpServletResponse response) {
-		IndexHelper.putArticleDataMap(data, VIEW_MODE);
+		IndexHelper.putDataMap(data, VIEW_MODE);
 	}
 
 }

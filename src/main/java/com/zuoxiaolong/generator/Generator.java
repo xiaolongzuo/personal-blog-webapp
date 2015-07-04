@@ -26,6 +26,8 @@ public interface Generator {
 
     ViewMode VIEW_MODE = ViewMode.STATIC;
 
+    int order();
+
     void generate();
 
 }

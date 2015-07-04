@@ -72,7 +72,7 @@ public class ArticleDao extends BaseDao {
 			public List<Map<String, String>> doInConnection(Connection connection) {
 				List<Map<String, String>> result = new ArrayList<Map<String,String>>();
 				try {
-					PreparedStatement statement = connection.prepareStatement("select * from articles where id in (select article_id from article_tag where tag_id=? ) order by create_date desc limit ?,10");
+					PreparedStatement statement = connection.prepareStatement("select * from articles where id in (select article_id from article_tag where tag_id=? ) and type=0 order by create_date desc limit ?,10");
 					statement.setInt(1 , tagId);
 					statement.setInt(2 , (pager.get("current") - 1) * 10);
 					ResultSet resultSet = statement.executeQuery();
@@ -93,7 +93,7 @@ public class ArticleDao extends BaseDao {
 			public List<Map<String, String>> doInConnection(Connection connection) {
 				List<Map<String, String>> result = new ArrayList<Map<String,String>>();
 				try {
-					PreparedStatement statement = connection.prepareStatement("select * from articles where id in (select article_id from article_tag where tag_id=? )");
+					PreparedStatement statement = connection.prepareStatement("select * from articles where id in (select article_id from article_tag where tag_id=?  and type=0 )");
 					statement.setInt(1 , tagId);
 					ResultSet resultSet = statement.executeQuery();
 					while (resultSet.next()) {
@@ -113,7 +113,7 @@ public class ArticleDao extends BaseDao {
 			public List<Map<String, String>> doInConnection(Connection connection) {
 				List<Map<String, String>> result = new ArrayList<Map<String,String>>();
 				try {
-					PreparedStatement statement = connection.prepareStatement("select * from articles where id in (select article_id from article_category where category_id=? ) order by create_date desc limit ?,10");
+					PreparedStatement statement = connection.prepareStatement("select * from articles where id in (select article_id from article_category where category_id=? )  and type=0 order by create_date desc limit ?,10");
 					statement.setInt(1, categoryId);
 					statement.setInt(2 , (pager.get("current") - 1) * 10);
 					ResultSet resultSet = statement.executeQuery();
@@ -134,7 +134,7 @@ public class ArticleDao extends BaseDao {
 			public List<Map<String, String>> doInConnection(Connection connection) {
 				List<Map<String, String>> result = new ArrayList<Map<String,String>>();
 				try {
-					PreparedStatement statement = connection.prepareStatement("select * from articles where id in (select article_id from article_category where category_id=? )");
+					PreparedStatement statement = connection.prepareStatement("select * from articles where id in (select article_id from article_category where category_id=?  and type=0 )");
 					statement.setInt(1, categoryId);
 					ResultSet resultSet = statement.executeQuery();
 					while (resultSet.next()) {
@@ -147,130 +147,164 @@ public class ArticleDao extends BaseDao {
 			}
 		});
 	}
-    
-    public Integer saveOrUpdate(String id, String subject, Integer status,String username, String html, String content, String icon) {
-    	return execute(new TransactionalOperation<Integer>() {
-			@Override
-			public Integer doInConnection(Connection connection) {
-				String insertSql = "insert into articles (subject,username,icon,create_date," +
-                "html,content,status) values (?,?,?,?,?,?,?)";
-				String updateSql = "update articles set subject=?,username=?,icon=?,create_date=?,html=?,content=?,status=? where id=?";
-				try {
-					PreparedStatement statement = null;
-					if (StringUtils.isBlank(id)) {
-						statement = connection.prepareStatement(insertSql,Statement.RETURN_GENERATED_KEYS);
-						statement.setString(1, subject);
-						statement.setString(2, username);
-						statement.setString(3, icon == null ? ImageUtil.randomArticleImage() : icon);
-						statement.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
-						statement.setString(5, html);
-						statement.setString(6, content);
-						statement.setInt(7, status);
-					} else {
-						statement = connection.prepareStatement(updateSql);
-						statement.setString(1, subject);
-						statement.setString(2, username);
-						statement.setString(3, icon == null ? ImageUtil.randomArticleImage() : icon);
-						statement.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
-						statement.setString(5, html);
-						statement.setString(6, content);
-						statement.setInt(7, status);
-						statement.setInt(8, Integer.valueOf(id));
-					}
-					int result = statement.executeUpdate();
-					if (result > 0 && StringUtils.isBlank(id)) {
-						ResultSet keyResultSet = statement.getGeneratedKeys();
-						if (keyResultSet.next()) {
-							return keyResultSet.getInt(1);
-						}
-					} 
-					if (result > 0) {
-						return Integer.valueOf(id);
-					}
-				} catch (SQLException e) {
-					throw new RuntimeException(e);
-				}
-				return null;
-			}
-		});
-    }
-    
-    public Integer saveOrUpdate(String resourceId, String subject, String createDate, Integer status,String username, Integer accessTimes, Integer goodTimes, String html, String content) {
-    	return execute(new TransactionalOperation<Integer>() {
-			@Override
-			public Integer doInConnection(Connection connection) {
-				String selectSql = "select id,status from articles where resource_id=?";
-				String insertSql = "insert into articles (resource_id,username,icon,create_date," +
-                "access_times,good_times,subject,html,content,status) values (?,?,?,?,?,?,?,?,?,?)";
-				String updateSql = "update articles set subject=?,html=?,content=?,icon=?,status=? where resource_id=?";
-				try {
-					PreparedStatement statement = connection.prepareStatement(selectSql);
-					statement.setString(1, resourceId);
-					ResultSet resultSet = statement.executeQuery();
-					Boolean exsits = false;
-					Integer currentStatus = 0;
-					Integer id = null;
-					if (resultSet.next()) {
-						exsits = true;
-						currentStatus = resultSet.getInt("status");
-						id = resultSet.getInt("id");
-					}
-					PreparedStatement saveOrUpdate = null;
-					if (!exsits) {
-						saveOrUpdate = connection.prepareStatement(insertSql,Statement.RETURN_GENERATED_KEYS);
-						saveOrUpdate.setString(1, resourceId);
-						saveOrUpdate.setString(2, username);
-						saveOrUpdate.setString(3, ImageUtil.randomArticleImage());
-						saveOrUpdate.setString(4, createDate);
-						saveOrUpdate.setInt(5, accessTimes);
-						saveOrUpdate.setInt(6, goodTimes);
-						saveOrUpdate.setString(7, subject);
-						saveOrUpdate.setString(8, html);
-						saveOrUpdate.setString(9, content);
-						saveOrUpdate.setInt(10, status);
-					} else {
-						saveOrUpdate = connection.prepareStatement(updateSql);
-						saveOrUpdate.setString(1, subject);
-						saveOrUpdate.setString(2, html);
-						saveOrUpdate.setString(3, content);
-						saveOrUpdate.setString(4, ImageUtil.randomArticleImage());
-                        saveOrUpdate.setInt(5, currentStatus == 1 ? currentStatus : status);
-                        saveOrUpdate.setString(6, resourceId);
-					}
-					int result = saveOrUpdate.executeUpdate();
-					if (!exsits && result > 0) {
-						ResultSet keyResultSet = saveOrUpdate.getGeneratedKeys();
-						if (keyResultSet.next()) {
-							id = keyResultSet.getInt(1);
-						}
-					} 
-					return id;
-				} catch (SQLException e) {
-					throw new RuntimeException(e);
-				}
-			}
-		});
-    }
-    
-    public List<Map<String, String>> getPageArticles(final Map<String, Integer> pager,final Status status, final String orderColumn, final ViewMode viewMode ) {
+
+    public List<Map<String, String>> getPageArticlesByType(final Map<String, Integer> pager,final int type, ViewMode viewMode) {
         return execute(new Operation<List<Map<String, String>>>() {
             @Override
             public List<Map<String, String>> doInConnection(Connection connection) {
-                String sql = "select * from articles where status = ? order by " + orderColumn + " desc limit ?,10";
-                List<Map<String, String>> result = new ArrayList<Map<String, String>>();
+                List<Map<String, String>> result = new ArrayList<Map<String,String>>();
                 try {
-                    PreparedStatement statement = connection.prepareStatement(sql);
-					statement.setInt(1 , status.getIntValue());
+                    PreparedStatement statement = connection.prepareStatement("select * from articles where type=? order by create_date desc limit ?,10");
+                    statement.setInt(1, type);
                     statement.setInt(2 , (pager.get("current") - 1) * 10);
                     ResultSet resultSet = statement.executeQuery();
                     while (resultSet.next()) {
                         result.add(transfer(resultSet, viewMode));
                     }
                 } catch (SQLException e) {
-                    throw new RuntimeException(e);
+                    error("query article_category failed ..." , e);
                 }
                 return result;
             }
+        });
+    }
+
+    public List<Map<String, String>> getArticlesByType(final int type, ViewMode viewMode) {
+        return execute(new Operation<List<Map<String, String>>>() {
+            @Override
+            public List<Map<String, String>> doInConnection(Connection connection) {
+                List<Map<String, String>> result = new ArrayList<Map<String,String>>();
+                try {
+                    PreparedStatement statement = connection.prepareStatement("select * from articles where type=? ");
+                    statement.setInt(1, type);
+                    ResultSet resultSet = statement.executeQuery();
+                    while (resultSet.next()) {
+                        result.add(transfer(resultSet, viewMode));
+                    }
+                } catch (SQLException e) {
+                    error("query article_category failed ..." , e);
+                }
+                return result;
+            }
+        });
+    }
+    
+    public Integer saveOrUpdate(String id, String subject, Integer type, Integer status,String username, String html, String content, String icon) {
+    	return execute((TransactionalOperation<Integer>) connection -> {
+            String insertSql = "insert into articles (subject,username,icon,create_date," +
+                                    "html,content,status,type) values (?,?,?,?,?,?,?,?)";
+            String updateSql = "update articles set subject=?,username=?,icon=?,create_date=?,html=?,content=?,status=?,type=? where id=?";
+            try {
+                PreparedStatement statement = null;
+                if (StringUtils.isBlank(id)) {
+                    statement = connection.prepareStatement(insertSql,Statement.RETURN_GENERATED_KEYS);
+                    statement.setString(1, subject);
+                    statement.setString(2, username);
+                    statement.setString(3, icon == null ? ImageUtil.randomArticleImage() : icon);
+                    statement.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
+                    statement.setString(5, html);
+                    statement.setString(6, content);
+                    statement.setInt(7, status);
+                    statement.setInt(8, type);
+                } else {
+                    statement = connection.prepareStatement(updateSql);
+                    statement.setString(1, subject);
+                    statement.setString(2, username);
+                    statement.setString(3, icon == null ? ImageUtil.randomArticleImage() : icon);
+                    statement.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
+                    statement.setString(5, html);
+                    statement.setString(6, content);
+                    statement.setInt(7, status);
+                    statement.setInt(8, type);
+                    statement.setInt(9, Integer.valueOf(id));
+                }
+                int result = statement.executeUpdate();
+                if (result > 0 && StringUtils.isBlank(id)) {
+                    ResultSet keyResultSet = statement.getGeneratedKeys();
+                    if (keyResultSet.next()) {
+                        return keyResultSet.getInt(1);
+                    }
+                }
+                if (result > 0) {
+                    return Integer.valueOf(id);
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            return null;
+        });
+    }
+    
+    public Integer saveOrUpdate(String resourceId, String subject, String createDate, Integer status,String username, Integer accessTimes, Integer goodTimes, String html, String content) {
+    	return execute((TransactionalOperation<Integer>) connection -> {
+            String selectSql = "select id,status from articles where resource_id=?";
+            String insertSql = "insert into articles (resource_id,username,icon,create_date," +
+                "access_times,good_times,subject,html,content,status) values (?,?,?,?,?,?,?,?,?,?)";
+            String updateSql = "update articles set subject=?,html=?,content=?,icon=?,status=? where resource_id=? and type=0 ";
+            try {
+                PreparedStatement statement = connection.prepareStatement(selectSql);
+                statement.setString(1, resourceId);
+                ResultSet resultSet = statement.executeQuery();
+                Boolean exsits = false;
+                Integer currentStatus = 0;
+                Integer id = null;
+                if (resultSet.next()) {
+                    exsits = true;
+                    currentStatus = resultSet.getInt("status");
+                    id = resultSet.getInt("id");
+                }
+                PreparedStatement saveOrUpdate = null;
+                if (!exsits) {
+                    saveOrUpdate = connection.prepareStatement(insertSql,Statement.RETURN_GENERATED_KEYS);
+                    saveOrUpdate.setString(1, resourceId);
+                    saveOrUpdate.setString(2, username);
+                    saveOrUpdate.setString(3, ImageUtil.randomArticleImage());
+                    saveOrUpdate.setString(4, createDate);
+                    saveOrUpdate.setInt(5, accessTimes);
+                    saveOrUpdate.setInt(6, goodTimes);
+                    saveOrUpdate.setString(7, subject);
+                    saveOrUpdate.setString(8, html);
+                    saveOrUpdate.setString(9, content);
+                    saveOrUpdate.setInt(10, status);
+                } else {
+                    saveOrUpdate = connection.prepareStatement(updateSql);
+                    saveOrUpdate.setString(1, subject);
+                    saveOrUpdate.setString(2, html);
+                    saveOrUpdate.setString(3, content);
+                    saveOrUpdate.setString(4, ImageUtil.randomArticleImage());
+                    saveOrUpdate.setInt(5, currentStatus == 1 ? currentStatus : status);
+                    saveOrUpdate.setString(6, resourceId);
+                }
+                int result = saveOrUpdate.executeUpdate();
+                if (!exsits && result > 0) {
+                    ResultSet keyResultSet = saveOrUpdate.getGeneratedKeys();
+                    if (keyResultSet.next()) {
+                        id = keyResultSet.getInt(1);
+                    }
+                }
+                return id;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+    
+    public List<Map<String, String>> getPageArticles(final Map<String, Integer> pager,final Status status, final String orderColumn, final ViewMode viewMode ) {
+        return execute((Operation<List<Map<String, String>>>) connection -> {
+            String sql = "select * from articles where status = ? order by " + orderColumn + " desc limit ?,10";
+            List<Map<String, String>> result = new ArrayList<Map<String, String>>();
+            try {
+                PreparedStatement statement = connection.prepareStatement(sql);
+                statement.setInt(1 , status.getIntValue());
+                statement.setInt(2 , (pager.get("current") - 1) * 10);
+                ResultSet resultSet = statement.executeQuery();
+                while (resultSet.next()) {
+                    result.add(transfer(resultSet, viewMode));
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            return result;
         });
     }
 

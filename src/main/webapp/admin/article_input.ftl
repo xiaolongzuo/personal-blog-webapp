@@ -18,7 +18,8 @@ $(document).ready(function(){
 		}
 		$.ajax({
 			url:"${contextPath}/admin/updateArticle.do",
-			data:{"id":$("input[name=id]").val(),"content":tinymce.activeEditor.getContent(),"subject":$("input[name=subject]").val(),"status":status},
+			data:{"id":$("input[name=id]").val(),"content":tinymce.activeEditor.getContent()
+                ,"subject":$("input[name=subject]").val(),"status":status,"type":$("select[name=type]").val()},
 			type:"POST",
 			success:function(data){
 				if(data && data == 'success') {
@@ -56,6 +57,15 @@ $(document).ready(function(){
 				<input type="checkbox" name="status" <#if article??><#if article.status?default('0') == '1'>checked="checked"</#if></#if>/>
 			</td>
 		</tr>
+        <tr>
+            <td>类型</td>
+            <td>
+                <select name="type">
+                    <option value="0">文章</option>
+                    <option value="1">小说</option>
+                </select>
+            </td>
+        </tr>
 		<tr>
 			<td>&nbsp;</td>
 			<td>

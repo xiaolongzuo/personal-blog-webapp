@@ -41,7 +41,7 @@ public class QuestionList implements DataMap {
             current = Integer.valueOf(request.getParameter("current"));
         }
         String searchText = request.getParameter("searchText");
-        QuestionListHelper.putQuestionDataMap(searchText, current, data, ViewMode.DYNAMIC);
+        QuestionListHelper.putDataMap(searchText, current, data, ViewMode.DYNAMIC);
     }
 
 }

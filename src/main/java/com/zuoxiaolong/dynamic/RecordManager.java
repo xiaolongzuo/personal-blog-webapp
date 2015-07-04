@@ -17,59 +17,45 @@ package com.zuoxiaolong.dynamic;
  */
 
 import com.zuoxiaolong.dao.ArticleDao;
-import com.zuoxiaolong.freemarker.ArticleListHelper;
+import com.zuoxiaolong.dao.RecordDao;
 import com.zuoxiaolong.model.Status;
+import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.mvc.DataMap;
 import com.zuoxiaolong.mvc.Namespace;
 import com.zuoxiaolong.orm.DaoFactory;
-import com.zuoxiaolong.util.StringUtil;
 import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author 左潇龙
  * @since 2015年5月27日 上午2:13:35
  */
-@Namespace
-public class ArticleList implements DataMap {
+@Namespace("admin")
+public class RecordManager implements DataMap {
 
 	@Override
 	public void putCustomData(Map<String, Object> data, HttpServletRequest request, HttpServletResponse response) {
-		String tag = request.getParameter("tag");
-		String category = request.getParameter("category");
-		String searchText = request.getParameter("searchText");
-		String orderColumn = request.getParameter("orderColumn");
-        String type = request.getParameter("type");
 		String currentString = request.getParameter("current");
 		int current = 1;
 		if (StringUtils.isNotBlank(currentString)) {
 			current = Integer.valueOf(currentString);
 		}
-		if (StringUtils.isNotBlank(orderColumn)) {
-			int total = DaoFactory.getDao(ArticleDao.class).getArticles(orderColumn, Status.published, VIEW_MODE).size();
-			ArticleListHelper.putDataMap(data, VIEW_MODE, orderColumn, current, total);
-
-		} else if (StringUtils.isNotBlank(searchText)) {
-			searchText = StringUtil.urlDecode(searchText);
-			ArticleListHelper.putDataMapBySearchText(data, searchText, current);
-
-		} else if (StringUtils.isNotBlank(category)) {
-			category = StringUtil.urlDecode(category);
-			ArticleListHelper.putDataMapByCategory(data, VIEW_MODE, category, current);
-
-		} else if (StringUtils.isNotBlank(tag)) {
-			tag = StringUtil.urlDecode(tag);
-			ArticleListHelper.putDataMapByTag(data, VIEW_MODE, tag, current);
-
-		} else if (StringUtils.isNotBlank(type)) {
-            ArticleListHelper.putDataMapByType(data, VIEW_MODE, type, current);
-
-        } else {
-			throw new IllegalArgumentException();
-		}
+		int total = DaoFactory.getDao(RecordDao.class).getTotal();
+		int page = (total % 10 == 0) ? (total / 10) : (total / 10 + 1);
+		Map<String, Integer> pager = new HashMap<String, Integer>();
+		pager.put("current", current);
+		pager.put("total", total);
+		pager.put("page", page);
+		data.put("pageRecords", DaoFactory.getDao(RecordDao.class).getRecords(pager, ViewMode.DYNAMIC));
+		data.put("pager", pager);
+		data.put("firstArticleListUrl", "/admin/article_manager.ftl?current=1");
+		data.put("preArticleListUrl", "/admin/article_manager.ftl?current=" + (current - 1));
+		data.put("nextArticleListUrl", "/admin/article_manager.ftl?current=" + (current + 1));
+		data.put("lastArticleListUrl", "/admin/article_manager.ftl?current=" + (page));
 	}
 	
 }

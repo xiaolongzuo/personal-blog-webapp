@@ -16,26 +16,30 @@ package com.zuoxiaolong.dynamic;
  * limitations under the License.
  */
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.zuoxiaolong.freemarker.ArticleHelper;
+import com.zuoxiaolong.freemarker.MessageListHelper;
+import com.zuoxiaolong.freemarker.QuestionListHelper;
+import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.mvc.DataMap;
 import com.zuoxiaolong.mvc.Namespace;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
+
 /**
  * @author 左潇龙
- * @since 2015年5月27日 上午2:12:01
+ * @since 15/6/21 00:56
  */
-@Namespace
-public class Article implements DataMap {
+@Namespace("message")
+public class MessageList implements DataMap {
 
-	@Override
-	public void putCustomData(Map<String, Object> data, HttpServletRequest request, HttpServletResponse response) {
-		Integer id = Integer.valueOf(request.getParameter("id"));
-		ArticleHelper.putDataMap(data, VIEW_MODE, id);
-	}
+    @Override
+    public void putCustomData(Map<String, Object> data, HttpServletRequest request, HttpServletResponse response) {
+        Integer current = 1;
+        if (request.getParameter("current") != null) {
+            current = Integer.valueOf(request.getParameter("current"));
+        }
+        MessageListHelper.putDataMap(current, data, ViewMode.DYNAMIC);
+    }
 
 }

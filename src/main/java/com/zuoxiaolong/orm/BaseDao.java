@@ -309,6 +309,24 @@ public abstract class BaseDao {
         });
     }
 
+    public Integer getTotal(String table) {
+        return execute(new Operation<Integer>() {
+            @Override
+            public Integer doInConnection(Connection connection) {
+                try {
+                    Statement statement = connection.createStatement();
+                    ResultSet resultSet = statement.executeQuery("select count(*) from " + table);
+                    if (resultSet.next()) {
+                        return resultSet.getInt(1);
+                    }
+                } catch (SQLException e) {
+                    error("get questions failed ..." , e);
+                }
+                return 0;
+            }
+        });
+    }
+
     public abstract Map<String, String> transfer(ResultSet resultSet, ViewMode viewMode);
 
 }

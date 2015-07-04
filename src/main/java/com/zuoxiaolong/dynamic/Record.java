@@ -16,26 +16,26 @@ package com.zuoxiaolong.dynamic;
  * limitations under the License.
  */
 
-import java.util.Map;
+import com.zuoxiaolong.freemarker.QuestionHelper;
+import com.zuoxiaolong.freemarker.RecordHelper;
+import com.zuoxiaolong.mvc.DataMap;
+import com.zuoxiaolong.mvc.Namespace;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.zuoxiaolong.freemarker.ArticleHelper;
-import com.zuoxiaolong.mvc.DataMap;
-import com.zuoxiaolong.mvc.Namespace;
+import java.util.Map;
 
 /**
  * @author 左潇龙
  * @since 2015年5月27日 上午2:12:01
  */
-@Namespace
-public class Article implements DataMap {
+@Namespace("record")
+public class Record implements DataMap {
 
 	@Override
 	public void putCustomData(Map<String, Object> data, HttpServletRequest request, HttpServletResponse response) {
 		Integer id = Integer.valueOf(request.getParameter("id"));
-		ArticleHelper.putDataMap(data, VIEW_MODE, id);
+		RecordHelper.putDataMap(data, VIEW_MODE, id);
 	}
 
 }

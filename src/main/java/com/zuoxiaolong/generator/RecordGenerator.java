@@ -17,12 +17,11 @@ package com.zuoxiaolong.generator;
  */
 
 import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.dao.ArticleDao;
 import com.zuoxiaolong.dao.QuestionDao;
-import com.zuoxiaolong.freemarker.ArticleHelper;
+import com.zuoxiaolong.dao.RecordDao;
 import com.zuoxiaolong.freemarker.FreemarkerHelper;
 import com.zuoxiaolong.freemarker.QuestionHelper;
-import com.zuoxiaolong.model.Status;
+import com.zuoxiaolong.freemarker.RecordHelper;
 import com.zuoxiaolong.orm.DaoFactory;
 
 import java.io.FileWriter;
@@ -35,29 +34,29 @@ import java.util.Map;
  * @author 左潇龙
  * @since 15/6/29 21:34
  */
-public class QuestionGenerator implements Generator {
+public class RecordGenerator implements Generator {
 
     @Override
     public int order() {
-        return 2;
+        return 3;
     }
 
     @Override
     public void generate() {
-        List<Map<String, String>> questions = DaoFactory.getDao(QuestionDao.class).getAll(VIEW_MODE);
-        for (int i = 0; i < questions.size(); i++) {
-            generateQuestion(Integer.valueOf(questions.get(i).get("id")));
+        List<Map<String, String>> records = DaoFactory.getDao(RecordDao.class).getAll(VIEW_MODE);
+        for (int i = 0; i < records.size(); i++) {
+            generateRecord(Integer.valueOf(records.get(i).get("id")));
         }
     }
 
-    void generateQuestion(Integer id) {
+    void generateRecord(Integer id) {
         Writer writer = null;
         try {
-            Map<String, Object> data = FreemarkerHelper.buildCommonDataMap("question", VIEW_MODE);
-            QuestionHelper.putDataMap(null, data, VIEW_MODE, id);
-            String htmlPath = Configuration.getContextPath(QuestionHelper.generateStaticPath(id));
+            Map<String, Object> data = FreemarkerHelper.buildCommonDataMap("record", VIEW_MODE);
+            RecordHelper.putDataMap(data, VIEW_MODE, id);
+            String htmlPath = Configuration.getContextPath(RecordHelper.generateStaticPath(id));
             writer = new FileWriter(htmlPath);
-            FreemarkerHelper.generate("question", "question", writer, data);
+            FreemarkerHelper.generate("record", "record", writer, data);
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {

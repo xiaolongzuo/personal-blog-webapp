@@ -33,7 +33,7 @@ public abstract class IndexHelper {
 
 	private static final int DEFAULT_INDEX_ARTICLE_NUMBER = 6;
 
-	public static void putArticleDataMap(Map<String, Object> data, ViewMode viewMode) {
+	public static void putDataMap(Map<String, Object> data, ViewMode viewMode) {
 		List<Map<String, String>> randomList = Random.random(DaoFactory.getDao(ArticleDao.class).getArticles("create_date", Status.published, viewMode), DEFAULT_INDEX_ARTICLE_NUMBER);
         data.put("articles", randomList);
 	}

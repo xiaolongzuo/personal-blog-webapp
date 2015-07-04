@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public abstract class QuestionHelper {
 
-	public static void putQuestionDataMap(HttpServletRequest request, Map<String, Object> data, ViewMode viewMode,int questionId) {
+	public static void putDataMap(HttpServletRequest request, Map<String, Object> data, ViewMode viewMode,int questionId) {
 		DaoFactory.getDao(QuestionDao.class).updateCommentCount(questionId);
 		Map<String, String> question = DaoFactory.getDao(QuestionDao.class).getQuestion(questionId, viewMode);
 		data.put("question", question);

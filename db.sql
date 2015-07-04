@@ -238,7 +238,6 @@ alter table questions add solution_id INT DEFAULT 0;
 alter table answers add good_times INT DEFAULT 0;
 alter table answers add bad_times INT DEFAULT 0;
 
-
 create table answer_id_visitor_ip (
   answer_id INT NOT NULL,
 	visitor_ip char(20) NOT NULL,
@@ -247,13 +246,34 @@ create table answer_id_visitor_ip (
 
 ALTER TABLE answer_id_visitor_ip add username VARCHAR(40) ;
 
-create table chats (
+create table records (
 	id INT NOT NULL AUTO_INCREMENT,
+  title VARCHAR(100),
+  record TEXT NOT NULL,
 	content VARCHAR(1500),
-	visitor_ip char(20) NOT NULL,
-	city char(20) NOT NULL,
 	username VARCHAR (40),
-	reference_comment_id INT,
-	chat_date TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+	create_date TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+  access_times INT DEFAULT 0,
+  good_times INT DEFAULT 0,
 	primary key (id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT = 1;
+
+create table record_id_visitor_ip (
+  record_id INT NOT NULL,
+  visitor_ip char(20) NOT NULL,
+  username VARCHAR(40),
+  primary key (record_id,visitor_ip)
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 ;
+
+create table messages (
+  id INT NOT NULL AUTO_INCREMENT,
+  message VARCHAR(1000) NOT NULL,
+  visitor_ip char(20) NOT NULL,
+  city char(20) NOT NULL,
+  username VARCHAR (40),
+  create_date TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+  reference_message_id INT,
+  primary key (id)
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT = 1;
+
+alter table articles add type TINYINT(1) NOT NULL DEFAULT 0;

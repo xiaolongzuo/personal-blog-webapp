@@ -36,7 +36,7 @@ import java.util.Map;
  */
 public abstract class QuestionListHelper {
 
-	public static void putQuestionDataMap(String searchText, int current, Map<String, Object> data, ViewMode viewMode) {
+	public static void putDataMap(String searchText, int current, Map<String, Object> data, ViewMode viewMode) {
         Map<String, Integer> pager = new HashMap<>();
         if (searchText == null || searchText.trim().length() == 0) {
             int total = DaoFactory.getDao(QuestionDao.class).getTotal();

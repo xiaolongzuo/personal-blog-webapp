@@ -30,6 +30,12 @@ import com.zuoxiaolong.model.ViewMode;
  * @since 6/1/2015 5:53 PM
  */
 public class ExceptionGenerator implements Generator {
+
+    @Override
+    public int order() {
+        return 0;
+    }
+
     @Override
     public void generate() {
         Writer writerError = null;

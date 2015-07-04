@@ -36,7 +36,7 @@ import java.util.Map;
  */
 public class ArticleListHelper {
 
-	public static void putArticleListDataMap(Map<String, Object> data, ViewMode viewMode, String orderColumn , int current , int total) {
+	public static void putDataMap(Map<String, Object> data, ViewMode viewMode, String orderColumn , int current , int total) {
 		int page = (total % 10 == 0) ? (total / 10) : (total / 10 + 1);
 		Map<String, Integer> pager = new HashMap<String, Integer>();
 		pager.put("current", current);
@@ -57,7 +57,7 @@ public class ArticleListHelper {
 		}
 	}
 
-	public static void putArticleListDataMapBySearchText(Map<String, Object> data, String searchText, int current) {
+	public static void putDataMapBySearchText(Map<String, Object> data, String searchText, int current) {
 		List<Map<String, String>> articles = LuceneHelper.searchArticle(searchText);
 		int total = articles.size();
 		int page = (total % 10 == 0) ? (total / 10) : (total / 10 + 1);
@@ -74,7 +74,7 @@ public class ArticleListHelper {
 		data.put("lastPageUrl", ArticleListHelper.generateDynamicSearchTextPath(searchText, page));
 	}
 	
-	public static void putArticleListDataMapByTag(Map<String, Object> data, ViewMode viewMode, String tag, int current) {
+	public static void putDataMapByTag(Map<String, Object> data, ViewMode viewMode, String tag, int current) {
 		int tagId = DaoFactory.getDao(TagDao.class).getId(tag);
 		int total = DaoFactory.getDao(ArticleDao.class).getArticlesByTag(tagId, viewMode).size();
 		int page = (total % 10 == 0) ? (total / 10) : (total / 10 + 1);
@@ -89,8 +89,23 @@ public class ArticleListHelper {
 		data.put("nextPageUrl", ArticleListHelper.generateDynamicTagPath(tag, current + 1));
 		data.put("lastPageUrl", ArticleListHelper.generateDynamicTagPath(tag, page));
 	}
+
+    public static void putDataMapByType(Map<String, Object> data, ViewMode viewMode, String type, int current) {
+        int total = DaoFactory.getDao(ArticleDao.class).getArticlesByType(Integer.valueOf(type), viewMode).size();
+        int page = (total % 10 == 0) ? (total / 10) : (total / 10 + 1);
+        Map<String, Integer> pager = new HashMap<String, Integer>();
+        pager.put("current", current);
+        pager.put("total", total);
+        pager.put("page", page);
+        data.put("pageArticles", DaoFactory.getDao(ArticleDao.class).getPageArticlesByType(pager, Integer.valueOf(type), viewMode));
+        data.put("pager", pager);
+        data.put("firstPageUrl", ArticleListHelper.generateDynamicTypePath(type, 1));
+        data.put("prePageUrl", ArticleListHelper.generateDynamicTypePath(type, current - 1));
+        data.put("nextPageUrl", ArticleListHelper.generateDynamicTypePath(type, current + 1));
+        data.put("lastPageUrl", ArticleListHelper.generateDynamicTypePath(type, page));
+    }
 	
-	public static void putArticleListDataMapByCategory(Map<String, Object> data, ViewMode viewMode, String category, int current) {
+	public static void putDataMapByCategory(Map<String, Object> data, ViewMode viewMode, String category, int current) {
 		int categoryId = DaoFactory.getDao(CategoryDao.class).getId(category);
 		int total = DaoFactory.getDao(ArticleDao.class).getArticlesByCategory(categoryId, viewMode).size();
 		int page = (total % 10 == 0) ? (total / 10) : (total / 10 + 1);
@@ -124,6 +139,10 @@ public class ArticleListHelper {
 	public static String generateDynamicPath(String orderColumn, int current) {
 		return "/blog/article_list.ftl?orderColumn=" + orderColumn + "&current=" + current;
 	}
+
+    public static String generateDynamicTypePath(String type, int current) {
+        return "/blog/article_list.ftl?type=" + type + "&current=" + current;
+    }
 	
 	public static String generateDynamicTagPath(String tag, int current) {
 		return "/blog/article_list.ftl?tag=" + StringUtil.urlEncode(tag) + "&current=" + current;

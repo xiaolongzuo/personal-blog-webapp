@@ -16,39 +16,33 @@ package com.zuoxiaolong.servlet;
  * limitations under the License.
  */
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.dao.RecordDao;
+import com.zuoxiaolong.mvc.RequestMapping;
 import com.zuoxiaolong.orm.DaoFactory;
 import com.zuoxiaolong.util.JsoupUtil;
 import org.jsoup.Jsoup;
 
-import com.zuoxiaolong.dao.ArticleDao;
-import com.zuoxiaolong.mvc.RequestMapping;
-import com.zuoxiaolong.reptile.Cnblogs;
-import com.zuoxiaolong.util.StringUtil;
+import javax.servlet.ServletException;
+import java.io.IOException;
 
 /**
  * @author 左潇龙
  * @since 2015年6月18日 上午2:28:03
  */
-@RequestMapping("/admin/updateArticle.do")
-public class AdminUpdateArticle extends AbstractServlet {
+@RequestMapping("/admin/updateRecord.do")
+public class AdminUpdateRecord extends AbstractServlet {
 
 	@Override
 	protected void service() throws ServletException, IOException {
 		String id = getRequest().getParameter("id");
-		String subject = getRequest().getParameter("subject");
+		String title = getRequest().getParameter("title");
 		String html = getRequest().getParameter("content");
-		String status = getRequest().getParameter("status");
-        String type = getRequest().getParameter("type");
-		String icon = getRequest().getParameter("icon");
 		html = handleQuote(html);
 		
 		StringBuffer stringBuffer = new StringBuffer();
 		JsoupUtil.appendText(Jsoup.parse(html), stringBuffer);
-		DaoFactory.getDao(ArticleDao.class).saveOrUpdate(id, subject, Integer.valueOf(status), Integer.valueOf(type), "左潇龙", html, stringBuffer.toString(), icon);
+		DaoFactory.getDao(RecordDao.class).saveOrUpdate(id, title, "左潇龙", html, stringBuffer.toString());
 		writeText("success");
 	}
 

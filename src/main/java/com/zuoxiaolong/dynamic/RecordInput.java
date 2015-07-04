@@ -16,26 +16,31 @@ package com.zuoxiaolong.dynamic;
  * limitations under the License.
  */
 
-import java.util.Map;
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.dao.RecordDao;
+import com.zuoxiaolong.model.Status;
+import com.zuoxiaolong.model.ViewMode;
+import com.zuoxiaolong.mvc.DataMap;
+import com.zuoxiaolong.mvc.Namespace;
+import com.zuoxiaolong.orm.DaoFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.zuoxiaolong.freemarker.ArticleHelper;
-import com.zuoxiaolong.mvc.DataMap;
-import com.zuoxiaolong.mvc.Namespace;
+import java.util.Map;
 
 /**
  * @author 左潇龙
- * @since 2015年5月27日 上午2:12:01
+ * @since 2015年6月18日 下午2:47:47
  */
-@Namespace
-public class Article implements DataMap {
+@Namespace("admin")
+public class RecordInput implements DataMap {
 
 	@Override
 	public void putCustomData(Map<String, Object> data, HttpServletRequest request, HttpServletResponse response) {
-		Integer id = Integer.valueOf(request.getParameter("id"));
-		ArticleHelper.putDataMap(data, VIEW_MODE, id);
+		String id = request.getParameter("id");
+		if (id != null) {
+			data.put("record", DaoFactory.getDao(RecordDao.class).getRecord(Integer.valueOf(id), ViewMode.DYNAMIC));
+		}
 	}
 
 }

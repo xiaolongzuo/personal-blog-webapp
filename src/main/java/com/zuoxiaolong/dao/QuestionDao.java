@@ -95,21 +95,7 @@ public class QuestionDao extends BaseDao {
     }
 
     public Integer getTotal() {
-        return execute(new Operation<Integer>() {
-            @Override
-            public Integer doInConnection(Connection connection) {
-                try {
-                    Statement statement = connection.createStatement();
-                    ResultSet resultSet = statement.executeQuery("select count(*) from questions");
-                    if (resultSet.next()) {
-                        return resultSet.getInt(1);
-                    }
-                } catch (SQLException e) {
-                    error("get questions failed ..." , e);
-                }
-                return 0;
-            }
-        });
+        return getTotal("questions");
     }
 
     public List<Map<String, String>> getAll(ViewMode viewMode) {
@@ -128,6 +114,7 @@ public class QuestionDao extends BaseDao {
             question.put("title", resultSet.getString("title"));
             question.put("description", resultSet.getString("description"));
             String content = resultSet.getString("content");
+            question.put("content", content);
             question.put("summary", StringUtil.substring(content, 100));
             question.put("username", resultSet.getString("username"));
             question.put("access_times", resultSet.getString("access_times"));

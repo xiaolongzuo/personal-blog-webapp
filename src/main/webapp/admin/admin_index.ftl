@@ -13,6 +13,7 @@
 			<th><a href="${contextPath}/admin/statistics.ftl">统计信息</a></th>
 			<th><a href="${contextPath}/admin/new_comment.ftl">最新评论</a></th>
 			<th><a href="${contextPath}/admin/article_manager.ftl">文章管理</a></th>
+            <th><a href="${contextPath}/admin/record_manager.ftl">记录管理</a></th>
 		</tr>
 	</tbody>
 </table>

@@ -36,7 +36,12 @@ import com.zuoxiaolong.orm.DaoFactory;
  */
 public class ArticleGenerator implements Generator {
 
-	@Override
+    @Override
+    public int order() {
+        return 1;
+    }
+
+    @Override
 	public void generate() {
 		List<Map<String, String>> articles = DaoFactory.getDao(ArticleDao.class).getArticles("create_date", Status.published, VIEW_MODE);
 		for (int i = 0; i < articles.size(); i++) {
@@ -48,7 +53,7 @@ public class ArticleGenerator implements Generator {
 		Writer writer = null;
 		try {
 			Map<String, Object> data = FreemarkerHelper.buildCommonDataMap(VIEW_MODE);
-			ArticleHelper.putArticleDataMap(data, VIEW_MODE, id);
+			ArticleHelper.putDataMap(data, VIEW_MODE, id);
 			String htmlPath = Configuration.getContextPath(ArticleHelper.generateStaticPath(id));
 			writer = new FileWriter(htmlPath);
 			FreemarkerHelper.generate("article", writer, data);

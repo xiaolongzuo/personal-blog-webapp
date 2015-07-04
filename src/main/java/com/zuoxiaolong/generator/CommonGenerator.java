@@ -30,7 +30,12 @@ import com.zuoxiaolong.freemarker.FreemarkerHelper;
  */
 public class CommonGenerator implements Generator {
 
-	@Override
+    @Override
+    public int order() {
+        return 0;
+    }
+
+    @Override
 	public void generate() {
 		Writer writer = null;
 		try {

@@ -21,6 +21,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 
 import com.zuoxiaolong.dao.QuestionDao;
+import com.zuoxiaolong.dao.RecordDao;
 import com.zuoxiaolong.orm.DaoFactory;
 import org.apache.log4j.Logger;
 
@@ -45,9 +46,17 @@ public class Counter extends AbstractServlet {
 			updateArticle(request);
 		} else if (type == 2) {
 			updateQuestion(request);
-		} else {
+		}  else if (type == 3) {
+            updateRecord(request);
+        } else {
 			throw new RuntimeException("unknown type.");
 		}
+    }
+
+    private void updateRecord(HttpServletRequest request) {
+        Integer recordId = Integer.valueOf(request.getParameter("recordId"));
+        DaoFactory.getDao(RecordDao.class).updateCount(recordId);
+        writeText("success");
     }
 
 	private void updateQuestion(HttpServletRequest request) {

@@ -16,30 +16,31 @@ package com.zuoxiaolong.freemarker;
  * limitations under the License.
  */
 
-import java.util.Map;
-
-import com.zuoxiaolong.dao.*;
-import com.zuoxiaolong.model.Status;
+import com.zuoxiaolong.dao.AnswerDao;
+import com.zuoxiaolong.dao.QuestionDao;
+import com.zuoxiaolong.dao.RecordDao;
 import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.orm.DaoFactory;
+import com.zuoxiaolong.servlet.AbstractServlet;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author 左潇龙
  * @since 2015年5月31日 下午5:07:46
  */
-public abstract class ArticleHelper {
+public abstract class RecordHelper {
 
-	public static void putDataMap(Map<String, Object> data, ViewMode viewMode,int articleId) {
-		DaoFactory.getDao(ArticleDao.class).updateCommentCount(articleId);
-		Map<String, String> article = DaoFactory.getDao(ArticleDao.class).getArticle(articleId, Status.published, viewMode);
-		data.put("article", article);
-		data.put("comments", DaoFactory.getDao(CommentDao.class).getComments(articleId));
-		data.put("tags", DaoFactory.getDao(TagDao.class).getTags(articleId));
-		data.put("categories", DaoFactory.getDao(CategoryDao.class).getCategories(articleId));
+	public static void putDataMap(Map<String, Object> data, ViewMode viewMode,int recordId) {
+		Map<String, String> record = DaoFactory.getDao(RecordDao.class).getRecord(recordId, viewMode);
+        data.put("record", record);
 	}
 	
-	public static String generateStaticPath(int articleId) {
-		return "/html/article_" + articleId + ".html";
+	public static String generateStaticPath(int recordId) {
+		return "/html/record_" + recordId + ".html";
 	}
 	
 	public static String generateDynamicPath(String staticPath) {
@@ -47,8 +48,8 @@ public abstract class ArticleHelper {
 		return generateDynamicPath(Integer.valueOf(name.split("_")[1]));
 	}
 	
-	public static String generateDynamicPath(int id) {
-		return "/blog/article.ftl?id=" + id;
+	public static String generateDynamicPath(int recordId) {
+		return "/record/record.ftl?id=" + recordId;
 	}
 	
 }
