@@ -204,8 +204,6 @@ ALTER TABLE articles CHANGE COLUMN resource_id resource_id VARCHAR(200) NULL ;
 
 alter table comments change nick_name resource_username VARCHAR (40);
 
-/* 生产到此 */
-
 create table questions (
 	id INT NOT NULL AUTO_INCREMENT,
 	title VARCHAR(200) NOT NULL,
@@ -277,3 +275,5 @@ create table messages (
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT = 1;
 
 alter table articles add type TINYINT(1) NOT NULL DEFAULT 0;
+
+/* 生产到此 */
