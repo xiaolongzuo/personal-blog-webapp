@@ -38,11 +38,6 @@ public class FetchTask implements Runnable {
 		while (true) {
 			try {
 				ImageUtil.loadArticleImages();
-				if (Configuration.isProductEnv()) {
-					Cnblogs.fetchArticlesAfterLogin();
-				} else {
-					Cnblogs.fetchArticlesCommon();
-				}
 				LuceneHelper.generateIndex();
 				Generators.generate();
 				Thread.sleep(1000 * 60 * THREAD_SLEEP_MINUTES);
