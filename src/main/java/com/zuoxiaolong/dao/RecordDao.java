@@ -46,6 +46,26 @@ public class RecordDao extends BaseDao {
         return updateCount(id, "records", "good_times");
     }
 
+    public Boolean delete(Integer id) {
+        return execute(new TransactionalOperation<Boolean>() {
+            @Override
+            public Boolean doInConnection(Connection connection) {
+                String sql = "delete from records where id=?";
+                try {
+                    PreparedStatement statement = connection.prepareStatement(sql);
+                    statement.setInt(1, id);
+                    int result = statement.executeUpdate();
+                    if (result > 0) {
+                        return true;
+                    }
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+                return false;
+            }
+        });
+    }
+
     public Map<String, String> getRecord(final Integer id, ViewMode viewMode) {
         return getById("records", id, viewMode);
     }
