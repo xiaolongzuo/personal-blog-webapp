@@ -53,16 +53,7 @@ public class ConfigurationListener implements ServletContextListener {
         if (logger.isInfoEnabled()) {
             logger.info("DirtyWordsFlush thread has been started...");
         }
-        if (!Configuration.isProductEnv()) {
-//            ImageUtil.loadArticleImages();
-//            try {
-//				Cnblogs.fetchArticlesCommon();
-//			} catch (IOException e) {
-//				throw new RuntimeException(e);
-//			}
-//			LuceneHelper.generateIndex();
-//            Generators.generate();
-        } else {
+        if (Configuration.isProductEnv()) {
             if (logger.isInfoEnabled()) {
                 logger.info("starting fetch and generate thread...");
             }
