@@ -64,11 +64,13 @@ $(document).ready(function(){
             <td>
                 <#list categories as category>
                     <input style="margin: 5px 0px;" type="checkbox" value="${category.id}" name="categories"
-                    <#list articleCategories as articleCategory>
-                        <#if articleCategory.id == category.id>
-                            checked="checked"
-                        </#if>
-                    </#list>
+                    <#if articleCategories??>
+                        <#list articleCategories as articleCategory>
+                            <#if articleCategory.id == category.id>
+                           checked="checked"
+                            </#if>
+                        </#list>
+                    </#if>
                             />${category.category_name}&nbsp;
                     <#if (category_index > 0) && ((category_index + 1) % 7 == 0)>
                         <br/>
@@ -79,7 +81,13 @@ $(document).ready(function(){
         <tr>
             <td>标签</td>
             <td>
-                <input type="text" name="tags" value="${article.tags?default('')}"/>
+                <input type="text" name="tags"
+                   <#if article??>
+                        value="${article.tags?default('')}"
+                   <#else>
+                        value=""
+                   </#if>
+                />
             </td>
         </tr>
 		<tr>
@@ -92,8 +100,8 @@ $(document).ready(function(){
             <td>类型</td>
             <td>
                 <select name="type">
-                    <option value="0" <#if article.type == "0">selected="selected"</#if>>文章</option>
-                    <option value="1" <#if article.type == "1">selected="selected"</#if>>小说</option>
+                    <option value="0" <#if article?? && article.type == "0">selected="selected"</#if>>文章</option>
+                    <option value="1" <#if article?? && article.type == "1">selected="selected"</#if>>小说</option>
                 </select>
             </td>
         </tr>
