@@ -91,13 +91,13 @@ public class ArticleListHelper {
 	}
 
     public static void putDataMapByType(Map<String, Object> data, ViewMode viewMode, String type, int current) {
-        int total = DaoFactory.getDao(ArticleDao.class).getArticlesByType(Integer.valueOf(type), viewMode).size();
+        int total = DaoFactory.getDao(ArticleDao.class).getArticlesByType(Integer.valueOf(type), Status.published, viewMode).size();
         int page = (total % 10 == 0) ? (total / 10) : (total / 10 + 1);
         Map<String, Integer> pager = new HashMap<String, Integer>();
         pager.put("current", current);
         pager.put("total", total);
         pager.put("page", page);
-        data.put("pageArticles", DaoFactory.getDao(ArticleDao.class).getPageArticlesByType(pager, Integer.valueOf(type), viewMode));
+        data.put("pageArticles", DaoFactory.getDao(ArticleDao.class).getPageArticlesByType(pager, Integer.valueOf(type), Status.published, viewMode));
         data.put("pager", pager);
         data.put("firstPageUrl", ArticleListHelper.generateDynamicTypePath(type, 1));
         data.put("prePageUrl", ArticleListHelper.generateDynamicTypePath(type, current - 1));
@@ -120,6 +120,21 @@ public class ArticleListHelper {
 		data.put("nextPageUrl", ArticleListHelper.generateDynamicCategoryPath(category, current + 1));
 		data.put("lastPageUrl", ArticleListHelper.generateDynamicCategoryPath(category, page));
 	}
+
+    public static void putDataMapForManager(Map<String, Object> data, ViewMode viewMode, int current) {
+        int total = DaoFactory.getDao(ArticleDao.class).getArticles("create_date", null, viewMode).size();
+        int page = (total % 10 == 0) ? (total / 10) : (total / 10 + 1);
+        Map<String, Integer> pager = new HashMap<String, Integer>();
+        pager.put("current", current);
+        pager.put("total", total);
+        pager.put("page", page);
+        data.put("pageArticles", DaoFactory.getDao(ArticleDao.class).getPageArticles(pager, null, "create_date", ViewMode.DYNAMIC));
+        data.put("pager", pager);
+        data.put("firstPageUrl", "/admin/article_manager.ftl?current=1");
+        data.put("prePageUrl", "/admin/article_manager.ftl?current=" + (current - 1));
+        data.put("nextPageUrl", "/admin/article_manager.ftl?current=" + (current + 1));
+        data.put("lastPageUrl", "/admin/article_manager.ftl?current=" + (page));
+    }
 
 	public static String generateStaticPath(String column, int current) {
 		return "/html/article_list_" + column + "_" + current + ".html";

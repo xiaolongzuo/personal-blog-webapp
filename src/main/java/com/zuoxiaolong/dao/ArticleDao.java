@@ -30,6 +30,7 @@ import java.util.Map;
 
 import com.zuoxiaolong.model.Status;
 import com.zuoxiaolong.orm.BaseDao;
+import com.zuoxiaolong.orm.DaoFactory;
 import com.zuoxiaolong.orm.Operation;
 import com.zuoxiaolong.orm.TransactionalOperation;
 import org.apache.commons.lang.StringUtils;
@@ -47,149 +48,144 @@ import com.zuoxiaolong.util.StringUtil;
 public class ArticleDao extends BaseDao {
 	
 	public Boolean delete(Integer id) {
-    	return execute(new TransactionalOperation<Boolean>() {
-			@Override
-			public Boolean doInConnection(Connection connection) {
-				String updateSql = "update articles set status=0 where id=?";
-				try {
-					PreparedStatement statement = connection.prepareStatement(updateSql);
-					statement.setInt(1, id);
-					int result = statement.executeUpdate();
-					if (result > 0) {
-						return true;
-					}
-				} catch (SQLException e) {
-					throw new RuntimeException(e);
-				}
-				return false;
-			}
-		});
+    	return execute((TransactionalOperation<Boolean>) connection -> {
+            String updateSql = "update articles set status=0 where id=?";
+            try {
+                PreparedStatement statement = connection.prepareStatement(updateSql);
+                statement.setInt(1, id);
+                int result = statement.executeUpdate();
+                if (result > 0) {
+                    return true;
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            return false;
+        });
     }
 	
     public List<Map<String, String>> getPageArticlesByTag(final Map<String, Integer> pager,final int tagId, ViewMode viewMode) {
-		return execute(new Operation<List<Map<String, String>>>() {
-			@Override
-			public List<Map<String, String>> doInConnection(Connection connection) {
-				List<Map<String, String>> result = new ArrayList<Map<String,String>>();
-				try {
-					PreparedStatement statement = connection.prepareStatement("select * from articles where id in (select article_id from article_tag where tag_id=? ) and type=0 order by create_date desc limit ?,10");
-					statement.setInt(1 , tagId);
-					statement.setInt(2 , (pager.get("current") - 1) * 10);
-					ResultSet resultSet = statement.executeQuery();
-					while (resultSet.next()) {
-						result.add(transfer(resultSet, viewMode));
-					}
-				} catch (SQLException e) {
-					error("query article_category failed ..." , e);
-				}
-				return result;
-			}
-		});
+		return execute((Operation<List<Map<String, String>>>) connection -> {
+            List<Map<String, String>> result = new ArrayList<>();
+            try {
+                PreparedStatement statement = connection.prepareStatement("select * from articles where id in (select article_id from article_tag where tag_id=? ) and type=0 order by create_date desc limit ?,10");
+                statement.setInt(1 , tagId);
+                statement.setInt(2 , (pager.get("current") - 1) * 10);
+                ResultSet resultSet = statement.executeQuery();
+                while (resultSet.next()) {
+                    result.add(transfer(resultSet, viewMode));
+                }
+            } catch (SQLException e) {
+                error("query article_category failed ..." , e);
+            }
+            return result;
+        });
 	}
     
     public List<Map<String, String>> getArticlesByTag(final int tagId, ViewMode viewMode) {
-		return execute(new Operation<List<Map<String, String>>>() {
-			@Override
-			public List<Map<String, String>> doInConnection(Connection connection) {
-				List<Map<String, String>> result = new ArrayList<Map<String,String>>();
-				try {
-					PreparedStatement statement = connection.prepareStatement("select * from articles where id in (select article_id from article_tag where tag_id=?  and type=0 )");
-					statement.setInt(1 , tagId);
-					ResultSet resultSet = statement.executeQuery();
-					while (resultSet.next()) {
-						result.add(transfer(resultSet, viewMode));
-					}
-				} catch (SQLException e) {
-					error("query article_category failed ..." , e);
-				}
-				return result;
-			}
-		});
+		return execute((Operation<List<Map<String, String>>>) connection -> {
+            List<Map<String, String>> result = new ArrayList<>();
+            try {
+                PreparedStatement statement = connection.prepareStatement("select * from articles where id in (select article_id from article_tag where tag_id=?  and type=0 )");
+                statement.setInt(1 , tagId);
+                ResultSet resultSet = statement.executeQuery();
+                while (resultSet.next()) {
+                    result.add(transfer(resultSet, viewMode));
+                }
+            } catch (SQLException e) {
+                error("query article_category failed ..." , e);
+            }
+            return result;
+        });
 	}
     
     public List<Map<String, String>> getPageArticlesByCategory(final Map<String, Integer> pager,final int categoryId, ViewMode viewMode) {
-		return execute(new Operation<List<Map<String, String>>>() {
-			@Override
-			public List<Map<String, String>> doInConnection(Connection connection) {
-				List<Map<String, String>> result = new ArrayList<Map<String,String>>();
-				try {
-					PreparedStatement statement = connection.prepareStatement("select * from articles where id in (select article_id from article_category where category_id=? )  and type=0 order by create_date desc limit ?,10");
-					statement.setInt(1, categoryId);
-					statement.setInt(2 , (pager.get("current") - 1) * 10);
-					ResultSet resultSet = statement.executeQuery();
-					while (resultSet.next()) {
-						result.add(transfer(resultSet, viewMode));
-					}
-				} catch (SQLException e) {
-					error("query article_category failed ..." , e);
-				}
-				return result;
-			}
-		});
+		return execute((Operation<List<Map<String, String>>>) connection -> {
+            List<Map<String, String>> result = new ArrayList<>();
+            try {
+                PreparedStatement statement = connection.prepareStatement("select * from articles where id in (select article_id from article_category where category_id=? )  and type=0 order by create_date desc limit ?,10");
+                statement.setInt(1, categoryId);
+                statement.setInt(2 , (pager.get("current") - 1) * 10);
+                ResultSet resultSet = statement.executeQuery();
+                while (resultSet.next()) {
+                    result.add(transfer(resultSet, viewMode));
+                }
+            } catch (SQLException e) {
+                error("query article_category failed ..." , e);
+            }
+            return result;
+        });
 	}
     
     public List<Map<String, String>> getArticlesByCategory(final int categoryId, ViewMode viewMode) {
-		return execute(new Operation<List<Map<String, String>>>() {
-			@Override
-			public List<Map<String, String>> doInConnection(Connection connection) {
-				List<Map<String, String>> result = new ArrayList<Map<String,String>>();
-				try {
-					PreparedStatement statement = connection.prepareStatement("select * from articles where id in (select article_id from article_category where category_id=?  and type=0 )");
-					statement.setInt(1, categoryId);
-					ResultSet resultSet = statement.executeQuery();
-					while (resultSet.next()) {
-						result.add(transfer(resultSet, viewMode));
-					}
-				} catch (SQLException e) {
-					error("query article_category failed ..." , e);
-				}
-				return result;
-			}
-		});
+		return execute((Operation<List<Map<String, String>>>) connection -> {
+            List<Map<String, String>> result = new ArrayList<>();
+            try {
+                PreparedStatement statement = connection.prepareStatement("select * from articles where id in (select article_id from article_category where category_id=?  and type=0 )");
+                statement.setInt(1, categoryId);
+                ResultSet resultSet = statement.executeQuery();
+                while (resultSet.next()) {
+                    result.add(transfer(resultSet, viewMode));
+                }
+            } catch (SQLException e) {
+                error("query article_category failed ..." , e);
+            }
+            return result;
+        });
 	}
 
-    public List<Map<String, String>> getPageArticlesByType(final Map<String, Integer> pager,final int type, ViewMode viewMode) {
-        return execute(new Operation<List<Map<String, String>>>() {
-            @Override
-            public List<Map<String, String>> doInConnection(Connection connection) {
-                List<Map<String, String>> result = new ArrayList<Map<String,String>>();
-                try {
-                    PreparedStatement statement = connection.prepareStatement("select * from articles where type=? order by create_date desc limit ?,10");
-                    statement.setInt(1, type);
-                    statement.setInt(2 , (pager.get("current") - 1) * 10);
-                    ResultSet resultSet = statement.executeQuery();
-                    while (resultSet.next()) {
-                        result.add(transfer(resultSet, viewMode));
-                    }
-                } catch (SQLException e) {
-                    error("query article_category failed ..." , e);
-                }
-                return result;
+    public List<Map<String, String>> getPageArticlesByType(final Map<String, Integer> pager,final Integer type, final Status status, ViewMode viewMode) {
+        return execute((Operation<List<Map<String, String>>>) connection -> {
+            List<Map<String, String>> result = new ArrayList<>();
+            String sql = "select * from articles where type=? and status=? order by create_date desc limit ?,10";
+            if (status == null) {
+                sql = "select * from articles where type=? order by create_date desc limit ?,10";
             }
+            try {
+                PreparedStatement statement = connection.prepareStatement(sql);
+                statement.setInt(1, type);
+                if (status == null) {
+                    statement.setInt(2 , (pager.get("current") - 1) * 10);
+                } else {
+                    statement.setInt(2, status.getIntValue());
+                    statement.setInt(3, (pager.get("current") - 1) * 10);
+                }
+                ResultSet resultSet = statement.executeQuery();
+                while (resultSet.next()) {
+                    result.add(transfer(resultSet, viewMode));
+                }
+            } catch (SQLException e) {
+                error("query articles failed ..." , e);
+            }
+            return result;
         });
     }
 
-    public List<Map<String, String>> getArticlesByType(final int type, ViewMode viewMode) {
-        return execute(new Operation<List<Map<String, String>>>() {
-            @Override
-            public List<Map<String, String>> doInConnection(Connection connection) {
-                List<Map<String, String>> result = new ArrayList<Map<String,String>>();
-                try {
-                    PreparedStatement statement = connection.prepareStatement("select * from articles where type=? ");
-                    statement.setInt(1, type);
-                    ResultSet resultSet = statement.executeQuery();
-                    while (resultSet.next()) {
-                        result.add(transfer(resultSet, viewMode));
-                    }
-                } catch (SQLException e) {
-                    error("query article_category failed ..." , e);
-                }
-                return result;
+    public List<Map<String, String>> getArticlesByType(final Integer type, final Status status, ViewMode viewMode) {
+        return execute((Operation<List<Map<String, String>>>) connection -> {
+            List<Map<String, String>> result = new ArrayList<>();
+            String sql = "select * from articles where type=? and status=? order by create_date desc";
+            if (status == null) {
+                sql = "select * from articles where type=? order by create_date desc";
             }
+            try {
+                PreparedStatement statement = connection.prepareStatement(sql);
+                statement.setInt(1, type);
+                if (status != null) {
+                    statement.setInt(2, status.getIntValue());
+                }
+                ResultSet resultSet = statement.executeQuery();
+                while (resultSet.next()) {
+                    result.add(transfer(resultSet, viewMode));
+                }
+            } catch (SQLException e) {
+                error("query articles failed ..." , e);
+            }
+            return result;
         });
     }
     
-    public Integer saveOrUpdate(String id, String subject, Integer type, Integer status,String username, String html, String content, String icon) {
+    public Integer saveOrUpdate(String id, String subject, Integer status, Integer type, String username, String html, String content, String icon) {
     	return execute((TransactionalOperation<Integer>) connection -> {
             String insertSql = "insert into articles (subject,username,icon,create_date," +
                                     "html,content,status,type) values (?,?,?,?,?,?,?,?)";
@@ -292,11 +288,18 @@ public class ArticleDao extends BaseDao {
     public List<Map<String, String>> getPageArticles(final Map<String, Integer> pager,final Status status, final String orderColumn, final ViewMode viewMode ) {
         return execute((Operation<List<Map<String, String>>>) connection -> {
             String sql = "select * from articles where status = ? order by " + orderColumn + " desc limit ?,10";
-            List<Map<String, String>> result = new ArrayList<Map<String, String>>();
+            if (status == null ) {
+                sql = "select * from articles order by " + orderColumn + " desc limit ?,10";
+            }
+            List<Map<String, String>> result = new ArrayList<>();
             try {
                 PreparedStatement statement = connection.prepareStatement(sql);
-                statement.setInt(1 , status.getIntValue());
-                statement.setInt(2 , (pager.get("current") - 1) * 10);
+                if (status == null ) {
+                    statement.setInt(1 , (pager.get("current") - 1) * 10);
+                } else {
+                    statement.setInt(1 , status.getIntValue());
+                    statement.setInt(2 , (pager.get("current") - 1) * 10);
+                }
                 ResultSet resultSet = statement.executeQuery();
                 while (resultSet.next()) {
                     result.add(transfer(resultSet, viewMode));
@@ -308,45 +311,44 @@ public class ArticleDao extends BaseDao {
         });
     }
 
-    public List<Map<String, String>> getArticles(final String order,final Status status, final ViewMode viewMode ) {
-        return execute(new Operation<List<Map<String, String>>>() {
-            @Override
-            public List<Map<String, String>> doInConnection(Connection connection) {
-                String sql = "select * from articles where status = ? order by " + order + " desc";
-                List<Map<String, String>> result = new ArrayList<Map<String, String>>();
-                try {
-					PreparedStatement statement = connection.prepareStatement(sql);
-					statement.setInt(1 , status.getIntValue());
-                    ResultSet resultSet = statement.executeQuery();
-                    while (resultSet.next()) {
-                        result.add(transfer(resultSet, viewMode));
-                    }
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-                return result;
+    public List<Map<String, String>> getArticles(final String orderColumn,final Status status, final ViewMode viewMode ) {
+        return execute((Operation<List<Map<String, String>>>) connection -> {
+            String sql = "select * from articles where status = ? order by " + orderColumn + " desc";
+            if (status == null ) {
+                sql = "select * from articles order by " + orderColumn + " desc";
             }
+            List<Map<String, String>> result = new ArrayList<>();
+            try {
+                PreparedStatement statement = connection.prepareStatement(sql);
+                if (status != null) {
+                    statement.setInt(1 , status.getIntValue());
+                }
+                ResultSet resultSet = statement.executeQuery();
+                while (resultSet.next()) {
+                    result.add(transfer(resultSet, viewMode));
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            return result;
         });
     }
 
-    public Map<String, String> getArticle(final int id,final Status status, final ViewMode viewMode ) {
-        return execute(new Operation<Map<String, String>>() {
-            @Override
-            public Map<String, String> doInConnection(Connection connection) {
-                String sql = "select * from articles where status = ? and id = " + id;
-                Map<String, String> result = new HashMap<String, String>();
-                try {
-					PreparedStatement statement = connection.prepareStatement(sql);
-					statement.setInt(1 , status.getIntValue());
-                    ResultSet resultSet = statement.executeQuery();
-                    if (resultSet.next()) {
-                        result = transfer(resultSet, viewMode);
-                    }
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
+    public Map<String, String> getArticle(final int id, final ViewMode viewMode ) {
+        return execute((Operation<Map<String, String>>) connection -> {
+            String sql = "select * from articles where id=?";
+            Map<String, String> result = new HashMap<>();
+            try {
+                PreparedStatement statement = connection.prepareStatement(sql);
+                statement.setInt(1 , id);
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    result = transfer(resultSet, viewMode);
                 }
-                return result;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
+            return result;
         });
     }
     
@@ -368,6 +370,18 @@ public class ArticleDao extends BaseDao {
             } else {
                 article.put("url", ArticleHelper.generateStaticPath(Integer.valueOf(id)));
             }
+            List<Map<String,String>> tags = DaoFactory.getDao(TagDao.class).getTags(Integer.valueOf(id));
+            StringBuffer stringBuffer = new StringBuffer("");
+            if (tags != null && tags.size() > 0) {
+                for (int i = 0; i < tags.size(); i++) {
+                    Map<String, String> tag = tags.get(i);
+                    if (i > 0) {
+                        stringBuffer.append(",");
+                    }
+                    stringBuffer.append(tag.get("tag_name"));
+                }
+            }
+            article.put("tags", stringBuffer.toString());
             article.put("icon", resultSet.getString("icon"));
             article.put("subject", resultSet.getString("subject"));
             article.put("username", resultSet.getString("username"));
@@ -375,6 +389,7 @@ public class ArticleDao extends BaseDao {
             article.put("create_date", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(createDate));
             article.put("us_create_date", DateUtil.rfc822(createDate));
             article.put("status", resultSet.getString("status"));
+            article.put("type", resultSet.getString("type"));
             article.put("access_times", resultSet.getString("access_times"));
             article.put("comment_times", resultSet.getString("comment_times"));
 

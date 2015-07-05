@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.dao.CategoryDao;
 import com.zuoxiaolong.model.Status;
 import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.mvc.DataMap;
@@ -39,8 +40,10 @@ public class ArticleInput implements DataMap {
 	public void putCustomData(Map<String, Object> data, HttpServletRequest request, HttpServletResponse response) {
 		String id = request.getParameter("id");
 		if (id != null) {
-			data.put("article", DaoFactory.getDao(ArticleDao.class).getArticle(Integer.valueOf(id), Status.draft, ViewMode.DYNAMIC));
-		}
+			data.put("article", DaoFactory.getDao(ArticleDao.class).getArticle(Integer.valueOf(id), ViewMode.DYNAMIC));
+		    data.put("articleCategories", DaoFactory.getDao(CategoryDao.class).getCategories(Integer.valueOf(id)));
+        }
+        data.put("categories", DaoFactory.getDao(CategoryDao.class).getAll());
 	}
 
 }

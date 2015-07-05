@@ -56,66 +56,71 @@ public class TagDao extends BaseDao {
 			}
 		});
 	}
+
+    public boolean delete(final int articleId) {
+        return execute((TransactionalOperation<Boolean>) connection -> {
+            try {
+                PreparedStatement statement = connection.prepareStatement("delete from article_tag where article_id=?");
+                statement.setInt(1, articleId);
+                int result = statement.executeUpdate();
+                return result > 0;
+            } catch (SQLException e) {
+                error("delete article_tag failed ..." , e);
+            }
+            return false;
+        });
+    }
 	
 	public List<Map<String, String>> getTags(final int articleId) {
-		return execute(new Operation<List<Map<String, String>>>() {
-			@Override
-			public List<Map<String, String>> doInConnection(Connection connection) {
-				List<Map<String, String>> result = new ArrayList<Map<String,String>>();
-				try {
-					PreparedStatement statement = connection.prepareStatement("select * from tags where id in (select tag_id from article_tag where article_id=?)");
-					statement.setInt(1, articleId);
-					ResultSet resultSet = statement.executeQuery();
-					while (resultSet.next()) {
-						result.add(transfer(resultSet, null));
-					}
-				} catch (SQLException e) {
-					error("query article_category failed ..." , e);
-				}
-				return result;
-			}
-		});
+		return execute((Operation<List<Map<String, String>>>) connection -> {
+            List<Map<String, String>> result = new ArrayList<Map<String,String>>();
+            try {
+                PreparedStatement statement = connection.prepareStatement("select * from tags where id in (select tag_id from article_tag where article_id=?)");
+                statement.setInt(1, articleId);
+                ResultSet resultSet = statement.executeQuery();
+                while (resultSet.next()) {
+                    result.add(transfer(resultSet, null));
+                }
+            } catch (SQLException e) {
+                error("query tags failed ..." , e);
+            }
+            return result;
+        });
 	}
 
 	public Integer save(final String tagName) {
-		return execute(new TransactionalOperation<Integer>() {
-			@Override
-			public Integer doInConnection(Connection connection) {
-				try {
-					PreparedStatement statement = connection.prepareStatement("insert into tags (tag_name) values (?)",Statement.RETURN_GENERATED_KEYS);
-					statement.setString(1, tagName);
-					int result = statement.executeUpdate();
-					if (result > 0) {
-						ResultSet resultSet = statement.getGeneratedKeys();
-						if (resultSet.next()) {
-							return resultSet.getInt(1);
-						}
-					}
-				} catch (SQLException e) {
-					error("save tags failed ..." , e);
-				}
-				return null;
-			}
-		});
+		return execute((TransactionalOperation<Integer>) connection -> {
+            try {
+                PreparedStatement statement = connection.prepareStatement("insert into tags (tag_name) values (?)",Statement.RETURN_GENERATED_KEYS);
+                statement.setString(1, tagName);
+                int result = statement.executeUpdate();
+                if (result > 0) {
+                    ResultSet resultSet = statement.getGeneratedKeys();
+                    if (resultSet.next()) {
+                        return resultSet.getInt(1);
+                    }
+                }
+            } catch (SQLException e) {
+                error("save tags failed ..." , e);
+            }
+            return null;
+        });
 	} 
 	
 	public Integer getId(final String tagName) {
-		return execute(new Operation<Integer>() {
-			@Override
-			public Integer doInConnection(Connection connection) {
-				try {
-					PreparedStatement statement = connection.prepareStatement("select id from tags where tag_name=?");
-					statement.setString(1, tagName);
-					ResultSet resultSet = statement.executeQuery();
-					if (resultSet.next()) {
-						return resultSet.getInt(1);
-					}
-				} catch (SQLException e) {
-					error("query tags failed ..." , e);
-				}
-				return null;
-			}
-		});
+		return execute((Operation<Integer>) connection -> {
+            try {
+                PreparedStatement statement = connection.prepareStatement("select id from tags where tag_name=?");
+                statement.setString(1, tagName);
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    return resultSet.getInt(1);
+                }
+            } catch (SQLException e) {
+                error("query tags failed ..." , e);
+            }
+            return null;
+        });
 	}
 	
 	public Map<String, String> transfer(ResultSet resultSet, ViewMode viewMode) {

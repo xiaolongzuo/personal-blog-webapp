@@ -31,7 +31,7 @@ public abstract class ArticleHelper {
 
 	public static void putDataMap(Map<String, Object> data, ViewMode viewMode,int articleId) {
 		DaoFactory.getDao(ArticleDao.class).updateCommentCount(articleId);
-		Map<String, String> article = DaoFactory.getDao(ArticleDao.class).getArticle(articleId, Status.published, viewMode);
+		Map<String, String> article = DaoFactory.getDao(ArticleDao.class).getArticle(articleId, viewMode);
 		data.put("article", article);
 		data.put("comments", DaoFactory.getDao(CommentDao.class).getComments(articleId));
 		data.put("tags", DaoFactory.getDao(TagDao.class).getTags(articleId));

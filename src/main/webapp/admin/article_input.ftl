@@ -16,10 +16,18 @@ $(document).ready(function(){
 		} else {
 			status = 0;
 		}
+        var categories = '';
+        $("input[name=categories]:checked").each(function() {
+            categories = categories + $(this).val() + ",";
+        });
+        if (categories && $.trim(categories).length > 0) {
+            categories = categories.substring(0, categories.length - 1);
+        }
 		$.ajax({
 			url:"${contextPath}/admin/updateArticle.do",
 			data:{"id":$("input[name=id]").val(),"content":tinymce.activeEditor.getContent()
-                ,"subject":$("input[name=subject]").val(),"status":status,"type":$("select[name=type]").val()},
+                ,"subject":$("input[name=subject]").val(),"status":status,"type":$("select[name=type]").val()
+                ,"tags":$("input[name=tags]").val(),"categories":categories},
 			type:"POST",
 			success:function(data){
 				if(data && data == 'success') {
@@ -51,6 +59,29 @@ $(document).ready(function(){
 				<textarea class="html_editor" style="width:100%"></textarea>
 			</td>
 		</tr>
+        <tr>
+            <td>分类</td>
+            <td>
+                <#list categories as category>
+                    <input style="margin: 5px 0px;" type="checkbox" value="${category.id}" name="categories"
+                    <#list articleCategories as articleCategory>
+                        <#if articleCategory.id == category.id>
+                            checked="checked"
+                        </#if>
+                    </#list>
+                            />${category.category_name}&nbsp;
+                    <#if (category_index > 0) && ((category_index + 1) % 7 == 0)>
+                        <br/>
+                    </#if>
+                </#list>
+            </td>
+        </tr>
+        <tr>
+            <td>标签</td>
+            <td>
+                <input type="text" name="tags" value="${article.tags?default('')}"/>
+            </td>
+        </tr>
 		<tr>
 			<td>是否发表</td>
 			<td>
@@ -61,8 +92,8 @@ $(document).ready(function(){
             <td>类型</td>
             <td>
                 <select name="type">
-                    <option value="0">文章</option>
-                    <option value="1">小说</option>
+                    <option value="0" <#if article.type == "0">selected="selected"</#if>>文章</option>
+                    <option value="1" <#if article.type == "1">selected="selected"</#if>>小说</option>
                 </select>
             </td>
         </tr>

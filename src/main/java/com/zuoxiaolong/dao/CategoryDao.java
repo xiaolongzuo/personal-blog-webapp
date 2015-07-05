@@ -20,6 +20,7 @@ import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.orm.BaseDao;
 import com.zuoxiaolong.orm.Operation;
 import com.zuoxiaolong.orm.TransactionalOperation;
+import com.zuoxiaolong.util.StringUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -36,6 +37,24 @@ import java.util.Map;
  * @since 2015年5月29日 上午1:04:31
  */
 public class CategoryDao extends BaseDao {
+
+    public boolean delete(final int articleId) {
+        return execute((TransactionalOperation<Boolean>) connection -> {
+            try {
+                PreparedStatement statement = connection.prepareStatement("delete from article_category where article_id=?");
+                statement.setInt(1, articleId);
+                int result = statement.executeUpdate();
+                return result > 0;
+            } catch (SQLException e) {
+                error("delete article_category failed ..." , e);
+            }
+            return false;
+        });
+    }
+
+    public List<Map<String, String>> getAll() {
+        return getAll("categories");
+    }
 	
 	public List<Map<String, String>> getCategories(final int articleId) {
 		return execute(new Operation<List<Map<String, String>>>() {
@@ -103,6 +122,15 @@ public class CategoryDao extends BaseDao {
 
 	@Override
 	public Map<String, String> transfer(ResultSet resultSet, ViewMode viewMode) {
-		throw new UnsupportedOperationException();
+        Map<String, String> category = new HashMap<String, String>();
+        try {
+            category.put("id", resultSet.getString("id"));
+            String categoryName = resultSet.getString("category_name");
+            category.put("category_name", categoryName);
+            category.put("short_category_name", StringUtil.substring(categoryName, 4));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return category;
 	}
 }

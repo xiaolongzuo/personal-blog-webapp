@@ -20,11 +20,11 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
+import com.zuoxiaolong.dao.*;
 import com.zuoxiaolong.orm.DaoFactory;
 import com.zuoxiaolong.util.JsoupUtil;
 import org.jsoup.Jsoup;
 
-import com.zuoxiaolong.dao.ArticleDao;
 import com.zuoxiaolong.mvc.RequestMapping;
 import com.zuoxiaolong.reptile.Cnblogs;
 import com.zuoxiaolong.util.StringUtil;
@@ -38,18 +38,43 @@ public class AdminUpdateArticle extends AbstractServlet {
 
 	@Override
 	protected void service() throws ServletException, IOException {
-		String id = getRequest().getParameter("id");
+		Integer id = Integer.valueOf(getRequest().getParameter("id"));
 		String subject = getRequest().getParameter("subject");
 		String html = getRequest().getParameter("content");
 		String status = getRequest().getParameter("status");
         String type = getRequest().getParameter("type");
 		String icon = getRequest().getParameter("icon");
+        String[] categories = getRequest().getParameter("categories").split(",");
+        String[] tags = getRequest().getParameter("tags").split(",");
 		html = handleQuote(html);
 		
 		StringBuffer stringBuffer = new StringBuffer();
 		JsoupUtil.appendText(Jsoup.parse(html), stringBuffer);
-		DaoFactory.getDao(ArticleDao.class).saveOrUpdate(id, subject, Integer.valueOf(status), Integer.valueOf(type), "左潇龙", html, stringBuffer.toString(), icon);
-		writeText("success");
+		DaoFactory.getDao(ArticleDao.class).saveOrUpdate(String.valueOf(id), subject, Integer.valueOf(status), Integer.valueOf(type), "左潇龙", html, stringBuffer.toString(), icon);
+        if (tags == null || categories == null) {
+            return;
+        }
+        DaoFactory.getDao(TagDao.class).delete(id);
+        for (int i = 0; i < tags.length; i++) {
+            String tag = tags[i].trim();
+            if (tag.length() == 0) {
+                continue;
+            }
+            Integer tagId = DaoFactory.getDao(TagDao.class).getId(tag);
+            if (tagId == null) {
+                tagId = DaoFactory.getDao(TagDao.class).save(tag);
+            }
+            DaoFactory.getDao(ArticleTagDao.class).save(id, tagId);
+        }
+        DaoFactory.getDao(CategoryDao.class).delete(id);
+        for (int i = 0; i < categories.length; i++) {
+            String categoryId = categories[i].trim();
+            if (categoryId.length() == 0) {
+                continue;
+            }
+            DaoFactory.getDao(ArticleCategoryDao.class).save(id, Integer.valueOf(categoryId));
+        }
+        writeText("success");
 	}
 
 }
