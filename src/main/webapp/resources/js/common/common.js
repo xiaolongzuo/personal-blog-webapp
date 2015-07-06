@@ -1,3 +1,7 @@
+function isEmptyHtml(s) {
+    return !content || !$.trim(content) || content.match(/^<p>[&nbsp;| ]*<\/p>$/);
+}
+
 function counter(data) {
 	$.ajax({
 		url:contextPath + "/counter.do",

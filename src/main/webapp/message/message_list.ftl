@@ -20,7 +20,7 @@
             });
             $("#submit_comment_button").click(function(){
                 var content = tinymce.activeEditor.getContent();
-                if(!content || !$.trim(content)) {
+                if(isEmptyHtml(content)) {
                     alert("留言不能为空啊，亲！");
                     return false;
                 }
