@@ -1,4 +1,4 @@
-function isEmptyHtml(s) {
+function isEmptyHtml(content) {
     return !content || !$.trim(content) || content.match(/^<p>[&nbsp;| ]*<\/p>$/);
 }
 
