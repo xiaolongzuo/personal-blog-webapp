@@ -23,6 +23,7 @@ import com.zuoxiaolong.generator.Generators;
 import com.zuoxiaolong.orm.DaoFactory;
 import com.zuoxiaolong.util.DirtyWordsUtil;
 import com.zuoxiaolong.util.HttpUtil;
+import com.zuoxiaolong.util.StringUtil;
 import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.ServletException;
@@ -65,6 +66,10 @@ public class Answer extends AbstractServlet {
 			content = "<a href=\"javascript:void(0);\" class=\"content_reply_a\" reference_comment_id=\""+referenceCommentId+"\">@"+referenceCommenter+"</a><br/>" + content;
 		}
 		content = handleQuote(content);
+        if (StringUtil.isEmptyHtml(content)) {
+            writeText("empty");
+            return;
+        }
 		Integer id = DaoFactory.getDao(AnswerDao.class).save(questionId, visitorIp, new Date(), content, username,referenceCommentId);
 		if (id == null) {
 			logger.error("save answer error!");

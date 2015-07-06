@@ -29,10 +29,6 @@
         });
         $("#submit_comment_button").click(function(){
             var content = tinymce.activeEditor.getContent();
-            if(isEmptyHtml(content)) {
-                alert("评论不能为空啊，亲！");
-                return false;
-            }
             comment("/answer.do",{
                 "questionId":$("#questionId").val(),
                 "content":content,

@@ -149,7 +149,9 @@ function comment(url,data) {
 		type:"POST",
 		data:data,
 		success:function(data) {
-			if (data && data.success) {
+            if (data && data == 'empty') {
+                alert("评论不能为空呀，亲！")
+            } else if (data && data.success) {
 				var size = parseInt($("#comment_size").html()) + 1;
 				var id = data.id;
 				$("#comment_size").html(size);

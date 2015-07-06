@@ -20,10 +20,6 @@
             });
             $("#submit_comment_button").click(function(){
                 var content = tinymce.activeEditor.getContent();
-                if(isEmptyHtml(content)) {
-                    alert("留言不能为空啊，亲！");
-                    return false;
-                }
                 if(content.length > 1000) {
                     alert("留言长度不能大于1000啊，亲！");
                     return false;

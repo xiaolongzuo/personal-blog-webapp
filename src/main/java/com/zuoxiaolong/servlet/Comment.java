@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.zuoxiaolong.dao.QuestionDao;
 import com.zuoxiaolong.dynamic.Article;
 import com.zuoxiaolong.orm.DaoFactory;
+import com.zuoxiaolong.util.JsoupUtil;
 import org.apache.commons.lang.StringUtils;
 
 import com.zuoxiaolong.dao.ArticleDao;
@@ -35,6 +36,7 @@ import com.zuoxiaolong.generator.Generators;
 import com.zuoxiaolong.util.DirtyWordsUtil;
 import com.zuoxiaolong.util.HttpUtil;
 import com.zuoxiaolong.util.StringUtil;
+import org.jsoup.Jsoup;
 
 /**
  * @author 左潇龙
@@ -69,7 +71,10 @@ public class Comment extends AbstractServlet {
 			referenceCommentId = Integer.valueOf(referenceCommentIdString);
 			content = "<a href=\"javascript:void(0);\" class=\"content_reply_a\" reference_comment_id=\""+referenceCommentId+"\">@"+referenceCommenter+"</a><br/>" + content;
 		}
-		content = handleQuote(content);
+        if (StringUtil.isEmptyHtml(content)) {
+            writeText("empty");
+            return;
+        }
 		Integer id = DaoFactory.getDao(CommentDao.class).save(articleId, visitorIp, new Date(), content, username, nickName, null, referenceCommentId);
 		if (id == null) {
 			logger.error("save comment error!");

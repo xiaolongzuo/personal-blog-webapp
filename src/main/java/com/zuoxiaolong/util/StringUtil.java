@@ -29,6 +29,19 @@ public abstract class StringUtil {
 	
 	private static final String chinesePattern = "[\u4e00-\u9fa5]{1,1}";
 
+    public static boolean isEmptyHtml(String s) {
+        s = JsoupUtil.getText(s);
+        char[] cs = s.toCharArray();
+        for (int i = 0; i < cs.length; i++) {
+            if (cs[i] == 160 || cs[i] == 32) {
+                continue;
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
 	public static String replaceSlants(String url) {
 		return url.replaceAll("/+", "/");
 	}
