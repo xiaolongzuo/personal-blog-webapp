@@ -16,6 +16,12 @@ $(document).ready(function(){
 		} else {
 			status = 0;
 		}
+        var updateCreateTime = $("input[name=updateCreateTime]").is(":checked");
+        if (updateCreateTime) {
+            updateCreateTime = 1;
+        } else {
+            updateCreateTime = 0;
+        }
         var categories = '';
         $("input[name=categories]:checked").each(function() {
             categories = categories + $(this).val() + ",";
@@ -27,7 +33,7 @@ $(document).ready(function(){
 			url:"${contextPath}/admin/updateArticle.do",
 			data:{"id":$("input[name=id]").val(),"content":tinymce.activeEditor.getContent()
                 ,"subject":$("input[name=subject]").val(),"status":status,"type":$("select[name=type]").val()
-                ,"tags":$("input[name=tags]").val(),"categories":categories},
+                ,"tags":$("input[name=tags]").val(),"categories":categories,"updateCreateTime":updateCreateTime},
 			type:"POST",
 			success:function(data){
 				if(data && data == 'success') {
@@ -96,6 +102,12 @@ $(document).ready(function(){
 				<input type="checkbox" name="status" <#if article??><#if article.status?default('0') == '1'>checked="checked"</#if></#if>/>
 			</td>
 		</tr>
+        <tr>
+            <td>是否更新创建时间</td>
+            <td>
+                <input type="checkbox" name="updateCreateTime" />
+            </td>
+        </tr>
         <tr>
             <td>类型</td>
             <td>

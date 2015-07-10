@@ -16,30 +16,24 @@ package com.zuoxiaolong.dao;
  * limitations under the License.
  */
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
+import com.zuoxiaolong.freemarker.ArticleHelper;
+import com.zuoxiaolong.model.Status;
+import com.zuoxiaolong.model.ViewMode;
+import com.zuoxiaolong.orm.BaseDao;
+import com.zuoxiaolong.orm.DaoFactory;
+import com.zuoxiaolong.orm.Operation;
+import com.zuoxiaolong.orm.TransactionalOperation;
+import com.zuoxiaolong.util.DateUtil;
+import com.zuoxiaolong.util.ImageUtil;
+import com.zuoxiaolong.util.StringUtil;
+import org.apache.commons.lang.StringUtils;
+
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.zuoxiaolong.model.Status;
-import com.zuoxiaolong.orm.BaseDao;
-import com.zuoxiaolong.orm.DaoFactory;
-import com.zuoxiaolong.orm.Operation;
-import com.zuoxiaolong.orm.TransactionalOperation;
-import org.apache.commons.lang.StringUtils;
-
-import com.zuoxiaolong.freemarker.ArticleHelper;
-import com.zuoxiaolong.model.ViewMode;
-import com.zuoxiaolong.util.DateUtil;
-import com.zuoxiaolong.util.ImageUtil;
-import com.zuoxiaolong.util.StringUtil;
 
 /**
  * @author 左潇龙
@@ -185,11 +179,15 @@ public class ArticleDao extends BaseDao {
         });
     }
     
-    public Integer saveOrUpdate(String id, String subject, Integer status, Integer type, String username, String html, String content, String icon) {
+    public Integer saveOrUpdate(String id, String subject, Integer status, Integer type, Integer updateCreateTime
+            , String username, String html, String content, String icon) {
     	return execute((TransactionalOperation<Integer>) connection -> {
             String insertSql = "insert into articles (subject,username,icon,create_date," +
                                     "html,content,status,type) values (?,?,?,?,?,?,?,?)";
-            String updateSql = "update articles set subject=?,username=?,icon=?,create_date=?,html=?,content=?,status=?,type=? where id=?";
+            String updateSql = "update articles set subject=?,username=?,icon=?,html=?,content=?,status=?,type=? where id=?";
+            if (updateCreateTime == 1) {
+                updateSql = "update articles set subject=?,username=?,icon=?,html=?,content=?,status=?,type=?,create_date=? where id=?";
+            }
             try {
                 PreparedStatement statement = null;
                 if (StringUtils.isBlank(id)) {
@@ -207,12 +205,16 @@ public class ArticleDao extends BaseDao {
                     statement.setString(1, subject);
                     statement.setString(2, username);
                     statement.setString(3, icon == null ? ImageUtil.randomArticleImage() : icon);
-                    statement.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
-                    statement.setString(5, html);
-                    statement.setString(6, content);
-                    statement.setInt(7, status);
-                    statement.setInt(8, type);
-                    statement.setInt(9, Integer.valueOf(id));
+                    statement.setString(4, html);
+                    statement.setString(5, content);
+                    statement.setInt(6, status);
+                    statement.setInt(7, type);
+                    if (updateCreateTime == 1) {
+                        statement.setTimestamp(8, new Timestamp(System.currentTimeMillis()));
+                        statement.setInt(9, Integer.valueOf(id));
+                    } else {
+                        statement.setInt(8, Integer.valueOf(id));
+                    }
                 }
                 int result = statement.executeUpdate();
                 if (result > 0 && StringUtils.isBlank(id)) {
@@ -231,7 +233,8 @@ public class ArticleDao extends BaseDao {
         });
     }
     
-    public Integer saveOrUpdate(String resourceId, String subject, String createDate, Integer status,String username, Integer accessTimes, Integer goodTimes, String html, String content) {
+    public Integer saveOrUpdate(String resourceId, String subject, String createDate, Integer status
+            , String username, Integer accessTimes, Integer goodTimes, String html, String content) {
     	return execute((TransactionalOperation<Integer>) connection -> {
             String selectSql = "select id,status from articles where resource_id=?";
             String insertSql = "insert into articles (resource_id,username,icon,create_date," +

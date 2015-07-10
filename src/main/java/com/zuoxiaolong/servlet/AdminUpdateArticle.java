@@ -16,19 +16,14 @@ package com.zuoxiaolong.servlet;
  * limitations under the License.
  */
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-
 import com.zuoxiaolong.dao.*;
+import com.zuoxiaolong.mvc.RequestMapping;
 import com.zuoxiaolong.orm.DaoFactory;
 import com.zuoxiaolong.util.JsoupUtil;
-import org.apache.commons.lang.StringUtils;
 import org.jsoup.Jsoup;
 
-import com.zuoxiaolong.mvc.RequestMapping;
-import com.zuoxiaolong.reptile.Cnblogs;
-import com.zuoxiaolong.util.StringUtil;
+import javax.servlet.ServletException;
+import java.io.IOException;
 
 /**
  * @author 左潇龙
@@ -45,13 +40,14 @@ public class AdminUpdateArticle extends AbstractServlet {
 		String status = getRequest().getParameter("status");
         String type = getRequest().getParameter("type");
 		String icon = getRequest().getParameter("icon");
+        String updateCreateTime = getRequest().getParameter("updateCreateTime");
         String[] categories = getRequest().getParameter("categories").split(",");
         String[] tags = getRequest().getParameter("tags").split(",");
 		html = handleQuote(html);
 		
 		StringBuffer stringBuffer = new StringBuffer();
 		JsoupUtil.appendText(Jsoup.parse(html), stringBuffer);
-        Integer articleId = DaoFactory.getDao(ArticleDao.class).saveOrUpdate(id, subject, Integer.valueOf(status), Integer.valueOf(type), "左潇龙", html, stringBuffer.toString(), icon);
+        Integer articleId = DaoFactory.getDao(ArticleDao.class).saveOrUpdate(id, subject, Integer.valueOf(status), Integer.valueOf(type), Integer.valueOf(updateCreateTime), "左潇龙", html, stringBuffer.toString(), icon);
 		if (tags == null || categories == null) {
             return;
         }
