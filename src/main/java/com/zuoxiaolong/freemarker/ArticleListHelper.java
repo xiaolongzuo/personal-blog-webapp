@@ -38,7 +38,7 @@ public class ArticleListHelper {
 
 	public static void putDataMap(Map<String, Object> data, ViewMode viewMode, String orderColumn , int current , int total) {
 		int page = (total % 10 == 0) ? (total / 10) : (total / 10 + 1);
-		Map<String, Integer> pager = new HashMap<String, Integer>();
+		Map<String, Integer> pager = new HashMap<>();
 		pager.put("current", current);
 		pager.put("total", total);
 		pager.put("page", page);
@@ -78,7 +78,7 @@ public class ArticleListHelper {
 		int tagId = DaoFactory.getDao(TagDao.class).getId(tag);
 		int total = DaoFactory.getDao(ArticleDao.class).getArticlesByTag(tagId, viewMode).size();
 		int page = (total % 10 == 0) ? (total / 10) : (total / 10 + 1);
-		Map<String, Integer> pager = new HashMap<String, Integer>();
+		Map<String, Integer> pager = new HashMap<>();
 		pager.put("current", current);
 		pager.put("total", total);
 		pager.put("page", page);
@@ -90,10 +90,10 @@ public class ArticleListHelper {
 		data.put("lastPageUrl", ArticleListHelper.generateDynamicTagPath(tag, page));
 	}
 
-    public static void putDataMapByType(Map<String, Object> data, ViewMode viewMode, String type, int current) {
+    public static void putDataMapByType(Map<String, Object> data, ViewMode viewMode, Integer type, int current) {
         int total = DaoFactory.getDao(ArticleDao.class).getArticlesByType(Integer.valueOf(type), Status.published, viewMode).size();
         int page = (total % 10 == 0) ? (total / 10) : (total / 10 + 1);
-        Map<String, Integer> pager = new HashMap<String, Integer>();
+        Map<String, Integer> pager = new HashMap<>();
         pager.put("current", current);
         pager.put("total", total);
         pager.put("page", page);
@@ -109,7 +109,7 @@ public class ArticleListHelper {
 		int categoryId = DaoFactory.getDao(CategoryDao.class).getId(category);
 		int total = DaoFactory.getDao(ArticleDao.class).getArticlesByCategory(categoryId, viewMode).size();
 		int page = (total % 10 == 0) ? (total / 10) : (total / 10 + 1);
-		Map<String, Integer> pager = new HashMap<String, Integer>();
+		Map<String, Integer> pager = new HashMap<>();
 		pager.put("current", current);
 		pager.put("total", total);
 		pager.put("page", page);
@@ -121,10 +121,32 @@ public class ArticleListHelper {
 		data.put("lastPageUrl", ArticleListHelper.generateDynamicCategoryPath(category, page));
 	}
 
+    public static void putDataMapForNovel(Map<String, Object> data, ViewMode viewMode , int current , int total) {
+        int page = (total % 10 == 0) ? (total / 10) : (total / 10 + 1);
+        Map<String, Integer> pager = new HashMap<>();
+        pager.put("current", current);
+        pager.put("total", total);
+        pager.put("page", page);
+        data.put("pageArticles", DaoFactory.getDao(ArticleDao.class).getPageArticlesByType(pager, 1, Status.published, viewMode));
+        data.put("pager", pager);
+        if (viewMode == ViewMode.STATIC) {
+            data.put("firstPageUrl", ArticleListHelper.generateStaticPath("novel", 1));
+            data.put("prePageUrl", ArticleListHelper.generateStaticPath("novel", current - 1));
+            data.put("nextPageUrl", ArticleListHelper.generateStaticPath("novel", current + 1));
+            data.put("lastPageUrl", ArticleListHelper.generateStaticPath("novel", page));
+        } else {
+            data.put("firstPageUrl", ArticleListHelper.generateDynamicTypePath(1, 1));
+            data.put("prePageUrl", ArticleListHelper.generateDynamicTypePath(1, current - 1));
+            data.put("nextPageUrl", ArticleListHelper.generateDynamicTypePath(1, current + 1));
+            data.put("lastPageUrl", ArticleListHelper.generateDynamicTypePath(1, page));
+        }
+    }
+
+
     public static void putDataMapForManager(Map<String, Object> data, ViewMode viewMode, int current) {
         int total = DaoFactory.getDao(ArticleDao.class).getArticles("create_date", null, viewMode).size();
         int page = (total % 10 == 0) ? (total / 10) : (total / 10 + 1);
-        Map<String, Integer> pager = new HashMap<String, Integer>();
+        Map<String, Integer> pager = new HashMap<>();
         pager.put("current", current);
         pager.put("total", total);
         pager.put("page", page);
@@ -148,6 +170,9 @@ public class ArticleListHelper {
 		for (int i = 3; i < names.length - 1; i++) {
 			column = column + "_" + names[i];
 		}
+        if (column.equals("novel")) {
+            return generateDynamicTypePath(1, current);
+        }
 		return generateDynamicPath(column, current);
 	}
 	
@@ -155,7 +180,7 @@ public class ArticleListHelper {
 		return "/blog/article_list.ftl?orderColumn=" + orderColumn + "&current=" + current;
 	}
 
-    public static String generateDynamicTypePath(String type, int current) {
+    public static String generateDynamicTypePath(Integer type, int current) {
         return "/blog/article_list.ftl?type=" + type + "&current=" + current;
     }
 	

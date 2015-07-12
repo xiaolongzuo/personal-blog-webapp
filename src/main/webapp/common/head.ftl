@@ -1,7 +1,7 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
-<title>Zeus个人博客</title>
-<meta name="keywords" content="左潇龙,个人博客,Zeus">
-<meta name="description" content="左潇龙的个人博客，记录了工作与生活当中的点点滴滴">
+<title>${metaTitle}</title>
+<meta name="keywords" content="${metaKeywords}">
+<meta name="description" content="${metaDescription}">
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="cache-control" content="no-cache">
 <meta http-equiv="expires" content="0">

@@ -53,14 +53,14 @@ public class ConfigurationListener implements ServletContextListener {
         if (logger.isInfoEnabled()) {
             logger.info("DirtyWordsFlush thread has been started...");
         }
+        if (logger.isInfoEnabled()) {
+            logger.info("starting fetch and generate thread...");
+        }
+        Executor.executeTask(new FetchTask());
+        if (logger.isInfoEnabled()) {
+            logger.info("fetch and generate thread has been started...");
+        }
         if (Configuration.isProductEnv()) {
-            if (logger.isInfoEnabled()) {
-                logger.info("starting fetch and generate thread...");
-            }
-            Executor.executeTask(new FetchTask());
-            if (logger.isInfoEnabled()) {
-                logger.info("fetch and generate thread has been started...");
-            }
             if (logger.isInfoEnabled()) {
                 logger.info("starting baidu push thread...");
             }

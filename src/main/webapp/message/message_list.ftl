@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-<#include "../common/head.ftl">
+    <#assign metaTitle="Zeus个人博客" />
+    <#assign metaKeywords="左潇龙,个人博客,Zeus" />
+    <#assign metaDescription="左潇龙的个人博客，记录了工作与生活当中的点点滴滴" />
+    <#include "../common/head.ftl">
     <link href="${contextPath}/resources/css/common/article.css" rel="stylesheet"/>
     <link href="${contextPath}/resources/css/common/code.css" rel="stylesheet"/>
     <script type="text/javascript">

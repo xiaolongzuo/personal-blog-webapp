@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
+<#assign metaTitle="${article.subject}" />
+<#if article.type == "1">
+    <#assign metaKeywords="异能程序员,程序员小说,小说" />
+<#else>
+    <#assign metaKeywords="左潇龙,技术文章,技术博客" />
+</#if>
+<#assign metaDescription="${article.summary}" />
 <#include "../common/head.ftl">
 <link href="${contextPath}/resources/css/common/article.css" rel="stylesheet"/>
 <link href="${contextPath}/resources/css/common/code.css" rel="stylesheet"/>

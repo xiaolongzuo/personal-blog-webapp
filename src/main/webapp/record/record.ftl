@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+<#assign metaTitle="${record.title}" />
+<#assign metaKeywords="左潇龙,个人博客,Zeus" />
+<#assign metaDescription="${record.title}" />
 <#include "../common/head.ftl">
 <link href="${contextPath}/resources/css/common/article.css" rel="stylesheet"/>
 <link href="${contextPath}/resources/css/common/code.css" rel="stylesheet"/>

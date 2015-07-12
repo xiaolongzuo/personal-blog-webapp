@@ -65,7 +65,7 @@ public class ArticleList implements DataMap {
 			ArticleListHelper.putDataMapByTag(data, VIEW_MODE, tag, current);
 
 		} else if (StringUtils.isNotBlank(type)) {
-            ArticleListHelper.putDataMapByType(data, VIEW_MODE, type, current);
+            ArticleListHelper.putDataMapByType(data, VIEW_MODE, Integer.valueOf(type), current);
 
         } else {
 			throw new IllegalArgumentException();
