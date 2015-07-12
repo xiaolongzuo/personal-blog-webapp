@@ -111,7 +111,7 @@ public class QuestionDao extends BaseDao {
         try {
             question.put("id", resultSet.getString("id"));
             question.put("create_date", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(resultSet.getTimestamp("create_date")));
-            question.put("title", resultSet.getString("title"));
+            question.put("originTitle", resultSet.getString("title"));
             question.put("description", resultSet.getString("description"));
             String content = resultSet.getString("content");
             question.put("content", content);
@@ -123,9 +123,9 @@ public class QuestionDao extends BaseDao {
             question.put("solution_id", resultSet.getString("solution_id"));
             boolean isResolved = Integer.valueOf(question.get("is_resolved")) == 1;
             if (isResolved) {
-                question.put("title",  "<span style=\"color:green;\">［已解决］</span>" + question.get("title"));
+                question.put("title",  "<span style=\"color:green;\">［已解决］</span>" + question.get("originTitle"));
             } else {
-                question.put("title",  "<span style=\"color:red;\">［未解决］</span>" + question.get("title"));
+                question.put("title",  "<span style=\"color:red;\">［未解决］</span>" + question.get("originTitle"));
             }
             if (ViewMode.DYNAMIC == viewMode) {
                 question.put("url", QuestionHelper.generateDynamicPath(Integer.valueOf(question.get("id"))));

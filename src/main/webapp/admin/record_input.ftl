@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<#include "../common/meta.ftl">
 <#include "../common/head.ftl">
 <script type="text/javascript">
 var settings = {width:900,height:400,content:''};

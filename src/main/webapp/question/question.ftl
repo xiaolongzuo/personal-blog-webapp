@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<#assign metaTitle="${question.title}" />
+<#assign metaTitle="${question.originTitle}" />
 <#assign metaKeywords="左潇龙,个人博客,Zeus" />
-<#assign metaDescription="${question.title}" />
+<#assign metaDescription="${question.originTitle}" />
 <#include "../common/head.ftl">
 <link href="${contextPath}/resources/css/common/article.css" rel="stylesheet"/>
 <link href="${contextPath}/resources/css/common/code.css" rel="stylesheet"/>

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<#include "../common/meta.ftl">
 <#include "../common/head.ftl">
 </head>
 <body>
