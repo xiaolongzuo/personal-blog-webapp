@@ -20,7 +20,6 @@ import com.zuoxiaolong.cache.CacheManager;
 import com.zuoxiaolong.config.Configuration;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,8 +32,6 @@ import java.util.Random;
  */
 public abstract class ImageUtil {
 	
-	private static final String CONTEXT_PATH = Configuration.getSiteUrl();
-
     private static final String BASE_PATH = "resources/img/common/";
 
     public static String generateDir() {
@@ -56,11 +53,18 @@ public abstract class ImageUtil {
     }
 
     public static void loadArticleImages (){
-        CacheManager.getConcurrentHashMapCache().set("articleImages",getAllActicleImages());
+        CacheManager.getConcurrentHashMapCache().set("articleImages",getAllArticleImages());
+    }
+
+    public static String randomArticleImage() {
+        return randomArticleImage(0);
     }
 
     @SuppressWarnings("unchecked")
-	public static String randomArticleImage() {
+	public static String randomArticleImage(Integer articleType) {
+        if (articleType == 1) {
+            return Configuration.getSiteUrl(BASE_PATH + "novel.jpg");
+        }
         List<String> articleImages = (List<String>) CacheManager.getConcurrentHashMapCache().get("articleImages");
         return articleImages.get(new Random().nextInt(articleImages.size()));
     }
@@ -69,21 +73,18 @@ public abstract class ImageUtil {
         loadArticleImages();
     }
 
-    private static List<String> getAllActicleImages() {
+    private static List<String> getAllArticleImages() {
         File imageDir = new File(Configuration.getContextPath(BASE_PATH));
-        File[] articleImages = imageDir.listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File pathname) {
-                if (pathname.getName().startsWith("article_") && pathname.getName().endsWith(".jpg")) {
-                    return true;
-                }
-                return false;
+        File[] articleImages = imageDir.listFiles(pathname -> {
+            if (pathname.getName().startsWith("article_") && pathname.getName().endsWith(".jpg")) {
+                return true;
             }
+            return false;
         });
         List<String> nameList = new ArrayList<>();
         if (articleImages != null ) {
             for (int i = 0 ; i < articleImages.length ; i++) {
-                nameList.add(CONTEXT_PATH + "/" + BASE_PATH + articleImages[i].getName());
+                nameList.add(Configuration.getSiteUrl(BASE_PATH + articleImages[i].getName()));
             }
         }
         return nameList;

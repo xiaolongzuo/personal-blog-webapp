@@ -194,7 +194,7 @@ public class ArticleDao extends BaseDao {
                     statement = connection.prepareStatement(insertSql,Statement.RETURN_GENERATED_KEYS);
                     statement.setString(1, subject);
                     statement.setString(2, username);
-                    statement.setString(3, icon == null ? ImageUtil.randomArticleImage() : icon);
+                    statement.setString(3, icon == null ? ImageUtil.randomArticleImage(type) : icon);
                     statement.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
                     statement.setString(5, html);
                     statement.setString(6, content);
@@ -204,7 +204,7 @@ public class ArticleDao extends BaseDao {
                     statement = connection.prepareStatement(updateSql);
                     statement.setString(1, subject);
                     statement.setString(2, username);
-                    statement.setString(3, icon == null ? ImageUtil.randomArticleImage() : icon);
+                    statement.setString(3, icon == null ? ImageUtil.randomArticleImage(type) : icon);
                     statement.setString(4, html);
                     statement.setString(5, content);
                     statement.setInt(6, status);
