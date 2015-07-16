@@ -1,7 +1,7 @@
 <div class="main-div">
-    <h2>
-        <b>最近</b>问题
-    </h2>
+    <h1>
+        最近问题
+    </h1>
 <#if questions??>
     <#list questions as question>
         <div class="questions">

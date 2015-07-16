@@ -16,7 +16,6 @@ package com.zuoxiaolong.freemarker;
  * limitations under the License.
  */
 
-import com.zuoxiaolong.algorithm.Random;
 import com.zuoxiaolong.dao.ArticleDao;
 import com.zuoxiaolong.model.Status;
 import com.zuoxiaolong.model.ViewMode;
@@ -31,11 +30,9 @@ import java.util.Map;
  */
 public abstract class IndexHelper {
 
-	private static final int DEFAULT_INDEX_ARTICLE_NUMBER = 6;
-
 	public static void putDataMap(Map<String, Object> data, ViewMode viewMode) {
-		List<Map<String, String>> randomList = Random.random(DaoFactory.getDao(ArticleDao.class).getArticles("create_date", Status.published, viewMode), DEFAULT_INDEX_ARTICLE_NUMBER);
-        data.put("articles", randomList);
+		List<Map<String, String>> articles = DaoFactory.getDao(ArticleDao.class).getArticlesByType(1, Status.published, viewMode);
+        data.put("articles", articles);
 	}
 	
 	public static String generateStaticPath() {

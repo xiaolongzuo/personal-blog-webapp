@@ -1,11 +1,14 @@
 <div class="main-div">
-    <h2>
-        <b>文章</b>推荐
-    </h2>
+    <h1>
+        程序员小说
+    </h1>
 <#if articles??>
     <#list articles as article>
+        <#if article_index gt 6>
+            <#break />
+        </#if>
         <div class="blogs">
-            <figure><img src="${article.icon}"></figure>
+            <figure><img src="${article.icon}" title="程序员小说——《异能程序员》"></figure>
             <ul>
                 <h3><a href="${contextPath}${article.url}">${article.subject}</a></h3>
                 <p>

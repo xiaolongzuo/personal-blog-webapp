@@ -1,7 +1,7 @@
 <div class="main-div">
-    <h2>
-        <b>推荐</b>记录
-    </h2>
+    <h1>
+        推荐记录
+    </h1>
 <#if records??>
     <#list records as record>
         <div class="questions">

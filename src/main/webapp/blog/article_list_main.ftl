@@ -1,8 +1,8 @@
     <!-- 主题内容模块 -->
     <div class="main-div">
-        <h2>
-            <b>全部文章</b>
-        </h2>
+        <h1>
+            全部文章
+        </h1>
     <#if pageArticles??>
         <#list pageArticles as article>
             <div class="blogs">
