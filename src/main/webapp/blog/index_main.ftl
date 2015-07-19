@@ -4,7 +4,7 @@
     </h1>
 <#if articles??>
     <#list articles as article>
-        <#if article_index gt 6>
+        <#if article_index gt 5>
             <#break />
         </#if>
         <div class="blogs">
