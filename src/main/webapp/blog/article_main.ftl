@@ -28,14 +28,14 @@
                 </p>
             </div>
         </#if>
-        <#if nextArticle?? || preArticle?? >
+        <#if preArticle?? >
             <div class="nextinfo">
-                <#if preArticle??>
-                    <p>上一篇：<a href="${contextPath}${preArticle.url}">${preArticle.subject}</a></p>
-                </#if>
-                <#if nextArticle??>
-                    <p>下一篇：<a href="${contextPath}${nextArticle.url}">${nextArticle.subject}</a></p>
-                </#if>
+                <p>上一篇：<a href="${contextPath}${preArticle.url}">${preArticle.subject}</a></p>
+            </div>
+        </#if>
+        <#if nextArticle?? >
+            <div class="nextinfo">
+                <p>下一篇：<a href="${contextPath}${nextArticle.url}">${nextArticle.subject}</a></p>
             </div>
         </#if>
         <#if relatedArticles?? && relatedArticles?size gt 0>
@@ -48,7 +48,6 @@
                 </ul>
             </div>
         </#if>
-        <div id="comments_pager_top"></div>
         <!-- 评论列表 -->
         <div class="feedback_area_title">评论列表（共<span id="comment_size">${comments?size}</span>条评论）</div>
         <div class="feedbackNoItems"></div>
