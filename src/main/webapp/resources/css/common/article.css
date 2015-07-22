@@ -11,7 +11,8 @@
 .article_tag_div a { color: #9FB6CD ;margin: 0px 10px 0px 0px;}
 .article_category_div { font-size:14px;line-height: 30px; height: 30px; padding-left: 5px; border-bottom: 1px solid #F0F0F0; margin-right: 20px; }
 .article_category_div a { color: #9FB6CD ;margin: 0px 10px 0px 0px;}
-.nextinfo { line-height: 24px; }
+.nextinfo { font-size:14px;line-height: 30px; height: 30px; padding-left: 5px; border-bottom: 1px solid #F0F0F0; margin-right: 20px; }
+.nextinfo a { color: #9FB6CD ;margin: 0px 10px 0px 0px;}
 .otherlink h2 { border-bottom: #099 2px solid; line-height: 40px; font-size: 12px; font-weight: normal; margin-right: 20px; padding-left:40px}
 .otherlink ul { margin: 10px 0 }
 .otherlink li { line-height: 24px; height: 24px; display: block; width: 290px; float: left; overflow: hidden; margin-right: 30px; }

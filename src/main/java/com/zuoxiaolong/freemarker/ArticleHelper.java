@@ -16,12 +16,17 @@ package com.zuoxiaolong.freemarker;
  * limitations under the License.
  */
 
-import java.util.Map;
-
-import com.zuoxiaolong.dao.*;
-import com.zuoxiaolong.model.Status;
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.dao.CategoryDao;
+import com.zuoxiaolong.dao.CommentDao;
+import com.zuoxiaolong.dao.TagDao;
 import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.orm.DaoFactory;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * @author 左潇龙
@@ -36,6 +41,20 @@ public abstract class ArticleHelper {
 		data.put("comments", DaoFactory.getDao(CommentDao.class).getComments(articleId));
 		data.put("tags", DaoFactory.getDao(TagDao.class).getTags(articleId));
 		data.put("categories", DaoFactory.getDao(CategoryDao.class).getCategories(articleId));
+		Date createDate = null;
+		try {
+			createDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(article.get("create_date"));
+		} catch (ParseException e) {
+			throw new RuntimeException(e);
+		}
+		Map<String, String> preArticle = DaoFactory.getDao(ArticleDao.class).getPreArticle(articleId, createDate, viewMode);
+		Map<String, String> nextArticle = DaoFactory.getDao(ArticleDao.class).getNextArticle(articleId, createDate, viewMode);
+		if (preArticle != null) {
+			data.put("preArticle", preArticle);
+		}
+		if (nextArticle != null) {
+			data.put("nextArticle", nextArticle);
+		}
 	}
 	
 	public static String generateStaticPath(int articleId) {

@@ -30,10 +30,8 @@ import org.apache.commons.lang.StringUtils;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.Date;
 
 /**
  * @author 左潇龙
@@ -337,10 +335,50 @@ public class ArticleDao extends BaseDao {
         });
     }
 
+    public Map<String, String> getPreArticle(final int id, final Date createDate, final ViewMode viewMode) {
+        return execute((Operation<Map<String, String>>) connection -> {
+            String sql = "SELECT * FROM articles WHERE create_date<? AND " +
+                    "TYPE=(SELECT TYPE FROM articles WHERE id=?) ORDER BY create_date DESC LIMIT 0,1";
+            Map<String, String> result = null;
+            try {
+                PreparedStatement statement = connection.prepareStatement(sql);
+                statement.setTimestamp(1, new Timestamp(createDate.getTime()));
+                statement.setInt(2 , id);
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    result = transfer(resultSet, viewMode);
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            return result;
+        });
+    }
+
+    public Map<String, String> getNextArticle(final int id, final Date createDate, final ViewMode viewMode) {
+        return execute((Operation<Map<String, String>>) connection -> {
+            String sql = "SELECT * FROM articles WHERE create_date>? AND " +
+                    "TYPE=(SELECT TYPE FROM articles WHERE id=?) ORDER BY create_date ASC LIMIT 0,1";
+            Map<String, String> result = null;
+            try {
+                PreparedStatement statement = connection.prepareStatement(sql);
+                statement.setTimestamp(1, new Timestamp(createDate.getTime()));
+                statement.setInt(2 , id);
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    result = transfer(resultSet, viewMode);
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            return result;
+        });
+    }
+
     public Map<String, String> getArticle(final int id, final ViewMode viewMode ) {
         return execute((Operation<Map<String, String>>) connection -> {
             String sql = "select * from articles where id=?";
-            Map<String, String> result = new HashMap<>();
+            Map<String, String> result = null;
             try {
                 PreparedStatement statement = connection.prepareStatement(sql);
                 statement.setInt(1 , id);
