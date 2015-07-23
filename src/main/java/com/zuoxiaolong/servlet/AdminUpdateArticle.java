@@ -17,6 +17,8 @@ package com.zuoxiaolong.servlet;
  */
 
 import com.zuoxiaolong.dao.*;
+import com.zuoxiaolong.model.Status;
+import com.zuoxiaolong.model.Type;
 import com.zuoxiaolong.mvc.RequestMapping;
 import com.zuoxiaolong.orm.DaoFactory;
 import com.zuoxiaolong.util.JsoupUtil;
@@ -47,7 +49,7 @@ public class AdminUpdateArticle extends AbstractServlet {
 		
 		StringBuffer stringBuffer = new StringBuffer();
 		JsoupUtil.appendText(Jsoup.parse(html), stringBuffer);
-        Integer articleId = DaoFactory.getDao(ArticleDao.class).saveOrUpdate(id, subject, Integer.valueOf(status), Integer.valueOf(type), Integer.valueOf(updateCreateTime), "左潇龙", html, stringBuffer.toString(), icon);
+        Integer articleId = DaoFactory.getDao(ArticleDao.class).saveOrUpdate(id, subject, Status.valueOf(status), Type.valueOf(type), Integer.valueOf(updateCreateTime), "左潇龙", html, stringBuffer.toString(), icon);
 		if (tags == null || categories == null) {
             return;
         }

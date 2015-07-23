@@ -18,6 +18,7 @@ package com.zuoxiaolong.dao;
 
 import com.zuoxiaolong.freemarker.ArticleHelper;
 import com.zuoxiaolong.model.Status;
+import com.zuoxiaolong.model.Type;
 import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.orm.BaseDao;
 import com.zuoxiaolong.orm.DaoFactory;
@@ -126,7 +127,7 @@ public class ArticleDao extends BaseDao {
         });
 	}
 
-    public List<Map<String, String>> getPageArticlesByType(final Map<String, Integer> pager,final Integer type, final Status status, ViewMode viewMode) {
+    public List<Map<String, String>> getPageArticlesByType(final Map<String, Integer> pager,final Type type, final Status status, ViewMode viewMode) {
         return execute((Operation<List<Map<String, String>>>) connection -> {
             List<Map<String, String>> result = new ArrayList<>();
             String sql = "select * from articles where type=? and status=? order by create_date desc limit ?,10";
@@ -135,7 +136,7 @@ public class ArticleDao extends BaseDao {
             }
             try {
                 PreparedStatement statement = connection.prepareStatement(sql);
-                statement.setInt(1, type);
+                statement.setInt(1, type.getIntValue());
                 if (status == null) {
                     statement.setInt(2 , (pager.get("current") - 1) * 10);
                 } else {
@@ -153,7 +154,7 @@ public class ArticleDao extends BaseDao {
         });
     }
 
-    public List<Map<String, String>> getArticlesByType(final Integer type, final Status status, ViewMode viewMode) {
+    public List<Map<String, String>> getArticlesByType(final Type type, final Status status, ViewMode viewMode) {
         return execute((Operation<List<Map<String, String>>>) connection -> {
             List<Map<String, String>> result = new ArrayList<>();
             String sql = "select * from articles where type=? and status=? order by create_date desc";
@@ -162,7 +163,7 @@ public class ArticleDao extends BaseDao {
             }
             try {
                 PreparedStatement statement = connection.prepareStatement(sql);
-                statement.setInt(1, type);
+                statement.setInt(1, type.getIntValue());
                 if (status != null) {
                     statement.setInt(2, status.getIntValue());
                 }
@@ -177,7 +178,7 @@ public class ArticleDao extends BaseDao {
         });
     }
     
-    public Integer saveOrUpdate(String id, String subject, Integer status, Integer type, Integer updateCreateTime
+    public Integer saveOrUpdate(String id, String subject, Status status, Type type, Integer updateCreateTime
             , String username, String html, String content, String icon) {
     	return execute((TransactionalOperation<Integer>) connection -> {
             String insertSql = "insert into articles (subject,username,icon,create_date," +
@@ -196,8 +197,8 @@ public class ArticleDao extends BaseDao {
                     statement.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
                     statement.setString(5, html);
                     statement.setString(6, content);
-                    statement.setInt(7, status);
-                    statement.setInt(8, type);
+                    statement.setInt(7, status.getIntValue());
+                    statement.setInt(8, type.getIntValue());
                 } else {
                     statement = connection.prepareStatement(updateSql);
                     statement.setString(1, subject);
@@ -205,8 +206,8 @@ public class ArticleDao extends BaseDao {
                     statement.setString(3, icon == null ? ImageUtil.randomArticleImage(type) : icon);
                     statement.setString(4, html);
                     statement.setString(5, content);
-                    statement.setInt(6, status);
-                    statement.setInt(7, type);
+                    statement.setInt(6, status.getIntValue());
+                    statement.setInt(7, type.getIntValue());
                     if (updateCreateTime == 1) {
                         statement.setTimestamp(8, new Timestamp(System.currentTimeMillis()));
                         statement.setInt(9, Integer.valueOf(id));
@@ -231,7 +232,7 @@ public class ArticleDao extends BaseDao {
         });
     }
     
-    public Integer saveOrUpdate(String resourceId, String subject, String createDate, Integer status
+    public Integer saveOrUpdate(String resourceId, String subject, String createDate, Status status
             , String username, Integer accessTimes, Integer goodTimes, String html, String content) {
     	return execute((TransactionalOperation<Integer>) connection -> {
             String selectSql = "select id,status from articles where resource_id=?";
@@ -242,16 +243,16 @@ public class ArticleDao extends BaseDao {
                 PreparedStatement statement = connection.prepareStatement(selectSql);
                 statement.setString(1, resourceId);
                 ResultSet resultSet = statement.executeQuery();
-                Boolean exsits = false;
-                Integer currentStatus = 0;
+                Boolean exists = false;
+                Status currentStatus = Status.draft;
                 Integer id = null;
                 if (resultSet.next()) {
-                    exsits = true;
-                    currentStatus = resultSet.getInt("status");
+                    exists = true;
+                    currentStatus = Status.valueOf(resultSet.getInt("status"));
                     id = resultSet.getInt("id");
                 }
                 PreparedStatement saveOrUpdate = null;
-                if (!exsits) {
+                if (!exists) {
                     saveOrUpdate = connection.prepareStatement(insertSql,Statement.RETURN_GENERATED_KEYS);
                     saveOrUpdate.setString(1, resourceId);
                     saveOrUpdate.setString(2, username);
@@ -262,18 +263,18 @@ public class ArticleDao extends BaseDao {
                     saveOrUpdate.setString(7, subject);
                     saveOrUpdate.setString(8, html);
                     saveOrUpdate.setString(9, content);
-                    saveOrUpdate.setInt(10, status);
+                    saveOrUpdate.setInt(10, status.getIntValue());
                 } else {
                     saveOrUpdate = connection.prepareStatement(updateSql);
                     saveOrUpdate.setString(1, subject);
                     saveOrUpdate.setString(2, html);
                     saveOrUpdate.setString(3, content);
                     saveOrUpdate.setString(4, ImageUtil.randomArticleImage());
-                    saveOrUpdate.setInt(5, currentStatus == 1 ? currentStatus : status);
+                    saveOrUpdate.setInt(5, currentStatus == Status.published ? currentStatus.getIntValue() : status.getIntValue());
                     saveOrUpdate.setString(6, resourceId);
                 }
                 int result = saveOrUpdate.executeUpdate();
-                if (!exsits && result > 0) {
+                if (!exists && result > 0) {
                     ResultSet keyResultSet = saveOrUpdate.getGeneratedKeys();
                     if (keyResultSet.next()) {
                         id = keyResultSet.getInt(1);
@@ -312,17 +313,42 @@ public class ArticleDao extends BaseDao {
         });
     }
 
-    public List<Map<String, String>> getArticles(final String orderColumn,final Status status, final ViewMode viewMode ) {
+    public List<Map<String, String>> getArticles(final String orderColumn, final ViewMode viewMode ) {
+        return getArticles(orderColumn, null, null, viewMode);
+    }
+
+    public List<Map<String, String>> getArticles(final String orderColumn, final Type type, final ViewMode viewMode ) {
+        return getArticles(orderColumn, null, type, viewMode);
+    }
+
+    public List<Map<String, String>> getArticles(final String orderColumn, final Status status, final ViewMode viewMode ) {
+        return getArticles(orderColumn, status, null, viewMode);
+    }
+
+    public List<Map<String, String>> getArticles(final String orderColumn,final Status status, final Type type, final ViewMode viewMode ) {
         return execute((Operation<List<Map<String, String>>>) connection -> {
-            String sql = "select * from articles where status = ? order by " + orderColumn + " desc";
-            if (status == null ) {
-                sql = "select * from articles order by " + orderColumn + " desc";
+            String sql = "select * from articles order by " + orderColumn + " desc";
+            if (status != null && type == null) {
+                sql = "select * from articles where status = ? order by " + orderColumn + " desc";
+            }
+            if (status == null && type != null) {
+                sql = "select * from articles where type = ? order by " + orderColumn + " desc";
+            }
+            if (status != null && type != null) {
+                sql = "select * from articles where status = ? and type = ? order by " + orderColumn + " desc";
             }
             List<Map<String, String>> result = new ArrayList<>();
             try {
                 PreparedStatement statement = connection.prepareStatement(sql);
-                if (status != null) {
+                if (status != null && type == null) {
                     statement.setInt(1 , status.getIntValue());
+                }
+                if (status == null && type != null) {
+                    statement.setInt(1 , type.getIntValue());
+                }
+                if (status != null && type != null) {
+                    statement.setInt(1 , status.getIntValue());
+                    statement.setInt(2 , type.getIntValue());
                 }
                 ResultSet resultSet = statement.executeQuery();
                 while (resultSet.next()) {

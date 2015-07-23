@@ -23,6 +23,7 @@ import com.zuoxiaolong.dao.ArticleDao;
 import com.zuoxiaolong.dao.MatchDao;
 import com.zuoxiaolong.dao.TagDao;
 import com.zuoxiaolong.model.Status;
+import com.zuoxiaolong.model.Type;
 import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.orm.DaoFactory;
 import com.zuoxiaolong.util.StringUtil;
@@ -81,11 +82,11 @@ public abstract class FreemarkerHelper {
             data.put("winTimesCharts", winTimesCharts);
             data.put("totalCount", DaoFactory.getDao(MatchDao.class).count());
         } else {
-        	List<Map<String, String>> articleList = DaoFactory.getDao(ArticleDao.class).getArticles("create_date", Status.published, viewMode);
+        	List<Map<String, String>> articleList = DaoFactory.getDao(ArticleDao.class).getArticles("create_date", Status.published, Type.article, viewMode);
             List<Map<String, String>> articleListCopy = new ArrayList<>(articleList);
-            data.put("accessCharts",DaoFactory.getDao(ArticleDao.class).getArticles("access_times", Status.published, viewMode));
+            data.put("accessCharts",DaoFactory.getDao(ArticleDao.class).getArticles("access_times", Status.published, Type.article, viewMode));
             data.put("newCharts",articleList);
-            data.put("recommendCharts",DaoFactory.getDao(ArticleDao.class).getArticles("good_times", Status.published, viewMode));
+            data.put("recommendCharts",DaoFactory.getDao(ArticleDao.class).getArticles("good_times", Status.published, Type.article, viewMode));
             data.put("imageArticles",Random.random(articleListCopy, DEFAULT_RIGHT_ARTICLE_NUMBER));
             data.put("hotTags", Random.random(DaoFactory.getDao(TagDao.class).getHotTags(), DEFAULT_RIGHT_TAG_NUMBER));
             if (ViewMode.DYNAMIC == viewMode) {

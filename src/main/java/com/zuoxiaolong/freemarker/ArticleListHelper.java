@@ -19,8 +19,8 @@ package com.zuoxiaolong.freemarker;
 import com.zuoxiaolong.dao.ArticleDao;
 import com.zuoxiaolong.dao.CategoryDao;
 import com.zuoxiaolong.dao.TagDao;
-import com.zuoxiaolong.dao.UserDao;
 import com.zuoxiaolong.model.Status;
+import com.zuoxiaolong.model.Type;
 import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.orm.DaoFactory;
 import com.zuoxiaolong.search.LuceneHelper;
@@ -91,13 +91,13 @@ public class ArticleListHelper {
 	}
 
     public static void putDataMapByType(Map<String, Object> data, ViewMode viewMode, Integer type, int current) {
-        int total = DaoFactory.getDao(ArticleDao.class).getArticlesByType(Integer.valueOf(type), Status.published, viewMode).size();
+        int total = DaoFactory.getDao(ArticleDao.class).getArticlesByType(Type.valueOf(type), Status.published, viewMode).size();
         int page = (total % 10 == 0) ? (total / 10) : (total / 10 + 1);
         Map<String, Integer> pager = new HashMap<>();
         pager.put("current", current);
         pager.put("total", total);
         pager.put("page", page);
-        data.put("pageArticles", DaoFactory.getDao(ArticleDao.class).getPageArticlesByType(pager, Integer.valueOf(type), Status.published, viewMode));
+        data.put("pageArticles", DaoFactory.getDao(ArticleDao.class).getPageArticlesByType(pager, Type.valueOf(type), Status.published, viewMode));
         data.put("pager", pager);
         data.put("firstPageUrl", ArticleListHelper.generateDynamicTypePath(type, 1));
         data.put("prePageUrl", ArticleListHelper.generateDynamicTypePath(type, current - 1));
@@ -127,7 +127,7 @@ public class ArticleListHelper {
         pager.put("current", current);
         pager.put("total", total);
         pager.put("page", page);
-        data.put("pageArticles", DaoFactory.getDao(ArticleDao.class).getPageArticlesByType(pager, 1, Status.published, viewMode));
+        data.put("pageArticles", DaoFactory.getDao(ArticleDao.class).getPageArticlesByType(pager, Type.novel, Status.published, viewMode));
         data.put("pager", pager);
         if (viewMode == ViewMode.STATIC) {
             data.put("firstPageUrl", ArticleListHelper.generateStaticPath("novel", 1));
@@ -144,7 +144,7 @@ public class ArticleListHelper {
 
 
     public static void putDataMapForManager(Map<String, Object> data, ViewMode viewMode, int current) {
-        int total = DaoFactory.getDao(ArticleDao.class).getArticles("create_date", null, viewMode).size();
+        int total = DaoFactory.getDao(ArticleDao.class).getArticles("create_date", viewMode).size();
         int page = (total % 10 == 0) ? (total / 10) : (total / 10 + 1);
         Map<String, Integer> pager = new HashMap<>();
         pager.put("current", current);

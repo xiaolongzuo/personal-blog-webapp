@@ -20,27 +20,27 @@ package com.zuoxiaolong.model;
  * @author 左潇龙
  * @since 15/6/26 01:06
  */
-public enum Status {
-    published {
-        @Override
-        public int getIntValue() {
-            return 1;
-        }
-    },draft {
+public enum Type {
+    article {
         @Override
         public int getIntValue() {
             return 0;
+        }
+    },novel {
+        @Override
+        public int getIntValue() {
+            return 1;
         }
     };
 
     public abstract int getIntValue();
 
-    public static Status valueOf(int value) {
+    public static Type valueOf(int value) {
         if (value == 0) {
-            return draft;
+            return article;
         }
         if (value == 1) {
-            return published;
+            return novel;
         }
         throw new RuntimeException("unknown value");
     }

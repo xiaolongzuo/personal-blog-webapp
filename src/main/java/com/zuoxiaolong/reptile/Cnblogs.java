@@ -16,25 +16,15 @@ package com.zuoxiaolong.reptile;
  * limitations under the License.
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.dao.*;
+import com.zuoxiaolong.model.Status;
 import com.zuoxiaolong.orm.DaoFactory;
+import com.zuoxiaolong.util.EnrypyUtil;
+import com.zuoxiaolong.util.IOUtil;
+import com.zuoxiaolong.util.ImageUtil;
 import com.zuoxiaolong.util.JsoupUtil;
 import net.sf.json.JSONObject;
-
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -43,17 +33,16 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
-import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.dao.ArticleCategoryDao;
-import com.zuoxiaolong.dao.ArticleDao;
-import com.zuoxiaolong.dao.ArticleTagDao;
-import com.zuoxiaolong.dao.CategoryDao;
-import com.zuoxiaolong.dao.CommentDao;
-import com.zuoxiaolong.dao.ImageDao;
-import com.zuoxiaolong.dao.TagDao;
-import com.zuoxiaolong.util.EnrypyUtil;
-import com.zuoxiaolong.util.IOUtil;
-import com.zuoxiaolong.util.ImageUtil;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author 左潇龙
@@ -190,20 +179,20 @@ public abstract class Cnblogs {
 			logger.error("get create_date failed for " + postId);
 			return;
 		}
-        Integer status = null;
+        Status status = null;
         TextNode statusNode = (TextNode) tdElements.get(1).childNodes().get(0);
         String statusNodeText = statusNode.text().trim();
         if (statusNodeText.length() == 0) {
         	Element statusElement = (Element) tdElements.get(1).childNodes().get(1);
-			status = statusElement.text().trim().equals("未发布") ? 0 : 1;
+			status = statusElement.text().trim().equals("未发布") ? Status.draft : Status.published;
 		} else {
-			status = statusNodeText.equals("未发布") ? 0 : 1;
+			status = statusNodeText.equals("未发布") ? Status.draft : Status.published;
 		}
         Integer accessTimes = Integer.valueOf(tdElements.get(3).html().trim()) + Integer.valueOf(tdElements.get(4).html().trim());
 
         //获取赞的次数
         Integer goodTimes = 0;
-        if (status == 1) {
+        if (status == Status.published) {
         	Document diggCountDocument = Jsoup.connect("http://www.cnblogs.com/mvc/blog/BlogPostInfo.aspx?blogId=160491&postId=" + postId + "&blogApp=zuoxiaolong&blogUserGuid=8834a931-b305-e311-8d02-90b11c0b17d6").get();
             goodTimes = Integer.valueOf(diggCountDocument.getElementById("digg_count").html());
 		}
@@ -449,7 +438,7 @@ public abstract class Cnblogs {
         Document diggCountDocument = Jsoup.connect("http://www.cnblogs.com/mvc/blog/BlogPostInfo.aspx?blogId=160491&postId=" + postId + "&blogApp=zuoxiaolong&blogUserGuid=8834a931-b305-e311-8d02-90b11c0b17d6").get();
         Integer goodTimes = Integer.valueOf(diggCountDocument.getElementById("digg_count").html());
 
-        Integer status = 1;
+        Status status = Status.published;
         //如果resourceId已经存在则更新，否则保存
 		Integer id = DaoFactory.getDao(ArticleDao.class).saveOrUpdate(resourceId, subject, createDate, status, username, accessTimes, goodTimes, html, content);
         if (logger.isInfoEnabled()) {

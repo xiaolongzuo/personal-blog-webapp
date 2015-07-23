@@ -18,6 +18,7 @@ package com.zuoxiaolong.util;
 
 import com.zuoxiaolong.cache.CacheManager;
 import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.model.Type;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -57,12 +58,12 @@ public abstract class ImageUtil {
     }
 
     public static String randomArticleImage() {
-        return randomArticleImage(0);
+        return randomArticleImage(Type.article);
     }
 
     @SuppressWarnings("unchecked")
-	public static String randomArticleImage(Integer articleType) {
-        if (articleType == 1) {
+	public static String randomArticleImage(Type articleType) {
+        if (articleType == Type.novel) {
             return Configuration.getSiteUrl(BASE_PATH + "novel.jpg");
         }
         List<String> articleImages = (List<String>) CacheManager.getConcurrentHashMapCache().get("articleImages");

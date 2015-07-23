@@ -16,19 +16,18 @@ package com.zuoxiaolong.generator;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.config.Configuration;
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.freemarker.ArticleHelper;
+import com.zuoxiaolong.freemarker.FreemarkerHelper;
+import com.zuoxiaolong.model.Status;
+import com.zuoxiaolong.orm.DaoFactory;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 import java.util.Map;
-
-import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.dao.ArticleDao;
-import com.zuoxiaolong.dao.UserDao;
-import com.zuoxiaolong.freemarker.ArticleHelper;
-import com.zuoxiaolong.freemarker.FreemarkerHelper;
-import com.zuoxiaolong.model.Status;
-import com.zuoxiaolong.orm.DaoFactory;
 
 /**
  * @author 左潇龙

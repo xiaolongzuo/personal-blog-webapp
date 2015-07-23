@@ -18,6 +18,7 @@ package com.zuoxiaolong.freemarker;
 
 import com.zuoxiaolong.dao.ArticleDao;
 import com.zuoxiaolong.model.Status;
+import com.zuoxiaolong.model.Type;
 import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.orm.DaoFactory;
 
@@ -31,7 +32,7 @@ import java.util.Map;
 public abstract class IndexHelper {
 
 	public static void putDataMap(Map<String, Object> data, ViewMode viewMode) {
-		List<Map<String, String>> articles = DaoFactory.getDao(ArticleDao.class).getArticlesByType(1, Status.published, viewMode);
+		List<Map<String, String>> articles = DaoFactory.getDao(ArticleDao.class).getArticlesByType(Type.novel, Status.published, viewMode);
         data.put("articles", articles);
 	}
 	
