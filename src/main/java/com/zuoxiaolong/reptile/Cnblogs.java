@@ -137,9 +137,9 @@ public abstract class Cnblogs {
         String articleUrl = subjectElement.attr("href");
         
         String originArticleHtml = getHtmlUseCookie(cookie, articleUrl);
-        Document acticleDocument = Jsoup.parse(originArticleHtml);
+        Document articleDocument = Jsoup.parse(originArticleHtml);
         
-        Map<String, String> imageMap = saveImage(acticleDocument);
+        Map<String, String> imageMap = saveImage(articleDocument);
         
         //获取标题
         String subject = subjectElement.html().trim();
@@ -149,7 +149,7 @@ public abstract class Cnblogs {
         Integer postId = Integer.valueOf(resourceId);
         
         //获取内容
-        Element bodyElement = acticleDocument.getElementById("cnblogs_post_body");
+        Element bodyElement = articleDocument.getElementById("cnblogs_post_body");
         String html = bodyElement.html();
         List<String> codeList = getPreList(html, false);
         List<String> originCodeList = getPreList(originArticleHtml, true);

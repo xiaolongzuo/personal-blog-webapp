@@ -31,16 +31,21 @@ public class FetchTask implements Runnable {
 
 	private static final Logger logger = Logger.getLogger(FetchTask.class);
 	
-	private static final int THREAD_SLEEP_MINUTES = Integer.valueOf(Configuration.get("fetch.thread.sleep.minutes"));
+	private static final int THREAD_SLEEP_DAYS = Integer.valueOf(Configuration.get("fetch.thread.sleep.days"));
 
 	@Override
 	public void run() {
 		while (true) {
 			try {
 				ImageUtil.loadArticleImages();
+				if (Configuration.isProductEnv()) {
+					Cnblogs.fetchArticlesAfterLogin();
+				} else {
+					Cnblogs.fetchArticlesCommon();
+				}
 				LuceneHelper.generateIndex();
 				Generators.generate();
-				Thread.sleep(1000 * 60 * THREAD_SLEEP_MINUTES);
+				Thread.sleep(1000L * 60L * 60L * 24L * Long.valueOf(THREAD_SLEEP_DAYS));
 			} catch (Exception e) {
 				logger.warn("fetch and generate failed ...", e);
 				break;
