@@ -188,7 +188,7 @@ public abstract class Cnblogs {
 		} else {
 			status = statusNodeText.equals("未发布") ? Status.draft : Status.published;
 		}
-        Integer accessTimes = Integer.valueOf(tdElements.get(3).html().trim()) + Integer.valueOf(tdElements.get(4).html().trim());
+        Integer accessTimes = Integer.valueOf(tdElements.get(3).html().trim());
 
         //获取赞的次数
         Integer goodTimes = 0;
