@@ -32,7 +32,7 @@ import java.util.Map;
 public abstract class IndexHelper {
 
 	public static void putDataMap(Map<String, Object> data, ViewMode viewMode) {
-		List<Map<String, String>> articles = DaoFactory.getDao(ArticleDao.class).getArticlesByType(Type.novel, Status.published, viewMode);
+		List<Map<String, String>> articles = DaoFactory.getDao(ArticleDao.class).getArticlesByType(Type.article, Status.published, viewMode);
         data.put("articles", articles);
 	}
 	

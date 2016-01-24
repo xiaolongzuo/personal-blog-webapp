@@ -343,7 +343,20 @@ public abstract class Cnblogs {
 			String img = element.toString();
 			String imgUrl = element.attr("src");
 			String path = DaoFactory.getDao(ImageDao.class).getPath(imgUrl);
-			if (path == null) {
+            if (path != null) {
+                try {
+                    File file = new File(Configuration.getContextPath(path));
+                    if (!file.exists()) {
+                        HttpURLConnection connection = (HttpURLConnection) new URL(imgUrl).openConnection();
+                        connection.setRequestMethod("GET");
+                        path = ImageUtil.generatePath(imgUrl);
+                        IOUtil.copy(connection.getInputStream(), new File(Configuration.getContextPath(path)));
+                    }
+                } catch (Exception e) {
+                    logger.error("save image error for : " + imgUrl, e);
+                }
+                DaoFactory.getDao(ImageDao.class).update(path, imgUrl);
+            } else {
 				path = ImageUtil.generatePath(imgUrl);
 				try {
 					File file = new File(Configuration.getContextPath(path));

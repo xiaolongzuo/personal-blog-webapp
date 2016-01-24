@@ -54,6 +54,24 @@ public class ImageDao extends BaseDao {
 	public boolean exists(final String resourceUrl) {
 		return getId(resourceUrl) != null;
 	}
+
+	public boolean update(final String path, final String resourceUrl) {
+		return execute(new TransactionalOperation<Boolean>() {
+			@Override
+			public Boolean doInConnection(Connection connection) {
+				try {
+					PreparedStatement statement = connection.prepareStatement("update images set path=? where resource_url=?");
+					statement.setString(1, path);
+					statement.setString(2, resourceUrl);
+					int result = statement.executeUpdate();
+					return result > 0;
+				} catch (SQLException e) {
+					error("update image failed ..." , e);
+				}
+				return null;
+			}
+		});
+	}
 	
 	public String getPath(final String resourceUrl) {
 		return execute(new Operation<String>() {

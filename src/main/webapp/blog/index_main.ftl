@@ -8,7 +8,7 @@
             <#break />
         </#if>
         <div class="blogs">
-            <figure><img src="${article.icon}" title="程序员小说——《异能程序员》"></figure>
+            <figure><img src="${article.icon}" title="niubi-job——一个分布式的任务调度框架"></figure>
             <ul>
                 <h3><a href="${contextPath}${article.url}">${article.subject}</a></h3>
                 <p>
