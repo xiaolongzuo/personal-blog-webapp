@@ -9,7 +9,7 @@ CREATE TABLE articles
 (
   id INT NOT NULL AUTO_INCREMENT,
   username CHAR(15) NOT NULL,
-  resource_id VARCHAR(200) NOT NULL,
+  resource_id VARCHAR(100) NOT NULL,
   subject VARCHAR (100) NOT NULL,
   html LONGTEXT NOT NULL,
   content LONGTEXT NOT NULL,
@@ -200,7 +200,7 @@ alter table users add CONSTRAINT `USERS_FK_LANGUAGE_ID` FOREIGN KEY (`language_i
 alter table users drop qq_nick_name ;
 alter table users change qq_avatar_url_30 image_path VARCHAR(200);
 
-ALTER TABLE articles CHANGE COLUMN resource_id resource_id VARCHAR(200) NULL ;
+ALTER TABLE articles CHANGE COLUMN resource_id resource_id VARCHAR(100) NULL ;
 
 alter table comments change nick_name resource_username VARCHAR (40);
 
