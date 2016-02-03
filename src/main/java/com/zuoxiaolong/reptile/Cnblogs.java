@@ -75,12 +75,16 @@ public abstract class Cnblogs {
             Elements elements = mainElement.getElementsByTag("tr");
             int pageSize = 0;
             for (int j = 1 ; j < elements.size(); j++) {
-                fetchArticle(elements.get(j),cookie);
+                try {
+                    fetchArticle(elements.get(j),cookie);
+                    if (logger.isInfoEnabled()) {
+                        logger.info("fetch success for pagenumber : " + i + ", pagesize : " + (pageSize + 1));
+                    }
+                } catch (Throwable e) {
+                    logger.error("fetch failed for pagenumber : " + i + ", pagesize : " + (pageSize + 1));
+                }
                 pageSize++;
             }
-            if (logger.isInfoEnabled()) {
-        		logger.info("fetch success for pagenumber : " + i + ", pagesize : " + pageSize);
-			}
             if (pageSize < 10) {
 				break;
 			}
