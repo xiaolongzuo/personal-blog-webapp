@@ -70,7 +70,7 @@ public abstract class Cnblogs {
         	if (logger.isInfoEnabled()) {
         		logger.info("begin fetch the " + i + " page...");
 			}
-            Document document = Jsoup.parse(getHtmlUseCookie(cookie, "http://i.cnblogs.com/EditPosts.aspx?pg=" + i));
+            Document document = Jsoup.parse(getHtmlUseCookie(cookie, "http://i.cnblogs.com/posts?page=" + i));
             Element mainElement = document.getElementById("post_list");
             Elements elements = mainElement.getElementsByTag("tr");
             int pageSize = 0;
@@ -81,7 +81,7 @@ public abstract class Cnblogs {
                         logger.info("fetch success for pagenumber : " + i + ", pagesize : " + (pageSize + 1));
                     }
                 } catch (Throwable e) {
-                    logger.error("fetch failed for pagenumber : " + i + ", pagesize : " + (pageSize + 1));
+                    logger.error("fetch failed for pagenumber : " + i + ", pagesize : " + (pageSize + 1), e);
                 }
                 pageSize++;
             }
@@ -119,8 +119,8 @@ public abstract class Cnblogs {
         loginConnection.connect();
         OutputStream outputStream = loginConnection.getOutputStream();
         Map<String,Object> params = new HashMap<>();
-        String username = "zuoxiaolong";//Configuration.get("cnblogs.username.product");
-        String password = "zuoxiaolong!8810";//Configuration.get("cnblogs.password.product");
+        String username = Configuration.get("cnblogs.username.product");
+        String password = Configuration.get("cnblogs.password.product");
         params.put("input1",EnrypyUtil.publicEnrypy(publicKey, username));
         params.put("input2",EnrypyUtil.publicEnrypy(publicKey, password));
         params.put("remember", false);
@@ -150,11 +150,15 @@ public abstract class Cnblogs {
         String subject = subjectElement.html().trim();
         
         //获取postid
-        String resourceId = element.attr("id").split("_")[1];
+        String resourceId = element.attr("id").split("\\-")[2];
         Integer postId = Integer.valueOf(resourceId);
         
         //获取内容
         Element bodyElement = articleDocument.getElementById("cnblogs_post_body");
+        if (bodyElement == null) {
+            logger.warn("can't get article html , url : " + articleUrl);
+            return;
+        }
         String html = bodyElement.html();
         List<String> codeList = getPreList(html, false);
         List<String> originCodeList = getPreList(originArticleHtml, true);
@@ -175,7 +179,7 @@ public abstract class Cnblogs {
         //获取文章基本属性，使用文章索引里面的postdesc获取
         List<Node> subjectNodes = subjectTdElement.childNodes();
         String createDateText = ((TextNode)subjectNodes.get(subjectNodes.size() - 1)).text().trim();
-        Pattern pattern = Pattern.compile("\\((.*?)\\)");
+        Pattern pattern = Pattern.compile("（(.*?)）");
         Matcher matcher = pattern.matcher(createDateText);
         String createDate = null;
         if (matcher.find()) {
@@ -207,7 +211,7 @@ public abstract class Cnblogs {
         if (logger.isInfoEnabled()) {
     		logger.info("saveOrUpdate article : [" + resourceId + ":" + subject + "]");
 		}
-        
+
         //保存标签和分类
         String tagsUrl = "http://www.cnblogs.com/mvc/blog/CategoriesTags.aspx?blogApp=zuoxiaolong&blogId=160491&postId=" + postId;
         String tagsJson = getHtmlUseCookie(cookie, tagsUrl);
