@@ -71,7 +71,7 @@ public abstract class Cnblogs {
         		logger.info("begin fetch the " + i + " page...");
 			}
             Document document = Jsoup.parse(getHtmlUseCookie(cookie, "http://i.cnblogs.com/EditPosts.aspx?pg=" + i));
-            Element mainElement = document.getElementById("Listing");
+            Element mainElement = document.getElementById("post_list");
             Elements elements = mainElement.getElementsByTag("tr");
             int pageSize = 0;
             for (int j = 1 ; j < elements.size(); j++) {
@@ -88,7 +88,6 @@ public abstract class Cnblogs {
             if (pageSize < 10) {
 				break;
 			}
-            pageSize = 0;
         }
     }
 	
@@ -120,8 +119,10 @@ public abstract class Cnblogs {
         loginConnection.connect();
         OutputStream outputStream = loginConnection.getOutputStream();
         Map<String,Object> params = new HashMap<>();
-        params.put("input1",EnrypyUtil.publicEnrypy(publicKey, Configuration.get("cnblogs.username.product")));
-        params.put("input2",EnrypyUtil.publicEnrypy(publicKey, Configuration.get("cnblogs.password.product")));
+        String username = "zuoxiaolong";//Configuration.get("cnblogs.username.product");
+        String password = "zuoxiaolong!8810";//Configuration.get("cnblogs.password.product");
+        params.put("input1",EnrypyUtil.publicEnrypy(publicKey, username));
+        params.put("input2",EnrypyUtil.publicEnrypy(publicKey, password));
         params.put("remember", false);
         outputStream.write(JSONObject.fromObject(params).toString().getBytes("UTF-8"));
         outputStream.flush();
@@ -510,7 +511,7 @@ public abstract class Cnblogs {
     }
 
     public static void main(String[] args) throws IOException {
-		fetchArticlesCommon();
+		fetchArticlesAfterLogin();
 	}
     
 }
