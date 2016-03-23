@@ -403,7 +403,6 @@ public abstract class Cnblogs {
             if (pageSize < 10) {
 				break;
 			}
-            pageSize = 0;
         }
     }
 	
@@ -515,7 +514,7 @@ public abstract class Cnblogs {
     }
 
     public static void main(String[] args) throws IOException {
-		fetchArticlesAfterLogin();
+		fetchArticlesCommon();
 	}
     
 }
