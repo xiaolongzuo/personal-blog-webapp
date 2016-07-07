@@ -73,8 +73,7 @@ public class DynamicFilter implements Filter {
 		if (StringUtils.isEmpty(StringUtil.replaceStartSlant(requestUri))) {
 			requestUri = IndexHelper.generateDynamicPath();
 		}
-        String contextPath = request.getServletContext().getContextPath();
-		String dataMapKey = requestUri.substring(contextPath.length(),requestUri.lastIndexOf("."));
+		String dataMapKey = requestUri.substring(((HttpServletRequest)request).getContextPath().length(),requestUri.lastIndexOf("."));
 		DataMap current = dataMap.get(dataMapKey);
 		if (current == null) {
 			if (dataMapKey.startsWith("/")) {
@@ -89,23 +88,23 @@ public class DynamicFilter implements Filter {
 		return dataMapKey;
 	}
 
-	private boolean loginFilter(Map<String, Object> data, String requesturi, ServletRequest request) {
+	private boolean loginFilter(Map<String, Object> data, String requestUri, ServletRequest request) {
 		Map<String, String> user = AbstractServlet.getUser((HttpServletRequest) request);
 		if (user != null) {
 			data.put("user", user);
 			return false;
 		}
 		Set<String> cachedLoginFilterExcludeUrls = (Set<String>)CacheManager.getConcurrentHashMapCache().get("loginFilterExcludeUrls");
-		if (cachedLoginFilterExcludeUrls != null && cachedLoginFilterExcludeUrls.contains(requesturi)) {
+		if (cachedLoginFilterExcludeUrls != null && cachedLoginFilterExcludeUrls.contains(requestUri)) {
 			return false;
 		}
 		Set<String> cachedLoginFilterUrls = (Set<String>)CacheManager.getConcurrentHashMapCache().get("loginFilterUrls");
-		if (cachedLoginFilterUrls != null && cachedLoginFilterUrls.contains(requesturi)) {
+		if (cachedLoginFilterUrls != null && cachedLoginFilterUrls.contains(requestUri)) {
 			return true;
 		}
 		boolean isLoginFilterUrl = false;
 		for (int i = 0; i < loginFilterUrls.length; i++) {
-			if (Pattern.matches(loginFilterUrls[i], requesturi)) {
+			if (Pattern.matches(loginFilterUrls[i], requestUri)) {
 				isLoginFilterUrl = true;
 				break;
 			}
@@ -115,13 +114,13 @@ public class DynamicFilter implements Filter {
 				if (cachedLoginFilterUrls == null) {
 					cachedLoginFilterUrls = new HashSet<>();
 				}
-				cachedLoginFilterUrls.add(requesturi);
+				cachedLoginFilterUrls.add(requestUri);
 				CacheManager.getConcurrentHashMapCache().set("loginFilterUrls", cachedLoginFilterUrls);
 			} else {
 				if (cachedLoginFilterExcludeUrls == null) {
 					cachedLoginFilterExcludeUrls = new HashSet<>();
 				}
-				cachedLoginFilterExcludeUrls.add(requesturi);
+				cachedLoginFilterExcludeUrls.add(requestUri);
 				CacheManager.getConcurrentHashMapCache().set("loginFilterExcludeUrls", cachedLoginFilterExcludeUrls);
 			}
 		}

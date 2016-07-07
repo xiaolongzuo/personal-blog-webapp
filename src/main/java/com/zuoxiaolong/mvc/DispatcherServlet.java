@@ -16,16 +16,15 @@ package com.zuoxiaolong.mvc;
  * limitations under the License.
  */
 
-import java.io.IOException;
-import java.util.Map;
+import com.zuoxiaolong.servlet.Servlet;
+import com.zuoxiaolong.util.StringUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.zuoxiaolong.servlet.Servlet;
-import com.zuoxiaolong.util.StringUtil;
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author 左潇龙
@@ -46,7 +45,7 @@ public class DispatcherServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String requestUri = request.getRequestURI();
-        Servlet servlet = mapping.get(requestUri);
+        Servlet servlet = mapping.get(requestUri.substring(request.getContextPath().length(), requestUri.length()));
         while (servlet == null) {
             if (requestUri.startsWith("/")) {
                 servlet = mapping.get(StringUtil.replaceStartSlant(requestUri));
