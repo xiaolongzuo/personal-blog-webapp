@@ -45,10 +45,11 @@ public class DispatcherServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String requestUri = request.getRequestURI();
-        Servlet servlet = mapping.get(requestUri.substring(request.getContextPath().length(), requestUri.length()));
+        String realRequestUri = requestUri.substring(request.getContextPath().length(), requestUri.length());
+        Servlet servlet = mapping.get(realRequestUri);
         while (servlet == null) {
-            if (requestUri.startsWith("/")) {
-                servlet = mapping.get(StringUtil.replaceStartSlant(requestUri));
+            if (realRequestUri.startsWith("/")) {
+                servlet = mapping.get(StringUtil.replaceStartSlant(realRequestUri));
             } else {
                 throw new RuntimeException("unknown request mapping.");
             }
