@@ -16,23 +16,8 @@ package com.zuoxiaolong.filter;
  * limitations under the License.
  */
 
-import java.io.IOException;
-import java.util.*;
-import java.util.regex.Pattern;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.zuoxiaolong.cache.CacheManager;
 import com.zuoxiaolong.config.Configuration;
-import org.apache.commons.lang.StringUtils;
-
 import com.zuoxiaolong.freemarker.FreemarkerHelper;
 import com.zuoxiaolong.freemarker.IndexHelper;
 import com.zuoxiaolong.model.ViewMode;
@@ -40,6 +25,17 @@ import com.zuoxiaolong.mvc.DataMap;
 import com.zuoxiaolong.mvc.DataMapLoader;
 import com.zuoxiaolong.servlet.AbstractServlet;
 import com.zuoxiaolong.util.StringUtil;
+import org.apache.commons.lang.StringUtils;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * @author 左潇龙
@@ -77,7 +73,8 @@ public class DynamicFilter implements Filter {
 		if (StringUtils.isEmpty(StringUtil.replaceStartSlant(requestUri))) {
 			requestUri = IndexHelper.generateDynamicPath();
 		}
-		String dataMapKey = requestUri.substring(0,requestUri.lastIndexOf("."));
+        String contextPath = request.getServletContext().getContextPath();
+		String dataMapKey = requestUri.substring(contextPath.length(),requestUri.lastIndexOf("."));
 		DataMap current = dataMap.get(dataMapKey);
 		if (current == null) {
 			if (dataMapKey.startsWith("/")) {
