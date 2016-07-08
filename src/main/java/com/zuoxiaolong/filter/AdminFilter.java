@@ -23,7 +23,6 @@ import com.zuoxiaolong.util.StringUtil;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
@@ -42,7 +41,8 @@ public class AdminFilter implements Filter {
     	String indexUrl = "/admin/admin_index.ftl";
     	String adminDefaultUrl = "/admin";
     	String contextPath = Configuration.getSiteUrl();
-    	String requestUri = StringUtil.replaceSlants(((HttpServletRequest)servletRequest).getRequestURI());
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+    	String requestUri = StringUtil.replaceSlants(request.getRequestURI().substring(request.getContextPath().length()));
     	if (loginPage.equals(requestUri) || loginUrl.equals(requestUri)) {
 			filterChain.doFilter(servletRequest, servletResponse);
 			return;
