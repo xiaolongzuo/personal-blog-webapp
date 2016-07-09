@@ -83,11 +83,10 @@ public abstract class FreemarkerHelper {
             data.put("totalCount", DaoFactory.getDao(MatchDao.class).count());
         } else {
         	List<Map<String, String>> articleList = DaoFactory.getDao(ArticleDao.class).getArticles("create_date", Status.published, Type.article, viewMode);
-            List<Map<String, String>> articleListCopy = new ArrayList<>(articleList);
             data.put("accessCharts",DaoFactory.getDao(ArticleDao.class).getArticles("access_times", Status.published, Type.article, viewMode));
-            data.put("newCharts",articleList);
+            data.put("newCharts",DaoFactory.getDao(ArticleDao.class).getArticles("create_date", Status.published, viewMode));
             data.put("recommendCharts",DaoFactory.getDao(ArticleDao.class).getArticles("good_times", Status.published, Type.article, viewMode));
-            data.put("imageArticles",Random.random(articleListCopy, DEFAULT_RIGHT_ARTICLE_NUMBER));
+            data.put("imageArticles",Random.random(articleList, DEFAULT_RIGHT_ARTICLE_NUMBER));
             data.put("hotTags", Random.random(DaoFactory.getDao(TagDao.class).getHotTags(), DEFAULT_RIGHT_TAG_NUMBER));
             if (ViewMode.DYNAMIC == viewMode) {
                 data.put("accessArticlesUrl", ArticleListHelper.generateDynamicPath("access_times", 1));
