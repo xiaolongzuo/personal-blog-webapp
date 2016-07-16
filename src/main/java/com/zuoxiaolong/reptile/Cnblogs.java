@@ -393,8 +393,15 @@ public abstract class Cnblogs {
             Element mainElement = document.getElementById("mainContent");
             Elements elements = mainElement.getElementsByClass("postTitle");
             int pageSize = 0;
-            for (Element element : elements) {
-                fetchArticle(element);
+            for (int j = 0; j < elements.size(); j++) {
+                try {
+                    fetchArticle(elements.get(j));
+                    if (logger.isInfoEnabled()) {
+                        logger.info("fetch success for pagenumber : " + i + ", pagesize : " + (pageSize + 1));
+                    }
+                } catch (Throwable e) {
+                    logger.error("fetch failed for pagenumber : " + i + ", pagesize : " + (pageSize + 1), e);
+                }
                 pageSize++;
             }
             if (logger.isInfoEnabled()) {

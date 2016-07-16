@@ -57,14 +57,18 @@ public abstract class ImageUtil {
         CacheManager.getConcurrentHashMapCache().set("articleImages",getAllArticleImages());
     }
 
-    public static String randomArticleImage() {
-        return randomArticleImage(Type.article);
+    public static String randomArticleImage(String subject) {
+        return randomArticleImage(subject, Type.article);
     }
 
     @SuppressWarnings("unchecked")
-	public static String randomArticleImage(Type articleType) {
+	public static String randomArticleImage(String subject, Type articleType) {
         if (articleType == Type.novel) {
-            return Configuration.getSiteUrl(BASE_PATH + "novel.jpg");
+            if (subject.startsWith("一个屌丝程序猿的人生")) {
+                return Configuration.getSiteUrl(BASE_PATH + "novel_2.jpg");
+            } else if (subject.startsWith("［异能程序员］")) {
+                return Configuration.getSiteUrl(BASE_PATH + "novel_1.jpg");
+            }
         }
         List<String> articleImages = (List<String>) CacheManager.getConcurrentHashMapCache().get("articleImages");
         return articleImages.get(new Random().nextInt(articleImages.size()));

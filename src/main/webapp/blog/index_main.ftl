@@ -1,6 +1,6 @@
 <div class="main-div">
     <h1>
-        程序员小说
+        最新文章
     </h1>
 <#if articles??>
     <#list articles as article>

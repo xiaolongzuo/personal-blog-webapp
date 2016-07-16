@@ -67,6 +67,8 @@
 .follow_me_link .txwb:hover { color: #000; background: url(../../img/common/right_info_ico_3.png) no-repeat scroll 0% 0% transparent; }
 .follow_me_link .github { background: url(../../img/common/right_info_ico_4_black.jpg) no-repeat scroll 0% 0% transparent; }
 .follow_me_link .github:hover { color: #000; background: url(../../img/common/right_info_ico_4.png) no-repeat scroll 0% 0% transparent; }
+.follow_me_link .douyu { background: url(../../img/common/right_info_ico_5_black.jpg) no-repeat scroll 0% 0% transparent; }
+.follow_me_link .douyu:hover { color: #000; background: url(../../img/common/right_info_ico_5.png) no-repeat scroll 0% 0% transparent; }
 /* 右侧图文 */
 .tuwen { width: 100%; clear: both; overflow: hidden; margin: 20px 0 }
 .tuwen h3 { line-height: 40px; color: #38485A; font-size: 18px; border-bottom: 1px solid #E6E6E6; height: 40px; margin-bottom: 30px }

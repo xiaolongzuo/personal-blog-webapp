@@ -193,7 +193,7 @@ public class ArticleDao extends BaseDao {
                     statement = connection.prepareStatement(insertSql,Statement.RETURN_GENERATED_KEYS);
                     statement.setString(1, subject);
                     statement.setString(2, username);
-                    statement.setString(3, icon == null ? ImageUtil.randomArticleImage(type) : icon);
+                    statement.setString(3, icon == null ? ImageUtil.randomArticleImage(subject, type) : icon);
                     statement.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
                     statement.setString(5, html);
                     statement.setString(6, content);
@@ -203,7 +203,7 @@ public class ArticleDao extends BaseDao {
                     statement = connection.prepareStatement(updateSql);
                     statement.setString(1, subject);
                     statement.setString(2, username);
-                    statement.setString(3, icon == null ? ImageUtil.randomArticleImage(type) : icon);
+                    statement.setString(3, icon == null ? ImageUtil.randomArticleImage(subject, type) : icon);
                     statement.setString(4, html);
                     statement.setString(5, content);
                     statement.setInt(6, status.getIntValue());
@@ -256,7 +256,7 @@ public class ArticleDao extends BaseDao {
                     saveOrUpdate = connection.prepareStatement(insertSql,Statement.RETURN_GENERATED_KEYS);
                     saveOrUpdate.setString(1, resourceId);
                     saveOrUpdate.setString(2, username);
-                    saveOrUpdate.setString(3, ImageUtil.randomArticleImage());
+                    saveOrUpdate.setString(3, ImageUtil.randomArticleImage(subject));
                     saveOrUpdate.setString(4, createDate);
                     saveOrUpdate.setInt(5, accessTimes);
                     saveOrUpdate.setInt(6, goodTimes);
@@ -269,7 +269,7 @@ public class ArticleDao extends BaseDao {
                     saveOrUpdate.setString(1, subject);
                     saveOrUpdate.setString(2, html);
                     saveOrUpdate.setString(3, content);
-                    saveOrUpdate.setString(4, ImageUtil.randomArticleImage());
+                    saveOrUpdate.setString(4, ImageUtil.randomArticleImage(subject));
                     saveOrUpdate.setInt(5, currentStatus == Status.published ? currentStatus.getIntValue() : status.getIntValue());
                     saveOrUpdate.setString(6, resourceId);
                 }
