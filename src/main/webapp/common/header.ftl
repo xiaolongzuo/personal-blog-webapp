@@ -11,7 +11,6 @@
             <a class="header_nav_a" href="${newArticlesUrl}" title="全部文章">全部文章</a>
             <a class="header_nav_a" href="${novelIndexUrl}" title="程序员小说">程序员小说</a>
             <a class="header_nav_a" href="${contextPath}/message/message_list.ftl" title="留言板" >留言板</a>
-            <a class="header_nav_a" href="/java-blog-web" title="大家的Java博客">大家的Java博客</a>
         </ul>
     </nav>
 </header>
