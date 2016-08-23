@@ -20,8 +20,11 @@ import com.zuoxiaolong.api.HttpApiHelper;
 import com.zuoxiaolong.config.Configuration;
 import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.orm.BaseDao;
+import com.zuoxiaolong.orm.DaoFactory;
 import com.zuoxiaolong.orm.Operation;
 import com.zuoxiaolong.orm.TransactionalOperation;
+import com.zuoxiaolong.util.JsoupUtil;
+import com.zuoxiaolong.util.StringUtil;
 import org.apache.commons.lang.StringUtils;
 
 import java.sql.*;
@@ -139,6 +142,26 @@ public class CommentDao extends BaseDao {
 		});
 	}
 
+    public List<Map<String, String>> getLastComments(final Integer size, final ViewMode viewMode) {
+        return execute(new Operation<List<Map<String, String>>>() {
+            @Override
+            public List<Map<String, String>> doInConnection(Connection connection) {
+                List<Map<String, String>> comments = new ArrayList<Map<String,String>>();
+                try {
+                    PreparedStatement statement = connection.prepareStatement("select * from comments order by create_date DESC limit ? ");
+                    statement.setInt(1, size);
+                    ResultSet resultSet = statement.executeQuery();
+                    while (resultSet.next()) {
+                        comments.add(transfer(resultSet, viewMode));
+                    }
+                } catch (SQLException e) {
+                    error("get comments for size[" + size + "] failed ..." , e);
+                }
+                return comments;
+            }
+        });
+    }
+
 	public List<Map<String, String>> getComments(final Integer articleId) {
 		return execute(new Operation<List<Map<String, String>>>() {
 			@Override
@@ -167,7 +190,11 @@ public class CommentDao extends BaseDao {
 		Map<String, String> comment = new HashMap<String, String>();
 		try {
 			comment.put("id", resultSet.getString("id"));
-			comment.put("content", resultSet.getString("content"));
+            String content = resultSet.getString("content");
+            String escapeContent = JsoupUtil.getText(content);
+			comment.put("content", content);
+			comment.put("escapeContent", escapeContent);
+            comment.put("shortContent", StringUtil.substring(escapeContent, 40) + (escapeContent.length() > 40 ? "..." : ""));
 			comment.put("create_date", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(resultSet.getTimestamp("create_date")));
 			String username = resultSet.getString("username");
 			String resourceUsername = resultSet.getString("resource_username");
@@ -178,7 +205,13 @@ public class CommentDao extends BaseDao {
 			} else {
 				comment.put("commenter", resultSet.getString("city") + "网友");
 			}
-			comment.put("articleUrl", Configuration.getSiteUrl() + "/blog/article.ftl?id=" + resultSet.getInt("article_id"));
+            Integer articleId = resultSet.getInt("article_id");
+            if (viewMode == null) {
+                viewMode = ViewMode.DYNAMIC;
+            }
+            Map<String, String> article = DaoFactory.getDao(ArticleDao.class).getArticle(articleId, viewMode);
+			comment.put("articleUrl", article.get("url"));
+			comment.put("articleSubject", article.get("subject"));
 			comment.put("good_times", resultSet.getString("good_times"));
 			comment.put("bad_times", resultSet.getString("bad_times"));
 		} catch (SQLException e) {

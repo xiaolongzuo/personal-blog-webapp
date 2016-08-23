@@ -20,6 +20,7 @@ import com.zuoxiaolong.algorithm.Match;
 import com.zuoxiaolong.algorithm.Random;
 import com.zuoxiaolong.config.Configuration;
 import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.dao.CommentDao;
 import com.zuoxiaolong.dao.MatchDao;
 import com.zuoxiaolong.dao.TagDao;
 import com.zuoxiaolong.model.Status;
@@ -47,7 +48,9 @@ public abstract class FreemarkerHelper {
     private static final String DEFAULT_NAMESPACE = "blog";
 
     private static final int DEFAULT_RIGHT_ARTICLE_NUMBER = 5;
-    
+
+    private static final int DEFAULT_RIGHT_COMMENT_NUMBER = 5;
+
     private static final int DEFAULT_RIGHT_TAG_NUMBER = 8;
 
     public static Map<String, Object> buildCommonDataMap(ViewMode viewMode) {
@@ -88,6 +91,7 @@ public abstract class FreemarkerHelper {
             data.put("recommendCharts",DaoFactory.getDao(ArticleDao.class).getArticles("good_times", Status.published, Type.article, viewMode));
             data.put("imageArticles",Random.random(articleList, DEFAULT_RIGHT_ARTICLE_NUMBER));
             data.put("hotTags", Random.random(DaoFactory.getDao(TagDao.class).getHotTags(), DEFAULT_RIGHT_TAG_NUMBER));
+            data.put("newComments", DaoFactory.getDao(CommentDao.class).getLastComments(DEFAULT_RIGHT_COMMENT_NUMBER, viewMode));
             if (ViewMode.DYNAMIC == viewMode) {
                 data.put("accessArticlesUrl", ArticleListHelper.generateDynamicPath("access_times", 1));
                 data.put("newArticlesUrl", ArticleListHelper.generateDynamicPath("create_date", 1));

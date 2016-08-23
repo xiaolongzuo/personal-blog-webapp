@@ -53,6 +53,14 @@
 #site_search_input_div {margin: 10px 0px;padding: 10px;}
 #search_text_input {margin: 0px 10px 0px 0px;height: 18px; width: 180px;}
 
+/* 右侧最新评论 */
+.new_comments { width: 100%; clear: both; overflow: hidden; margin: 20px 0 }
+.new_comments h3 { line-height: 40px; color: #38485A; font-size: 18px; border-bottom: 1px solid #E6E6E6; height: 40px; margin-bottom: 30px }
+.new_comments li {margin: 5px;}
+.new_comments li .new_comments_div { word-wrap:break-word; font-size:12px;  line-height:24px;  margin:10px 0;  padding:10px;  box-shadow:0 0 5px #aaa; clear: both; }
+.new_comments li div p.new_comments_author {float: right;}
+.new_comments li div a {font-size: 12px;}
+.new_comments li div.new_comments_comment_body {color: #756F71;}
 /* 右侧关注我 */
 .follow_me h3 { line-height: 40px; color: #38485A; font-size: 18px; border-bottom: 1px solid #E6E6E6; height: 40px }
 .follow_me_info {margin: 25px 0px 0px 0px;}
@@ -87,7 +95,7 @@
 .right_image { width: 300px; overflow: hidden; margin: 30px 0 }
 .right_image img { width: 300px; }
 /* 链接模块*/
-.links { width: 100%; overflow: hidden; clear: both }
+.links { width: 100%; overflow: hidden; clear: both; margin-bottom: 20px; }
 .links h3 { line-height: 40px; color: #38485A; font-size: 18px; border-bottom: 1px solid #E6E6E6; height: 40px; margin-bottom: 20px }
 .links h3 span { float: right; font-size: 12px; }
 .links h3 span a { color: #999; padding: 0 5px }

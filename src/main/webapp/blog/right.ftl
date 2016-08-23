@@ -10,6 +10,9 @@
     <!-- 排行榜模块 -->
     <#include "../common/chart.ftl">
 
+    <!-- 最新评论模块 -->
+    <#include "../common/new_comments.ftl">
+
     <!-- 标签模块 -->
     <#include "../common/tag.ftl">
 
