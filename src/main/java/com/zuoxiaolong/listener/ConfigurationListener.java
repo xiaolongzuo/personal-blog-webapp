@@ -16,18 +16,15 @@ package com.zuoxiaolong.listener;
  * limitations under the License.
  */
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-
-import org.apache.log4j.Logger;
-
 import com.zuoxiaolong.config.Configuration;
-import com.zuoxiaolong.generator.Generators;
-import com.zuoxiaolong.search.LuceneHelper;
 import com.zuoxiaolong.thread.BaiduPushTask;
 import com.zuoxiaolong.thread.DirtyWordsFlushTask;
 import com.zuoxiaolong.thread.Executor;
 import com.zuoxiaolong.thread.FetchTask;
+import org.apache.log4j.Logger;
+
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 
 /**
  * @author 左潇龙
@@ -53,14 +50,14 @@ public class ConfigurationListener implements ServletContextListener {
         if (logger.isInfoEnabled()) {
             logger.info("DirtyWordsFlush thread has been started...");
         }
-        if (logger.isInfoEnabled()) {
-            logger.info("starting fetch and generate thread...");
-        }
-        Executor.executeTask(new FetchTask());
-        if (logger.isInfoEnabled()) {
-            logger.info("fetch and generate thread has been started...");
-        }
         if (Configuration.isProductEnv()) {
+            if (logger.isInfoEnabled()) {
+                logger.info("starting fetch and generate thread...");
+            }
+            Executor.executeTask(new FetchTask());
+            if (logger.isInfoEnabled()) {
+                logger.info("fetch and generate thread has been started...");
+            }
             if (logger.isInfoEnabled()) {
                 logger.info("starting baidu push thread...");
             }
