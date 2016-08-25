@@ -185,13 +185,16 @@ public abstract class Cnblogs {
         Document articleDocument = Jsoup.parse(originArticleHtml);
         
         Map<String, String> imageMap = saveImage(articleDocument);
-        
+
         //获取标题
         String subject = subjectElement.html().trim();
         
         //获取postid
         String resourceId = element.attr("id").split("\\-")[2];
         Integer postId = Integer.valueOf(resourceId);
+        if (resourceId.equals("5521961") || resourceId.equals("5528889") || resourceId.equals("5537340")) {
+            logger.info(resourceId + "=================" +imageMap);
+        }
         
         //获取内容
         Element bodyElement = articleDocument.getElementById("cnblogs_post_body");
@@ -208,9 +211,6 @@ public abstract class Cnblogs {
         }
         html = html.replace("'", "\"");
         for (String img : imageMap.keySet()) {
-            if (resourceId.equals("5521961") || resourceId.equals("5528889") || resourceId.equals("5537340")) {
-                logger.info(resourceId + "=================" +imageMap);
-            }
 			html = html.replace(img, imageMap.get(img));
 		}
         
