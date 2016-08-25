@@ -102,7 +102,7 @@ public abstract class Cnblogs {
         	if (logger.isInfoEnabled()) {
         		logger.info("begin fetch the " + i + " page...");
 			}
-            Document document = Jsoup.parse(getHtmlUseCookie(cookie, "http://i.cnblogs.com/posts?page=" + i));
+            Document document = Jsoup.parse(getHtmlUseCookie(cookie, "https://i.cnblogs.com/posts?page=" + i));
             Element mainElement = document.getElementById("post_list");
             Elements elements = mainElement.getElementsByTag("tr");
             int pageSize = 0;
@@ -263,7 +263,7 @@ public abstract class Cnblogs {
 	}
 
     private static String getHtmlUseCookie(String cookie, String url) throws IOException {
-        HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(url).openConnection();
+        HttpsURLConnection httpURLConnection = (HttpsURLConnection) new URL(url).openConnection();
         httpURLConnection.setRequestMethod("GET");
         httpURLConnection.setRequestProperty("Cookie",cookie);
         return IOUtil.read(httpURLConnection.getInputStream());
