@@ -192,10 +192,7 @@ public abstract class Cnblogs {
         //获取postid
         String resourceId = element.attr("id").split("\\-")[2];
         Integer postId = Integer.valueOf(resourceId);
-        if (resourceId.equals("5521961") || resourceId.equals("5528889") || resourceId.equals("5537340")) {
-            logger.info(resourceId + "=================" +imageMap);
-        }
-        
+
         //获取内容
         Element bodyElement = articleDocument.getElementById("cnblogs_post_body");
         if (bodyElement == null) {
@@ -210,6 +207,12 @@ public abstract class Cnblogs {
             html = html.replace(codeList.get(i), originCodeList.get(i));
         }
         html = html.replace("'", "\"");
+
+        if (resourceId.equals("5521961") || resourceId.equals("5528889") || resourceId.equals("5537340")) {
+            logger.info(resourceId + "=================" +imageMap);
+            logger.info(resourceId + "=================" +html);
+        }
+
         for (String img : imageMap.keySet()) {
 			html = html.replace(img, imageMap.get(img));
 		}
