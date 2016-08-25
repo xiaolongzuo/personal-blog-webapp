@@ -33,11 +33,15 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
+import javax.net.ssl.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -52,11 +56,39 @@ public abstract class Cnblogs {
 	
 	private static final Logger logger = Logger.getLogger(Cnblogs.class);
 	
-	private static final String loginUrl = "http://passport.cnblogs.com/user/signin";
+	private static final String loginUrl = "https://passport.cnblogs.com/user/signin";
 
 	private static final String publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCp0wHYbg/NOPO3nzMD3dndwS0MccuMeXCHgVlGOoYyFwLdS24Im2e7YyhB0wrUsyYf0/nhzCzBK8ZC9eCWqd0aHbdgOQT6CuFQBMjbyGYvlVYU2ZP7kG9Ft6YV6oc9ambuO7nPZh+bvXH0zDKfi02prknrScAKC0XhadTHT3Al0QIDAQAB";
 	
 	private static final String username = "左潇龙";
+
+    private static class DefaultX509TrustManager implements X509TrustManager {
+
+        @Override
+        public void checkClientTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+
+        }
+
+        @Override
+        public void checkServerTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+
+        }
+
+        @Override
+        public X509Certificate[] getAcceptedIssuers() {
+            return new X509Certificate[0];
+        }
+
+    }
+
+    private static class DefaultHostnameVerifier implements HostnameVerifier {
+
+        @Override
+        public boolean verify(String s, SSLSession sslSession) {
+            return true;
+        }
+
+    }
 
 	public static void fetchArticlesAfterLogin() throws IOException {
 		String cookie;
@@ -91,8 +123,14 @@ public abstract class Cnblogs {
         }
     }
 	
-	private static String login() throws Exception{
-		HttpURLConnection loginPageConnection = (HttpURLConnection) new URL(loginUrl).openConnection();
+	private static String login() throws Exception {
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(null, new TrustManager[]{new DefaultX509TrustManager()}, new SecureRandom());
+
+        HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
+        HttpsURLConnection.setDefaultHostnameVerifier(new DefaultHostnameVerifier());
+
+        HttpsURLConnection loginPageConnection = (HttpsURLConnection) new URL(loginUrl).openConnection();
         loginPageConnection.setRequestProperty("Connection","keep-alive");
         loginPageConnection.setRequestMethod("GET");
         loginPageConnection.connect();
@@ -105,7 +143,7 @@ public abstract class Cnblogs {
             token = matcher.group(1);
         }
 
-        HttpURLConnection loginConnection = (HttpURLConnection) new URL(loginUrl).openConnection();
+        HttpsURLConnection loginConnection = (HttpsURLConnection) new URL(loginUrl).openConnection();
         loginConnection.setDoInput(true);
         loginConnection.setDoOutput(true);
         loginConnection.setRequestMethod("POST");
