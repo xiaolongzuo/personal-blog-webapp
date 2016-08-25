@@ -238,7 +238,7 @@ public class ArticleDao extends BaseDao {
             String selectSql = "select id,status from articles where resource_id=?";
             String insertSql = "insert into articles (resource_id,username,icon,create_date," +
                 "access_times,good_times,subject,html,content,status) values (?,?,?,?,?,?,?,?,?,?)";
-            String updateSql = "update articles set subject=?,html=?,content=?,icon=?,status=? where resource_id=? and type=0 ";
+            String updateSql = "update articles set subject=?,html=?,content=?,icon=?,status=?,create_date=? where resource_id=? and type=0 ";
             try {
                 PreparedStatement statement = connection.prepareStatement(selectSql);
                 statement.setString(1, resourceId);
@@ -271,7 +271,8 @@ public class ArticleDao extends BaseDao {
                     saveOrUpdate.setString(3, content);
                     saveOrUpdate.setString(4, ImageUtil.randomArticleImage(subject));
                     saveOrUpdate.setInt(5, currentStatus == Status.published ? currentStatus.getIntValue() : status.getIntValue());
-                    saveOrUpdate.setString(6, resourceId);
+                    saveOrUpdate.setString(6, createDate);
+                    saveOrUpdate.setString(7, resourceId);
                 }
                 int result = saveOrUpdate.executeUpdate();
                 if (!exists && result > 0) {

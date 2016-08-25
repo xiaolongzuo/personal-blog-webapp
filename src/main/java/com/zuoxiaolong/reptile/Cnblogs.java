@@ -208,6 +208,9 @@ public abstract class Cnblogs {
         }
         html = html.replace("'", "\"");
         for (String img : imageMap.keySet()) {
+            if (resourceId.equals("5521961") || resourceId.equals("5528889") || resourceId.equals("5537340")) {
+                logger.info(resourceId + "=================" +imageMap);
+            }
 			html = html.replace(img, imageMap.get(img));
 		}
         
