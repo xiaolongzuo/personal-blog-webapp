@@ -90,6 +90,8 @@ public abstract class Cnblogs {
 
     }
 
+    private static final String loginArticleListUrl = "https://i.cnblogs.com/posts?page=";
+
 	public static void fetchArticlesAfterLogin() throws IOException {
 		String cookie;
 		try {
@@ -102,7 +104,7 @@ public abstract class Cnblogs {
         	if (logger.isInfoEnabled()) {
         		logger.info("begin fetch the " + i + " page...");
 			}
-            Document document = Jsoup.parse(getHtmlUseCookie(cookie, "https://i.cnblogs.com/posts?page=" + i));
+            Document document = Jsoup.parse(getHtmlUseCookie(cookie, loginArticleListUrl + i, true));
             Element mainElement = document.getElementById("post_list");
             Elements elements = mainElement.getElementsByTag("tr");
             int pageSize = 0;
@@ -179,7 +181,7 @@ public abstract class Cnblogs {
 		Element subjectElement = subjectTdElement.getElementsByTag("a").first();
         String articleUrl = subjectElement.attr("href");
         
-        String originArticleHtml = getHtmlUseCookie(cookie, articleUrl);
+        String originArticleHtml = getHtmlUseCookie(cookie, articleUrl, false);
         Document articleDocument = Jsoup.parse(originArticleHtml);
         
         Map<String, String> imageMap = saveImage(articleDocument);
@@ -252,7 +254,7 @@ public abstract class Cnblogs {
 
         //保存标签和分类
         String tagsUrl = "http://www.cnblogs.com/mvc/blog/CategoriesTags.aspx?blogApp=zuoxiaolong&blogId=160491&postId=" + postId;
-        String tagsJson = getHtmlUseCookie(cookie, tagsUrl);
+        String tagsJson = getHtmlUseCookie(cookie, tagsUrl, false);
         saveTagAndCategory(id, tagsJson);
         if (logger.isInfoEnabled()) {
     		logger.info("save article tag and category: [" + tagsJson + "]");
@@ -262,8 +264,13 @@ public abstract class Cnblogs {
         saveComment(id, postId, cookie);
 	}
 
-    private static String getHtmlUseCookie(String cookie, String url) throws IOException {
-        HttpsURLConnection httpURLConnection = (HttpsURLConnection) new URL(url).openConnection();
+    private static String getHtmlUseCookie(String cookie, String url, boolean isHttps) throws IOException {
+        HttpURLConnection httpURLConnection;
+        if (isHttps) {
+            httpURLConnection = (HttpsURLConnection) new URL(url).openConnection();
+        } else {
+            httpURLConnection = (HttpURLConnection) new URL(url).openConnection();
+        }
         httpURLConnection.setRequestMethod("GET");
         httpURLConnection.setRequestProperty("Cookie",cookie);
         return IOUtil.read(httpURLConnection.getInputStream());
@@ -307,7 +314,7 @@ public abstract class Cnblogs {
             String currentCommentUrl = commentsUrl + i;
             String commentsJson = null;
             if (cookie != null) {
-				commentsJson = getHtmlUseCookie(cookie, currentCommentUrl);
+				commentsJson = getHtmlUseCookie(cookie, currentCommentUrl, false);
 			} else {
 				commentsJson = getArticleHtml(currentCommentUrl);
 			}

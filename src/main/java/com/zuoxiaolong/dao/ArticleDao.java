@@ -363,7 +363,7 @@ public class ArticleDao extends BaseDao {
 
     public Map<String, String> getPreArticle(final int id, final Date createDate, final ViewMode viewMode) {
         return execute((Operation<Map<String, String>>) connection -> {
-            String sql = "SELECT * FROM articles WHERE create_date<? AND " +
+            String sql = "SELECT * FROM articles WHERE create_date<? AND status=1 AND " +
                     "TYPE=(SELECT TYPE FROM articles WHERE id=?) ORDER BY create_date DESC LIMIT 0,1";
             Map<String, String> result = null;
             try {
@@ -383,7 +383,7 @@ public class ArticleDao extends BaseDao {
 
     public Map<String, String> getNextArticle(final int id, final Date createDate, final ViewMode viewMode) {
         return execute((Operation<Map<String, String>>) connection -> {
-            String sql = "SELECT * FROM articles WHERE create_date>? AND " +
+            String sql = "SELECT * FROM articles WHERE create_date>? AND status=1 AND " +
                     "TYPE=(SELECT TYPE FROM articles WHERE id=?) ORDER BY create_date ASC LIMIT 0,1";
             Map<String, String> result = null;
             try {
