@@ -208,17 +208,9 @@ public abstract class Cnblogs {
         }
         html = html.replace("'", "\"");
 
-        if (resourceId.equals("5521961") || resourceId.equals("5528889") || resourceId.equals("5537340")) {
-            logger.info(resourceId + "=================" +imageMap);
-            logger.info(resourceId + "=================" +html);
-        }
-
         for (String img : imageMap.keySet()) {
 			html = html.replace(img, imageMap.get(img));
 		}
-        if (resourceId.equals("5521961") || resourceId.equals("5528889") || resourceId.equals("5537340")) {
-            logger.info(resourceId + "=================" +html);
-        }
         //获取纯文本内容
         StringBuffer stringBuffer = new StringBuffer();
         JsoupUtil.appendText(bodyElement, stringBuffer);
@@ -574,9 +566,7 @@ public abstract class Cnblogs {
     }
 
     public static void main(String[] args) throws IOException {
-//		fetchArticlesCommon();
-	    String h = "<p>　　<img src=\"http://images2015.cnblogs.com/blog/558323/201605/558323-20160529162856053-1791170028.jpg\" alt=\"\"></p>";
-        System.out.println(h.replace("<img src=\"http://images2015.cnblogs.com/blog/558323/201605/558323-20160529162856053-1791170028.jpg\" alt=\"\">", "<img src=\"http://www.zuoxiaolong.com/image/201608/25222742224.jpg\" alt=\"\">"));
+		fetchArticlesCommon();
     }
     
 }
