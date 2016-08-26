@@ -38,7 +38,7 @@ public abstract class EnrypyUtil {
 
         // 得到公钥
         X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(base64Decode(publicKey));
-        KeyFactory keyFactory = java.security.KeyFactory.getInstance("RSA");
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         Key key = keyFactory.generatePublic(x509EncodedKeySpec);
 
         // 对数据进行加密
