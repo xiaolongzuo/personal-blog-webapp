@@ -57,13 +57,9 @@ public abstract class ImageUtil {
         CacheManager.getConcurrentHashMapCache().set("articleImages",getAllArticleImages());
     }
 
-    public static String randomArticleImage(String subject) {
-        return randomArticleImage(subject, null);
-    }
-
     @SuppressWarnings("unchecked")
 	public static String randomArticleImage(String subject, Type articleType) {
-        if (articleType == Type.novel || articleType == null) {
+        if (articleType == Type.novel) {
             if (subject.startsWith("一个屌丝程序猿的人生")) {
                 return Configuration.getSiteUrl(BASE_PATH + "novel_2.jpg");
             } else if (subject.startsWith("［异能程序员］")) {

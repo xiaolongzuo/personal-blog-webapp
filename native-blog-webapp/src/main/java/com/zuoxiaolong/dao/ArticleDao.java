@@ -233,12 +233,12 @@ public class ArticleDao extends BaseDao {
     }
     
     public Integer saveOrUpdate(String resourceId, String subject, String createDate, Status status
-            , String username, Integer accessTimes, Integer goodTimes, String html, String content) {
+            , String username, Integer accessTimes, Integer goodTimes, String html, String content, Type articleType) {
     	return execute((TransactionalOperation<Integer>) connection -> {
             String selectSql = "select id,status from articles where resource_id=?";
             String insertSql = "insert into articles (resource_id,username,icon,create_date," +
-                "access_times,good_times,subject,html,content,status) values (?,?,?,?,?,?,?,?,?,?)";
-            String updateSql = "update articles set subject=?,html=?,content=?,icon=?,status=?,create_date=? where resource_id=? ";
+                "access_times,good_times,subject,html,content,status,type) values (?,?,?,?,?,?,?,?,?,?)";
+            String updateSql = "update articles set subject=?,html=?,content=?,icon=?,status=?,create_date=?,type=? where resource_id=? ";
             try {
                 PreparedStatement statement = connection.prepareStatement(selectSql);
                 statement.setString(1, resourceId);
@@ -256,7 +256,7 @@ public class ArticleDao extends BaseDao {
                     saveOrUpdate = connection.prepareStatement(insertSql,Statement.RETURN_GENERATED_KEYS);
                     saveOrUpdate.setString(1, resourceId);
                     saveOrUpdate.setString(2, username);
-                    saveOrUpdate.setString(3, ImageUtil.randomArticleImage(subject));
+                    saveOrUpdate.setString(3, ImageUtil.randomArticleImage(subject, articleType));
                     saveOrUpdate.setString(4, createDate);
                     saveOrUpdate.setInt(5, accessTimes);
                     saveOrUpdate.setInt(6, goodTimes);
@@ -264,15 +264,17 @@ public class ArticleDao extends BaseDao {
                     saveOrUpdate.setString(8, html);
                     saveOrUpdate.setString(9, content);
                     saveOrUpdate.setInt(10, status.getIntValue());
+                    saveOrUpdate.setInt(11, articleType.getIntValue());
                 } else {
                     saveOrUpdate = connection.prepareStatement(updateSql);
                     saveOrUpdate.setString(1, subject);
                     saveOrUpdate.setString(2, html);
                     saveOrUpdate.setString(3, content);
-                    saveOrUpdate.setString(4, ImageUtil.randomArticleImage(subject));
+                    saveOrUpdate.setString(4, ImageUtil.randomArticleImage(subject, articleType));
                     saveOrUpdate.setInt(5, currentStatus == Status.published ? currentStatus.getIntValue() : status.getIntValue());
                     saveOrUpdate.setString(6, createDate);
-                    saveOrUpdate.setString(7, resourceId);
+                    saveOrUpdate.setInt(7, articleType.getIntValue());
+                    saveOrUpdate.setString(8, resourceId);
                 }
                 int result = saveOrUpdate.executeUpdate();
                 if (!exists && result > 0) {

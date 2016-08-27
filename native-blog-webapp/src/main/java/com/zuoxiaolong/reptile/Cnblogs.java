@@ -19,6 +19,7 @@ package com.zuoxiaolong.reptile;
 import com.zuoxiaolong.config.Configuration;
 import com.zuoxiaolong.dao.*;
 import com.zuoxiaolong.model.Status;
+import com.zuoxiaolong.model.Type;
 import com.zuoxiaolong.orm.DaoFactory;
 import com.zuoxiaolong.util.EnrypyUtil;
 import com.zuoxiaolong.util.IOUtil;
@@ -246,8 +247,13 @@ public abstract class Cnblogs {
             goodTimes = Integer.valueOf(diggCountDocument.getElementById("digg_count").html());
 		}
 
+        Type articleType = Type.article;
+        if (subject.startsWith("一个屌丝程序猿的人生") || subject.startsWith("［异能程序员］")) {
+            articleType = Type.novel;
+        }
+
         //如果resourceId已经存在则更新，否则保存
-		Integer id = DaoFactory.getDao(ArticleDao.class).saveOrUpdate(resourceId, subject, createDate, status, username, accessTimes, goodTimes, html, content);
+		Integer id = DaoFactory.getDao(ArticleDao.class).saveOrUpdate(resourceId, subject, createDate, status, username, accessTimes, goodTimes, html, content, articleType);
         if (logger.isInfoEnabled()) {
     		logger.info("saveOrUpdate article : [" + resourceId + ":" + subject + "]");
 		}
@@ -510,10 +516,13 @@ public abstract class Cnblogs {
         //获取赞的次数
         Document diggCountDocument = Jsoup.connect("http://www.cnblogs.com/mvc/blog/BlogPostInfo.aspx?blogId=160491&postId=" + postId + "&blogApp=zuoxiaolong&blogUserGuid=8834a931-b305-e311-8d02-90b11c0b17d6").get();
         Integer goodTimes = Integer.valueOf(diggCountDocument.getElementById("digg_count").html());
-
+        Type articleType = Type.article;
+        if (subject.startsWith("一个屌丝程序猿的人生") || subject.startsWith("［异能程序员］")) {
+            articleType = Type.novel;
+        }
         Status status = Status.published;
         //如果resourceId已经存在则更新，否则保存
-		Integer id = DaoFactory.getDao(ArticleDao.class).saveOrUpdate(resourceId, subject, createDate, status, username, accessTimes, goodTimes, html, content);
+		Integer id = DaoFactory.getDao(ArticleDao.class).saveOrUpdate(resourceId, subject, createDate, status, username, accessTimes, goodTimes, html, content, articleType);
         if (logger.isInfoEnabled()) {
     		logger.info("saveOrUpdate article : [" + resourceId + ":" + subject + "]");
 		}
