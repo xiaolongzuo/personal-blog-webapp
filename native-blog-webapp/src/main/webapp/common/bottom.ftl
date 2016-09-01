@@ -37,3 +37,57 @@
 </script>
 <script type="text/javascript" src="${contextPath}/resources/js/tinymce/tinymce.min.js"></script>
 <script type="text/javascript" src="${contextPath}/resources/js/tinymce/tinymce.init.js"></script>
+<script type="application/javascript">
+    window.onload = function () {
+        var oLi = document.getElementById("tab").getElementsByTagName("li");
+        var oUl = document.getElementById("ms-main").getElementsByTagName("div");
+
+        for (var i = 0; i < oLi.length; i++) {
+            oLi[i].index = i;
+            oLi[i].onmouseover = function () {
+                for (var n = 0; n < oLi.length; n++) oLi[n].className = "";
+                this.className = "cur";
+                for (var n = 0; n < oUl.length; n++) oUl[n].style.display = "none";
+                oUl[this.index].style.display = "block";
+            }
+        }
+    };
+    $(document).ready(function(){
+        $("#site_search_button").click(function() {
+            if (!$("#search_text_input").val().trim()) {
+                alert("搜索内容不能为空！");
+                return false;
+            }
+            searchArticles("searchText",$("#search_text_input").val());
+        });
+        $("#qq_login_button").click(function(){
+            window.location.href="${contextPath}/redirect.do";
+        });
+        $("#logout_button").click(function(){
+            $.ajax({
+                url:"${contextPath}/logout.do",
+                type:"POST",
+                success:function(data) {
+                    if(data && data == 'success'){
+                        window.location.href="${contextPath}";
+                    }
+                }
+            });
+        });
+        $("#login_register_button").click(function(){
+            $.ajax({
+                url:"${contextPath}/login.do",
+                type:"POST",
+                data:{"username":$("input[name=username]").val(),"password":$("input[name=password]").val()},
+                success:function(data){
+                    if(data && data.success){
+                        window.location.href=data.url;
+                    } else {
+                        $("#login_error_td").css("color","red");
+                        $("#login_error_td").html(data);
+                    }
+                }
+            });
+        });
+    });
+</script>

@@ -1,37 +1,4 @@
 	<div class="user_profile">
-        <script type="application/javascript">
-            $(document).ready(function(){
-            	$("#qq_login_button").click(function(){
-            		window.location.href="${contextPath}/redirect.do";
-            	});
-            	$("#logout_button").click(function(){
-            		$.ajax({
-            			url:"${contextPath}/logout.do",
-						type:"POST",
-						success:function(data) {
-							if(data && data == 'success'){
-								window.location.href="${contextPath}";
-							}
-						}
-            		});
-            	});
-            	$("#login_register_button").click(function(){
-            		$.ajax({
-            			url:"${contextPath}/login.do",
-						type:"POST",
-						data:{"username":$("input[name=username]").val(),"password":$("input[name=password]").val()},
-						success:function(data){
-							if(data && data.success){
-								window.location.href=data.url;
-							} else {
-                                $("#login_error_td").css("color","red");
-								$("#login_error_td").html(data);
-							}
-						}
-            		});
-            	});
-            });
-        </script>
         <h3>用户中心</h3>
         <#if user?? && user.nickName??>
             <div id="user_info_div">
