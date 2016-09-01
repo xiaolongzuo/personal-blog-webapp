@@ -24,32 +24,4 @@
             </div>
         </div>
     </div>
-    <!-- 滚动图片切换 -->
-    <script>
-        if (!window.slider) {
-            var slider = {};
-        }
-        slider.data = [
-            {
-                "id": "slide-img-1",
-                "client": "",
-                "desc": ""
-            },
-            {
-                "id": "slide-img-2",
-                "client": "",
-                "desc": ""
-            },
-            {
-                "id": "slide-img-3",
-                "client": "",
-                "desc": ""
-            },
-            {
-                "id": "slide-img-4",
-                "client": "",
-                "desc": ""
-            }
-        ];
-    </script>
 </div>

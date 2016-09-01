@@ -40,9 +40,6 @@
                 暂无留言
             </#if>
             </div>
-            <script type="application/javascript">
-                tinymceInit({width:700,height:150,skin:'comment'});
-            </script>
             <!-- 提交评论 -->
             <div id="comment_container">
                 <div id="comment_title">发表评论</div>
@@ -65,6 +62,7 @@
 <#include "../common/footer.ftl">
 <#include "../common/bottom.ftl">
 <script type="text/javascript">
+    tinymceInit({width:700,height:150,skin:'comment'});
     $(document).ready(function() {
         $("body").on("click",".content_reply_a",function(){
             scrollTo("#comment_div_"+$(this).attr("reference_comment_id"));

@@ -79,9 +79,6 @@
             暂无评论
         </#if>
         </div>
-		<script type="application/javascript">
-			tinymceInit({width:700,height:150,skin:'comment'});
-		</script>
         <!-- 提交评论 -->
         <div id="comment_container">
             <div id="comment_title">发表评论</div>

@@ -26,6 +26,7 @@
 <#include "../common/footer.ftl">
 <#include "../common/bottom.ftl">
 <script type="text/javascript">
+    tinymceInit({width:700,height:150,skin:'comment'});
     $(document).ready(function() {
         counter({"articleId":$("#articleId").val(),"type":1,"column":"access_times"});
         $("body").on("click",".content_reply_a",function(){

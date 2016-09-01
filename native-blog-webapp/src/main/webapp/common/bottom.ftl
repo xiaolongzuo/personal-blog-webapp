@@ -39,16 +39,21 @@
 <script type="text/javascript" src="${contextPath}/resources/js/tinymce/tinymce.init.js"></script>
 <script type="application/javascript">
     window.onload = function () {
-        var oLi = document.getElementById("tab").getElementsByTagName("li");
-        var oUl = document.getElementById("ms-main").getElementsByTagName("div");
+        var tabElement = document.getElementById("tab");
+        var msMainElement = document.getElementById("ms-main");
+        if (!tabElement || !msMainElement) {
+            return;
+        }
+        var liElement = tabElement.getElementsByTagName("li");
+        var divElement = msMainElement.getElementsByTagName("div");
 
-        for (var i = 0; i < oLi.length; i++) {
-            oLi[i].index = i;
-            oLi[i].onmouseover = function () {
-                for (var n = 0; n < oLi.length; n++) oLi[n].className = "";
+        for (var i = 0; i < liElement.length; i++) {
+            liElement[i].index = i;
+            liElement[i].onmouseover = function () {
+                for (var n = 0; n < liElement.length; n++) liElement[n].className = "";
                 this.className = "cur";
-                for (var n = 0; n < oUl.length; n++) oUl[n].style.display = "none";
-                oUl[this.index].style.display = "block";
+                for (var n = 0; n < divElement.length; n++) divElement[n].style.display = "none";
+                divElement[this.index].style.display = "block";
             }
         }
     };
@@ -90,4 +95,30 @@
             });
         });
     });
+    <!-- 滚动图片切换 -->
+    if (!window.slider) {
+        var slider = {};
+    }
+    slider.data = [
+        {
+            "id": "slide-img-1",
+            "client": "",
+            "desc": ""
+        },
+        {
+            "id": "slide-img-2",
+            "client": "",
+            "desc": ""
+        },
+        {
+            "id": "slide-img-3",
+            "client": "",
+            "desc": ""
+        },
+        {
+            "id": "slide-img-4",
+            "client": "",
+            "desc": ""
+        }
+    ];
 </script>
