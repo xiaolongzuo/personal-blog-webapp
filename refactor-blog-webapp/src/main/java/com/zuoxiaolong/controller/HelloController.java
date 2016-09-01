@@ -16,9 +16,12 @@
 
 package com.zuoxiaolong.controller;
 
+import com.zuoxiaolong.http.life.api.annotation.EnableDoc;
+import com.zuoxiaolong.http.life.api.annotation.ParamDoc;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -29,8 +32,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class HelloController {
 
     @RequestMapping("/")
-    public String hello() {
-        return "hello";
+    @EnableDoc
+    @ParamDoc(name = "name1111", decription = "这是一个随便的参数")
+    public String hello(@RequestParam(name = "name1111", defaultValue = "iniansidsd") String name) {
+        return name;
     }
 
     public static void main(String[] args) {

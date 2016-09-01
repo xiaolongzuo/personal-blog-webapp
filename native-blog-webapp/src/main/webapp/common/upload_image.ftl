@@ -6,32 +6,6 @@
 	<style type="text/css">
 		body {overflow: hidden;}
 	</style>
-	<script type="application/javascript">
-		$(document).ready(function(){
-			$("input[name=imageFile]").change(function(){
-				$("#file_path").val($(this).val());
-			});
-			$("#upload_image_form").ajaxForm({
-				beforeSubmit:function(){
-					if(!$("input[name=imageFile]").val()) {
-						window.parent.alert("请选择图片");
-						return false;
-					}
-					return true;
-				},
-				success:function(url){
-					if (url && url == 'format_error') {
-						alert("只能上传png,jpg,gif格式的文件");
-						return;
-					}
-					if (url) {
-						top.tinymce.activeEditor.insertContent("<img src='" + url + "'/>");
-						top.tinymce.activeEditor.windowManager.close();
-					}
-				}
-			});
-		});
-	</script>
     <title></title>
 </head>
 <body>
@@ -57,5 +31,32 @@
                 </tr>
             </form>
         </table>
+    <#include "../common/bottom.ftl">
+    <script type="application/javascript">
+        $(document).ready(function(){
+            $("input[name=imageFile]").change(function(){
+                $("#file_path").val($(this).val());
+            });
+            $("#upload_image_form").ajaxForm({
+                beforeSubmit:function(){
+                    if(!$("input[name=imageFile]").val()) {
+                        window.parent.alert("请选择图片");
+                        return false;
+                    }
+                    return true;
+                },
+                success:function(url){
+                    if (url && url == 'format_error') {
+                        alert("只能上传png,jpg,gif格式的文件");
+                        return;
+                    }
+                    if (url) {
+                        top.tinymce.activeEditor.insertContent("<img src='" + url + "'/>");
+                        top.tinymce.activeEditor.windowManager.close();
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>

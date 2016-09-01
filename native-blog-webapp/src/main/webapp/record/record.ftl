@@ -7,8 +7,22 @@
 <#include "../common/head.ftl">
 <link href="${contextPath}/resources/css/common/article.css" rel="stylesheet"/>
 <link href="${contextPath}/resources/css/common/code.css" rel="stylesheet"/>
+</head>
+<body>
+<input id="recordId" type="hidden" name="recordId" value="${record.id}"/>
+<#include "../common/header.ftl">
+<article>
+	<div class="left_box float_left">
+		<#include "record_main.ftl">
+	</div>
+	<div class="right_box float_right">
+		<#include "right.ftl">
+	</div>
+</article>
+<#include "../common/footer.ftl">
+<#include "../common/bottom.ftl">
 <script type="text/javascript">
-	$(document).ready(function() {
+    $(document).ready(function() {
         counter({"type":3,"recordId":$("#recordId").val()});
         $("#good_a").click(function () {
             $.ajax({
@@ -27,20 +41,7 @@
                 }
             });
         });
-	});
+    });
 </script>
-</head>
-<body>
-<input id="recordId" type="hidden" name="recordId" value="${record.id}"/>
-<#include "../common/header.ftl">
-<article>
-	<div class="left_box float_left">
-		<#include "record_main.ftl">
-	</div>
-	<div class="right_box float_right">
-		<#include "right.ftl">
-	</div>
-</article>
-<#include "../common/footer.ftl">
 </body>
 </html>

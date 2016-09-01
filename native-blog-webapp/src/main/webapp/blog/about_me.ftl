@@ -19,5 +19,6 @@
 	</div>
 </article>
 <#include "../common/footer.ftl">
+<#include "../common/bottom.ftl">
 </body>
 </html>

@@ -23,6 +23,11 @@
             <artifactId>spring-boot-starter-web</artifactId>
             <version>1.4.0.RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>com.zuoxiaolong</groupId>
+            <artifactId>http-life-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
 </project>

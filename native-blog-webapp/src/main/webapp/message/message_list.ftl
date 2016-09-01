@@ -5,34 +5,6 @@
     <#include "../common/head.ftl">
     <link href="${contextPath}/resources/css/common/article.css" rel="stylesheet"/>
     <link href="${contextPath}/resources/css/common/code.css" rel="stylesheet"/>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $("body").on("click",".content_reply_a",function(){
-                scrollTo("#comment_div_"+$(this).attr("reference_comment_id"));
-            });
-            $(".reply_button").click(function(){
-                reply($(this).attr("comment_id"));
-            });
-            $(".quite_button").click(function(){
-                quote($(this).attr("comment_id"));
-            });
-            $("body").on("click","#cancel_reply_button",function(){
-                cancelReply();
-            });
-            $("#submit_comment_button").click(function(){
-                var content = tinymce.activeEditor.getContent();
-                if(content.length > 1000) {
-                    alert("留言长度不能大于1000啊，亲！");
-                    return false;
-                }
-                comment("/message.do",{
-                    "content":content,
-                    "referenceCommentId":$("#reference_comment_id_input").val(),
-                    "referenceCommenter":$("#reference_commenter_input").val()
-                });
-            });
-        });
-    </script>
 </head>
 <body>
 <#include "../common/header.ftl">
@@ -91,6 +63,35 @@
     </div>
 </article>
 <#include "../common/footer.ftl">
+<#include "../common/bottom.ftl">
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("body").on("click",".content_reply_a",function(){
+            scrollTo("#comment_div_"+$(this).attr("reference_comment_id"));
+        });
+        $(".reply_button").click(function(){
+            reply($(this).attr("comment_id"));
+        });
+        $(".quite_button").click(function(){
+            quote($(this).attr("comment_id"));
+        });
+        $("body").on("click","#cancel_reply_button",function(){
+            cancelReply();
+        });
+        $("#submit_comment_button").click(function(){
+            var content = tinymce.activeEditor.getContent();
+            if(content.length > 1000) {
+                alert("留言长度不能大于1000啊，亲！");
+                return false;
+            }
+            comment("/message.do",{
+                "content":content,
+                "referenceCommentId":$("#reference_comment_id_input").val(),
+                "referenceCommenter":$("#reference_commenter_input").val()
+            });
+        });
+    });
+</script>
 </body>
 </html>
 

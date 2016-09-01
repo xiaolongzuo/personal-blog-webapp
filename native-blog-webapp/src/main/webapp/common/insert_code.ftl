@@ -7,18 +7,6 @@
     <style>
         body { overflow: hidden;}
     </style>
-    <script type="application/javascript">
-        $(document).ready(function(){
-            $("#insert_code_button").click(function(){
-                var content = '<pre class="brush: ' + $("#language_select").val() + '; ';
-                content = content + 'collapse :' + $("#is_collapse_input").is(":checked") + ';';
-                content = content + 'gutter :true;">';
-                content = content + $("#code_textarea").val() + '</pre><br/>';
-                top.tinymce.activeEditor.insertContent(content);
-                top.tinymce.activeEditor.windowManager.close();
-            });
-        });
-    </script>
 </head>
 <body>
     <div>
@@ -86,5 +74,18 @@
             </tr>
         </table>
     </div>
+    <#include "../common/bottom.ftl">
+    <script type="application/javascript">
+        $(document).ready(function(){
+            $("#insert_code_button").click(function(){
+                var content = '<pre class="brush: ' + $("#language_select").val() + '; ';
+                content = content + 'collapse :' + $("#is_collapse_input").is(":checked") + ';';
+                content = content + 'gutter :true;">';
+                content = content + $("#code_textarea").val() + '</pre><br/>';
+                top.tinymce.activeEditor.insertContent(content);
+                top.tinymce.activeEditor.windowManager.close();
+            });
+        });
+    </script>
 </body>
 </html>

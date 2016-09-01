@@ -10,5 +10,6 @@
     <p style="margin: 50px;font-size: 25px;color: #999999;">${error}</p>
 </article>
 <#include "footer.ftl">
+<#include "../common/bottom.ftl">
 </body>
 </html>

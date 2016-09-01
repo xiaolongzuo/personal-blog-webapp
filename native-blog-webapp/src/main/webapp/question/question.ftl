@@ -7,8 +7,22 @@
 <#include "../common/head.ftl">
 <link href="${contextPath}/resources/css/common/article.css" rel="stylesheet"/>
 <link href="${contextPath}/resources/css/common/code.css" rel="stylesheet"/>
+</head>
+<body>
+<input id="questionId" type="hidden" name="questionId" value="${question.id}"/>
+<#include "../common/header.ftl">
+<article>
+	<div class="left_box float_left">
+		<#include "question_main.ftl">
+	</div>
+	<div class="right_box float_right">
+		<#include "right.ftl">
+	</div>
+</article>
+<#include "../common/footer.ftl">
+<#include "../common/bottom.ftl">
 <script type="text/javascript">
-	$(document).ready(function() {
+    $(document).ready(function() {
         counter({"type":2,"questionId":$("#questionId").val()});
         $("body").on("click",".content_reply_a",function(){
             scrollTo("#comment_div_"+$(this).attr("reference_comment_id"));
@@ -55,20 +69,7 @@
                 }
             });
         });
-	});
+    });
 </script>
-</head>
-<body>
-<input id="questionId" type="hidden" name="questionId" value="${question.id}"/>
-<#include "../common/header.ftl">
-<article>
-	<div class="left_box float_left">
-		<#include "question_main.ftl">
-	</div>
-	<div class="right_box float_right">
-		<#include "right.ftl">
-	</div>
-</article>
-<#include "../common/footer.ftl">
 </body>
 </html>

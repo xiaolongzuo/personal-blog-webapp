@@ -3,51 +3,6 @@
 <head>
 <#include "../common/meta.ftl">
 <#include "../common/head.ftl">
-<script type="text/javascript">
-var settings = {width:900,height:400,content:''};
-<#if article?? && article.escapeHtml??>
-	settings.content = '${article.escapeHtml}';
-</#if>
-tinymceInit(settings);
-$(document).ready(function(){
-	$("#submitButton").click(function(){
-		var status = $("input[name=status]").is(":checked");
-		if (status) {
-			status = 1;
-		} else {
-			status = 0;
-		}
-        var updateCreateTime = $("input[name=updateCreateTime]").is(":checked");
-        if (updateCreateTime) {
-            updateCreateTime = 1;
-        } else {
-            updateCreateTime = 0;
-        }
-        var categories = '';
-        $("input[name=categories]:checked").each(function() {
-            categories = categories + $(this).val() + ",";
-        });
-        if (categories && $.trim(categories).length > 0) {
-            categories = categories.substring(0, categories.length - 1);
-        }
-		$.ajax({
-			url:"${contextPath}/admin/updateArticle.do",
-			data:{"id":$("input[name=id]").val(),"content":tinymce.activeEditor.getContent()
-                ,"subject":$("input[name=subject]").val(),"status":status,"type":$("select[name=type]").val()
-                ,"tags":$("input[name=tags]").val(),"categories":categories,"updateCreateTime":updateCreateTime},
-			type:"POST",
-			success:function(data){
-				if(data && data == 'success') {
-					alert("保存成功");
-					window.location.href="${contextPath}/admin/article_manager.ftl"
-				} else {
-					alert("保存失败");
-				}
-			}
-		});
-	});
-});
-</script>
 </head>
 <body>
 <#include "../common/header.ftl">
@@ -127,5 +82,51 @@ $(document).ready(function(){
 	<table>
 </article>
 <#include "../common/footer.ftl">
+<#include "../common/bottom.ftl">
+<script type="text/javascript">
+    var settings = {width:900,height:400,content:''};
+    <#if article?? && article.escapeHtml??>
+    settings.content = '${article.escapeHtml}';
+    </#if>
+    tinymceInit(settings);
+    $(document).ready(function(){
+        $("#submitButton").click(function(){
+            var status = $("input[name=status]").is(":checked");
+            if (status) {
+                status = 1;
+            } else {
+                status = 0;
+            }
+            var updateCreateTime = $("input[name=updateCreateTime]").is(":checked");
+            if (updateCreateTime) {
+                updateCreateTime = 1;
+            } else {
+                updateCreateTime = 0;
+            }
+            var categories = '';
+            $("input[name=categories]:checked").each(function() {
+                categories = categories + $(this).val() + ",";
+            });
+            if (categories && $.trim(categories).length > 0) {
+                categories = categories.substring(0, categories.length - 1);
+            }
+            $.ajax({
+                url:"${contextPath}/admin/updateArticle.do",
+                data:{"id":$("input[name=id]").val(),"content":tinymce.activeEditor.getContent()
+                    ,"subject":$("input[name=subject]").val(),"status":status,"type":$("select[name=type]").val()
+                    ,"tags":$("input[name=tags]").val(),"categories":categories,"updateCreateTime":updateCreateTime},
+                type:"POST",
+                success:function(data){
+                    if(data && data == 'success') {
+                        alert("保存成功");
+                        window.location.href="${contextPath}/admin/article_manager.ftl"
+                    } else {
+                        alert("保存失败");
+                    }
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>
