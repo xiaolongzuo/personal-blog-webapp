@@ -16,6 +16,8 @@ package com.zuoxiaolong.util;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.config.Configuration;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -24,15 +26,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import com.zuoxiaolong.config.Configuration;
-
 /**
  * @author 左潇龙
  * @since 5/28/2015 11:11 AM
  */
 public abstract class DirtyWordsUtil {
 
-    private static final List<String> dirtyWords = new CopyOnWriteArrayList<String>();
+    private static volatile List<String> dirtyWords = new CopyOnWriteArrayList<String>();
 
     public static boolean isDirtyWords(String words) {
         for (String dirtyWord : dirtyWords) {
@@ -43,22 +43,18 @@ public abstract class DirtyWordsUtil {
         return false;
     }
 
-    private static int skip = 0;
-
     public static void flush() {
         try {
             List<String> temp = new ArrayList<>();
             BufferedReader reader = new BufferedReader(new FileReader(Configuration.getClasspathFile("dirty.words.txt")));
-            for (int i = 0; i < skip; i++) {
-                reader.readLine();
-            }
             String line;
             while ((line = reader.readLine()) != null) {
-                skip++;
-                temp.add(line.trim());
+                if (!StringUtil.isEmpty(line.trim())) {
+                    temp.add(line.trim());
+                }
             }
             reader.close();
-            dirtyWords.addAll(temp);
+            dirtyWords = temp;
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {

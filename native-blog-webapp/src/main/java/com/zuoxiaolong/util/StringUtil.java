@@ -29,6 +29,10 @@ public abstract class StringUtil {
 	
 	private static final String chinesePattern = "[\u4e00-\u9fa5]{1,1}";
 
+    public static boolean isEmpty(String s) {
+        return s == null || s.length() == 0;
+    }
+
     public static boolean isEmptyHtml(String s) {
         s = JsoupUtil.getText(s);
         char[] cs = s.toCharArray();
