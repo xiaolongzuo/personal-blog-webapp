@@ -237,7 +237,7 @@ public class ArticleDao extends BaseDao {
     	return execute((TransactionalOperation<Integer>) connection -> {
             String selectSql = "select id,status from articles where resource_id=?";
             String insertSql = "insert into articles (resource_id,username,icon,create_date," +
-                "access_times,good_times,subject,html,content,status,type) values (?,?,?,?,?,?,?,?,?,?)";
+                "access_times,good_times,subject,html,content,status,type) values (?,?,?,?,?,?,?,?,?,?,?)";
             String updateSql = "update articles set subject=?,html=?,content=?,icon=?,status=?,create_date=?,type=? where resource_id=? ";
             try {
                 PreparedStatement statement = connection.prepareStatement(selectSql);
