@@ -7,6 +7,7 @@
             ）</span><span>评论（${article.comment_times}）</span></p>
         <ul class="infos">
         ${article.html} <br/>
+        <p style="color: red;">版权声明：本文版权归作者（左潇龙）所有，欢迎转载。但未经作者同意必须保留此段声明，且在文章页面明显位置给出原文连接，否则保留追究法律责任的权利。</p>
         <#include "remark.ftl">
         </ul>
         <#if tags?? && tags?size gt 0 >
