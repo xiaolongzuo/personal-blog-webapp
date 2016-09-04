@@ -82,7 +82,7 @@ public abstract class LuceneHelper {
     }
 
     public static List<Map<String, String>> searchArticle(String searchText) {
-        return search(searchText, "article", "subject", id -> DaoFactory.getDao(ArticleDao.class).getArticle(id, ViewMode.DYNAMIC));
+        return search(searchText, "/article", "subject", id -> DaoFactory.getDao(ArticleDao.class).getArticle(id, ViewMode.DYNAMIC));
     }
 
     private static void generateIndex(String path, String id, String title, String content, List<Map<String, String>> dataList) {
