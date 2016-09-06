@@ -46,7 +46,7 @@
         });
         $("#submit_comment_button").click(function(){
             var content = tinymce.activeEditor.getContent();
-            comment("/answer.do",{
+            comment("/answer.do",$(this),{
                 "questionId":$("#questionId").val(),
                 "content":content,
                 "referenceCommentId":$("#reference_comment_id_input").val(),

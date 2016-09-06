@@ -143,7 +143,8 @@ function remark(){
 /*
  * 评论
  */
-function comment(url,data) {
+function comment(url,button,data) {
+    button.attr("disabled", true);
 	$.ajax({
 		url:contextPath + url,
 		type:"POST",
@@ -164,6 +165,7 @@ function comment(url,data) {
 			} else {
 				alert(data);
 			}
+            button.attr("disabled", false);
 		}
 	});
 }

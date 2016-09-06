@@ -54,7 +54,7 @@
         });
         $("#submit_comment_button").click(function(){
             var content = tinymce.activeEditor.getContent();
-            comment("/comment.do",{
+            comment("/comment.do",$(this),{
                 "articleId":$("#articleId").val(),
                 "content":content,
                 "referenceCommentId":$("#reference_comment_id_input").val(),

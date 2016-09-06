@@ -82,7 +82,7 @@
                 alert("留言长度不能大于1000啊，亲！");
                 return false;
             }
-            comment("/message.do",{
+            comment("/message.do",$(this),{
                 "content":content,
                 "referenceCommentId":$("#reference_comment_id_input").val(),
                 "referenceCommenter":$("#reference_commenter_input").val()
