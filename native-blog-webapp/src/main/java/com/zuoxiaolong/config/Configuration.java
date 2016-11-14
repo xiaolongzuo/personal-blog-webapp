@@ -24,6 +24,8 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Properties;
 
 /**
@@ -72,7 +74,13 @@ public abstract class Configuration {
     }
     
     public static File getClasspathFile(String path) {
-    	return new File(getClassLoader().getResource(path).getFile());
+    	String configPath = getClassLoader().getResource(path).getFile(); 
+    	try {
+			configPath = URLDecoder.decode(configPath,"utf-8");
+		} catch (UnsupportedEncodingException e) {
+			logger.error("error decoding config path URL " + e.getMessage());
+		} 
+    	return new File(configPath);
     }
 
     public static void init(ServletContext servletContext) {
