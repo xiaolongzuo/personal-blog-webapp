@@ -40,7 +40,6 @@ public class DispatcherServlet extends HttpServlet {
     public void init() throws ServletException {
         super.init();
         mapping = Scanner.scan();
-        System.out.println(mapping);
     }
 
     @Override
