@@ -16,27 +16,22 @@ package com.zuoxiaolong.servlet;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.dao.ArticleDao;
+import com.zuoxiaolong.dao.CommentDao;
+import com.zuoxiaolong.generator.Generators;
+import com.zuoxiaolong.orm.DaoFactory;
+import com.zuoxiaolong.util.DirtyWordsUtil;
+import com.zuoxiaolong.util.HttpUtil;
+import com.zuoxiaolong.util.StringUtil;
+import com.zuoxiaolong.util.XssShieldUtil;
+import org.apache.commons.lang.StringUtils;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-
-import com.zuoxiaolong.dao.QuestionDao;
-import com.zuoxiaolong.dynamic.Article;
-import com.zuoxiaolong.orm.DaoFactory;
-import com.zuoxiaolong.util.JsoupUtil;
-import org.apache.commons.lang.StringUtils;
-
-import com.zuoxiaolong.dao.ArticleDao;
-import com.zuoxiaolong.dao.CommentDao;
-import com.zuoxiaolong.generator.Generators;
-import com.zuoxiaolong.util.DirtyWordsUtil;
-import com.zuoxiaolong.util.HttpUtil;
-import com.zuoxiaolong.util.StringUtil;
-import org.jsoup.Jsoup;
 
 /**
  * @author 左潇龙
@@ -54,6 +49,7 @@ public class Comment extends AbstractServlet {
 			writeText("评论不能为空");
 			return;
 		}
+		content = XssShieldUtil.stripXss(content); // 番茄 xss过滤
 		if (DirtyWordsUtil.isDirtyWords(content)) {
 			writeText("评论不合法");
 			return;
