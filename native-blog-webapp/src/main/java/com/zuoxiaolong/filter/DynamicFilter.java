@@ -40,6 +40,8 @@ import java.util.regex.Pattern;
 /**
  * @author 左潇龙
  * @since 2015年5月24日 上午1:24:45
+ * Filter for all the .ftl files. It will generate all the data for the requested .ftl file
+ * and output the merged result
  */
 public class DynamicFilter implements Filter {
 	

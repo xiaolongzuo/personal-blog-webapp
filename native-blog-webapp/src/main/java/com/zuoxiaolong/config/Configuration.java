@@ -38,12 +38,15 @@ public abstract class Configuration {
 
     private static final Properties properties = new Properties();
 
-    private static final freemarker.template.Configuration configuration;
+    private static final freemarker.template.Configuration ftlConfiguration;
 
     private static ServletContext servletContext;
 
     private static final String system;
 
+    /**
+     * load all property files into properties, and create freemarker configuration object
+     */
     static {
         system = System.getProperty("os.name").toLowerCase();
         if (logger.isInfoEnabled()) {
@@ -66,7 +69,7 @@ public abstract class Configuration {
                 logger.warn("load properties file failed , skiped :" + propertyFiles[i], e);
             }
         }
-        configuration = new freemarker.template.Configuration(new Version(2, 3, 22));
+        ftlConfiguration = new freemarker.template.Configuration(new Version(2, 3, 22));
     }
     
     public static ClassLoader getClassLoader() {
@@ -86,8 +89,8 @@ public abstract class Configuration {
     public static void init(ServletContext servletContext) {
         Configuration.servletContext = servletContext;
         try {
-            configuration.setDirectoryForTemplateLoading(new File(getContextPath()));
-            configuration.setDefaultEncoding("UTF-8");
+            ftlConfiguration.setDirectoryForTemplateLoading(new File(getContextPath()));
+            ftlConfiguration.setDefaultEncoding("UTF-8");
             if (logger.isInfoEnabled()) {
 				logger.info("templateBasePath set success ... ");
 			}
@@ -122,7 +125,7 @@ public abstract class Configuration {
     }
 
     public static freemarker.template.Configuration getFreemarkerConfiguration() {
-        return configuration;
+        return ftlConfiguration;
     }
 
     public static boolean isProductEnv() {

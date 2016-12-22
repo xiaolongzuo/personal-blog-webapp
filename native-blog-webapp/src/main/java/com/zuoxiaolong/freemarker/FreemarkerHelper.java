@@ -135,6 +135,10 @@ public abstract class FreemarkerHelper {
         }
     }
 
+    /**
+     * @param templatePath
+     * @return
+     */
     public static String getNamespace(String templatePath) {
         templatePath = StringUtil.replaceStartSlant(templatePath);
         return templatePath.substring(0, templatePath.indexOf("/"));

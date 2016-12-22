@@ -28,6 +28,10 @@ import java.util.Map;
  */
 public abstract class DataMapLoader {
 
+	/**
+	 * Scans all the classes in com.zuoxiaolong.dynamic and put them into a Map
+	 * @return the Map with "namespace/key" as key and DataMap object as value
+	 */
     public static Map<String, DataMap> load() {
         Map<String, DataMap> dataMap = new HashMap<String, DataMap>();
         File[] files = Configuration.getClasspathFile("com/zuoxiaolong/dynamic").listFiles();
@@ -43,6 +47,9 @@ public abstract class DataMapLoader {
                     char[] originChars = fileName.toCharArray();
                     char[] lowerChars = lowerCaseFileName.toCharArray();
                     StringBuffer key = new StringBuffer();
+                    /**
+                     * Translate Camel style key to lower string, e.g. "QuestionList" to "question_list"
+                     */
                     for (int j = 0; j < originChars.length; j++) {
                         if (j == 0) {
                             key.append(lowerChars[j]);

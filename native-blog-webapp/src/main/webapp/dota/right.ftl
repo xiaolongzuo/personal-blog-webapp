@@ -15,7 +15,7 @@
 		</p>
 		
 		<p style="margin:10px 0px 0px 0px;">
-		当前数据库当中共保存了<span style="color: red;">${totalCount}</span>场对战结果，加油！
+		当前数据库当中共保存了<span style="color: red;">${totalCount!0}</span>场对战结果，加油！
 		</p>
 	</div>
 
@@ -49,16 +49,19 @@
         <div class="ms-main" id="ms-main">
             <div style="display: block;" class="display_none charts_list">
                 <ul>
+                <#if hotCharts??>
                 <#list hotCharts as hero>
                     <#if hero_index gt 5>
                         <#break />
                     </#if>
                     <li><a href="#" >${hero.fullName}（出场次数：${hero.times}）</a></li>
                 </#list>
+                </#if>
                 </ul>
             </div>
             <div class="display_none charts_list">
                 <ul>
+                <#if winCharts??>
                 <#list winCharts as hero>
                     <#if hero_index gt 5>
                         <#break />
@@ -66,15 +69,18 @@
                     <li><a href="#">${hero.fullName}（胜率：${hero.win}％）</a></li>
                 </#list>
                 </ul>
+                </#if>
             </div>
 			<div class="display_none charts_list">
                 <ul>
+                <#if winTimesCharts??>
                 <#list winTimesCharts as hero>
                     <#if hero_index gt 5>
                         <#break />
                     </#if>
                     <li><a href="#">${hero.fullName}（胜场次数：${hero.winTimes}）</a></li>
                 </#list>
+                </#if>
                 </ul>
             </div>
         </div>
