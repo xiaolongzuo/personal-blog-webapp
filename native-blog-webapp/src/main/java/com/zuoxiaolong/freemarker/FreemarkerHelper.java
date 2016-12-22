@@ -136,6 +136,7 @@ public abstract class FreemarkerHelper {
     }
 
     /**
+     * Get the main function category. e.g. "blog", "dota", ...
      * @param templatePath
      * @return
      */
