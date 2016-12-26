@@ -31,7 +31,7 @@ www.zuoxiaolong.com
 1. 修改*context.path*变量，改成http://localhost:8080/zuoxiaolong
 2. 修改Server设置，让Web应用运行在根目录。方法是找到Server工程，打开server.xml，找到`Context`那行，修改`path`为空。
 
-![具体步骤](https://lh4.googleusercontent.com/d1LpQsA4FSMfP-aDSEURxIgLyeg7FF6716H_YUBs_HDJZNbCehrIQjp6lV2_KXhKGvIkNnISP27uhyM=w1600-h794-rw)
+![具体步骤](https://github.com/xinlmain/personal-blog-webapp/blob/master/tomcat.PNG?raw=true)
 
 我暂时倾向于二，因为1可能还需要你修改程序中的某些代码。
 
