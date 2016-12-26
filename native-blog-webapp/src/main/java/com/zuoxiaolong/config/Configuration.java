@@ -129,7 +129,10 @@ public abstract class Configuration {
     }
 
     public static boolean isProductEnv() {
-        return system.contains("linux");
+        //return system.contains("linux");
+    	boolean isProduct = "true".equals(get("environment.product"));
+    	logger.info("Is product environemnt: " + isProduct);
+    	return isProduct;
     }
 
     public static String getSiteUrl(){
