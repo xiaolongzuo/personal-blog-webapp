@@ -1,8 +1,8 @@
 temp/
 html/
 index/
-image/
-!plugin.min.js
+image/*
+!tinymce/plugins/image/plugin.min.js
 article*.html
 .idea/
 *.iml
