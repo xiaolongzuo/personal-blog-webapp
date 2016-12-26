@@ -2,6 +2,7 @@ temp/
 html/
 index/
 image/
+!plugin.min.js
 article*.html
 .idea/
 *.iml
