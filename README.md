@@ -39,7 +39,7 @@ www.zuoxiaolong.com
 可以注意到web.xml中配置的欢迎页面是一个静态的html文件，放在html/目录下，可是这个目录并不存在。其实，这些静态文件是应用在启动后自动生成的，代码在*com.zuoxiaolong.generator*包里。由于当前的配置并不是product环境，所以默认并不生成。后面会讲解如何生成这些静态页面。
 
 > 好在我们可以直接访问动态页面。http://localhost:8080/blog/index.ftl
-就是首页，所有的页面都能够访问。想写博客的话，访问http://localhost:8080/admin 。系统会提示你登陆，初始密码是123456（hash在setting.properties中配置）。
+就是首页，上面所有的链接都能够访问。想写博客的话，访问http://localhost:8080/admin 。系统会提示你登陆，初始密码是123456（hash在setting.properties中配置）。
 
 ### 继续学习项目
 请移步我的博客：https://segmentfault.com/a/1190000007912251 。我在写一个系列来系统学习这个项目, 内容持续更新中。
