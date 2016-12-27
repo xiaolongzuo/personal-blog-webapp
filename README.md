@@ -11,10 +11,10 @@ www.zuoxiaolong.com
  - **native-blog-webapp** 真正的Web项目
  - **refactor-blog-webapp** 基于Spring Boot框架的项目，用于启动上面的Web项目。
 
-> 关于什么是 Spring Boot，[这里](https://spring.io/guides/gs/spring-boot/)有一个入门介绍。概括起来，运行它就能够自动地运行你真正想运行的项目——用Tomcat把web应用跑起来。但是现在我们只是想来学习Web项目，所以暂时就不管Spring Boot，而直接运行 **native-blog-webapp** 就可以了。（真实情况是对Spring Boot我还没怎么看懂，《**大写的尴尬**》 ，后面会把这部分内容加进来）。
+> 关于什么是 Spring Boot，[这里](https://spring.io/guides/gs/spring-boot/)有一个入门介绍。概括起来，它就能够方便地启动你真正想运行的程序——用Tomcat把web应用跑起来。但是现在我们只是想来学习Web项目，所以暂时就不管Spring Boot，而直接运行 **native-blog-webapp** 就可以了。（真实情况是对Spring Boot我还没怎么看懂，《**大写的尴尬**》 ，后面会把这部分内容加进来）。
 
 ### 直接运行native-blog-webapp项目
-是的，你用eclipse打开外层项目，然后这个项目就会出现在你的项目列表里。在你右键-> Run as -> Run on server之前，请确保：
+是的，用eclipse打开外层项目，然后这个项目就会出现在你的项目列表里。在你右键-> Run as -> Run on server之前，请确保：
 
  - Eclipse已配置好了maven。一般情况下你下载下来的Eclipse for Java EE Developers已经自带maven，即使不自己安装maven也能用。
  - 安装好了Tomcat，已经在Eclipse中配好了Tomcat server。
@@ -33,13 +33,13 @@ www.zuoxiaolong.com
 
 ![具体步骤](https://github.com/xinlmain/personal-blog-webapp/blob/master/tomcat.PNG?raw=true)
 
-我暂时倾向于二，因为1可能还需要你修改程序中的某些代码。
+我暂时倾向于2，因为1可能还需要你修改程序中的某些代码。
 
 ### 访问Web应用
 可以注意到web.xml中配置的欢迎页面是一个静态的html文件，放在html/目录下，可是这个目录并不存在。其实，这些静态文件是应用在启动后自动生成的，代码在*com.zuoxiaolong.generator*包里。由于当前的配置并不是product环境，所以默认并不生成。后面会讲解如何生成这些静态页面。
 
 > 好在我们可以直接访问动态页面。http://localhost:8080/blog/index.ftl
-就是首页，所有的页面都能够访问。想写博客的话，访问http://localhost:8080/admin 。系统会提示你登陆，密码是123456（hash在setting.properties中配置）。
+就是首页，所有的页面都能够访问。想写博客的话，访问http://localhost:8080/admin 。系统会提示你登陆，初始密码是123456（hash在setting.properties中配置）。
 
 ### 继续学习项目
 请移步我的博客：https://segmentfault.com/a/1190000007912251 。我在写一个系列来系统学习这个项目, 内容持续更新中。
