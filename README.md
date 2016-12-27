@@ -11,7 +11,7 @@ www.zuoxiaolong.com
  - **native-blog-webapp** 真正的Web项目
  - **refactor-blog-webapp** 基于Spring Boot框架的项目，用于启动上面的Web项目。
 
-> 关于什么是 Spring Boot，[这里](https://spring.io/guides/gs/spring-boot/)有一个入门介绍。概括起来，它就能够方便地启动你真正想运行的程序——用Tomcat把web应用跑起来。但是现在我们只是想来学习Web项目，所以暂时就不管Spring Boot，而直接运行 **native-blog-webapp** 就可以了。（真实情况是对Spring Boot我还没怎么看懂，《**大写的尴尬**》 ，后面会把这部分内容加进来）。
+> 关于什么是 Spring Boot，[这里](https://spring.io/guides/gs/spring-boot/)有一个入门介绍。概括起来，它能够方便地启动你真正想运行的程序——用Tomcat把web应用跑起来。但是现在我们只是想来学习Web项目，所以暂时就不管Spring Boot，而直接运行 **native-blog-webapp** 就可以了。（真实情况是对Spring Boot我还没怎么看懂，《**大写的尴尬**》 ，后面会把这部分内容加进来）。
 
 ### 直接运行native-blog-webapp项目
 是的，用eclipse打开外层项目，然后这个项目就会出现在你的项目列表里。在你右键-> Run as -> Run on server之前，请确保：
@@ -21,7 +21,7 @@ www.zuoxiaolong.com
 
 接下来，还有准备工作要做：
  - 安装好mysql
- - 建立Blog数据库，把**native-blog-webapp**里面的sql文件都执行一遍，初始schema和数据就都设置好了。请确保它们都执行成功了，如有失败是因为互相有些依赖关系，重复执行即可。
+ - 建立Blog数据库，把**native-blog-webapp**根路径下面的sql文件都执行一遍，初始schema和数据就都设置好了。请确保它们都执行成功了，如有失败是因为互相有些依赖关系，重复执行即可。
  - 在*resource*目录下找到jdbc.properties，把你的密码配好。
 
 现在可以右键运行项目了。
