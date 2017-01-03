@@ -41,6 +41,9 @@ www.zuoxiaolong.com
 > 好在我们可以直接访问动态页面。http://localhost:8080/blog/index.ftl
 就是首页，上面所有的链接都能够访问。想写博客的话，访问http://localhost:8080/admin 。系统会提示你登陆，初始密码是123456（hash在setting.properties中配置）。
 
+### 生成静态页面
+将setting.properties文件中的`environment.product`改为`true`，可以在Console中看到starting fetch and generate thread...
+
 ### 继续学习项目
 请移步我的博客：https://segmentfault.com/a/1190000007912251 。我在写一个系列来系统学习这个项目, 内容持续更新中。
 
