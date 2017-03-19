@@ -10,7 +10,6 @@
 
     <modules>
         <module>native-blog-webapp</module>
-        <module>refactor-blog-webapp</module>
     </modules>
 
 </project>
