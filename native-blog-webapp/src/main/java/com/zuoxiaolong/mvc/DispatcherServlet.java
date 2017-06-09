@@ -29,6 +29,7 @@ import java.util.Map;
 /**
  * @author 左潇龙
  * @since 6/16/2015 10:54 AM
+ * The dispatcher class for all *.do requests
  */
 public class DispatcherServlet extends HttpServlet {
 

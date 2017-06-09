@@ -30,6 +30,11 @@ import java.util.Map;
  */
 public abstract class Scanner {
 
+	/**
+	 * Scan all the Servlet classes and put them into map. If Servlet has RequestMapping annotation,
+	 * then use the annotation as key; else, use servlet name + ".do" as key.
+	 * @return
+	 */
     public static Map<String, Servlet> scan() {
         Map<String, Servlet> mapping = new HashMap<>();
         File[] files = Configuration.getClasspathFile("com/zuoxiaolong/servlet").listFiles();

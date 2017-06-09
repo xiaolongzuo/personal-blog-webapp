@@ -24,6 +24,8 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Properties;
 
 /**
@@ -36,12 +38,15 @@ public abstract class Configuration {
 
     private static final Properties properties = new Properties();
 
-    private static final freemarker.template.Configuration configuration;
+    private static final freemarker.template.Configuration ftlConfiguration;
 
     private static ServletContext servletContext;
 
     private static final String system;
 
+    /**
+     * load all property files into properties, and create freemarker configuration object
+     */
     static {
         system = System.getProperty("os.name").toLowerCase();
         if (logger.isInfoEnabled()) {
@@ -64,7 +69,7 @@ public abstract class Configuration {
                 logger.warn("load properties file failed , skiped :" + propertyFiles[i], e);
             }
         }
-        configuration = new freemarker.template.Configuration(new Version(2, 3, 22));
+        ftlConfiguration = new freemarker.template.Configuration(new Version(2, 3, 22));
     }
     
     public static ClassLoader getClassLoader() {
@@ -72,14 +77,20 @@ public abstract class Configuration {
     }
     
     public static File getClasspathFile(String path) {
-    	return new File(getClassLoader().getResource(path).getFile());
+    	String configPath = getClassLoader().getResource(path).getFile(); 
+    	try {
+			configPath = URLDecoder.decode(configPath,"utf-8");
+		} catch (UnsupportedEncodingException e) {
+			logger.error("error decoding config path URL " + e.getMessage());
+		} 
+    	return new File(configPath);
     }
 
     public static void init(ServletContext servletContext) {
         Configuration.servletContext = servletContext;
         try {
-            configuration.setDirectoryForTemplateLoading(new File(getContextPath()));
-            configuration.setDefaultEncoding("UTF-8");
+            ftlConfiguration.setDirectoryForTemplateLoading(new File(getContextPath()));
+            ftlConfiguration.setDefaultEncoding("UTF-8");
             if (logger.isInfoEnabled()) {
 				logger.info("templateBasePath set success ... ");
 			}
@@ -114,11 +125,14 @@ public abstract class Configuration {
     }
 
     public static freemarker.template.Configuration getFreemarkerConfiguration() {
-        return configuration;
+        return ftlConfiguration;
     }
 
     public static boolean isProductEnv() {
-        return system.contains("linux");
+        //return system.contains("linux");
+    	boolean isProduct = "true".equals(get("environment.product"));
+    	logger.info("Is product environemnt: " + isProduct);
+    	return isProduct;
     }
 
     public static String getSiteUrl(){
