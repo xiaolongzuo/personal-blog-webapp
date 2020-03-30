@@ -182,8 +182,23 @@ public class CommentDao extends BaseDao {
 		});
 	}
 	
-	public List<Map<String, String>> getComments() {
-		return getAll("comments", "create_date");
+	public List<Map<String, String>> getComments(int size) {
+		return execute(new Operation<List<Map<String, String>>>() {
+			@Override
+			public List<Map<String, String>> doInConnection(Connection connection) {
+				List<Map<String, String>> comments = new ArrayList<Map<String,String>>();
+				try {
+					PreparedStatement statement = connection.prepareStatement("select * from comments order by create_date desc limit " + size);
+					ResultSet resultSet = statement.executeQuery();
+					while (resultSet.next()) {
+						comments.add(transfer(resultSet, null));
+					}
+				} catch (SQLException e) {
+					error("get comments for size[" + size + "] failed ..." , e);
+				}
+				return comments;
+			}
+		});
 	}
 	
 	public Map<String, String> transfer(ResultSet resultSet, ViewMode viewMode){

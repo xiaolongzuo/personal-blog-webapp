@@ -35,7 +35,7 @@ public class NewComment implements DataMap {
 	
 	@Override
 	public void putCustomData(Map<String, Object> data,HttpServletRequest request, HttpServletResponse response) {
-		data.put("newComments", DaoFactory.getDao(CommentDao.class).getComments());
+		data.put("newComments", DaoFactory.getDao(CommentDao.class).getComments(100));
 	}
 
 }
