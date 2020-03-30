@@ -57,218 +57,10 @@ public abstract class Cnblogs {
 	
 	private static final Logger logger = Logger.getLogger(Cnblogs.class);
 	
-	private static final String loginUrl = "https://passport.cnblogs.com/user/signin";
-
-	private static final String publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCp0wHYbg/NOPO3nzMD3dndwS0MccuMeXCHgVlGOoYyFwLdS24Im2e7YyhB0wrUsyYf0/nhzCzBK8ZC9eCWqd0aHbdgOQT6CuFQBMjbyGYvlVYU2ZP7kG9Ft6YV6oc9ambuO7nPZh+bvXH0zDKfi02prknrScAKC0XhadTHT3Al0QIDAQAB";
-	
-	private static final String username = "左潇龙";
-
-    private static class DefaultX509TrustManager implements X509TrustManager {
-
-        @Override
-        public void checkClientTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
-
-        }
-
-        @Override
-        public void checkServerTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
-
-        }
-
-        @Override
-        public X509Certificate[] getAcceptedIssuers() {
-            return new X509Certificate[0];
-        }
-
-    }
-
-    private static class DefaultHostnameVerifier implements HostnameVerifier {
-
-        @Override
-        public boolean verify(String s, SSLSession sslSession) {
-            return true;
-        }
-
-    }
-
-    private static final String loginArticleListUrl = "https://i.cnblogs.com/posts?page=";
-
-	public static void fetchArticlesAfterLogin() throws IOException {
-		String cookie;
-		try {
-			cookie = login();
-		} catch (Exception e) {
-			logger.error("login failed ...", e);
-			return;
-		}
-        for (int i = 1; ; i++) {
-        	if (logger.isInfoEnabled()) {
-        		logger.info("begin fetch the " + i + " page...");
-			}
-            Document document = Jsoup.parse(getHtmlUseCookie(cookie, loginArticleListUrl + i, true));
-            Element mainElement = document.getElementById("post_list");
-            Elements elements = mainElement.getElementsByTag("tr");
-            int pageSize = 0;
-            for (int j = 1 ; j < elements.size(); j++) {
-                try {
-                    fetchArticle(elements.get(j),cookie);
-                    if (logger.isInfoEnabled()) {
-                        logger.info("fetch success for pagenumber : " + i + ", pagesize : " + (pageSize + 1));
-                    }
-                } catch (Throwable e) {
-                    logger.error("fetch failed for pagenumber : " + i + ", pagesize : " + (pageSize + 1), e);
-                }
-                pageSize++;
-            }
-            if (pageSize < 10) {
-				break;
-			}
-        }
-    }
-	
-	private static String login() throws Exception {
-        SSLContext sslContext = SSLContext.getInstance("TLS");
-        sslContext.init(null, new TrustManager[]{new DefaultX509TrustManager()}, new SecureRandom());
-
-        HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
-        HttpsURLConnection.setDefaultHostnameVerifier(new DefaultHostnameVerifier());
-
-        HttpsURLConnection loginPageConnection = (HttpsURLConnection) new URL(loginUrl).openConnection();
-        loginPageConnection.setRequestProperty("Connection","keep-alive");
-        loginPageConnection.setRequestMethod("GET");
-        loginPageConnection.connect();
-        String body = IOUtil.read(loginPageConnection.getInputStream());
-        String cookie = loginPageConnection.getHeaderField("Set-Cookie");
-        Pattern pattern = Pattern.compile("'VerificationToken':\\s*?'(.*?)'");
-        Matcher matcher = pattern.matcher(body);
-        String token = null;
-        if (matcher.find()) {
-            token = matcher.group(1);
-        }
-
-        HttpsURLConnection loginConnection = (HttpsURLConnection) new URL(loginUrl).openConnection();
-        loginConnection.setDoInput(true);
-        loginConnection.setDoOutput(true);
-        loginConnection.setRequestMethod("POST");
-        loginConnection.setRequestProperty("Connection", "keep-alive");
-        loginConnection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
-        loginConnection.setRequestProperty("VerificationToken",token);
-        loginConnection.setRequestProperty("Cookie",cookie);
-        loginConnection.setRequestProperty("User-Agent","Mozilla/5.0 (Windows NT 6.3; WOW64; rv:37.0) Gecko/20100101 Firefox/37.0");
-        loginConnection.setRequestProperty("Referer","http://passport.cnblogs.com/user/signin?ReturnUrl=http%3A%2F%2Fhome.cnblogs.com%2Fu%2Fzuoxiaolong%2F");
-        loginConnection.setRequestProperty("X-Requested-With","XMLHttpRequest");
-        loginConnection.connect();
-        OutputStream outputStream = loginConnection.getOutputStream();
-        Map<String,Object> params = new HashMap<>();
-        String username = Configuration.get("cnblogs.username.product");
-        String password = Configuration.get("cnblogs.password.product");
-        params.put("input1",EnrypyUtil.publicEnrypy(publicKey, username));
-        params.put("input2",EnrypyUtil.publicEnrypy(publicKey, password));
-        params.put("remember", false);
-        outputStream.write(JSONObject.fromObject(params).toString().getBytes("UTF-8"));
-        outputStream.flush();
-        String json = IOUtil.read(loginConnection.getInputStream());
-        if (JSONObject.fromObject(json).containsKey("success") && JSONObject.fromObject(json).getBoolean("success")) {
-        	List<String> cooks = loginConnection.getHeaderFields().get("Set-Cookie");
-            return cooks.get(0) + ";" + cooks.get(1);
-		} else {
-			throw new RuntimeException("login failed ...");
-		}
-	}
-	
-	private static void fetchArticle(Element element,String cookie) throws IOException {
-		Elements tdElements = element.getElementsByTag("td");
-		Element subjectTdElement = tdElements.get(0);
-		Element subjectElement = subjectTdElement.getElementsByTag("a").first();
-        String articleUrl = subjectElement.attr("href");
-        
-        String originArticleHtml = getHtmlUseCookie(cookie, articleUrl, false);
-        Document articleDocument = Jsoup.parse(originArticleHtml);
-        
-        Map<String, String> imageMap = saveImage(articleDocument);
-
-        //获取标题
-        String subject = subjectElement.html().trim();
-        
-        //获取postid
-        String resourceId = element.attr("id").split("\\-")[2];
-        Integer postId = Integer.valueOf(resourceId);
-
-        //获取内容
-        Element bodyElement = articleDocument.getElementById("cnblogs_post_body");
-        if (bodyElement == null) {
-            logger.warn("can't get article html , url : " + articleUrl);
-            return;
-        }
-        String html = bodyElement.html();
-        List<String> codeList = getPreList(html, false);
-        List<String> originCodeList = getPreList(originArticleHtml, true);
-        if (codeList.size() != originCodeList.size()) throw new RuntimeException();
-        for (int i = 0; i < codeList.size() ; i++) {
-            html = html.replace(codeList.get(i), originCodeList.get(i));
-        }
-        html = html.replace("'", "\"");
-
-        for (String img : imageMap.keySet()) {
-			html = html.replace(img, imageMap.get(img));
-		}
-        //获取纯文本内容
-        StringBuffer stringBuffer = new StringBuffer();
-        JsoupUtil.appendText(bodyElement, stringBuffer);
-        String content = stringBuffer.toString().replace("'", "\"");
-
-        //获取文章基本属性，使用文章索引里面的postdesc获取
-        List<Node> subjectNodes = subjectTdElement.childNodes();
-        String createDateText = ((TextNode)subjectNodes.get(subjectNodes.size() - 1)).text().trim();
-        Pattern pattern = Pattern.compile("（(.*?)）");
-        Matcher matcher = pattern.matcher(createDateText);
-        String createDate = null;
-        if (matcher.find()) {
-        	createDate = matcher.group(1) + ":00";
-		} else {
-			logger.error("get create_date failed for " + postId);
-			return;
-		}
-        Status status = null;
-        TextNode statusNode = (TextNode) tdElements.get(1).childNodes().get(0);
-        String statusNodeText = statusNode.text().trim();
-        if (statusNodeText.length() == 0) {
-        	Element statusElement = (Element) tdElements.get(1).childNodes().get(1);
-			status = statusElement.text().trim().equals("未发布") ? Status.draft : Status.published;
-		} else {
-			status = statusNodeText.equals("未发布") ? Status.draft : Status.published;
-		}
-        Integer accessTimes = Integer.valueOf(tdElements.get(3).html().trim());
-
-        //获取赞的次数
-        Integer goodTimes = 0;
-        if (status == Status.published) {
-        	Document diggCountDocument = Jsoup.connect("http://www.cnblogs.com/mvc/blog/BlogPostInfo.aspx?blogId=160491&postId=" + postId + "&blogApp=zuoxiaolong&blogUserGuid=8834a931-b305-e311-8d02-90b11c0b17d6").get();
-            goodTimes = Integer.valueOf(diggCountDocument.getElementById("digg_count").html());
-		}
-
-        Type articleType = Type.article;
-        if (subject.startsWith("一个屌丝程序猿的人生") || subject.startsWith("［异能程序员］")) {
-            articleType = Type.novel;
-        }
-
-        //如果resourceId已经存在则更新，否则保存
-		Integer id = DaoFactory.getDao(ArticleDao.class).saveOrUpdate(resourceId, subject, createDate, status, username, accessTimes, goodTimes, html, content, articleType);
-        if (logger.isInfoEnabled()) {
-    		logger.info("saveOrUpdate article : [" + resourceId + ":" + subject + "]");
-		}
-
-        //保存标签和分类
-        String tagsUrl = "http://www.cnblogs.com/mvc/blog/CategoriesTags.aspx?blogApp=zuoxiaolong&blogId=160491&postId=" + postId;
-        String tagsJson = getHtmlUseCookie(cookie, tagsUrl, false);
-        saveTagAndCategory(id, tagsJson);
-        if (logger.isInfoEnabled()) {
-    		logger.info("save article tag and category: [" + tagsJson + "]");
-		}
-
-        //保存评论
-        saveComment(id, postId, cookie);
-	}
+	private static final String article_url = "http://www.cnblogs.com/zuoxiaolong/default.html";
+	private static final String digg_url = "http://www.cnblogs.com/zuoxiaolong/ajax/BlogPostInfo.aspx";
+	private static final String category_url = "https://www.cnblogs.com/zuoxiaolong/ajax/CategoriesTags.aspx";
+	private static final String comment_url = "https://www.cnblogs.com/zuoxiaolong/ajax/GetComments.aspx";
 
     private static String getHtmlUseCookie(String cookie, String url, boolean isHttps) throws IOException {
         HttpURLConnection httpURLConnection;
@@ -282,49 +74,48 @@ public abstract class Cnblogs {
         return IOUtil.read(httpURLConnection.getInputStream());
     }
 
-    private static void saveTagAndCategory(Integer id,String json) {
-        JSONObject tagsJsonObject = JSONObject.fromObject(json);
-        String[] tags = new String[0];
-        if (tagsJsonObject.getString("Tags").split("标签:").length > 1) {
-            tags = tagsJsonObject.getString("Tags").split("标签:")[1].trim().split(",");
-        }
-        String[] categories = new String[0];
-        if (tagsJsonObject.getString("Categories").split("分类:").length > 1) {
-            categories = tagsJsonObject.getString("Categories").split("分类:")[1].trim().split(",");
-        }
-        for (int i = 0; i < tags.length; i++) {
-            String tag = Jsoup.parseBodyFragment(tags[i]).text().trim();
-            Integer tagId = DaoFactory.getDao(TagDao.class).getId(tag);
-            if (tagId == null) {
-                tagId = DaoFactory.getDao(TagDao.class).save(tag);
-            }
-            if (!DaoFactory.getDao(ArticleTagDao.class).exsits(id, tagId)) {
-                DaoFactory.getDao(ArticleTagDao.class).save(id, tagId);
+    private static void saveTagAndCategory(Integer id,String tagsHtml) {
+        Document document = Jsoup.parse(tagsHtml);
+        Element tagElement = document.getElementById("EntryTag");
+        if (tagElement != null) {
+            Elements elements = tagElement.getElementsByTag("a");
+            if (elements != null) {
+                for (Element element : elements) {
+                    String tag = element.text().trim();
+                    Integer tagId = DaoFactory.getDao(TagDao.class).getId(tag);
+                    if (tagId == null) {
+                        tagId = DaoFactory.getDao(TagDao.class).save(tag);
+                    }
+                    if (!DaoFactory.getDao(ArticleTagDao.class).exsits(id, tagId)) {
+                        DaoFactory.getDao(ArticleTagDao.class).save(id, tagId);
+                    }
+                }
             }
         }
-        for (int i = 0; i < categories.length; i++) {
-            String category = Jsoup.parseBodyFragment(categories[i]).text().trim();
-            Integer categoryId = DaoFactory.getDao(CategoryDao.class).getId(category);
-            if (categoryId == null) {
-                categoryId = DaoFactory.getDao(CategoryDao.class).save(category);
-            }
-            if (!DaoFactory.getDao(ArticleCategoryDao.class).exsits(id, categoryId)) {
-                DaoFactory.getDao(ArticleCategoryDao.class).save(id, categoryId);
+        Element categoryElement = document.getElementById("BlogPostCategory");
+        if (categoryElement != null) {
+            Elements elements = categoryElement.getElementsByTag("a");
+            if (elements != null) {
+                for (Element element : elements) {
+                    String category = element.text().trim();
+                    Integer categoryId = DaoFactory.getDao(CategoryDao.class).getId(category);
+                    if (categoryId == null) {
+                        categoryId = DaoFactory.getDao(CategoryDao.class).save(category);
+                    }
+                    if (!DaoFactory.getDao(ArticleCategoryDao.class).exsits(id, categoryId)) {
+                        DaoFactory.getDao(ArticleCategoryDao.class).save(id, categoryId);
+                    }
+                }
             }
         }
     }
     
-    private static void saveComment(Integer id, Integer postId, String cookie) throws IOException {
-    	String commentsUrl = "http://www.cnblogs.com/mvc/blog/GetComments.aspx?blogApp=zuoxiaolong&postId=" + postId + "&pageIndex=";
+    private static void saveComment(Integer id, Integer postId) throws IOException {
+    	String commentsUrl = comment_url + "?blogApp=zuoxiaolong&postId=" + postId + "&pageIndex=";
         for (int i = 1 ; ; i++ ) {
             String currentCommentUrl = commentsUrl + i;
-            String commentsJson = null;
-            if (cookie != null) {
-				commentsJson = getHtmlUseCookie(cookie, currentCommentUrl, false);
-			} else {
-				commentsJson = getArticleHtml(currentCommentUrl);
-			}
-            Document commentsDocument = Jsoup.parseBodyFragment(JSONObject.fromObject(commentsJson).getString("commentsHtml"));
+            String commentsHtml = getArticleHtml(currentCommentUrl);
+            Document commentsDocument = Jsoup.parse(commentsHtml);
             Elements commentElements = commentsDocument.getElementsByClass("feedbackItem");
             for (Element commentElement : commentElements) {
                 String commentResourceId = commentElement.getElementsByClass("layer").first().attr("href");
@@ -357,7 +148,7 @@ public abstract class Cnblogs {
                 if (goodTimesMatcher.find()) {
                     commentGoodTimes = Integer.valueOf(goodTimesMatcher.group(1));
                 }
-                String badTimesString = commentElement.getElementsByClass("comment_bury").first().text().trim();
+                String badTimesString = commentElement.getElementsByClass("comment_burry").first().text().trim();
                 Integer commentBadTimes = 0;
                 Matcher badTimesMatcher = onclickPattern.matcher(badTimesString);
                 if (badTimesMatcher.find()) {
@@ -440,7 +231,7 @@ public abstract class Cnblogs {
         	if (logger.isInfoEnabled()) {
         		logger.info("begin fetch the " + i + " page...");
 			}
-            Document document = Jsoup.connect("http://www.cnblogs.com/zuoxiaolong/default.html?page=" + i).get();
+            Document document = Jsoup.connect(article_url + "?page=" + i).get();
             Element mainElement = document.getElementById("mainContent");
             Elements elements = mainElement.getElementsByClass("postTitle");
             int pageSize = 0;
@@ -511,10 +302,10 @@ public abstract class Cnblogs {
         String[] attrs = postDescAElement.text().split("\\s");
         String createDate = attrs[2] + " " + attrs[3] + ":00";
         String username = attrs[4];
-        Integer accessTimes = Integer.valueOf(attrs[5].substring(attrs[5].indexOf("(") + 1, attrs[5].length() - 1));
+        Integer accessTimes = Integer.valueOf(attrs[6].substring(attrs[6].indexOf("(") + 1, attrs[6].length() - 1));
 
         //获取赞的次数
-        Document diggCountDocument = Jsoup.connect("http://www.cnblogs.com/mvc/blog/BlogPostInfo.aspx?blogId=160491&postId=" + postId + "&blogApp=zuoxiaolong&blogUserGuid=8834a931-b305-e311-8d02-90b11c0b17d6").get();
+        Document diggCountDocument = Jsoup.connect(digg_url + "?blogId=160491&postId=" + postId + "&blogApp=zuoxiaolong&blogUserGuid=8834a931-b305-e311-8d02-90b11c0b17d6").get();
         Integer goodTimes = Integer.valueOf(diggCountDocument.getElementById("digg_count").html());
         Type articleType = Type.article;
         if (subject.startsWith("一个屌丝程序猿的人生") || subject.startsWith("［异能程序员］")) {
@@ -528,15 +319,15 @@ public abstract class Cnblogs {
 		}
         
         //保存标签和分类
-        String tagsUrl = "http://www.cnblogs.com/mvc/blog/CategoriesTags.aspx?blogApp=zuoxiaolong&blogId=160491&postId=" + postId;
-        String tagsJson = getArticleHtml(tagsUrl);
-        saveTagAndCategory(id, tagsJson);
+        String tagsUrl = category_url + "?blogApp=zuoxiaolong&blogId=160491&postId=" + postId;
+        String tagsHtml = getArticleHtml(tagsUrl);
+        saveTagAndCategory(id, tagsHtml);
         if (logger.isInfoEnabled()) {
-    		logger.info("save article tag and category: [" + tagsJson + "]");
+    		logger.info("save article tag and category: [" + tagsHtml + "]");
 		}
 
         //保存评论
-        saveComment(id, postId, null);
+        saveComment(id, postId);
 	}
 	
     private static String getArticleHtml(String url) throws IOException {

@@ -1,4 +1,4 @@
-ALTER SCHEMA `blog`  DEFAULT CHARACTER SET utf8mb4 ;
+create DATABASE `blog`  DEFAULT CHARACTER SET utf8mb4 ;
 
 DROP TABLE IF EXISTS comments;
 DROP TABLE IF EXISTS article_id_visitor_ip;

@@ -10,6 +10,7 @@
 
     <modules>
         <module>native-blog-webapp</module>
-    </modules>
+		<module>personal-blog-webapp-server</module>
+	</modules>
 
 </project>
