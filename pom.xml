@@ -9,8 +9,10 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>native-blog-webapp</module>
+        <module>personal-blog-webapp-site</module>
 		<module>personal-blog-webapp-server</module>
+        <module>personal-blog-webapp-common</module>
+        <module>personal-blog-webapp-client</module>
 	</modules>
 
 </project>
