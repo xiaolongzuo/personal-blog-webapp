@@ -17,6 +17,7 @@ package com.zuoxiaolong.filter;
  */
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -26,7 +27,12 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import com.zuoxiaolong.api.HttpApiHelper;
+import com.zuoxiaolong.blog.client.AccessLogDubboService;
+import com.zuoxiaolong.blog.entity.AccessLog;
 import com.zuoxiaolong.dao.UserDao;
+import com.zuoxiaolong.dubbo.DubboClient;
+import com.zuoxiaolong.dubbo.DubboClientFactory;
 import com.zuoxiaolong.orm.DaoFactory;
 import net.sf.json.JSONObject;
 
@@ -50,7 +56,13 @@ public class AccessLogFilter implements Filter {
             String visitorIp = HttpUtil.getVisitorIp(httpServletRequest);
             String url = httpServletRequest.getRequestURI();
             String params = httpServletRequest.getParameterMap() == null ? "" : JSONObject.fromObject(httpServletRequest.getParameterMap()).toString();
-            DaoFactory.getDao(AccessLogDao.class).save(visitorIp, url, params);
+            AccessLog accessLog = new AccessLog();
+            accessLog.setAccessDate(new Date());
+            accessLog.setCity(HttpApiHelper.getCity(visitorIp));
+            accessLog.setVisitorIp(visitorIp);
+            accessLog.setParams(params);
+            accessLog.setUrl(url);
+            DubboClientFactory.getClient(AccessLogDubboService.class).save(accessLog);
         }
         filterChain.doFilter(servletRequest, servletResponse);
     }

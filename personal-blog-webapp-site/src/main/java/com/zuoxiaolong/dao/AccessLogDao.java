@@ -51,7 +51,7 @@ public class AccessLogDao extends BaseDao {
                     ResultSet resultSet = statement.executeQuery("select count(id) from access_log where visitor_ip='" + visitorIp + "' and access_date > '" + startTime + "'");
                     if (resultSet.next() && resultSet.getInt(1) > TIMES_PER_SECOND) {
                         warn("the ip[" + visitorIp + "] access too often , please note!");
-                        CacheManager.getConcurrentHashMapCache().set(visitorIp, 1000 * 60 * 60);
+                        CacheManager.getConcurrentHashMapCache().set(visitorIp, 1000);
                     }
                     PreparedStatement preparedStatement = connection.prepareStatement("insert into access_log (visitor_ip,url,access_date,city,params) values (?,?,?,?,?)");
                     preparedStatement.setString(1, visitorIp);
