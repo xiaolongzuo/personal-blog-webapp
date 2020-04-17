@@ -16,13 +16,16 @@
 
 package com.zuoxiaolong.blog.service;
 
+import com.zuoxiaolong.blog.dao.ArticleTagRepository;
 import com.zuoxiaolong.blog.dao.TagRepository;
+import com.zuoxiaolong.blog.entity.ArticleTag;
 import com.zuoxiaolong.blog.entity.Tag;
 import com.zuoxiaolong.util.StringUtil;
 import io.netty.handler.codec.dns.DatagramDnsResponse;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,18 +41,55 @@ public class TagService {
     @Resource
     private TagRepository tagRepository;
 
+    @Resource
+    private ArticleTagRepository articleTagRepository;
+
     public List<Map<String, Object>> getHotTags() {
         List<Tag> tags = tagRepository.getHotTags();
+        return transfer(tags);
+    }
+
+    public boolean deleteByArticleId(Integer articleId) {
+        return articleTagRepository.deleteByTagId(articleId) > 0;
+    }
+
+    public Integer getId(String tagName) {
+        Tag tag = tagRepository.findByTagName(tagName);
+        if (tag != null) {
+            return tag.getId();
+        } else {
+            return null;
+        }
+    }
+
+    public Integer save(String tagName) {
+        Tag tag = new Tag();
+        tag.setTagName(tagName);
+        return tagRepository.save(tag).getId();
+    }
+
+    public List<Map<String, Object>> getTags(Integer articleId) {
+        List<Integer> tagIds = articleTagRepository.findTagIdByArticleId(articleId);
+        List<Tag> tags = tagRepository.findByIdIn(tagIds);
+        return transfer(tags);
+    }
+
+    private List<Map<String, Object>> transfer(List<Tag> tags) {
         List<Map<String, Object>> result = new ArrayList<>();
         if (tags != null) {
             for (Tag resultSet : tags) {
-                Map<String, Object> tag = new HashMap<>();
-                tag.put("id", resultSet.getId());
-                tag.put("tag_name", resultSet.getTagName());
-                tag.put("short_tag_name", StringUtil.substring(resultSet.getTagName(), 4));
-                result.add(tag);
+                result.add(transfer(resultSet));
             }
         }
         return result;
     }
+
+    private Map<String, Object> transfer(Tag resultSet) {
+        Map<String, Object> tag = new HashMap<String, Object>();
+        tag.put("id", resultSet.getId());
+        tag.put("tag_name", resultSet.getTagName());
+        tag.put("short_tag_name", StringUtil.substring(resultSet.getTagName(), 4));
+        return tag;
+    }
+
 }

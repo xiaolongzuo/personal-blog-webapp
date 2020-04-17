@@ -11,5 +11,11 @@
 
     <artifactId>personal-blog-webapp-client</artifactId>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>com.zuoxiaolong</groupId>
+            <artifactId>personal-blog-webapp-domain</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 </project>

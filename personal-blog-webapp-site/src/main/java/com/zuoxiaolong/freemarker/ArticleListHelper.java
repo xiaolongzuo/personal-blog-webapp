@@ -16,9 +16,10 @@ package com.zuoxiaolong.freemarker;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.blog.client.TagDubboService;
 import com.zuoxiaolong.dao.ArticleDao;
 import com.zuoxiaolong.dao.CategoryDao;
-import com.zuoxiaolong.dao.TagDao;
+import com.zuoxiaolong.dubbo.DubboClientFactory;
 import com.zuoxiaolong.model.Status;
 import com.zuoxiaolong.model.Type;
 import com.zuoxiaolong.model.ViewMode;
@@ -75,7 +76,7 @@ public class ArticleListHelper {
 	}
 	
 	public static void putDataMapByTag(Map<String, Object> data, ViewMode viewMode, String tag, int current) {
-		int tagId = DaoFactory.getDao(TagDao.class).getId(tag);
+		int tagId = DubboClientFactory.getClient(TagDubboService.class).getId(tag);
 		int total = DaoFactory.getDao(ArticleDao.class).getArticlesByTag(tagId, viewMode).size();
 		int page = (total % 10 == 0) ? (total / 10) : (total / 10 + 1);
 		Map<String, Integer> pager = new HashMap<>();

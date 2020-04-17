@@ -14,26 +14,17 @@
  * limitations under the License.
  */
 
-package com.zuoxiaolong.blog.client;
+package com.zuoxiaolong.blog.entity;
 
-import com.zuoxiaolong.blog.entity.Tag;
-
-import java.util.List;
-import java.util.Map;
+import java.io.Serializable;
 
 /**
  * @author xiaolongzuo
  */
-public interface TagDubboService {
+public class ArticleTagId implements Serializable {
 
-    List<Map<String, Object>> getHotTags();
+    private Integer articleId;
 
-    Integer save(String tagName);
-
-    Integer getId(String tagName);
-
-    boolean deleteByArticleId(Integer articleId);
-
-    List<Map<String, Object>> getTags(Integer articleId);
+    private Integer tagId;
 
 }

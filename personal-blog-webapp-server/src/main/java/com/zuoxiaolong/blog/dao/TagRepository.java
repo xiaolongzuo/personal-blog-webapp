@@ -30,5 +30,8 @@ public interface TagRepository extends JpaRepository<Tag, Integer> {
     @Query(nativeQuery = true, value = "select * from tags order by (select count(article_id) from article_tag where tag_id=id) desc")
     List<Tag> getHotTags();
 
+    Tag findByTagName(String tagName);
+
+    List<Tag> findByIdIn(List<Integer> tagIds);
 
 }

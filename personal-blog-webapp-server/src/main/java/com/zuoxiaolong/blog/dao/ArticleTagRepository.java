@@ -14,26 +14,23 @@
  * limitations under the License.
  */
 
-package com.zuoxiaolong.blog.client;
+package com.zuoxiaolong.blog.dao;
 
+import com.zuoxiaolong.blog.entity.ArticleTag;
+import com.zuoxiaolong.blog.entity.ArticleTagId;
 import com.zuoxiaolong.blog.entity.Tag;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author xiaolongzuo
  */
-public interface TagDubboService {
+public interface ArticleTagRepository extends JpaRepository<ArticleTag, ArticleTagId> {
 
-    List<Map<String, Object>> getHotTags();
+    int deleteByTagId(Integer articleId);
 
-    Integer save(String tagName);
-
-    Integer getId(String tagName);
-
-    boolean deleteByArticleId(Integer articleId);
-
-    List<Map<String, Object>> getTags(Integer articleId);
+    List<Integer> findTagIdByArticleId(Integer articleId);
 
 }

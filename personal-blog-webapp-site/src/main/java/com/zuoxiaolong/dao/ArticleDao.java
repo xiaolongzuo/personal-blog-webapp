@@ -16,6 +16,8 @@ package com.zuoxiaolong.dao;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.blog.client.TagDubboService;
+import com.zuoxiaolong.dubbo.DubboClientFactory;
 import com.zuoxiaolong.freemarker.ArticleHelper;
 import com.zuoxiaolong.model.Status;
 import com.zuoxiaolong.model.Type;
@@ -440,11 +442,11 @@ public class ArticleDao extends BaseDao {
             } else {
                 article.put("url", ArticleHelper.generateStaticPath(Integer.valueOf(id)));
             }
-            List<Map<String, String>> tags = DaoFactory.getDao(TagDao.class).getTags(Integer.valueOf(id));
+            List<Map<String, Object>> tags = DubboClientFactory.getClient(TagDubboService.class).getTags(Integer.valueOf(id));
             StringBuffer stringBuffer = new StringBuffer("");
             if (tags != null && tags.size() > 0) {
                 for (int i = 0; i < tags.size(); i++) {
-                    Map<String, String> tag = tags.get(i);
+                    Map<String, Object> tag = tags.get(i);
                     if (i > 0) {
                         stringBuffer.append(",");
                     }

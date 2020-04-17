@@ -13,6 +13,7 @@
 		<module>personal-blog-webapp-server</module>
         <module>personal-blog-webapp-common</module>
         <module>personal-blog-webapp-client</module>
-	</modules>
+        <module>personal-blog-webapp-domain</module>
+    </modules>
 
 </project>

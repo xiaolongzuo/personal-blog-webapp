@@ -16,8 +16,10 @@ package com.zuoxiaolong.reptile;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.blog.client.TagDubboService;
 import com.zuoxiaolong.config.Configuration;
 import com.zuoxiaolong.dao.*;
+import com.zuoxiaolong.dubbo.DubboClientFactory;
 import com.zuoxiaolong.model.Status;
 import com.zuoxiaolong.model.Type;
 import com.zuoxiaolong.orm.DaoFactory;
@@ -82,9 +84,9 @@ public abstract class Cnblogs {
             if (elements != null) {
                 for (Element element : elements) {
                     String tag = element.text().trim();
-                    Integer tagId = DaoFactory.getDao(TagDao.class).getId(tag);
+                    Integer tagId = DubboClientFactory.getClient(TagDubboService.class).getId(tag);
                     if (tagId == null) {
-                        tagId = DaoFactory.getDao(TagDao.class).save(tag);
+                        tagId = DubboClientFactory.getClient(TagDubboService.class).save(tag);
                     }
                     if (!DaoFactory.getDao(ArticleTagDao.class).exsits(id, tagId)) {
                         DaoFactory.getDao(ArticleTagDao.class).save(id, tagId);

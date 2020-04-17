@@ -38,4 +38,24 @@ public class TagDubboServiceImpl implements TagDubboService {
         return tagService.getHotTags();
     }
 
+    @Override
+    public Integer save(String tagName) {
+        return tagService.save(tagName);
+    }
+
+    @Override
+    public Integer getId(String tagName) {
+        return tagService.getId(tagName);
+    }
+
+    @Override
+    public boolean deleteByArticleId(Integer articleId) {
+        return tagService.deleteByArticleId(articleId);
+    }
+
+    @Override
+    public List<Map<String, Object>> getTags(Integer articleId) {
+        return tagService.getTags(articleId);
+    }
+
 }

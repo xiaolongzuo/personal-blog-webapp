@@ -14,26 +14,38 @@
  * limitations under the License.
  */
 
-package com.zuoxiaolong.blog.client;
+package com.zuoxiaolong.blog.entity;
 
-import com.zuoxiaolong.blog.entity.Tag;
-
-import java.util.List;
-import java.util.Map;
+import javax.persistence.*;
 
 /**
  * @author xiaolongzuo
  */
-public interface TagDubboService {
+@Entity
+@Table(name = "article_tag")
+@IdClass(ArticleTagId.class)
+public class ArticleTag {
 
-    List<Map<String, Object>> getHotTags();
+    @Id
+    private Integer articleId;
 
-    Integer save(String tagName);
+    @Id
+    private Integer tagId;
 
-    Integer getId(String tagName);
+    public Integer getArticleId() {
+        return articleId;
+    }
 
-    boolean deleteByArticleId(Integer articleId);
+    public void setArticleId(Integer articleId) {
+        this.articleId = articleId;
+    }
 
-    List<Map<String, Object>> getTags(Integer articleId);
+    public Integer getTagId() {
+        return tagId;
+    }
+
+    public void setTagId(Integer tagId) {
+        this.tagId = tagId;
+    }
 
 }

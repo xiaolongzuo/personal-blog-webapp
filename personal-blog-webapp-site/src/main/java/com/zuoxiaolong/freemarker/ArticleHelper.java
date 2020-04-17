@@ -16,10 +16,11 @@ package com.zuoxiaolong.freemarker;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.blog.client.TagDubboService;
 import com.zuoxiaolong.dao.ArticleDao;
 import com.zuoxiaolong.dao.CategoryDao;
 import com.zuoxiaolong.dao.CommentDao;
-import com.zuoxiaolong.dao.TagDao;
+import com.zuoxiaolong.dubbo.DubboClientFactory;
 import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.orm.DaoFactory;
 
@@ -39,7 +40,7 @@ public abstract class ArticleHelper {
 		Map<String, String> article = DaoFactory.getDao(ArticleDao.class).getArticle(articleId, viewMode);
 		data.put("article", article);
 		data.put("comments", DaoFactory.getDao(CommentDao.class).getComments(articleId));
-		data.put("tags", DaoFactory.getDao(TagDao.class).getTags(articleId));
+		data.put("tags", DubboClientFactory.getClient(TagDubboService.class).getTags(articleId));
 		data.put("categories", DaoFactory.getDao(CategoryDao.class).getCategories(articleId));
 		Date createDate = null;
 		try {

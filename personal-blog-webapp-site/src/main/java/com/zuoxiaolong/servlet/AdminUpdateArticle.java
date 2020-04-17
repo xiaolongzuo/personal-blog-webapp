@@ -16,7 +16,9 @@ package com.zuoxiaolong.servlet;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.blog.client.TagDubboService;
 import com.zuoxiaolong.dao.*;
+import com.zuoxiaolong.dubbo.DubboClientFactory;
 import com.zuoxiaolong.model.Status;
 import com.zuoxiaolong.model.Type;
 import com.zuoxiaolong.mvc.RequestMapping;
@@ -53,15 +55,15 @@ public class AdminUpdateArticle extends AbstractServlet {
 		if (tags == null || categories == null) {
             return;
         }
-        DaoFactory.getDao(TagDao.class).delete(articleId);
+        DubboClientFactory.getClient(TagDubboService.class).deleteByArticleId(articleId);
         for (int i = 0; i < tags.length; i++) {
             String tag = tags[i].trim();
             if (tag.length() == 0) {
                 continue;
             }
-            Integer tagId = DaoFactory.getDao(TagDao.class).getId(tag);
+            Integer tagId = DubboClientFactory.getClient(TagDubboService.class).getId(tag);
             if (tagId == null) {
-                tagId = DaoFactory.getDao(TagDao.class).save(tag);
+                tagId = DubboClientFactory.getClient(TagDubboService.class).save(tag);
             }
             DaoFactory.getDao(ArticleTagDao.class).save(articleId, tagId);
         }
