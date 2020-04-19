@@ -21,7 +21,6 @@ import com.zuoxiaolong.algorithm.Random;
 import com.zuoxiaolong.config.Configuration;
 import com.zuoxiaolong.dao.ArticleDao;
 import com.zuoxiaolong.dao.CommentDao;
-import com.zuoxiaolong.dao.MatchDao;
 import com.zuoxiaolong.dao.TagDao;
 import com.zuoxiaolong.model.Status;
 import com.zuoxiaolong.model.Type;
@@ -73,35 +72,22 @@ public abstract class FreemarkerHelper {
             data.put("recordIndexUrl", RecordListHelper.generateStaticPath(1));
             data.put("novelIndexUrl", ArticleListHelper.generateStaticPath("novel", 1));
         }
-        if (namespace.equals("dota")) {
-            List<Map<String, String>> matchList = DaoFactory.getDao(MatchDao.class).getAll();
-            List<Map<String, Object>> hotCharts = new ArrayList<Map<String,Object>>();
-            List<Map<String, Object>> winCharts = new ArrayList<Map<String,Object>>();
-            List<Map<String, Object>> winTimesCharts = new ArrayList<Map<String,Object>>();
-            Map<String, int[]> resultCountMap = Match.computeHeroCharts(matchList);
-            Match.fillHeroCharts(resultCountMap, hotCharts, winCharts, winTimesCharts);
-            data.put("hotCharts", hotCharts);
-            data.put("winCharts", winCharts);
-            data.put("winTimesCharts", winTimesCharts);
-            data.put("totalCount", DaoFactory.getDao(MatchDao.class).count());
+        List<Map<String, String>> articleList = DaoFactory.getDao(ArticleDao.class).getArticles("create_date", Status.published, Type.article, viewMode);
+        data.put("accessCharts",DaoFactory.getDao(ArticleDao.class).getArticles("access_times", Status.published, Type.article, viewMode));
+        data.put("newCharts",DaoFactory.getDao(ArticleDao.class).getArticles("create_date", Status.published, viewMode));
+        data.put("recommendCharts",DaoFactory.getDao(ArticleDao.class).getArticles("good_times", Status.published, Type.article, viewMode));
+        data.put("imageArticles",Random.random(articleList, DEFAULT_RIGHT_ARTICLE_NUMBER));
+        data.put("hotTags", Random.random(DaoFactory.getDao(TagDao.class).getHotTags(), DEFAULT_RIGHT_TAG_NUMBER));
+        data.put("newComments", DaoFactory.getDao(CommentDao.class).getLastComments(DEFAULT_RIGHT_COMMENT_NUMBER, viewMode));
+        if (ViewMode.DYNAMIC == viewMode) {
+            data.put("accessArticlesUrl", ArticleListHelper.generateDynamicPath("access_times", 1));
+            data.put("newArticlesUrl", ArticleListHelper.generateDynamicPath("create_date", 1));
+            data.put("recommendArticlesUrl", ArticleListHelper.generateDynamicPath("good_times", 1));
         } else {
-        	List<Map<String, String>> articleList = DaoFactory.getDao(ArticleDao.class).getArticles("create_date", Status.published, Type.article, viewMode);
-            data.put("accessCharts",DaoFactory.getDao(ArticleDao.class).getArticles("access_times", Status.published, Type.article, viewMode));
-            data.put("newCharts",DaoFactory.getDao(ArticleDao.class).getArticles("create_date", Status.published, viewMode));
-            data.put("recommendCharts",DaoFactory.getDao(ArticleDao.class).getArticles("good_times", Status.published, Type.article, viewMode));
-            data.put("imageArticles",Random.random(articleList, DEFAULT_RIGHT_ARTICLE_NUMBER));
-            data.put("hotTags", Random.random(DaoFactory.getDao(TagDao.class).getHotTags(), DEFAULT_RIGHT_TAG_NUMBER));
-            data.put("newComments", DaoFactory.getDao(CommentDao.class).getLastComments(DEFAULT_RIGHT_COMMENT_NUMBER, viewMode));
-            if (ViewMode.DYNAMIC == viewMode) {
-                data.put("accessArticlesUrl", ArticleListHelper.generateDynamicPath("access_times", 1));
-                data.put("newArticlesUrl", ArticleListHelper.generateDynamicPath("create_date", 1));
-                data.put("recommendArticlesUrl", ArticleListHelper.generateDynamicPath("good_times", 1));
-            } else {
-            	data.put("accessArticlesUrl", ArticleListHelper.generateStaticPath("access_times", 1));
-                data.put("newArticlesUrl", ArticleListHelper.generateStaticPath("create_date", 1));
-                data.put("recommendArticlesUrl", ArticleListHelper.generateStaticPath("good_times", 1));
-            }
-		}
+            data.put("accessArticlesUrl", ArticleListHelper.generateStaticPath("access_times", 1));
+            data.put("newArticlesUrl", ArticleListHelper.generateStaticPath("create_date", 1));
+            data.put("recommendArticlesUrl", ArticleListHelper.generateStaticPath("good_times", 1));
+        }
         return data;
     }
 

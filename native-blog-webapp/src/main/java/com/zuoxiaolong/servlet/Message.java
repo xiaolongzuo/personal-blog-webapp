@@ -49,11 +49,11 @@ public class Message extends AbstractServlet {
 			writeText("答案不能为空");
 			return;
 		}
-		if (DirtyWordsUtil.isDirtyWords(content)) {
+		String visitorIp = HttpUtil.getVisitorIp(request);
+		if (DirtyWordsUtil.isDirtyWords(content) || DirtyWordsUtil.isDirtyWords(visitorIp)) {
 			writeText("答案不合法");
 			return;
 		}
-		String visitorIp = HttpUtil.getVisitorIp(request);
 		Map<String, String> user = getUser();
 		String username = user == null ? null : user.get("username");
 		Integer referenceCommentId = null;

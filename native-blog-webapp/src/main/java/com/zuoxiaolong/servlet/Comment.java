@@ -54,15 +54,15 @@ public class Comment extends AbstractServlet {
 			writeText("评论不能为空");
 			return;
 		}
-		if (DirtyWordsUtil.isDirtyWords(content)) {
-			writeText("评论不合法");
-			return;
-		}
 		Integer articleId = Integer.valueOf(request.getParameter("articleId"));
 		if (logger.isInfoEnabled()) {
 			logger.info("comment param : articleId = " + articleId + "   , content = " + content);
 		}
 		String visitorIp = HttpUtil.getVisitorIp(request);
+		if (DirtyWordsUtil.isDirtyWords(content) || DirtyWordsUtil.isDirtyWords(visitorIp)) {
+			writeText("评论不合法");
+			return;
+		}
 		Map<String, String> user = getUser();
 		String username = user == null ? null : user.get("username");
 		String nickName = user == null ? null : user.get("nickName");
