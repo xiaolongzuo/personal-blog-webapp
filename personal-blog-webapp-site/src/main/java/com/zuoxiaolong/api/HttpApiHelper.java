@@ -68,6 +68,8 @@ public abstract class HttpApiHelper {
             connection.setDoOutput(true);
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "text/plain");
+            connection.setConnectTimeout(1000);
+            connection.setReadTimeout(5000);
             OutputStream outputStream = connection.getOutputStream();
             outputStream.write(pushUrl.getBytes("UTF-8"));
             outputStream.write("\r\n".getBytes("UTF-8"));
