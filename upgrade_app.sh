@@ -10,6 +10,6 @@ unzip -o zuoxiaolong.war -d /home/zuoxiaolong/personal-blog-webapp-site
 
 ps -ef | grep 'personal-blog-webapp-server' | grep -v 'grep' | awk '{print "kill -9 " $2}' | sh
 sleep 2
+cd /home/zuoxiaolong/personal-blog-webapp-server/
 nohup java -Xms256m -Xms256m -Dspring.config.location=classpath:application.yml,/home/zuoxiaolong/personal-blog-webapp-server/application-product.yml -jar personal-blog-webapp-server.jar >/home/zuoxiaolong/personal-blog-webapp-server/std.log 2>&1 &
-
 
