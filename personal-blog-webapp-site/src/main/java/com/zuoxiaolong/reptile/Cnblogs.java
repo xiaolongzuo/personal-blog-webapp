@@ -64,18 +64,6 @@ public abstract class Cnblogs {
 	private static final String category_url = "https://www.cnblogs.com/zuoxiaolong/ajax/CategoriesTags.aspx";
 	private static final String comment_url = "https://www.cnblogs.com/zuoxiaolong/ajax/GetComments.aspx";
 
-    private static String getHtmlUseCookie(String cookie, String url, boolean isHttps) throws IOException {
-        HttpURLConnection httpURLConnection;
-        if (isHttps) {
-            httpURLConnection = (HttpsURLConnection) new URL(url).openConnection();
-        } else {
-            httpURLConnection = (HttpURLConnection) new URL(url).openConnection();
-        }
-        httpURLConnection.setRequestMethod("GET");
-        httpURLConnection.setRequestProperty("Cookie",cookie);
-        return IOUtil.read(httpURLConnection.getInputStream());
-    }
-
     private static void saveTagAndCategory(Integer id,String tagsHtml) {
         Document document = Jsoup.parse(tagsHtml);
         Element tagElement = document.getElementById("EntryTag");
@@ -202,6 +190,8 @@ public abstract class Cnblogs {
                     if (!file.exists()) {
                         HttpURLConnection connection = (HttpURLConnection) new URL(imgUrl).openConnection();
                         connection.setRequestMethod("GET");
+                        connection.setConnectTimeout(1000);
+                        connection.setReadTimeout(5000);
                         path = ImageUtil.generatePath(imgUrl);
                         IOUtil.copy(connection.getInputStream(), new File(Configuration.getContextPath(path)));
                     }
@@ -216,6 +206,8 @@ public abstract class Cnblogs {
 					if (!file.exists()) {
                         HttpURLConnection connection = (HttpURLConnection) new URL(imgUrl).openConnection();
                         connection.setRequestMethod("GET");
+                        connection.setConnectTimeout(1000);
+                        connection.setReadTimeout(5000);
                         IOUtil.copy(connection.getInputStream(), file);
 					}
 				} catch (Exception e) {
@@ -335,6 +327,8 @@ public abstract class Cnblogs {
     private static String getArticleHtml(String url) throws IOException {
         HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(url).openConnection();
         httpURLConnection.setRequestMethod("GET");
+        httpURLConnection.setConnectTimeout(1000);
+        httpURLConnection.setReadTimeout(5000);
         return IOUtil.read(httpURLConnection.getInputStream());
     }
 
