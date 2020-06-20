@@ -17,6 +17,7 @@
 package com.zuoxiaolong.blog.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -24,7 +25,9 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "access_log")
-public class AccessLog {
+public class AccessLog implements Serializable {
+
+    private static final long serialVersionUID = -7892220429541341582L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
