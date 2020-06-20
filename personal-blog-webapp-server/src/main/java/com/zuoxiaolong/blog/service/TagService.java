@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author xiaolongzuo
@@ -69,7 +70,8 @@ public class TagService {
     }
 
     public List<Map<String, Object>> getTags(Integer articleId) {
-        List<Integer> tagIds = articleTagRepository.findTagIdByArticleId(articleId);
+        List<ArticleTag> articleTags = articleTagRepository.findByArticleId(articleId);
+        List<Integer> tagIds = articleTags.stream().map(articleTag -> articleTag.getTagId()).collect(Collectors.toList());
         List<Tag> tags = tagRepository.findByIdIn(tagIds);
         return transfer(tags);
     }
