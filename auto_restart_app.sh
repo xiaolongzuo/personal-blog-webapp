@@ -4,7 +4,12 @@ export JAVA_HOME=/usr/lib/jvm/jdk8
 
 MYSQL_NUM=`ps -ef | grep mysql | grep -v 'grep' | wc -l`
 if [ "x$MYSQL_NUM" != "x2" ];then
-	/etc/init.d/mysql restart
+	service mysqld start
+fi
+
+NGINX_NUM=`ps -ef | grep nginx | grep -v 'grep' | wc -l`
+if [ "x$NGINX_NUM" != "x2" ];then
+	/usr/sbin/nginx
 fi
 
 HTTP_CODE=`curl -w %{http_code} http://localhost:8080/zuoxiaolong`
