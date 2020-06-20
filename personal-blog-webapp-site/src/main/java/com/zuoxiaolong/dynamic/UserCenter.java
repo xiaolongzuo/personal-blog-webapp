@@ -17,12 +17,11 @@ package com.zuoxiaolong.dynamic;
  */
 
 import com.zuoxiaolong.blog.client.CityDubboService;
+import com.zuoxiaolong.blog.client.DictionaryDubboService;
 import com.zuoxiaolong.blog.client.ProvinceDubboService;
-import com.zuoxiaolong.dao.DictionaryDao;
 import com.zuoxiaolong.dubbo.DubboClientFactory;
 import com.zuoxiaolong.mvc.DataMap;
 import com.zuoxiaolong.mvc.Namespace;
-import com.zuoxiaolong.orm.DaoFactory;
 import com.zuoxiaolong.servlet.AbstractServlet;
 import org.apache.commons.lang.StringUtils;
 
@@ -48,7 +47,7 @@ public class UserCenter implements DataMap {
             data.put("cities", DubboClientFactory.getClient(CityDubboService.class).getCities(provinceId));
         }
         data.put("provinces", DubboClientFactory.getClient(ProvinceDubboService.class).getProvinces());
-        data.put("languages", DaoFactory.getDao(DictionaryDao.class).getDictionariesByType("LANG"));
+        data.put("languages", DubboClientFactory.getClient(DictionaryDubboService.class).getDictionariesByType("LANG"));
     }
 
 }

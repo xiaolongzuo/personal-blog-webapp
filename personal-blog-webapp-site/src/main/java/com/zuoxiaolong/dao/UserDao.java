@@ -24,9 +24,10 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.zuoxiaolong.blog.client.DictionaryDubboService;
+import com.zuoxiaolong.dubbo.DubboClientFactory;
 import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.orm.BaseDao;
-import com.zuoxiaolong.orm.DaoFactory;
 import com.zuoxiaolong.orm.Operation;
 import com.zuoxiaolong.orm.TransactionalOperation;
 import com.zuoxiaolong.util.EnrypyUtil;
@@ -201,7 +202,7 @@ public class UserDao extends BaseDao {
             user.put("city", resultSet.getString("city"));
             Integer languageId = resultSet.getInt("language_id");
             user.put("languageId", String.valueOf(languageId));
-            user.put("language", DaoFactory.getDao(DictionaryDao.class).getName(languageId));
+            user.put("language", DubboClientFactory.getClient(DictionaryDubboService.class).getName(languageId));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
