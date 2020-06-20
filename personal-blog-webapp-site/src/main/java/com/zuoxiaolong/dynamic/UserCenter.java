@@ -17,8 +17,8 @@ package com.zuoxiaolong.dynamic;
  */
 
 import com.zuoxiaolong.blog.client.CityDubboService;
+import com.zuoxiaolong.blog.client.ProvinceDubboService;
 import com.zuoxiaolong.dao.DictionaryDao;
-import com.zuoxiaolong.dao.ProvinceDao;
 import com.zuoxiaolong.dubbo.DubboClientFactory;
 import com.zuoxiaolong.mvc.DataMap;
 import com.zuoxiaolong.mvc.Namespace;
@@ -44,10 +44,10 @@ public class UserCenter implements DataMap {
             throw new RuntimeException();
         }
         if (StringUtils.isNotBlank(user.get("province"))) {
-            Integer provinceId = DaoFactory.getDao(ProvinceDao.class).getId(user.get("province"));
+            Integer provinceId = DubboClientFactory.getClient(ProvinceDubboService.class).getId(user.get("province"));
             data.put("cities", DubboClientFactory.getClient(CityDubboService.class).getCities(provinceId));
         }
-        data.put("provinces", DaoFactory.getDao(ProvinceDao.class).getProvinces());
+        data.put("provinces", DubboClientFactory.getClient(ProvinceDubboService.class).getProvinces());
         data.put("languages", DaoFactory.getDao(DictionaryDao.class).getDictionariesByType("LANG"));
     }
 

@@ -17,9 +17,8 @@ package com.zuoxiaolong.servlet;
  */
 
 import com.zuoxiaolong.blog.client.CityDubboService;
-import com.zuoxiaolong.dao.ProvinceDao;
+import com.zuoxiaolong.blog.client.ProvinceDubboService;
 import com.zuoxiaolong.dubbo.DubboClientFactory;
-import com.zuoxiaolong.orm.DaoFactory;
 import com.zuoxiaolong.util.StringUtil;
 
 import javax.servlet.ServletException;
@@ -34,7 +33,7 @@ public class GetCities extends AbstractServlet {
     @Override
     protected void service() throws ServletException, IOException {
         String province = StringUtil.urlDecode(getRequest().getParameter("province"));
-        Integer provinceId = DaoFactory.getDao(ProvinceDao.class).getId(province);
+        Integer provinceId = DubboClientFactory.getClient(ProvinceDubboService.class).getId(province);
         writeJsonArray(DubboClientFactory.getClient(CityDubboService.class).getCities(provinceId));
     }
 

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author xiaolongzuo
@@ -21,13 +22,10 @@ public class CityService {
 
     public List<Map<String, String>> getCities(Integer provinceId) {
         List<City> cities = cityRepository.findByProvinceId(provinceId);
-        List<Map<String, String>> result = new ArrayList<>();
         if (cities != null) {
-            for (City city : cities) {
-                result.add(transfer(city));
-            }
+            return cities.stream().map(city -> transfer(city)).collect(Collectors.toList());
         }
-        return result;
+        return new ArrayList<>();
     }
 
     public Map<String, String> transfer(City city) {
