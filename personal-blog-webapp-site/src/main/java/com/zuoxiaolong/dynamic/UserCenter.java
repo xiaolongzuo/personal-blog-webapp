@@ -16,10 +16,10 @@ package com.zuoxiaolong.dynamic;
  * limitations under the License.
  */
 
-import com.zuoxiaolong.dao.CityDao;
+import com.zuoxiaolong.blog.client.CityDubboService;
 import com.zuoxiaolong.dao.DictionaryDao;
 import com.zuoxiaolong.dao.ProvinceDao;
-import com.zuoxiaolong.dao.UserDao;
+import com.zuoxiaolong.dubbo.DubboClientFactory;
 import com.zuoxiaolong.mvc.DataMap;
 import com.zuoxiaolong.mvc.Namespace;
 import com.zuoxiaolong.orm.DaoFactory;
@@ -45,7 +45,7 @@ public class UserCenter implements DataMap {
         }
         if (StringUtils.isNotBlank(user.get("province"))) {
             Integer provinceId = DaoFactory.getDao(ProvinceDao.class).getId(user.get("province"));
-            data.put("cities", DaoFactory.getDao(CityDao.class).getCities(provinceId));
+            data.put("cities", DubboClientFactory.getClient(CityDubboService.class).getCities(provinceId));
         }
         data.put("provinces", DaoFactory.getDao(ProvinceDao.class).getProvinces());
         data.put("languages", DaoFactory.getDao(DictionaryDao.class).getDictionariesByType("LANG"));

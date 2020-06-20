@@ -30,13 +30,9 @@ import javax.servlet.http.HttpServletRequest;
 import com.zuoxiaolong.api.HttpApiHelper;
 import com.zuoxiaolong.blog.client.AccessLogDubboService;
 import com.zuoxiaolong.blog.entity.AccessLog;
-import com.zuoxiaolong.dao.UserDao;
-import com.zuoxiaolong.dubbo.DubboClient;
 import com.zuoxiaolong.dubbo.DubboClientFactory;
-import com.zuoxiaolong.orm.DaoFactory;
 import net.sf.json.JSONObject;
 
-import com.zuoxiaolong.dao.AccessLogDao;
 import com.zuoxiaolong.util.HttpUtil;
 
 /**

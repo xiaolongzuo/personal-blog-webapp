@@ -16,8 +16,9 @@ package com.zuoxiaolong.servlet;
  * limitations under the License.
  */
 
-import com.zuoxiaolong.dao.CityDao;
+import com.zuoxiaolong.blog.client.CityDubboService;
 import com.zuoxiaolong.dao.ProvinceDao;
+import com.zuoxiaolong.dubbo.DubboClientFactory;
 import com.zuoxiaolong.orm.DaoFactory;
 import com.zuoxiaolong.util.StringUtil;
 
@@ -34,7 +35,7 @@ public class GetCities extends AbstractServlet {
     protected void service() throws ServletException, IOException {
         String province = StringUtil.urlDecode(getRequest().getParameter("province"));
         Integer provinceId = DaoFactory.getDao(ProvinceDao.class).getId(province);
-        writeJsonArray(DaoFactory.getDao(CityDao.class).getCities(provinceId));
+        writeJsonArray(DubboClientFactory.getClient(CityDubboService.class).getCities(provinceId));
     }
 
 }
