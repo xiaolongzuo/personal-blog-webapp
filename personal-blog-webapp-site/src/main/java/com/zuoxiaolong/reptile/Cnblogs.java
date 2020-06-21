@@ -16,6 +16,7 @@ package com.zuoxiaolong.reptile;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.blog.client.ArticleTagDubboService;
 import com.zuoxiaolong.blog.client.TagDubboService;
 import com.zuoxiaolong.config.Configuration;
 import com.zuoxiaolong.dao.*;
@@ -23,28 +24,20 @@ import com.zuoxiaolong.dubbo.DubboClientFactory;
 import com.zuoxiaolong.model.Status;
 import com.zuoxiaolong.model.Type;
 import com.zuoxiaolong.orm.DaoFactory;
-import com.zuoxiaolong.util.EnrypyUtil;
 import com.zuoxiaolong.util.IOUtil;
 import com.zuoxiaolong.util.ImageUtil;
 import com.zuoxiaolong.util.JsoupUtil;
-import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
-import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
-import javax.net.ssl.*;
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.security.SecureRandom;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -76,8 +69,8 @@ public abstract class Cnblogs {
                     if (tagId == null) {
                         tagId = DubboClientFactory.getClient(TagDubboService.class).save(tag);
                     }
-                    if (!DaoFactory.getDao(ArticleTagDao.class).exsits(id, tagId)) {
-                        DaoFactory.getDao(ArticleTagDao.class).save(id, tagId);
+                    if (!DubboClientFactory.getClient(ArticleTagDubboService.class).exsits(id, tagId)) {
+                        DubboClientFactory.getClient(ArticleTagDubboService.class).save(id, tagId);
                     }
                 }
             }

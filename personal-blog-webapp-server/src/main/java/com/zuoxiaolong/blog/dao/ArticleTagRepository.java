@@ -33,4 +33,6 @@ public interface ArticleTagRepository extends JpaRepository<ArticleTag, ArticleT
 
     List<ArticleTag> findByArticleId(Integer articleId);
 
+    ArticleTag findByArticleIdAndTagId(Integer articleId, Integer tagId);
+
 }
