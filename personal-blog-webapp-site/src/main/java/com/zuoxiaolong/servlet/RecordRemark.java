@@ -16,11 +16,12 @@ package com.zuoxiaolong.servlet;
  * limitations under the License.
  */
 
+import com.zuoxiaolong.blog.client.RecordIdVisitorIpDubboService;
 import com.zuoxiaolong.dao.*;
+import com.zuoxiaolong.dubbo.DubboClientFactory;
 import com.zuoxiaolong.generator.Generators;
 import com.zuoxiaolong.orm.DaoFactory;
 import com.zuoxiaolong.util.HttpUtil;
-import com.zuoxiaolong.util.JsoupUtil;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
@@ -36,14 +37,14 @@ public class RecordRemark extends AbstractServlet {
         Integer recordId = Integer.valueOf(getRequest().getParameter("recordId"));
         String ip = HttpUtil.getVisitorIp(getRequest());
         String username = getUsername();
-        if (DaoFactory.getDao(RecordIdVisitorIpDao.class).exists(recordId, ip, username)) {
+        if (DubboClientFactory.getClient(RecordIdVisitorIpDubboService.class).exists(recordId, ip, username)) {
             writeText("exists");
             if (logger.isInfoEnabled()) {
                 logger.info(ip + " has remarked...");
             }
             return ;
         } else {
-            DaoFactory.getDao(RecordIdVisitorIpDao.class).save(recordId, ip, username);
+            DubboClientFactory.getClient(RecordIdVisitorIpDubboService.class).save(recordId, ip, username);
         }
         boolean result = DaoFactory.getDao(RecordDao.class).updateGoodTimes(recordId);
         if (!result) {
