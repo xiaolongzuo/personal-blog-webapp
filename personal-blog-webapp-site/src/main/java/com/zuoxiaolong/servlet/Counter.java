@@ -20,10 +20,10 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.zuoxiaolong.blog.client.ArticleIdVisitorIpDubboService;
+import com.zuoxiaolong.client.HttpClient;
+import com.zuoxiaolong.client.HttpUriEnums;
 import com.zuoxiaolong.dao.QuestionDao;
 import com.zuoxiaolong.dao.RecordDao;
-import com.zuoxiaolong.dubbo.DubboClientFactory;
 import com.zuoxiaolong.orm.DaoFactory;
 import org.apache.log4j.Logger;
 
@@ -78,15 +78,15 @@ public class Counter extends AbstractServlet {
 			}
 			String username = getUsername();
 			String ip = HttpUtil.getVisitorIp(request);
-			if (DubboClientFactory.getClient(ArticleIdVisitorIpDubboService.class).exists(articleId, ip, username)) {
+			if (HttpClient.get(Boolean.class, HttpUriEnums.ARTICLE_ID_VISITOR_IP_EXISTS, new String[]{"articleId", "ip", "username"}, articleId, ip, username)) {
 				writeText("exists");
 				if (logger.isInfoEnabled()) {
 					logger.info(ip + " has remarked...");
 				}
 				return ;
 			} else {
-				DubboClientFactory.getClient(ArticleIdVisitorIpDubboService.class).save(articleId, ip, username);
-			}
+				HttpClient.get(HttpUriEnums.ARTICLE_ID_VISITOR_IP_SAVE, new String[]{"articleId", "ip", "username"}, articleId, ip, username);
+				}
 		}
 		boolean result = DaoFactory.getDao(ArticleDao.class).updateCount(articleId, column);
 		if (!result) {

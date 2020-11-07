@@ -16,17 +16,18 @@ package com.zuoxiaolong.freemarker;
  * limitations under the License.
  */
 
-import com.zuoxiaolong.blog.client.TagDubboService;
+import com.zuoxiaolong.client.HttpClient;
+import com.zuoxiaolong.client.HttpUriEnums;
 import com.zuoxiaolong.dao.ArticleDao;
 import com.zuoxiaolong.dao.CategoryDao;
 import com.zuoxiaolong.dao.CommentDao;
-import com.zuoxiaolong.dubbo.DubboClientFactory;
 import com.zuoxiaolong.model.ViewMode;
 import com.zuoxiaolong.orm.DaoFactory;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,7 +41,7 @@ public abstract class ArticleHelper {
 		Map<String, String> article = DaoFactory.getDao(ArticleDao.class).getArticle(articleId, viewMode);
 		data.put("article", article);
 		data.put("comments", DaoFactory.getDao(CommentDao.class).getComments(articleId));
-		data.put("tags", DubboClientFactory.getClient(TagDubboService.class).getTags(articleId));
+		data.put("tags", HttpClient.get(List.class, HttpUriEnums.TAG_GET_TAGS, new String[]{"articleId"}, articleId));
 		data.put("categories", DaoFactory.getDao(CategoryDao.class).getCategories(articleId));
 		Date createDate = null;
 		try {

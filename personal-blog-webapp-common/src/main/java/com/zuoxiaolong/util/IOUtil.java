@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 
 /**
  * @author 左潇龙
@@ -53,6 +54,14 @@ public abstract class IOUtil {
             stringBytes = tempStringBytes;
         }
         return stringBytes;
+    }
+
+    public static byte[] readStreamBytes(HttpURLConnection connection) throws IOException {
+        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            return readBytes(connection.getInputStream());
+        } else {
+            return readBytes(connection.getErrorStream());
+        }
     }
 
 }

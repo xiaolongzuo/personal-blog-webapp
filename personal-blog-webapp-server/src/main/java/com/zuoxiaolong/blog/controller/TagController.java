@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.zuoxiaolong.blog.dubbo;
+package com.zuoxiaolong.blog.controller;
 
-import com.zuoxiaolong.blog.client.TagDubboService;
 import com.zuoxiaolong.blog.service.TagService;
-import org.apache.dubbo.config.annotation.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -27,33 +27,34 @@ import java.util.Map;
 /**
  * @author xiaolongzuo
  */
-@Service
-public class TagDubboServiceImpl implements TagDubboService {
+@RestController
+@RequestMapping("/tag")
+public class TagController {
 
     @Resource
     private TagService tagService;
 
-    @Override
+    @RequestMapping("/getHotTags")
     public List<Map<String, Object>> getHotTags() {
         return tagService.getHotTags();
     }
 
-    @Override
+    @RequestMapping("/save")
     public Integer save(String tagName) {
         return tagService.save(tagName);
     }
 
-    @Override
+    @RequestMapping("/getId")
     public Integer getId(String tagName) {
         return tagService.getId(tagName);
     }
 
-    @Override
+    @RequestMapping("/deleteByArticleId")
     public boolean deleteByArticleId(Integer articleId) {
         return tagService.deleteByArticleId(articleId);
     }
 
-    @Override
+    @RequestMapping("/getTags")
     public List<Map<String, Object>> getTags(Integer articleId) {
         return tagService.getTags(articleId);
     }

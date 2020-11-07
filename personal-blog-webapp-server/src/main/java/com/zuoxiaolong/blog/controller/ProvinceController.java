@@ -1,25 +1,26 @@
-package com.zuoxiaolong.blog.dubbo;
+package com.zuoxiaolong.blog.controller;
 
-import com.zuoxiaolong.blog.client.ProvinceDubboService;
 import com.zuoxiaolong.blog.service.ProvinceService;
-import org.apache.dubbo.config.annotation.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
-@Service
-public class ProvinceDubboServiceImpl implements ProvinceDubboService {
+@RestController
+@RequestMapping("/province")
+public class ProvinceController {
 
     @Resource
     private ProvinceService provinceService;
 
-    @Override
+    @RequestMapping("/getId")
     public Integer getId(String name) {
         return provinceService.getId(name);
     }
 
-    @Override
+    @RequestMapping("/getProvinces")
     public List<Map<String, String>> getProvinces() {
         return provinceService.getProvinces();
     }

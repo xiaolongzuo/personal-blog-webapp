@@ -16,10 +16,8 @@ package com.zuoxiaolong.dynamic;
  * limitations under the License.
  */
 
-import com.zuoxiaolong.blog.client.CityDubboService;
-import com.zuoxiaolong.blog.client.DictionaryDubboService;
-import com.zuoxiaolong.blog.client.ProvinceDubboService;
-import com.zuoxiaolong.dubbo.DubboClientFactory;
+import com.zuoxiaolong.client.HttpClient;
+import com.zuoxiaolong.client.HttpUriEnums;
 import com.zuoxiaolong.mvc.DataMap;
 import com.zuoxiaolong.mvc.Namespace;
 import com.zuoxiaolong.servlet.AbstractServlet;
@@ -27,6 +25,7 @@ import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -43,11 +42,11 @@ public class UserCenter implements DataMap {
             throw new RuntimeException();
         }
         if (StringUtils.isNotBlank(user.get("province"))) {
-            Integer provinceId = DubboClientFactory.getClient(ProvinceDubboService.class).getId(user.get("province"));
-            data.put("cities", DubboClientFactory.getClient(CityDubboService.class).getCities(provinceId));
+            Integer provinceId = HttpClient.get(Integer.class, HttpUriEnums.PROVINCE_GET_ID, new String[]{"name"}, user.get("province"));
+            data.put("cities", HttpClient.get(List.class, HttpUriEnums.CITY_GET_CITIES, new String[]{"provinceId"}, provinceId));
         }
-        data.put("provinces", DubboClientFactory.getClient(ProvinceDubboService.class).getProvinces());
-        data.put("languages", DubboClientFactory.getClient(DictionaryDubboService.class).getDictionariesByType("LANG"));
+        data.put("provinces", HttpClient.get(List.class, HttpUriEnums.PROVINCE_GET_PROVINCES, new String[]{}, new Object[]{}));
+        data.put("languages", HttpClient.get(List.class, HttpUriEnums.DICTIONARY_GET_DICTIONARIES_BY_TYPE, new String[]{"type"}, "LANG"));
     }
 
 }

@@ -20,10 +20,9 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.zuoxiaolong.blog.client.AnswerIdVisitorIpDubboService;
-import com.zuoxiaolong.blog.client.CommentIdVisitorIpDubboService;
+import com.zuoxiaolong.client.HttpClient;
+import com.zuoxiaolong.client.HttpUriEnums;
 import com.zuoxiaolong.dao.*;
-import com.zuoxiaolong.dubbo.DubboClientFactory;
 import com.zuoxiaolong.orm.DaoFactory;
 import org.apache.log4j.Logger;
 
@@ -57,14 +56,14 @@ public class CommentRemark extends AbstractServlet {
 		}
 		String ip = HttpUtil.getVisitorIp(request);
 		String username = getUsername();
-		if (DubboClientFactory.getClient(CommentIdVisitorIpDubboService.class).exists(commentId, ip, username)) {
+		if (HttpClient.get(Boolean.class, HttpUriEnums.COMMENT_ID_VISITOR_IP_EXISTS, new String[]{"commentId", "ip", "username"}, commentId, ip, username)) {
 			writeText("exists");
 			if (logger.isInfoEnabled()) {
 				logger.info(ip + " has remarked...");
 			}
 			return ;
 		} else {
-			DubboClientFactory.getClient(CommentIdVisitorIpDubboService.class).save(commentId, ip, username);
+			HttpClient.get(HttpUriEnums.COMMENT_ID_VISITOR_IP_SAVE, new String[]{"commentId", "ip", "username"}, commentId, ip, username);
 		}
 		boolean result = DaoFactory.getDao(CommentDao.class).updateCount(commentId, column);
 		if (!result) {
@@ -87,14 +86,14 @@ public class CommentRemark extends AbstractServlet {
 		}
 		String ip = HttpUtil.getVisitorIp(request);
 		String username = getUsername();
-		if (DubboClientFactory.getClient(AnswerIdVisitorIpDubboService.class).exists(commentId, ip, username)) {
+		if (HttpClient.get(Boolean.class, HttpUriEnums.ANSWER_ID_VISITOR_IP_EXISTS, new String[]{"commentId", "ip", "username"}, commentId, ip, username)) {
 			writeText("exists");
 			if (logger.isInfoEnabled()) {
 				logger.info(ip + " has remarked...");
 			}
 			return ;
 		} else {
-			DubboClientFactory.getClient(AnswerIdVisitorIpDubboService.class).save(commentId, ip, username);
+			HttpClient.get(HttpUriEnums.ANSWER_ID_VISITOR_IP_SAVE, new String[]{"commentId", "ip", "username"}, commentId, ip, username);
 		}
 		boolean result = DaoFactory.getDao(AnswerDao.class).updateCount(commentId, column);
 		if (!result) {

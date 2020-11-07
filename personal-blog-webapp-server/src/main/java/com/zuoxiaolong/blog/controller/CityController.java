@@ -1,20 +1,21 @@
-package com.zuoxiaolong.blog.dubbo;
+package com.zuoxiaolong.blog.controller;
 
-import com.zuoxiaolong.blog.client.CityDubboService;
 import com.zuoxiaolong.blog.service.CityService;
-import org.apache.dubbo.config.annotation.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
-@Service
-public class CityDubboServiceImpl implements CityDubboService {
+@RestController
+@RequestMapping("/city")
+public class CityController {
 
     @Resource
     private CityService cityService;
 
-    @Override
+    @RequestMapping("/getCities")
     public List<Map<String, String>> getCities(Integer provinceId) {
         return cityService.getCities(provinceId);
     }

@@ -1,25 +1,26 @@
-package com.zuoxiaolong.blog.dubbo;
+package com.zuoxiaolong.blog.controller;
 
-import com.zuoxiaolong.blog.client.DictionaryDubboService;
 import com.zuoxiaolong.blog.service.DictionaryService;
-import org.apache.dubbo.config.annotation.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
-@Service
-public class DictionaryDubboServiceImpl implements DictionaryDubboService {
+@RestController
+@RequestMapping("/dictionary")
+public class DictionaryController {
 
     @Resource
     private DictionaryService dictionaryService;
 
-    @Override
+    @RequestMapping("/getDictionariesByType")
     public List<Map<String, String>> getDictionariesByType(String type) {
         return dictionaryService.getDictionariesByType(type);
     }
 
-    @Override
+    @RequestMapping("/getName")
     public String getName(Integer id) {
         return dictionaryService.getName(id);
     }

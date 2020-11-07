@@ -16,10 +16,9 @@ package com.zuoxiaolong.servlet;
  * limitations under the License.
  */
 
-import com.zuoxiaolong.blog.client.ArticleTagDubboService;
-import com.zuoxiaolong.blog.client.TagDubboService;
+import com.zuoxiaolong.client.HttpClient;
+import com.zuoxiaolong.client.HttpUriEnums;
 import com.zuoxiaolong.dao.*;
-import com.zuoxiaolong.dubbo.DubboClientFactory;
 import com.zuoxiaolong.model.Status;
 import com.zuoxiaolong.model.Type;
 import com.zuoxiaolong.mvc.RequestMapping;
@@ -56,17 +55,17 @@ public class AdminUpdateArticle extends AbstractServlet {
 		if (tags == null || categories == null) {
             return;
         }
-        DubboClientFactory.getClient(TagDubboService.class).deleteByArticleId(articleId);
+        HttpClient.get(HttpUriEnums.TAG_DELETE_BY_ARTICLE_ID, new String[]{"articleId"}, articleId);
         for (int i = 0; i < tags.length; i++) {
             String tag = tags[i].trim();
             if (tag.length() == 0) {
                 continue;
             }
-            Integer tagId = DubboClientFactory.getClient(TagDubboService.class).getId(tag);
+            Integer tagId = HttpClient.get(Integer.class, HttpUriEnums.TAG_GET_ID, new String[]{"tag"}, tag);
             if (tagId == null) {
-                tagId = DubboClientFactory.getClient(TagDubboService.class).save(tag);
+                tagId = HttpClient.get(Integer.class, HttpUriEnums.TAG_SAVE, new String[]{"tag"}, tag);
             }
-            DubboClientFactory.getClient(ArticleTagDubboService.class).save(articleId, tagId);
+            HttpClient.get(HttpUriEnums.ARTICLE_TAG_SAVE, new String[]{"articleId", "tagId"}, articleId, tagId);
         }
         DaoFactory.getDao(CategoryDao.class).delete(articleId);
         for (int i = 0; i < categories.length; i++) {

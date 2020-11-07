@@ -84,6 +84,9 @@ public abstract class StringUtil {
 	}
 	
 	public static String substring(String source, int length) {
+    	if (source == null) {
+    		return null;
+		}
 		char[] chars = source.toCharArray();
 		int realLength = length * 2;
 		StringBuffer stringBuffer = new StringBuffer();

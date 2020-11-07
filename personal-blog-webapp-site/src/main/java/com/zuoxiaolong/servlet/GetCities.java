@@ -16,13 +16,13 @@ package com.zuoxiaolong.servlet;
  * limitations under the License.
  */
 
-import com.zuoxiaolong.blog.client.CityDubboService;
-import com.zuoxiaolong.blog.client.ProvinceDubboService;
-import com.zuoxiaolong.dubbo.DubboClientFactory;
+import com.zuoxiaolong.client.HttpClient;
+import com.zuoxiaolong.client.HttpUriEnums;
 import com.zuoxiaolong.util.StringUtil;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author 左潇龙
@@ -33,8 +33,8 @@ public class GetCities extends AbstractServlet {
     @Override
     protected void service() throws ServletException, IOException {
         String province = StringUtil.urlDecode(getRequest().getParameter("province"));
-        Integer provinceId = DubboClientFactory.getClient(ProvinceDubboService.class).getId(province);
-        writeJsonArray(DubboClientFactory.getClient(CityDubboService.class).getCities(provinceId));
+        Integer provinceId = HttpClient.get(Integer.class, HttpUriEnums.PROVINCE_GET_ID, new String[]{"name"}, province);
+        writeJsonArray(HttpClient.get(List.class, HttpUriEnums.CITY_GET_CITIES, new String[]{"provinceId"}, provinceId));
     }
 
 }

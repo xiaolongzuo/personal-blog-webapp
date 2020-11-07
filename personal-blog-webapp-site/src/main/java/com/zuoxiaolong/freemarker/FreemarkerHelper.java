@@ -17,11 +17,11 @@ package com.zuoxiaolong.freemarker;
  */
 
 import com.zuoxiaolong.algorithm.Random;
-import com.zuoxiaolong.blog.client.TagDubboService;
+import com.zuoxiaolong.client.HttpClient;
+import com.zuoxiaolong.client.HttpUriEnums;
 import com.zuoxiaolong.config.Configuration;
 import com.zuoxiaolong.dao.ArticleDao;
 import com.zuoxiaolong.dao.CommentDao;
-import com.zuoxiaolong.dubbo.DubboClientFactory;
 import com.zuoxiaolong.model.Status;
 import com.zuoxiaolong.model.Type;
 import com.zuoxiaolong.model.ViewMode;
@@ -76,7 +76,7 @@ public abstract class FreemarkerHelper {
         data.put("newCharts",DaoFactory.getDao(ArticleDao.class).getArticles("create_date", Status.published, viewMode));
         data.put("recommendCharts",DaoFactory.getDao(ArticleDao.class).getArticles("good_times", Status.published, Type.article, viewMode));
         data.put("imageArticles",Random.random(articleList, DEFAULT_RIGHT_ARTICLE_NUMBER));
-        data.put("hotTags", Random.random(DubboClientFactory.getClient(TagDubboService.class).getHotTags(), DEFAULT_RIGHT_TAG_NUMBER));
+        data.put("hotTags", Random.random(HttpClient.get(List.class, HttpUriEnums.TAG_GET_HOT_TAGS, new String[]{}, new Object[]{}), DEFAULT_RIGHT_TAG_NUMBER));
         data.put("newComments", DaoFactory.getDao(CommentDao.class).getLastComments(DEFAULT_RIGHT_COMMENT_NUMBER, viewMode));
         if (ViewMode.DYNAMIC == viewMode) {
             data.put("accessArticlesUrl", ArticleListHelper.generateDynamicPath("access_times", 1));

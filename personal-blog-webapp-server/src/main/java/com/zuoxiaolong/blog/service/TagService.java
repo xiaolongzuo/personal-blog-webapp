@@ -21,12 +21,9 @@ import com.zuoxiaolong.blog.dao.TagRepository;
 import com.zuoxiaolong.blog.entity.ArticleTag;
 import com.zuoxiaolong.blog.entity.Tag;
 import com.zuoxiaolong.util.StringUtil;
-import io.netty.handler.codec.dns.DatagramDnsResponse;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

@@ -16,11 +16,10 @@ package com.zuoxiaolong.reptile;
  * limitations under the License.
  */
 
-import com.zuoxiaolong.blog.client.ArticleTagDubboService;
-import com.zuoxiaolong.blog.client.TagDubboService;
+import com.zuoxiaolong.client.HttpClient;
+import com.zuoxiaolong.client.HttpUriEnums;
 import com.zuoxiaolong.config.Configuration;
 import com.zuoxiaolong.dao.*;
-import com.zuoxiaolong.dubbo.DubboClientFactory;
 import com.zuoxiaolong.model.Status;
 import com.zuoxiaolong.model.Type;
 import com.zuoxiaolong.orm.DaoFactory;
@@ -65,12 +64,12 @@ public abstract class Cnblogs {
             if (elements != null) {
                 for (Element element : elements) {
                     String tag = element.text().trim();
-                    Integer tagId = DubboClientFactory.getClient(TagDubboService.class).getId(tag);
+                    Integer tagId = HttpClient.get(Integer.class, HttpUriEnums.TAG_GET_ID, new String[]{"tag"}, tag);
                     if (tagId == null) {
-                        tagId = DubboClientFactory.getClient(TagDubboService.class).save(tag);
+                        HttpClient.get(HttpUriEnums.TAG_SAVE, new String[]{"tag"}, tag);
                     }
-                    if (!DubboClientFactory.getClient(ArticleTagDubboService.class).exsits(id, tagId)) {
-                        DubboClientFactory.getClient(ArticleTagDubboService.class).save(id, tagId);
+                    if (!HttpClient.get(Boolean.class, HttpUriEnums.ARTICLE_TAG_EXISTS, new String[]{"articleId", "tagId"}, id, tagId)) {
+                        HttpClient.get(HttpUriEnums.ARTICLE_TAG_SAVE, new String[]{"articleId", "tagId"}, id, tagId);
                     }
                 }
             }
@@ -171,8 +170,12 @@ public abstract class Cnblogs {
     }
     
     private static Map<String, String> saveImage(Document articleDocument) {
-    	Elements elements = articleDocument.getElementsByTag("img");
-    	Map<String, String> result = new HashMap<>();
+        Element mainContentElement = articleDocument.getElementById("mainContent");
+        Map<String, String> result = new HashMap<>();
+        if (mainContentElement == null) {
+            return result;
+        }
+        Elements elements = mainContentElement.getElementsByTag("img");
     	for (Element element : elements) {
 			String img = element.toString();
 			String imgUrl = element.attr("src");
@@ -246,7 +249,9 @@ public abstract class Cnblogs {
         Element subjectElement = element.getElementsByTag("a").first();
         String articleUrl = subjectElement.attr("href");
         Document acticleDocument = Jsoup.connect(articleUrl).get();
-        
+        if (acticleDocument.getElementsContainingText("请输入博文的阅读密码:").size() > 0) {
+            return;
+        }
         Map<String, String> imageMap = saveImage(acticleDocument);
         
         //获取标题

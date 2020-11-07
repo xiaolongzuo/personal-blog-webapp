@@ -14,26 +14,29 @@
  * limitations under the License.
  */
 
-package com.zuoxiaolong.blog.client;
+package com.zuoxiaolong.blog.controller;
 
-import com.zuoxiaolong.blog.entity.Tag;
+import com.zuoxiaolong.blog.entity.AccessLog;
+import com.zuoxiaolong.blog.service.AccessLogService;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Map;
+import javax.annotation.Resource;
 
 /**
  * @author xiaolongzuo
  */
-public interface TagDubboService {
+@RestController
+@RequestMapping("/accessLog")
+public class AccessLogController {
 
-    List<Map<String, Object>> getHotTags();
+    @Resource
+    private AccessLogService accessLogService;
 
-    Integer save(String tagName);
-
-    Integer getId(String tagName);
-
-    boolean deleteByArticleId(Integer articleId);
-
-    List<Map<String, Object>> getTags(Integer articleId);
+    @RequestMapping("/save")
+    public void save(@RequestBody AccessLog accessLog) {
+        accessLogService.save(accessLog);
+    }
 
 }

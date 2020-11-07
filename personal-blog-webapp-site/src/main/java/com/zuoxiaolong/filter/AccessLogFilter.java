@@ -28,9 +28,9 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 import com.zuoxiaolong.api.HttpApiHelper;
-import com.zuoxiaolong.blog.client.AccessLogDubboService;
 import com.zuoxiaolong.blog.entity.AccessLog;
-import com.zuoxiaolong.dubbo.DubboClientFactory;
+import com.zuoxiaolong.client.HttpClient;
+import com.zuoxiaolong.client.HttpUriEnums;
 import net.sf.json.JSONObject;
 
 import com.zuoxiaolong.util.HttpUtil;
@@ -58,7 +58,7 @@ public class AccessLogFilter implements Filter {
             accessLog.setVisitorIp(visitorIp);
             accessLog.setParams(params);
             accessLog.setUrl(url);
-            DubboClientFactory.getClient(AccessLogDubboService.class).save(accessLog);
+            HttpClient.post(HttpUriEnums.ACCESS_LOG_SAVE, accessLog);
         }
         filterChain.doFilter(servletRequest, servletResponse);
     }
