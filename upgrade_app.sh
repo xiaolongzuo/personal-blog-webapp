@@ -17,6 +17,10 @@ rm -rf /home/zuoxiaolong/personal-blog-webapp-site/message
 rm -rf /home/zuoxiaolong/personal-blog-webapp-site/META-INF
 rm -rf /home/zuoxiaolong/personal-blog-webapp-site/question
 unzip -qo zuoxiaolong.war -d /home/zuoxiaolong/personal-blog-webapp-site
+cp -f /home/zuoxiaolong/product/dirty.words.txt /home/zuoxiaolong/personal-blog-webapp-site/WEB-INF/classes/dirty.words.txt
+cp -f /home/zuoxiaolong/product/jdbc.properties /home/zuoxiaolong/personal-blog-webapp-site/WEB-INF/classes/jdbc.properties
+cp -f /home/zuoxiaolong/product/log4j.properties /home/zuoxiaolong/personal-blog-webapp-site/WEB-INF/classes/log4j.properties
+cp -f /home/zuoxiaolong/product/setting.properties /home/zuoxiaolong/personal-blog-webapp-site/WEB-INF/classes/setting.properties
 
 ps -ef | grep 'personal-blog-webapp-server' | grep -v 'grep' | awk '{print "kill -9 " $2}' | sh
 sleep 2
