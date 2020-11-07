@@ -7,6 +7,15 @@ mvn clean install -Dmaven.test.skip=true
 rm -f /home/zuoxiaolong/personal-blog-webapp-server/personal-blog-webapp-server.jar
 cp personal-blog-webapp-server/target/personal-blog-webapp-server.jar /home/zuoxiaolong/personal-blog-webapp-server/
 cd personal-blog-webapp-site/target
+rm -rf /home/zuoxiaolong/personal-blog-webapp-site/WEB-INF
+rm -rf /home/zuoxiaolong/personal-blog-webapp-site/resources
+rm -rf /home/zuoxiaolong/personal-blog-webapp-site/record
+rm -rf /home/zuoxiaolong/personal-blog-webapp-site/admin
+rm -rf /home/zuoxiaolong/personal-blog-webapp-site/blog
+rm -rf /home/zuoxiaolong/personal-blog-webapp-site/common
+rm -rf /home/zuoxiaolong/personal-blog-webapp-site/message
+rm -rf /home/zuoxiaolong/personal-blog-webapp-site/META-INF
+rm -rf /home/zuoxiaolong/personal-blog-webapp-site/question
 unzip -qo zuoxiaolong.war -d /home/zuoxiaolong/personal-blog-webapp-site
 
 ps -ef | grep 'personal-blog-webapp-server' | grep -v 'grep' | awk '{print "kill -9 " $2}' | sh
