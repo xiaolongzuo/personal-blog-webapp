@@ -3,7 +3,7 @@
 cd /home/zuoxiaolong/personal-blog-webapp
 git pull
 sleep 5
-mvn clean package -Dmaven.test.skip=true
+mvn clean install -Dmaven.test.skip=true
 rm -f /home/zuoxiaolong/personal-blog-webapp-server/personal-blog-webapp-server.jar
 cp personal-blog-webapp-server/target/personal-blog-webapp-server.jar /home/zuoxiaolong/personal-blog-webapp-server/
 cd personal-blog-webapp-site/target
