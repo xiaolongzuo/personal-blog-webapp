@@ -3,7 +3,7 @@
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.252.b09-2.el7_8.x86_64
 
 HTTP_SERVER_CODE=`curl -I -o /dev/null -s -w %{http_code} http://localhost:8888/tag/getHotTags`
-if [ "$HTTP_CODE" != "200" ];then
+if [ "x$HTTP_SERVER_CODE" != "x200" ];then
 	ps -ef | grep "personal-blog-webapp-server.jar" | grep -v 'grep' | awk '{print "kill -9 " $2}' | sh
     sleep 2
     cd /home/zuoxiaolong/personal-blog-webapp-server/
@@ -14,7 +14,7 @@ if [ "$HTTP_CODE" != "200" ];then
 fi
 
 HTTP_CODE=`curl -w %{http_code} http://localhost:8080/personal-blog-webapp-site`
-if [ "$HTTP_CODE" == "302" ];then
+if [ "x$HTTP_CODE" == "x302" ];then
 	exit 0
 fi
 ps -ef | grep "org.apache.catalina.startup.Bootstrap" | grep -v 'grep' | awk '{print "kill -9 " $2}' | sh
