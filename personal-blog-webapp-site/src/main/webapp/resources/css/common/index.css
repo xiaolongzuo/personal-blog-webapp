@@ -101,7 +101,7 @@
 .links h3 span a { color: #999; padding: 0 5px }
 .links h3 span a:hover { color: #F60; text-decoration: underline }
 .links ul { background: #f9f9f9; padding: 10px; overflow: hidden; border: #e9e9e9 1px solid }
-.links ul li { float: left; padding: 5px 8px }
+.links ul li { padding: 5px 8px }
 .links ul li a:hover { color: #000 }
 
 .questions { padding: 30px 0; position: relative; border-bottom: #CCC 1px solid; overflow: hidden }
