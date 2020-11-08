@@ -1,5 +1,6 @@
 user:
 */1 * * * * sh /home/zuoxiaolong/personal-blog-webapp/auto_restart_java.sh
+0 */1 * * * sh /home/zuoxiaolong/personal-blog-webapp/auto_upgrade_java.sh
 root:
 0 6 * * * sh /home/zuoxiaolong/personal-blog-webapp/auto_backup_db.sh 数据库密码
 */1 * * * * sh /home/zuoxiaolong/personal-blog-webapp/auto_delete_message.sh 数据库密码
