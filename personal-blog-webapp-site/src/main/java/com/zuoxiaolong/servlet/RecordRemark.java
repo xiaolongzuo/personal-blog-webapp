@@ -37,14 +37,14 @@ public class RecordRemark extends AbstractServlet {
         Integer recordId = Integer.valueOf(getRequest().getParameter("recordId"));
         String ip = HttpUtil.getVisitorIp(getRequest());
         String username = getUsername();
-        if (HttpClient.get(Boolean.class, HttpUriEnums.RECORD_ID_VISITOR_IP_EXISTS, new String[]{"recordId", "ip", "username"}, recordId, ip, username)) {
+        if (HttpClient.get(Boolean.class, HttpUriEnums.RECORD_ID_VISITOR_IP_EXISTS, new String[]{"recordId", "visitorIp", "username"}, recordId, ip, username)) {
             writeText("exists");
             if (logger.isInfoEnabled()) {
                 logger.info(ip + " has remarked...");
             }
             return ;
         } else {
-            HttpClient.get(HttpUriEnums.RECORD_ID_VISITOR_IP_SAVE, new String[]{"recordId", "ip", "username"}, recordId, ip, username);
+            HttpClient.get(HttpUriEnums.RECORD_ID_VISITOR_IP_SAVE, new String[]{"recordId", "visitorIp", "username"}, recordId, ip, username);
         }
         boolean result = DaoFactory.getDao(RecordDao.class).updateGoodTimes(recordId);
         if (!result) {

@@ -56,14 +56,14 @@ public class CommentRemark extends AbstractServlet {
 		}
 		String ip = HttpUtil.getVisitorIp(request);
 		String username = getUsername();
-		if (HttpClient.get(Boolean.class, HttpUriEnums.COMMENT_ID_VISITOR_IP_EXISTS, new String[]{"commentId", "ip", "username"}, commentId, ip, username)) {
+		if (HttpClient.get(Boolean.class, HttpUriEnums.COMMENT_ID_VISITOR_IP_EXISTS, new String[]{"commentId", "visitorIp", "username"}, commentId, ip, username)) {
 			writeText("exists");
 			if (logger.isInfoEnabled()) {
 				logger.info(ip + " has remarked...");
 			}
 			return ;
 		} else {
-			HttpClient.get(HttpUriEnums.COMMENT_ID_VISITOR_IP_SAVE, new String[]{"commentId", "ip", "username"}, commentId, ip, username);
+			HttpClient.get(HttpUriEnums.COMMENT_ID_VISITOR_IP_SAVE, new String[]{"commentId", "visitorIp", "username"}, commentId, ip, username);
 		}
 		boolean result = DaoFactory.getDao(CommentDao.class).updateCount(commentId, column);
 		if (!result) {
@@ -86,14 +86,14 @@ public class CommentRemark extends AbstractServlet {
 		}
 		String ip = HttpUtil.getVisitorIp(request);
 		String username = getUsername();
-		if (HttpClient.get(Boolean.class, HttpUriEnums.ANSWER_ID_VISITOR_IP_EXISTS, new String[]{"commentId", "ip", "username"}, commentId, ip, username)) {
+		if (HttpClient.get(Boolean.class, HttpUriEnums.ANSWER_ID_VISITOR_IP_EXISTS, new String[]{"answerId", "visitorIp", "username"}, commentId, ip, username)) {
 			writeText("exists");
 			if (logger.isInfoEnabled()) {
 				logger.info(ip + " has remarked...");
 			}
 			return ;
 		} else {
-			HttpClient.get(HttpUriEnums.ANSWER_ID_VISITOR_IP_SAVE, new String[]{"commentId", "ip", "username"}, commentId, ip, username);
+			HttpClient.get(HttpUriEnums.ANSWER_ID_VISITOR_IP_SAVE, new String[]{"answerId", "visitorIp", "username"}, commentId, ip, username);
 		}
 		boolean result = DaoFactory.getDao(AnswerDao.class).updateCount(commentId, column);
 		if (!result) {

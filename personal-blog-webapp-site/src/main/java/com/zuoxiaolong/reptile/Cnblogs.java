@@ -63,12 +63,11 @@ public abstract class Cnblogs {
             Elements elements = tagElement.getElementsByTag("a");
             if (elements != null) {
                 for (Element element : elements) {
-                    String tag = element.text().trim();
-                    if (tag != null && tag.length() > 0 && !"NULL".equals(tag)) {
-                        Integer tagId = HttpClient.get(Integer.class, HttpUriEnums.TAG_GET_ID, new String[]{"tag"}, tag);
+                    String tagName = element.text().trim();
+                    if (tagName != null && tagName.length() > 0 && !"NULL".equals(tagName)) {
+                        Integer tagId = HttpClient.get(Integer.class, HttpUriEnums.TAG_GET_ID, new String[]{"tagName"}, tagName);
                         if (tagId == null) {
-                            logger.info("tag save : " + tag + ", articleId : " + articleId + ",tagElement : " +  element);
-                            HttpClient.get(HttpUriEnums.TAG_SAVE, new String[]{"tag"}, tag);
+                            HttpClient.get(HttpUriEnums.TAG_SAVE, new String[]{"tagName"}, tagName);
                         }
                         if (!HttpClient.get(Boolean.class, HttpUriEnums.ARTICLE_TAG_EXISTS, new String[]{"articleId", "tagId"}, articleId, tagId)) {
                             HttpClient.get(HttpUriEnums.ARTICLE_TAG_SAVE, new String[]{"articleId", "tagId"}, articleId, tagId);

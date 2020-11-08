@@ -75,8 +75,8 @@ public class ArticleListHelper {
 		data.put("lastPageUrl", ArticleListHelper.generateDynamicSearchTextPath(searchText, page));
 	}
 	
-	public static void putDataMapByTag(Map<String, Object> data, ViewMode viewMode, String tag, int current) {
-		int tagId = HttpClient.get(Integer.class, HttpUriEnums.TAG_GET_ID, new String[]{"tag"}, tag);
+	public static void putDataMapByTag(Map<String, Object> data, ViewMode viewMode, String tagName, int current) {
+		int tagId = HttpClient.get(Integer.class, HttpUriEnums.TAG_GET_ID, new String[]{"tagName"}, tagName);
 		int total = DaoFactory.getDao(ArticleDao.class).getArticlesByTag(tagId, viewMode).size();
 		int page = (total % 10 == 0) ? (total / 10) : (total / 10 + 1);
 		Map<String, Integer> pager = new HashMap<>();
@@ -85,10 +85,10 @@ public class ArticleListHelper {
 		pager.put("page", page);
 		data.put("pageArticles", DaoFactory.getDao(ArticleDao.class).getPageArticlesByTag(pager, tagId, viewMode));
 		data.put("pager", pager);
-		data.put("firstPageUrl", ArticleListHelper.generateDynamicTagPath(tag, 1));
-		data.put("prePageUrl", ArticleListHelper.generateDynamicTagPath(tag, current - 1));
-		data.put("nextPageUrl", ArticleListHelper.generateDynamicTagPath(tag, current + 1));
-		data.put("lastPageUrl", ArticleListHelper.generateDynamicTagPath(tag, page));
+		data.put("firstPageUrl", ArticleListHelper.generateDynamicTagPath(tagName, 1));
+		data.put("prePageUrl", ArticleListHelper.generateDynamicTagPath(tagName, current - 1));
+		data.put("nextPageUrl", ArticleListHelper.generateDynamicTagPath(tagName, current + 1));
+		data.put("lastPageUrl", ArticleListHelper.generateDynamicTagPath(tagName, page));
 	}
 
     public static void putDataMapByType(Map<String, Object> data, ViewMode viewMode, Integer type, int current) {

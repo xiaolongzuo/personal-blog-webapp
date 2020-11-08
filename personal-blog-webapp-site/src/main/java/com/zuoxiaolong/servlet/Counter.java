@@ -78,14 +78,14 @@ public class Counter extends AbstractServlet {
 			}
 			String username = getUsername();
 			String ip = HttpUtil.getVisitorIp(request);
-			if (HttpClient.get(Boolean.class, HttpUriEnums.ARTICLE_ID_VISITOR_IP_EXISTS, new String[]{"articleId", "ip", "username"}, articleId, ip, username)) {
+			if (HttpClient.get(Boolean.class, HttpUriEnums.ARTICLE_ID_VISITOR_IP_EXISTS, new String[]{"articleId", "visitorIp", "username"}, articleId, ip, username)) {
 				writeText("exists");
 				if (logger.isInfoEnabled()) {
 					logger.info(ip + " has remarked...");
 				}
 				return ;
 			} else {
-				HttpClient.get(HttpUriEnums.ARTICLE_ID_VISITOR_IP_SAVE, new String[]{"articleId", "ip", "username"}, articleId, ip, username);
+				HttpClient.get(HttpUriEnums.ARTICLE_ID_VISITOR_IP_SAVE, new String[]{"articleId", "visitorIp", "username"}, articleId, ip, username);
 				}
 		}
 		boolean result = DaoFactory.getDao(ArticleDao.class).updateCount(articleId, column);

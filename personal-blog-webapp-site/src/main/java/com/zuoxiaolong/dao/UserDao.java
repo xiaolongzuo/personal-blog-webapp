@@ -202,7 +202,7 @@ public class UserDao extends BaseDao {
             user.put("city", resultSet.getString("city"));
             Integer languageId = resultSet.getInt("language_id");
             user.put("languageId", String.valueOf(languageId));
-            user.put("language", HttpClient.get(String.class, HttpUriEnums.DICTIONARY_GET_NAME, new String[]{"languageId"}, languageId));
+            user.put("language", HttpClient.get(String.class, HttpUriEnums.DICTIONARY_GET_NAME, new String[]{"id"}, languageId));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

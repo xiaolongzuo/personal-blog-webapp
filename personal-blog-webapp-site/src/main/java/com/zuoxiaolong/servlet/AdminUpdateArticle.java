@@ -57,13 +57,13 @@ public class AdminUpdateArticle extends AbstractServlet {
         }
         HttpClient.get(HttpUriEnums.TAG_DELETE_BY_ARTICLE_ID, new String[]{"articleId"}, articleId);
         for (int i = 0; i < tags.length; i++) {
-            String tag = tags[i].trim();
-            if (tag.length() == 0) {
+            String tagName = tags[i].trim();
+            if (tagName.length() == 0) {
                 continue;
             }
-            Integer tagId = HttpClient.get(Integer.class, HttpUriEnums.TAG_GET_ID, new String[]{"tag"}, tag);
+            Integer tagId = HttpClient.get(Integer.class, HttpUriEnums.TAG_GET_ID, new String[]{"tagName"}, tagName);
             if (tagId == null) {
-                tagId = HttpClient.get(Integer.class, HttpUriEnums.TAG_SAVE, new String[]{"tag"}, tag);
+                tagId = HttpClient.get(Integer.class, HttpUriEnums.TAG_SAVE, new String[]{"tagName"}, tagName);
             }
             HttpClient.get(HttpUriEnums.ARTICLE_TAG_SAVE, new String[]{"articleId", "tagId"}, articleId, tagId);
         }
