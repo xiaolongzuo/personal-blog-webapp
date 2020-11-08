@@ -56,7 +56,7 @@ public abstract class Cnblogs {
 	private static final String category_url = "https://www.cnblogs.com/zuoxiaolong/ajax/CategoriesTags.aspx";
 	private static final String comment_url = "https://www.cnblogs.com/zuoxiaolong/ajax/GetComments.aspx";
 
-    private static void saveTagAndCategory(Integer id,String tagsHtml) {
+    private static void saveTagAndCategory(Integer articleId,String tagsHtml) {
         Document document = Jsoup.parse(tagsHtml);
         Element tagElement = document.getElementById("EntryTag");
         if (tagElement != null) {
@@ -67,10 +67,11 @@ public abstract class Cnblogs {
                     if (tag != null && tag.length() > 0 && !"NULL".equals(tag)) {
                         Integer tagId = HttpClient.get(Integer.class, HttpUriEnums.TAG_GET_ID, new String[]{"tag"}, tag);
                         if (tagId == null) {
+                            logger.info("tag save : " + tag + ", articleId : " + articleId + ",tagElement : " +  element);
                             HttpClient.get(HttpUriEnums.TAG_SAVE, new String[]{"tag"}, tag);
                         }
-                        if (!HttpClient.get(Boolean.class, HttpUriEnums.ARTICLE_TAG_EXISTS, new String[]{"articleId", "tagId"}, id, tagId)) {
-                            HttpClient.get(HttpUriEnums.ARTICLE_TAG_SAVE, new String[]{"articleId", "tagId"}, id, tagId);
+                        if (!HttpClient.get(Boolean.class, HttpUriEnums.ARTICLE_TAG_EXISTS, new String[]{"articleId", "tagId"}, articleId, tagId)) {
+                            HttpClient.get(HttpUriEnums.ARTICLE_TAG_SAVE, new String[]{"articleId", "tagId"}, articleId, tagId);
                         }
                     }
                 }
@@ -86,8 +87,8 @@ public abstract class Cnblogs {
                     if (categoryId == null) {
                         categoryId = DaoFactory.getDao(CategoryDao.class).save(category);
                     }
-                    if (!DaoFactory.getDao(ArticleCategoryDao.class).exsits(id, categoryId)) {
-                        DaoFactory.getDao(ArticleCategoryDao.class).save(id, categoryId);
+                    if (!DaoFactory.getDao(ArticleCategoryDao.class).exsits(articleId, categoryId)) {
+                        DaoFactory.getDao(ArticleCategoryDao.class).save(articleId, categoryId);
                     }
                 }
             }
