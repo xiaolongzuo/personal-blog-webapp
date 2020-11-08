@@ -7,7 +7,7 @@ if [ "$HTTP_CODE" != "200" ];then
 	ps -ef | grep "personal-blog-webapp-server.jar" | grep -v 'grep' | awk '{print "kill -9 " $2}' | sh
     sleep 2
     cd /home/zuoxiaolong/personal-blog-webapp-server/
-    nohup java -Xms128m -Xms128m -Dspring.config.location=classpath:application.yml,/home/zuoxiaolong/personal-blog-webapp-server/application-product.yml -jar personal-blog-webapp-server.jar >/home/zuoxiaolong/personal-blog-webapp-server/std.log 2>&1 &
+    nohup $JAVA_HOME/bin/java -Xms128m -Xms128m -Dspring.config.location=classpath:application.yml,/home/zuoxiaolong/personal-blog-webapp-server/application-product.yml -jar personal-blog-webapp-server.jar >/home/zuoxiaolong/personal-blog-webapp-server/std.log 2>&1 &
     CURRENT=`date`
     echo "$CURRENT restart." >> /home/zuoxiaolong/personal-blog-webapp-server/logs/restart.log
     sleep 30
