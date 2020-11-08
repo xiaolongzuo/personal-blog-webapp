@@ -6,6 +6,7 @@ HTTP_SERVER_CODE=`curl -I -o /dev/null -s -w %{http_code} http://localhost:8888/
 if [ "$HTTP_CODE" != "200" ];then
 	ps -ef | grep "personal-blog-webapp-server.jar" | grep -v 'grep' | awk '{print "kill -9 " $2}' | sh
     sleep 2
+    cd /home/zuoxiaolong/personal-blog-webapp-server/
     nohup java -Xms128m -Xms128m -Dspring.config.location=classpath:application.yml,/home/zuoxiaolong/personal-blog-webapp-server/application-product.yml -jar personal-blog-webapp-server.jar >/home/zuoxiaolong/personal-blog-webapp-server/std.log 2>&1 &
     CURRENT=`date`
     echo "$CURRENT restart." >> /home/zuoxiaolong/personal-blog-webapp-server/logs/restart.log
@@ -18,6 +19,7 @@ if [ "$HTTP_CODE" == "302" ];then
 fi
 ps -ef | grep "org.apache.catalina.startup.Bootstrap" | grep -v 'grep' | awk '{print "kill -9 " $2}' | sh
 sleep 2
+cd /home/zuoxiaolong/personal-blog-webapp-site/
 /home/zuoxiaolong/apache-tomcat-8.0.21/bin/startup.sh
 CURRENT=`date`
 echo "$CURRENT restart." >> /home/zuoxiaolong/apache-tomcat-8.0.21/logs/restart.log
