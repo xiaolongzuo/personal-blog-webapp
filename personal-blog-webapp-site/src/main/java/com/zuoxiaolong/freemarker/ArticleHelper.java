@@ -40,7 +40,7 @@ public abstract class ArticleHelper {
 		DaoFactory.getDao(ArticleDao.class).updateCommentCount(articleId);
 		Map<String, String> article = DaoFactory.getDao(ArticleDao.class).getArticle(articleId, viewMode);
 		data.put("article", article);
-		data.put("comments", DaoFactory.getDao(CommentDao.class).getComments(articleId));
+		data.put("comments", DaoFactory.getDao(CommentDao.class).getArticleComments(articleId));
 		data.put("tags", HttpClient.get(List.class, HttpUriEnums.TAG_GET_TAGS, new String[]{"articleId"}, articleId));
 		data.put("categories", DaoFactory.getDao(CategoryDao.class).getCategories(articleId));
 		Date createDate = null;

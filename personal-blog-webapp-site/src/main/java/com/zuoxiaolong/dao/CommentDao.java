@@ -162,7 +162,7 @@ public class CommentDao extends BaseDao {
         });
     }
 
-    public List<Map<String, String>> getComments(final Integer articleId) {
+    public List<Map<String, String>> getArticleComments(final Integer articleId) {
         return execute(new Operation<List<Map<String, String>>>() {
             @Override
             public List<Map<String, String>> doInConnection(Connection connection) {
