@@ -24,13 +24,8 @@ cp -f /home/zuoxiaolong/product/setting.properties /home/zuoxiaolong/personal-bl
 
 ps -ef | grep 'personal-blog-webapp-server' | grep -v 'grep' | awk '{print "kill -9 " $2}' | sh
 sleep 2
-cd /home/zuoxiaolong/personal-blog-webapp-server/
-nohup java -Xms128m -Xms128m -Dspring.config.location=classpath:application.yml,/home/zuoxiaolong/personal-blog-webapp-server/application-product.yml -jar personal-blog-webapp-server.jar >/home/zuoxiaolong/personal-blog-webapp-server/std.log 2>&1 &
-echo "personal-blog-webapp-server started"
-sleep 30
+echo "personal-blog-webapp-server killed ,wait restart..."
 ps -ef | grep 'org.apache.catalina.startup.Bootstrap' | grep -v 'grep' | awk '{print "kill -9 " $2}' | sh
 sleep 2
-cd /home/zuoxiaolong/personal-blog-webapp-site/
-/home/zuoxiaolong/apache-tomcat-8.0.21/bin/startup.sh
-echo "personal-blog-webapp-site started"
+echo "personal-blog-webapp-site killed ,wait restart..."
 
