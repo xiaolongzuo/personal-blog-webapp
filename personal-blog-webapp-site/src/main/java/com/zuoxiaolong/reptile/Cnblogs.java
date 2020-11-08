@@ -257,8 +257,8 @@ public abstract class Cnblogs {
         Map<String, String> imageMap = saveImage(acticleDocument);
         
         //获取标题
-        String subject = subjectElement.html().trim();
-        
+        String subject = subjectElement.getElementsByTag("span").first().html().trim();
+
         //获取postid，使用文章页面里的postdesc获取
         Element postIdElement = null;
         Elements postDescAElements = acticleDocument.getElementsByClass("postDesc").first().getElementsByTag("a");
